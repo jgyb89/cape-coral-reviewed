@@ -1,6 +1,16 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactCompiler: true,
+  images: {
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "staging.capecoralreviewed.com",
+        port: "",
+        pathname: "/wp-content/uploads/**",
+      },
+    ],
+  },
   async headers() {
     return [
       {
