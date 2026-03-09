@@ -19,7 +19,7 @@ export default async function FavoritesPage() {
     );
   }
 
-  const favorites = viewer.favorite_listings?.nodes || [];
+  const favorites = viewer.favoritelistings?.nodes || [];
 
   return (
     <div className="favorites-page">

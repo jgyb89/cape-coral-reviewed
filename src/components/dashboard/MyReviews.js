@@ -38,7 +38,7 @@ export default function MyReviews({ reviews: initialReviews }) {
     <div className="my-reviews">
       <ul className="my-reviews__list">
         {reviews.map((review) => {
-          const listing = review.ccrlisting;
+          const listing = review.relatedListing?.node;
           const categorySlug = listing?.ccrdirectorytypes?.nodes[0]?.slug || 'uncategorized';
           const listingUrl = listing ? `/directory/${categorySlug}/${listing.slug}` : '#';
 

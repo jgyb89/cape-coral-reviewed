@@ -80,7 +80,7 @@ export async function getViewer() {
             name
           }
         }
-        favorite_listings {
+        favoritelistings {
           nodes {
             id
             databaseId
@@ -107,13 +107,15 @@ export async function getViewer() {
             title
             content
             starRating
-            ccrlisting {
-              ... on Ccrlisting {
-                title
-                slug
-                ccrdirectorytypes {
-                  nodes {
-                    slug
+            relatedListing {
+              node {
+                ... on Ccrlisting {
+                  title
+                  slug
+                  ccrdirectorytypes {
+                    nodes {
+                      slug
+                    }
                   }
                 }
               }
