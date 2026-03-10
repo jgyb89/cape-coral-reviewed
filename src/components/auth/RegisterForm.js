@@ -1,8 +1,9 @@
 // src/components/auth/RegisterForm.js
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import './Auth.css';
 
 export default function RegisterForm() {
   const router = useRouter();
@@ -13,19 +14,93 @@ export default function RegisterForm() {
     firstName: "",
     lastName: "",
     phoneNumber: "",
+    consent: false,
   });
+  
+  const [fieldErrors, setFieldErrors] = useState({});
+  const [showPassword, setShowPassword] = useState(false);
+  const [passwordStrength, setPasswordStrength] = useState(""); // "", "weak", "medium", "strong"
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState(null);
+  const [generalError, setGeneralError] = useState(null);
+
+  // Phone number masking: (XXX) XXX-XXXX
+  const formatPhoneNumber = (value) => {
+    if (!value) return value;
+    const phoneNumber = value.replace(/[^\d]/g, "");
+    const phoneNumberLength = phoneNumber.length;
+    if (phoneNumberLength < 4) return phoneNumber;
+    if (phoneNumberLength < 7) {
+      return `(${phoneNumber.slice(0, 3)}) ${phoneNumber.slice(3)}`;
+    }
+    return `(${phoneNumber.slice(0, 3)}) ${phoneNumber.slice(3, 6)}-${phoneNumber.slice(6, 10)}`;
+  };
+
+  // Password strength logic
+  const checkPasswordStrength = (password) => {
+    if (!password) return "";
+    let strength = 0;
+    if (password.length >= 8) strength++;
+    if (/[A-Z]/.test(password) && /[a-z]/.test(password)) strength++;
+    if (/[0-9]/.test(password) || /[^A-Za-z0-9]/.test(password)) strength++;
+
+    if (strength === 1) return "weak";
+    if (strength === 2) return "medium";
+    if (strength === 3) return "strong";
+    return "weak";
+  };
+
+  const validateField = (name, value) => {
+    let error = "";
+    if (name === "username") {
+      if (!value) error = "Username is required";
+      else if (value.length < 3) error = "Username must be at least 3 characters";
+    } else if (name === "email") {
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!value) error = "Email is required";
+      else if (!emailRegex.test(value)) error = "Please enter a valid email address";
+    } else if (name === "password") {
+      if (!value) error = "Password is required";
+      else if (checkPasswordStrength(value) === "weak") error = "Password is too weak";
+    } else if (name === "consent") {
+      if (!value) error = "You must agree to the Terms and Conditions";
+    }
+    return error;
+  };
 
   const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
+    const { name, value, type, checked } = e.target;
+    let finalValue = type === "checkbox" ? checked : value;
+
+    if (name === "phoneNumber") {
+      finalValue = formatPhoneNumber(finalValue);
+    }
+
+    setFormData((prev) => ({ ...prev, [name]: finalValue }));
+
+    // Real-time validation
+    const error = validateField(name, finalValue);
+    setFieldErrors((prev) => ({ ...prev, [name]: error }));
+
+    if (name === "password") {
+      setPasswordStrength(checkPasswordStrength(finalValue));
+    }
+  };
+
+  const isFormValid = () => {
+    const requiredFields = ["username", "email", "password", "consent"];
+    const hasRequired = requiredFields.every((field) => formData[field]);
+    const hasNoErrors = Object.values(fieldErrors).every((err) => !err);
+    const isMediumStrength = passwordStrength === "medium" || passwordStrength === "strong";
+    
+    return hasRequired && hasNoErrors && isMediumStrength;
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!isFormValid()) return;
+
     setIsLoading(true);
-    setError(null);
+    setGeneralError(null);
 
     const GRAPHQL_URL = process.env.NEXT_PUBLIC_WORDPRESS_API_URL;
 
@@ -71,118 +146,143 @@ export default function RegisterForm() {
       const gfResponse = json.data?.submitGfForm;
 
       if (gfResponse?.errors && gfResponse.errors.length > 0) {
-        setError(gfResponse.errors[0].message || 'Registration failed. Please check your inputs.');
+        setGeneralError(gfResponse.errors[0].message || 'Registration failed.');
         setIsLoading(false);
         return;
       }
 
-      // If no errors, the submission was successful. Redirect to check-email page.
       router.push("/check-email");
     } catch (err) {
-      setError(err.message || "An unexpected error occurred.");
+      setGeneralError(err.message || "An unexpected error occurred.");
     } finally {
       setIsLoading(false);
     }
   };
 
   return (
-    <form className="register-form" onSubmit={handleSubmit}>
-      <div className="register-form__group">
-        <label className="register-form__label" htmlFor="username">
-          Username
-        </label>
+    <form className="auth-form" onSubmit={handleSubmit}>
+      <div className="auth-form__group">
+        <label className="auth-form__label" htmlFor="username">Username</label>
         <input
           id="username"
           name="username"
           type="text"
-          className="register-form__input"
+          className={`auth-form__input ${fieldErrors.username ? "auth-form__input--invalid" : ""}`}
           value={formData.username}
           onChange={handleChange}
           required
         />
+        {fieldErrors.username && <span className="auth-form__error-text">{fieldErrors.username}</span>}
       </div>
 
-      <div className="register-form__group">
-        <label className="register-form__label" htmlFor="email">
-          Email
-        </label>
+      <div className="auth-form__group">
+        <label className="auth-form__label" htmlFor="email">Email</label>
         <input
           id="email"
           name="email"
           type="email"
-          className="register-form__input"
+          className={`auth-form__input ${fieldErrors.email ? "auth-form__input--invalid" : ""}`}
           value={formData.email}
           onChange={handleChange}
           required
         />
+        {fieldErrors.email && <span className="auth-form__error-text">{fieldErrors.email}</span>}
       </div>
 
-      <div className="register-form__group">
-        <label className="register-form__label" htmlFor="password">
-          Password
-        </label>
-        <input
-          id="password"
-          name="password"
-          type="password"
-          className="register-form__input"
-          value={formData.password}
-          onChange={handleChange}
-          required
-        />
+      <div className="auth-form__group">
+        <label className="auth-form__label" htmlFor="password">Password</label>
+        <div className="auth-form__password-wrapper">
+          <input
+            id="password"
+            name="password"
+            type={showPassword ? "text" : "password"}
+            className={`auth-form__input ${fieldErrors.password ? "auth-form__input--invalid" : ""}`}
+            value={formData.password}
+            onChange={handleChange}
+            required
+          />
+          <span 
+            className="material-symbols-outlined auth-form__toggle-icon"
+            onClick={() => setShowPassword(!showPassword)}
+          >
+            {showPassword ? "visibility_off" : "visibility"}
+          </span>
+        </div>
+        {passwordStrength && (
+          <>
+            <div className="auth-form__strength-meter" data-strength={passwordStrength}>
+              <div className="auth-form__strength-bar"></div>
+              <div className="auth-form__strength-bar"></div>
+              <div className="auth-form__strength-bar"></div>
+            </div>
+            <span className="auth-form__strength-text">
+              Strength: {passwordStrength.charAt(0).toUpperCase() + passwordStrength.slice(1)}
+            </span>
+          </>
+        )}
+        {fieldErrors.password && <span className="auth-form__error-text">{fieldErrors.password}</span>}
       </div>
 
-      <div className="register-form__row">
-        <div className="register-form__group">
-          <label className="register-form__label" htmlFor="firstName">
-            First Name
-          </label>
+      <div className="auth-form__row">
+        <div className="auth-form__group">
+          <label className="auth-form__label" htmlFor="firstName">First Name</label>
           <input
             id="firstName"
             name="firstName"
             type="text"
-            className="register-form__input"
+            className="auth-form__input"
             value={formData.firstName}
             onChange={handleChange}
-            required
           />
         </div>
-        <div className="register-form__group">
-          <label className="register-form__label" htmlFor="lastName">
-            Last Name
-          </label>
+        <div className="auth-form__group">
+          <label className="auth-form__label" htmlFor="lastName">Last Name</label>
           <input
             id="lastName"
             name="lastName"
             type="text"
-            className="register-form__input"
+            className="auth-form__input"
             value={formData.lastName}
             onChange={handleChange}
-            required
           />
         </div>
       </div>
 
-      <div className="register-form__group">
-        <label className="register-form__label" htmlFor="phoneNumber">
-          Phone Number
-        </label>
+      <div className="auth-form__group">
+        <label className="auth-form__label" htmlFor="phoneNumber">Phone Number</label>
         <input
           id="phoneNumber"
           name="phoneNumber"
           type="tel"
-          className="register-form__input"
+          className="auth-form__input"
           value={formData.phoneNumber}
           onChange={handleChange}
+          placeholder="(XXX) XXX-XXXX"
         />
       </div>
 
-      {error && <p className="register-form__error">{error}</p>}
+      <div className="auth-form__checkbox-group">
+        <input
+          id="consent"
+          name="consent"
+          type="checkbox"
+          className="auth-form__checkbox"
+          checked={formData.consent}
+          onChange={handleChange}
+          required
+        />
+        <label htmlFor="consent" className="auth-form__checkbox-label">
+          I agree to the <a href="/terms">Terms and Conditions</a> and <a href="/privacy">Privacy Policy</a>.
+        </label>
+      </div>
+      {fieldErrors.consent && <span className="auth-form__error-text" style={{ marginBottom: '1.5rem' }}>{fieldErrors.consent}</span>}
+
+      {generalError && <p className="auth-form__error">{generalError}</p>}
 
       <button
         type="submit"
-        className="register-form__submit"
-        disabled={isLoading}
+        className="auth-form__submit"
+        disabled={isLoading || !isFormValid()}
       >
         {isLoading ? "Registering..." : "Create Account"}
       </button>
