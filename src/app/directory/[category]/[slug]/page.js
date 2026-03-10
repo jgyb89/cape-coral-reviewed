@@ -1,12 +1,12 @@
 import DOMPurify from "isomorphic-dompurify";
 import Script from "next/script";
+import Image from "next/image";
 import { getListingBySlug } from "@/lib/api";
 import ContactCard from "@/components/directory/ContactCard";
 import HoursCard from "@/components/directory/HoursCard";
-import ImageGallery from "@/components/directory/ImageGallery";
 import ReviewList from "@/components/directory/ReviewList";
+import "./ListingPage.css";
 
-// 1. Implementing Dynamic generateMetadata
 export async function generateMetadata({ params }) {
   const { slug } = await params;
   const listing = await getListingBySlug(slug);
@@ -45,25 +45,20 @@ export default async function DirectoryListingPage({ params }) {
     );
   }
 
-  // Calculate Review Data mathematically from relationship nodes
-  // Unpack the edges into a clean array of review nodes
   const reviewNodes = listing.reviews?.map(edge => edge.node) || [];
-  
   const reviewCount = reviewNodes.length;
   const averageRating = reviewCount > 0 
     ? (reviewNodes.reduce((acc, curr) => acc + (curr.starRating || 0), 0) / reviewCount).toFixed(1)
     : null;
 
-  // Calculate gallery nodes
   const galleryNodes = listing.imageGallery?.nodes || [];
+  const heroImage = listing.featuredImage?.node?.sourceUrl || galleryNodes[0]?.sourceUrl || "/placeholder-image.jpg";
 
-  // Sanitize WordPress content
   const cleanContent = DOMPurify.sanitize(listing.content || "", {
     ALLOWED_TAGS: ["p", "br", "b", "i", "em", "strong", "a", "ul", "ol", "li", "h3", "h4"],
     ALLOWED_ATTR: ["href", "target", "rel"],
   });
 
-  // 2. Mapping the LocalBusiness JSON-LD Schema
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "LocalBusiness",
@@ -88,7 +83,6 @@ export default async function DirectoryListingPage({ params }) {
     } : undefined
   };
 
-  // Group data for sub-components
   const contactInfo = {
     addressStreet: listing.addressStreet,
     addressCity: listing.addressCity,
@@ -111,74 +105,95 @@ export default async function DirectoryListingPage({ params }) {
   };
 
   return (
-    <main style={{ maxWidth: "1100px", margin: "0 auto", padding: "2rem", fontFamily: "sans-serif" }}>
-      {/* Inject JSON-LD */}
+    <div className="listing-page">
       <Script
         id="listing-jsonld"
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
 
-      {/* Hero Media Section */}
-      <ImageGallery images={galleryNodes} videoUrl={listing.videoUrl} />
-      
-      <section style={{ marginBottom: "2.5rem", marginTop: "2rem" }}>
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end" }}>
-          <div>
-            <h1 style={{ fontSize: "2.8rem", marginBottom: "0.5rem" }}>{listing.title}</h1>
-            <p style={{ fontSize: "1.1rem", color: "#666" }}>
-              📍 {listing.addressStreet}, {listing.addressCity}, {listing.addressState} {listing.addressZipCode}
-            </p>
-            {averageRating && (
-              <div style={{ fontSize: "1.2rem", color: "#f39c12", marginTop: "0.5rem" }}>
-                {"★".repeat(Math.round(averageRating))}
-                {"☆".repeat(5 - Math.round(averageRating))}
-                <span style={{ color: "#666", fontSize: "0.9rem", marginLeft: "0.5rem" }}>
-                  ({averageRating} from {reviewCount} reviews)
-                </span>
-              </div>
-            )}
-          </div>
-          {listing.priceRange && (
-            <div style={{ fontSize: "1.5rem", fontWeight: "bold", color: "#27ae60" }}>
-              {"$".repeat(listing.priceRange)}
-            </div>
-          )}
-        </div>
-      </section>
+      <div className="listing-hero">
+        <Image 
+          src={heroImage} 
+          alt={listing.title} 
+          fill 
+          style={{ objectFit: 'cover' }}
+          priority
+        />
+      </div>
 
-      <div style={{ display: "grid", gridTemplateColumns: "1.8fr 1fr", gap: "3rem" }}>
-        {/* Left Column */}
-        <section>
-          <div style={{ marginBottom: "3rem" }}>
-            <h2 style={{ borderBottom: "2px solid #eee", paddingBottom: "0.5rem", marginBottom: "1.5rem" }}>About this Business</h2>
+      <header className="listing-header">
+        <div className="listing-header__container">
+          <div className="listing-header__info">
+            <h1 className="listing-header__title">{listing.title}</h1>
+            <div className="ccr-card__rating" style={{ justifyContent: 'flex-start', marginBottom: '0' }}>
+              <span className="material-symbols-outlined" style={{ fontSize: '20px', color: 'var(--color-secondary)' }}>
+                star
+              </span>
+              <span style={{ fontSize: '1.1rem', fontWeight: '600', color: 'var(--color-text)' }}>
+                {averageRating || "0.0"}
+              </span>
+              <span style={{ color: '#666', fontSize: '0.9rem', marginLeft: '0.5rem' }}>
+                ({reviewCount} reviews)
+              </span>
+            </div>
+          </div>
+          <div className="listing-header__actions">
+            <button className="btn-primary">
+              <span className="material-symbols-outlined">rate_review</span>
+              Write a Review
+            </button>
+            <button className="btn-secondary">
+              <span className="material-symbols-outlined">favorite_border</span>
+              Favorite
+            </button>
+            <button className="btn-secondary">
+              <span className="material-symbols-outlined">share</span>
+              Share
+            </button>
+          </div>
+        </div>
+      </header>
+
+      <div className="listing-body">
+        <main>
+          <section className="listing-section">
+            <h2 className="listing-section__title">Overview</h2>
             <div
+              className="listing-section__content"
               style={{ fontSize: "1.1rem", lineHeight: "1.8", color: "#333" }}
               dangerouslySetInnerHTML={{ __html: cleanContent }}
             />
-          </div>
+          </section>
 
-          {/* User Reviews Section */}
-          <ReviewList reviews={reviewNodes} />
-        </section>
+          {listing.videoUrl && (
+            <section className="listing-section">
+              <h2 className="listing-section__title">Video</h2>
+              {/* Video embed logic would go here */}
+            </section>
+          )}
 
-        {/* Right Column (Sidebar) */}
+          <section className="listing-section">
+            <h2 className="listing-section__title">Reviews</h2>
+            <ReviewList reviews={reviewNodes} />
+          </section>
+        </main>
+
         <aside>
           <div style={{ position: "sticky", top: "2rem" }}>
-            {/* Contact Card Component */}
             <div style={{ marginBottom: "2rem" }}>
               <ContactCard contactInfo={contactInfo} />
             </div>
-
-            {/* Hours Card Component */}
             <HoursCard hours={hoursData} />
-
-            <button style={{ width: "100%", padding: "1rem", backgroundColor: "#0070f3", color: "white", border: "none", borderRadius: "8px", cursor: "pointer", fontWeight: "bold", marginTop: "2rem" }}>
-              Leave a Review
-            </button>
+            
+            {/* Featured Listings Placeholder */}
+            <div style={{ marginTop: "3rem" }}>
+              <h3 className="listing-section__title" style={{ fontSize: '1.2rem' }}>Featured Listings</h3>
+              {/* Featured Listings Grid/List would go here */}
+            </div>
           </div>
         </aside>
       </div>
-    </main>
+    </div>
   );
 }
