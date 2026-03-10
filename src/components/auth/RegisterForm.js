@@ -1,7 +1,7 @@
 // src/components/auth/RegisterForm.js
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 import './Auth.css';
 
@@ -26,7 +26,7 @@ export default function RegisterForm() {
   // Phone number masking: (XXX) XXX-XXXX
   const formatPhoneNumber = (value) => {
     if (!value) return value;
-    const phoneNumber = value.replace(/[^\d]/g, "");
+    const phoneNumber = value.replaceAll(/\D/g, "");
     const phoneNumberLength = phoneNumber.length;
     if (phoneNumberLength < 4) return phoneNumber;
     if (phoneNumberLength < 7) {
@@ -202,12 +202,17 @@ export default function RegisterForm() {
             onChange={handleChange}
             required
           />
-          <span 
-            className="material-symbols-outlined auth-form__toggle-icon"
+          <button 
+            type="button" 
+            className="auth-form__toggle-icon" 
             onClick={() => setShowPassword(!showPassword)}
+            aria-label={showPassword ? "Hide password" : "Show password"}
+            style={{ background: 'none', border: 'none', padding: 0 }}
           >
-            {showPassword ? "visibility_off" : "visibility"}
-          </span>
+            <span className="material-symbols-outlined">
+              {showPassword ? 'visibility_off' : 'visibility'}
+            </span>
+          </button>
         </div>
         {passwordStrength && (
           <>
