@@ -3,7 +3,6 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { handleLogin } from "@/lib/actions";
 
 export default function RegisterForm() {
   const router = useRouter();
@@ -77,19 +76,8 @@ export default function RegisterForm() {
         return;
       }
 
-      // If no errors, the submission was successful. Proceed to login handoff.
-      const loginResult = await handleLogin(
-        formData.username,
-        formData.password,
-      );
-
-      if (loginResult.success) {
-        router.push("/dashboard");
-      } else {
-        setError(
-          "Registration successful, but login failed. Please try logging in manually.",
-        );
-      }
+      // If no errors, the submission was successful. Redirect to check-email page.
+      router.push("/check-email");
     } catch (err) {
       setError(err.message || "An unexpected error occurred.");
     } finally {
