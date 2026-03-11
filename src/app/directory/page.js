@@ -1,10 +1,13 @@
-import DOMPurify from "isomorphic-dompurify";
-import Link from "next/link";
 import { getListings } from "@/lib/api";
 import { getViewer } from "@/lib/auth";
 import CcrCardGrid from "@/components/directory/CcrCardGrid";
 
-export default async function DirectoryPage() {
+export const metadata = {
+  title: "Local Business Directory - Cape Coral Reviewed",
+  description: "Browse our comprehensive directory of local businesses in Cape Coral, Florida.",
+};
+
+export default async function DirectoryIndexPage() {
   const listings = await getListings();
   const currentUser = await getViewer();
 
@@ -19,10 +22,10 @@ export default async function DirectoryPage() {
     >
       <header style={{ marginBottom: "3rem", textAlign: "center" }}>
         <h1 style={{ fontSize: "3rem", fontWeight: "800", marginBottom: "1rem" }}>
-          Cape Coral Reviewed
+          Business Directory
         </h1>
         <p style={{ fontSize: "1.2rem", color: "#666" }}>
-          Discover the best local businesses in Cape Coral, Florida.
+          Explore the best local services, restaurants, and shops in Cape Coral.
         </p>
       </header>
 

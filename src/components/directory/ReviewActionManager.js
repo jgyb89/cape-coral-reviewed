@@ -1,0 +1,43 @@
+// src/components/directory/ReviewActionManager.js
+"use client";
+
+import { useState } from "react";
+import LoginModal from "@/components/auth/LoginModal";
+import ReviewModal from "./ReviewModal";
+
+export default function ReviewActionManager({ currentUser, listingId }) {
+  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
+  const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
+
+  const handleWriteReviewClick = () => {
+    if (currentUser) {
+      setIsReviewModalOpen(true);
+    } else {
+      setIsLoginModalOpen(true);
+    }
+  };
+
+  return (
+    <>
+      <button 
+        className="btn-primary" 
+        onClick={handleWriteReviewClick}
+      >
+        <span className="material-symbols-outlined">rate_review</span>
+        Write a Review
+      </button>
+
+      <LoginModal 
+        isOpen={isLoginModalOpen} 
+        onClose={() => setIsLoginModalOpen(false)} 
+      />
+
+      <ReviewModal 
+        listingId={listingId}
+        isOpen={isReviewModalOpen} 
+        onClose={() => setIsReviewModalOpen(false)} 
+        currentUser={currentUser}
+      />
+    </>
+  );
+}

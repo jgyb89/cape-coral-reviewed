@@ -2,9 +2,11 @@ import DOMPurify from "isomorphic-dompurify";
 import Script from "next/script";
 import Image from "next/image";
 import { getListingBySlug } from "@/lib/api";
+import { getViewer } from "@/lib/auth";
 import ContactCard from "@/components/directory/ContactCard";
 import HoursCard from "@/components/directory/HoursCard";
 import ReviewList from "@/components/directory/ReviewList";
+import ReviewActionManager from "@/components/directory/ReviewActionManager";
 import "./ListingPage.css";
 
 export async function generateMetadata({ params }) {
@@ -35,6 +37,7 @@ export async function generateMetadata({ params }) {
 export default async function DirectoryListingPage({ params }) {
   const { slug, category } = await params;
   const listing = await getListingBySlug(slug);
+  const currentUser = await getViewer();
 
   if (!listing) {
     return (
@@ -139,10 +142,10 @@ export default async function DirectoryListingPage({ params }) {
             </div>
           </div>
           <div className="listing-header__actions">
-            <button className="btn-primary">
-              <span className="material-symbols-outlined">rate_review</span>
-              Write a Review
-            </button>
+            <ReviewActionManager 
+              currentUser={currentUser} 
+              listingId={listing.databaseId} 
+            />
             <button className="btn-secondary">
               <span className="material-symbols-outlined">favorite_border</span>
               Favorite

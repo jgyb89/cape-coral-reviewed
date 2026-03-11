@@ -4,6 +4,8 @@ export async function getListingBySlug(slug) {
   const query = `
     query GetListingBySlug($id: ID!) {
       ccrlisting(id: $id, idType: SLUG) {
+        id
+        databaseId
         title
         content
         
@@ -100,6 +102,8 @@ export async function getListings(categorySlug = null) {
     query GetListings {
       ccrlistings(first: 100${taxQuery}) {
         nodes {
+          id
+          databaseId
           title
           slug
           content
@@ -154,5 +158,52 @@ export async function getListings(categorySlug = null) {
   } catch (error) {
     console.error("Fetch Error:", error);
     return [];
+  }
+}
+
+export async function updateUserFavorites(userId, favoriteIdsArray, authToken) {
+  const mutation = `
+    mutation UpdateUserFavorites($id: ID!, $favorites: [Int]) {
+      updateUser(input: {
+        id: $id, 
+        favorite_listing: $favorites
+      }) {
+        user {
+          id
+          databaseId
+          favorite_listing {
+            nodes {
+              databaseId
+            }
+          }
+        }
+      }
+    }
+  `;
+
+  const variables = {
+    id: userId,
+    favorites: favoriteIdsArray,
+  };
+
+  try {
+    const res = await fetch(process.env.NEXT_PUBLIC_WORDPRESS_API_URL, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${authToken}`
+      },
+      body: JSON.stringify({ query: mutation, variables }),
+    });
+
+    const json = await res.json();
+    if (json.errors) {
+      console.error("GraphQL Errors:", json.errors);
+      throw new Error("Failed to update favorites");
+    }
+    return json.data.updateUser.user;
+  } catch (error) {
+    console.error("Error updating favorites:", error);
+    return null;
   }
 }

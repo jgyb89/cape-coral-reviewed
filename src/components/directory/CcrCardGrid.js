@@ -2,7 +2,7 @@
 import CcrCard from './CcrCard';
 import './CcrCardGrid.css';
 
-export default function CcrCardGrid({ listings }) {
+export default function CcrCardGrid({ listings, currentUser }) {
   if (!listings || listings.length === 0) {
     return (
       <div className="ccr-card-grid--empty" style={{ padding: '3rem', textAlign: 'center', backgroundColor: 'var(--color-bg)', borderRadius: '12px' }}>
@@ -17,7 +17,7 @@ export default function CcrCardGrid({ listings }) {
   return (
     <div className="ccr-card-grid">
       {listings.map((listing) => (
-        <CcrCard key={listing.id || listing.slug} listing={listing} />
+        <CcrCard key={listing.id || listing.slug} listing={listing} currentUser={currentUser} />
       ))}
     </div>
   );

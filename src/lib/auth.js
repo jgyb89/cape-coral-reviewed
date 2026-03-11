@@ -127,6 +127,9 @@ export async function getViewer() {
   `;
 
   try {
+    // Bypass strict SSL for local staging development
+    process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
+
     const res = await fetch(GRAPHQL_URL, {
       method: 'POST',
       headers: {
@@ -140,7 +143,7 @@ export async function getViewer() {
     const json = await res.json();
 
     if (json.errors) {
-      console.error('Viewer Query Error:', json.errors);
+      console.error('Viewer Query Error:', JSON.stringify(json.errors, null, 2));
       return null;
     }
 
