@@ -2,19 +2,18 @@
 
 export default function HoursCard({ hours }) {
   // 1. Get today's index using standard JavaScript Date
-  // getDay() returns 0 for Sunday, 1 for Monday, etc.
   const currentDayIndex = new Date().getDay();
 
-  // 2. Map the WordPress fields to an array of objects
-  // This allows us to easily map over them in the UI and apply logic
+  // 2. Map the ACF fields to an array of objects from the listingdata wrapper
+  const listingdata = hours.listingdata || {};
   const daysOfWeek = [
-    { label: 'Sunday', value: hours.hoursSunday, index: 0 },
-    { label: 'Monday', value: hours.hoursMonday, index: 1 },
-    { label: 'Tuesday', value: hours.hoursTuesday, index: 2 },
-    { label: 'Wednesday', value: hours.hoursWednesday, index: 3 },
-    { label: 'Thursday', value: hours.hoursThursday, index: 4 },
-    { label: 'Friday', value: hours.hoursFriday, index: 5 },
-    { label: 'Saturday', value: hours.hoursSaturday, index: 6 },
+    { label: 'Sunday', value: listingdata.hoursSunday, index: 0 },
+    { label: 'Monday', value: listingdata.hoursMonday, index: 1 },
+    { label: 'Tuesday', value: listingdata.hoursTuesday, index: 2 },
+    { label: 'Wednesday', value: listingdata.hoursWednesday, index: 3 },
+    { label: 'Thursday', value: listingdata.hoursThursday, index: 4 },
+    { label: 'Friday', value: listingdata.hoursFriday, index: 5 },
+    { label: 'Saturday', value: listingdata.hoursSaturday, index: 6 },
   ];
 
   // 3. Reorder the array so Monday is the first day of the week in the UI
@@ -45,7 +44,7 @@ export default function HoursCard({ hours }) {
               </span>
               
               <span className="hours-card__time">
-                {/* Fallback to 'Closed' if the WordPress field is empty */}
+                {/* Fallback to 'Closed' if the field is empty */}
                 {day.value ? day.value : 'Closed'}
               </span>
             </li>

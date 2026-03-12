@@ -43,14 +43,14 @@ export default function ReviewList({ reviews }) {
       
       <div className="review-list__container">
         {reviews.slice(0, visibleCount).map((review, index) => {
-          // Sanitize the review content to prevent XSS from user submissions
+          // Sanitize the review content
           const cleanReviewContent = DOMPurify.sanitize(review.content || '', {
             ALLOWED_TAGS: ['p', 'br', 'b', 'i', 'strong', 'em'],
             ALLOWED_ATTR: []
           });
 
-          // Ensure star rating falls within 1-5
-          const rating = review.starRating || 0;
+          // Ensure star rating falls within 1-5, reading from ACF reviewFields
+          const rating = parseFloat(review.reviewFields?.starRating) || 0;
           const activeStars = '★'.repeat(Math.round(rating));
           const inactiveStars = '☆'.repeat(5 - Math.round(rating));
           

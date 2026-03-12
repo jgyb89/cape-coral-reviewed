@@ -9,41 +9,8 @@ export async function getListingBySlug(slug) {
         title
         content
         
-        seo {
-          title
-          metaDesc
-          opengraphImage {
-            sourceUrl
-          }
-        }
-        
-        ccrdirectorytypes {
-          nodes {
-            name
-            slug
-          }
-        }
-        
-        addressStreet
-        addressCity
-        addressState
-        addressZipCode
-        phoneNumber
-        businessEmail
-        websiteUrl
-        socialUrl
-        priceRange
-        
-        hoursMonday
-        hoursTuesday
-        hoursWednesday
-        hoursThursday
-        hoursFriday
-        hoursSaturday
-        hoursSunday
-        
-        imageGallery {
-          nodes {
+        featuredImage {
+          node {
             sourceUrl
             altText
             mediaDetails {
@@ -52,14 +19,57 @@ export async function getListingBySlug(slug) {
             }
           }
         }
-        videoUrl
 
-        # FIX: Querying the node directly from the field
+        seo {
+          title
+          metaDesc
+          opengraphImage {
+            sourceUrl
+          }
+        }
+        
+        directoryTypes {
+          nodes {
+            name
+            slug
+          }
+        }
+        
+        listingdata {
+          addressStreet
+          addressCity
+          addressState
+          addressZipCode
+          phoneNumber
+          businessEmail
+          websiteUrl
+          socialUrl
+          priceRange
+          
+          hoursMonday
+          hoursTuesday
+          hoursWednesday
+          hoursThursday
+          hoursFriday
+          hoursSaturday
+          hoursSunday
+          
+          videoUrl
+        }
+
         reviews {
-          node {
+          nodes {
             title
             content
-            starRating
+            date
+            author {
+              node {
+                name
+              }
+            }
+            reviewFields {
+              starRating
+            }
           }
         }
       }
@@ -95,7 +105,7 @@ export async function getListingBySlug(slug) {
 
 export async function getListings(categorySlug = null) {
   const taxQuery = categorySlug
-    ? `, where: { taxQuery: { taxArray: { taxonomy: CCRDIRECTORYTYPE, field: SLUG, terms: ["${categorySlug}"] } } }`
+    ? `, where: { taxQuery: { taxArray: [{ taxonomy: CCRDIRECTORYTYPE, field: SLUG, terms: ["${categorySlug}"] }] } }`
     : "";
 
   const query = `
@@ -107,29 +117,31 @@ export async function getListings(categorySlug = null) {
           title
           slug
           content
-          addressStreet
-          addressCity
-          phoneNumber
-          priceRange
           
-          # FIX: Wrapped imageGallery in nodes to match WPGraphQL connection structure
-          imageGallery {
-            nodes {
+          featuredImage {
+            node {
               sourceUrl
+              altText
             }
           }
-          
-          ccrdirectorytypes {
+
+          listingdata {
+            addressStreet
+            addressCity
+            phoneNumber
+            priceRange
+          }
+          directoryTypes {
             nodes {
               name
               slug
             }
           }
-          
-          # FIX: Querying the node directly from the field
           reviews {
-            node {
-              starRating
+            nodes {
+              reviewFields {
+                starRating
+              }
             }
           }
         }

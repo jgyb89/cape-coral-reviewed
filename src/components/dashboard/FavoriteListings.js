@@ -37,8 +37,8 @@ export default function FavoriteListings({ favorites: initialFavorites = [] }) {
     <div className="favorite-listings">
       <div className="favorite-listings__grid">
         {favorites.map((listing) => {
-          const categorySlug = listing.ccrdirectorytypes?.nodes[0]?.slug || 'uncategorized';
-          const imageUrl = listing.imageGallery?.nodes[0]?.sourceUrl || '/placeholder-listing.jpg';
+          const categorySlug = listing.directoryTypes?.nodes[0]?.slug || 'uncategorized';
+          const imageUrl = listing.featuredImage?.node?.sourceUrl || '/placeholder-listing.jpg';
 
           return (
             <article key={listing.id} className="favorite-card">

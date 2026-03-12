@@ -117,6 +117,9 @@ export async function deleteUserReview(reviewId) {
       throw new Error(json.errors[0].message);
     }
 
+    revalidatePath('/dashboard/reviews');
+    revalidatePath('/directory', 'layout');
+
     return { success: true };
   } catch (error) {
     console.error('Delete Review Error:', error);
@@ -140,8 +143,8 @@ export async function removeFavoriteListing(listingId) {
     const viewer = await getViewer();
     if (!viewer) throw new Error('Could not fetch viewer data');
 
-    // Field name from WPGraphQL is 'favoritelistings' (no underscore)
-    const currentFavorites = viewer.favoritelistings?.nodes.map(n => n.databaseId) || [];
+    // Field name from WPGraphQL is now inside userData.favoriteListings
+    const currentFavorites = viewer.userData?.favoriteListings?.nodes.map(n => n.databaseId) || [];
     
     // 2. Filter out the listingId to remove
     const updatedFavorites = currentFavorites.filter(id => id.toString() !== listingId.toString());
@@ -262,7 +265,9 @@ export async function submitUserReview(formData) {
           databaseId
           title
           content
-          starRating
+          reviewFields {
+            starRating
+          }
         }
       }
     }
@@ -281,9 +286,9 @@ export async function submitUserReview(formData) {
           input: {
             title: formData.title || `Review for Listing #${formData.listingId}`,
             content: formData.content,
-            starRating: parseInt(formData.rating, 10),
+            starRating: String(formData.rating),
             relatedListing: [parseInt(formData.listingId, 10)], // Linking to listing
-            status: 'publish'
+            status: 'PUBLISH'
           }
         }
       }),
@@ -296,10 +301,70 @@ export async function submitUserReview(formData) {
       return { success: false, message: json.errors[0].message || 'Failed to submit review.' };
     }
 
-    revalidatePath(`/directory/[category]/[slug]`, 'page');
+    revalidatePath('/directory', 'layout');
     return { success: true };
   } catch (error) {
     console.error('Submit Review Action Error:', error);
     return { success: false, message: 'Network error occurred while submitting review.' };
+  }
+}
+
+/**
+ * Server Action to update an existing user review.
+ */
+export async function updateUserReview(reviewId, formData) {
+  const cookieStore = await cookies();
+  const authToken = cookieStore.get('authToken')?.value;
+
+  if (!authToken) {
+    return { success: false, error: 'Not authenticated' };
+  }
+
+  const mutation = `
+    mutation UpdateReview($input: UpdateCcrreviewInput!) {
+      updateCcrreview(input: $input) {
+        ccrreview {
+          id
+          content
+          reviewFields {
+            starRating
+          }
+        }
+      }
+    }
+  `;
+
+  try {
+    const res = await fetch(GRAPHQL_URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${authToken}`,
+      },
+      body: JSON.stringify({
+        query: mutation,
+        variables: {
+          input: {
+            id: reviewId,
+            starRating: String(formData.rating),
+            content: formData.content,
+          },
+        },
+      }),
+    });
+
+    const json = await res.json();
+
+    if (json.errors) {
+      throw new Error(json.errors[0].message);
+    }
+
+    revalidatePath('/dashboard/reviews');
+    revalidatePath('/directory', 'layout');
+
+    return { success: true };
+  } catch (error) {
+    console.error('Update Review Error:', error);
+    return { success: false, error: error.message };
   }
 }

@@ -9,8 +9,7 @@ import { toggleFavoriteListing } from '@/lib/actions';
 
 export default function CcrCard({ listing, currentUser }) {
   // Initialize state based on whether the listing ID exists in currentUser's favorites
-  // Field name from WPGraphQL is 'favoritelistings' (no underscore)
-  const initialFavoriteState = currentUser?.favoritelistings?.nodes?.some(
+  const initialFavoriteState = currentUser?.userData?.favoriteListings?.nodes?.some(
     node => node.databaseId === listing.databaseId
   ) || false;
 
@@ -20,15 +19,23 @@ export default function CcrCard({ listing, currentUser }) {
   if (!listing) return null;
 
   const { title, slug, featuredImage } = listing;
+  const listingdata = listing.listingdata || {};
 
-  // Extract category slug or fallback
+  // Extract category slug or fallback using the updated ACF taxonomy name
   const categorySlug =
-    listing?.ccrdirectorytypes?.nodes?.[0]?.slug || "uncategorized";
+    listing?.directoryTypes?.nodes?.[0]?.slug || "uncategorized";
   const listingUrl = `/directory/${categorySlug}/${slug}`;
 
   // Image handling
   const imageUrl = featuredImage?.node?.sourceUrl || "/placeholder-image.jpg";
   const imageAlt = featuredImage?.node?.altText || title;
+
+  // Rating calculation from the new ACF structure
+  const reviewNodes = listing.reviews?.nodes || [];
+  const reviewCount = reviewNodes.length;
+  const averageRating = reviewCount > 0 
+    ? (reviewNodes.reduce((acc, curr) => acc + (parseFloat(curr.reviewFields?.starRating) || 0), 0) / reviewCount).toFixed(1)
+    : "0.0";
 
   return (
     <div className="ccr-card">
@@ -53,7 +60,6 @@ export default function CcrCard({ listing, currentUser }) {
       </div>
 
       <div className="ccr-card__content">
-        {/* Clickable Area Restricted to Header Link */}
         <Link href={listingUrl} className="ccr-card__header-link">
           <h3 className="ccr-card__title">{title}</h3>
         </Link>
@@ -65,9 +71,9 @@ export default function CcrCard({ listing, currentUser }) {
           >
             star
           </span>
-          <span style={{ fontWeight: "600" }}>4.5</span>
+          <span style={{ fontWeight: "600" }}>{averageRating}</span>
           <span style={{ color: "#666", fontSize: "0.8rem" }}>
-            (12 reviews)
+            ({reviewCount} reviews)
           </span>
         </div>
 
@@ -79,7 +85,7 @@ export default function CcrCard({ listing, currentUser }) {
             >
               location_on
             </span>
-            Cape Coral, FL
+            {listingdata.addressCity || "Cape Coral"}, FL
           </div>
 
           <button
@@ -89,14 +95,11 @@ export default function CcrCard({ listing, currentUser }) {
             style={{ opacity: isUpdating ? 0.6 : 1, position: 'relative', zIndex: 10 }}
             onClick={async (e) => {
               e.preventDefault();
-              console.log('Heart clicked! Listing ID is:', listing.databaseId); 
-
+              
               if (!listing.databaseId) {
-                alert("Cache still hasn't cleared! databaseId is missing.");
+                alert("Listing data is incomplete.");
                 return;
               }
-
-              console.log("Heart clicked! Current User Data:", currentUser);
               
               if (!currentUser) {
                 alert("Please log in to save favorites.");
@@ -110,8 +113,7 @@ export default function CcrCard({ listing, currentUser }) {
               setIsFavorite(newFavoriteState);
 
               // Calculate new array
-              // Use 'favoritelistings' property from getViewer
-              const currentFavIds = currentUser.favoritelistings?.nodes?.map(node => node.databaseId).filter(Boolean) || [];
+              const currentFavIds = currentUser.userData?.favoriteListings?.nodes?.map(node => node.databaseId).filter(Boolean) || [];
               const listingId = listing.databaseId;
               
               let updatedArray;

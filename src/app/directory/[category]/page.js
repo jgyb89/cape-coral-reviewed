@@ -20,7 +20,8 @@ export default async function CategoryPage({ params }) {
   const currentUser = await getViewer();
 
   // Derive category name from the first listing if available, or use the slug
-  const categoryName = listings[0]?.ccrdirectorytypes?.nodes.find(n => n.slug === category)?.name || category;
+  // Updated to use directoryTypes for ACF
+  const categoryName = listings[0]?.directoryTypes?.nodes.find(n => n.slug === category)?.name || category;
 
   return (
     <main style={{ padding: "3rem", maxWidth: "1200px", margin: "0 auto", fontFamily: "sans-serif" }}>

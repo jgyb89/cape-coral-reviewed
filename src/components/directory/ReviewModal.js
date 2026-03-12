@@ -16,9 +16,9 @@ export default function ReviewModal({ listingId, isOpen, onClose, currentUser })
 
   const MAX_CHAR_COUNT = 2000;
 
-  // Check if user has already reviewed this listing
+  // Check if user has already reviewed this listing using updated ACF structure
   const hasReviewed = currentUser?.ccrreviews?.nodes?.some(
-    review => review.relatedListing?.node?.databaseId === parseInt(listingId, 10)
+    review => review.reviewFields?.relatedListing?.nodes?.[0]?.databaseId === parseInt(listingId, 10)
   );
 
   const handleSubmit = async (e) => {
@@ -53,7 +53,6 @@ export default function ReviewModal({ listingId, isOpen, onClose, currentUser })
 
     if (result.success) {
       onClose();
-      // Optional: Trigger a success notification or page refresh
     } else {
       setError(result.message);
     }
