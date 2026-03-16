@@ -8,7 +8,9 @@ export default function ReviewList({ reviews }) {
   const [visibleCount, setVisibleCount] = useState(5);
   const [expandedReviews, setExpandedReviews] = useState({});
 
-  if (!reviews || reviews.length === 0) {
+  const nodes = reviews?.nodes || [];
+
+  if (!nodes || nodes.length === 0) {
     return (
       <div className="review-list review-list--empty">
         <p>No reviews yet. Be the first to leave one!</p>
@@ -39,10 +41,10 @@ export default function ReviewList({ reviews }) {
 
   return (
     <section className="review-list">
-      <h3 className="review-list__header">User Reviews ({reviews.length})</h3>
+      <h3 className="review-list__header">User Reviews ({nodes.length})</h3>
       
       <div className="review-list__container">
-        {reviews.slice(0, visibleCount).map((review, index) => {
+        {nodes.slice(0, visibleCount).map((review, index) => {
           // Sanitize the review content
           const cleanReviewContent = DOMPurify.sanitize(review.content || '', {
             ALLOWED_TAGS: ['p', 'br', 'b', 'i', 'strong', 'em'],
@@ -96,7 +98,7 @@ export default function ReviewList({ reviews }) {
         })}
       </div>
 
-      {visibleCount < reviews.length && (
+      {visibleCount < nodes.length && (
         <div className="review-list__pagination">
           <button className="review-list__load-more" onClick={handleShowMore}>
             Load More Reviews

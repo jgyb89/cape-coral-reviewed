@@ -138,11 +138,11 @@ export default function CcrCard({ listing, currentUser }) {
             <span 
               className="material-symbols-outlined"
               style={{ 
-                color: isFavorite ? 'var(--color-primary)' : '#666',
-                fontVariationSettings: isFavorite ? '"FILL" 1' : '"FILL" 0'
+                color: isFavorite ? 'var(--color-primary, red)' : 'inherit',
+                fontVariationSettings: isFavorite ? "'FILL' 1" : "'FILL' 0"
               }}
             >
-              favorite
+              {isFavorite ? 'favorite' : 'favorite_border'}
             </span>
           </button>
         </div>

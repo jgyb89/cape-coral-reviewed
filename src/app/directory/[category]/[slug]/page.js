@@ -7,6 +7,7 @@ import ContactCard from "@/components/directory/ContactCard";
 import HoursCard from "@/components/directory/HoursCard";
 import ReviewList from "@/components/directory/ReviewList";
 import ReviewActionManager from "@/components/directory/ReviewActionManager";
+import FavoriteButton from "@/components/directory/FavoriteButton";
 import "./ListingPage.css";
 
 export async function generateMetadata({ params }) {
@@ -126,11 +127,9 @@ export default async function DirectoryListingPage({ params }) {
             <ReviewActionManager 
               currentUser={currentUser} 
               listingId={listing.databaseId} 
+              listingSlug={slug}
             />
-            <button className="btn-secondary">
-              <span className="material-symbols-outlined">favorite_border</span>
-              Favorite
-            </button>
+            <FavoriteButton listingId={listing.databaseId} currentUser={currentUser} />
             <button className="btn-secondary">
               <span className="material-symbols-outlined">share</span>
               Share
@@ -159,7 +158,7 @@ export default async function DirectoryListingPage({ params }) {
 
           <section className="listing-section">
             <h2 className="listing-section__title">Reviews</h2>
-            <ReviewList reviews={reviewNodes} />
+            <ReviewList reviews={listing.reviews} />
           </section>
         </main>
 

@@ -5,7 +5,7 @@ import { useState } from "react";
 import LoginModal from "@/components/auth/LoginModal";
 import ReviewModal from "./ReviewModal";
 
-export default function ReviewActionManager({ currentUser, listingId }) {
+export default function ReviewActionManager({ currentUser, listingId, listingSlug }) {
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
   const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
 
@@ -34,6 +34,7 @@ export default function ReviewActionManager({ currentUser, listingId }) {
 
       <ReviewModal 
         listingId={listingId}
+        listingSlug={listingSlug}
         isOpen={isReviewModalOpen} 
         onClose={() => setIsReviewModalOpen(false)} 
         currentUser={currentUser}

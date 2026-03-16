@@ -5,7 +5,7 @@ import { useState } from "react";
 import { submitUserReview } from "@/lib/actions";
 import "./ReviewModal.css";
 
-export default function ReviewModal({ listingId, isOpen, onClose, currentUser }) {
+export default function ReviewModal({ listingId, listingSlug, isOpen, onClose, currentUser }) {
   const [rating, setRating] = useState(0);
   const [hoverRating, setHoverHoverRating] = useState(0);
   const [content, setContent] = useState("");
@@ -44,6 +44,7 @@ export default function ReviewModal({ listingId, isOpen, onClose, currentUser })
 
     const formData = {
       listingId,
+      listingSlug,
       rating,
       content,
       title: `${currentUser?.name || "User"}'s Review`

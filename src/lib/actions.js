@@ -151,13 +151,13 @@ export async function removeFavoriteListing(listingId) {
 
     // 3. Update the user's favoriteListings field (CamelCase for input)
     const mutation = `
-      mutation UpdateUserFavorites($id: ID!, $favorites: [Int]) {
-        updateUser(input: { id: $id, favoriteListings: $favorites }) {
-          user {
-            id
-          }
+    mutation UpdateUserFavorites($userId: ID!, $favorites: [Int]) {
+      updateUser(input: { id: $userId, userData: { favoriteListings: $favorites } }) {
+        user {
+          databaseId
         }
       }
+    }
     `;
 
     const res = await fetch(GRAPHQL_URL, {
@@ -169,7 +169,7 @@ export async function removeFavoriteListing(listingId) {
       body: JSON.stringify({
         query: mutation,
         variables: {
-          id: viewer.id,
+          userId: viewer.id,
           favorites: updatedFavorites,
         },
       }),
@@ -201,11 +201,8 @@ export async function toggleFavoriteListing(userId, newFavoritesArray) {
 
   // Use 'favoriteListings' (CamelCase) for the input mapping
   const mutation = `
-    mutation UpdateUserFavorites($id: ID!, $favorites: [Int]) {
-      updateUser(input: {
-        id: $id, 
-        favoriteListings: $favorites
-      }) {
+    mutation UpdateUserFavorites($userId: ID!, $favorites: [Int]) {
+      updateUser(input: { id: $userId, userData: { favoriteListings: $favorites } }) {
         user {
           databaseId
         }
@@ -222,7 +219,7 @@ export async function toggleFavoriteListing(userId, newFavoritesArray) {
       },
       body: JSON.stringify({ 
         query: mutation, 
-        variables: { id: userId, favorites: newFavoritesArray } 
+        variables: { userId: userId, favorites: newFavoritesArray } 
       }),
     });
 
@@ -301,7 +298,9 @@ export async function submitUserReview(formData) {
       return { success: false, message: json.errors[0].message || 'Failed to submit review.' };
     }
 
-    revalidatePath('/directory', 'layout');
+    revalidatePath('/dashboard/reviews');
+    revalidatePath(`/directory/[category]/${formData.listingSlug}`, 'page');
+    revalidatePath('/directory', 'layout'); 
     return { success: true };
   } catch (error) {
     console.error('Submit Review Action Error:', error);
