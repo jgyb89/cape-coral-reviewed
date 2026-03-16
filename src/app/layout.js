@@ -1,5 +1,6 @@
 import { Poppins, Open_Sans } from "next/font/google";
 import "./globals.css";
+import 'material-symbols/outlined.css';
 
 const poppins = Poppins({
   subsets: ["latin"],
@@ -21,12 +22,6 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <head>
-        <link
-          href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&display=optional"
-          rel="stylesheet"
-        />
-      </head>
       <body className={`${poppins.variable} ${openSans.variable}`}>
         {children}
       </body>

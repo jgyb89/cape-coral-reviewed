@@ -2,6 +2,7 @@
 'use server';
 
 import { cookies } from 'next/headers';
+import { revalidatePath } from 'next/cache';
 import { loginUser, getViewer } from './auth';
 
 const GRAPHQL_URL = process.env.NEXT_PUBLIC_WORDPRESS_API_URL;
@@ -116,6 +117,9 @@ export async function deleteUserReview(reviewId) {
       throw new Error(json.errors[0].message);
     }
 
+    revalidatePath('/dashboard/reviews');
+    revalidatePath('/directory', 'layout');
+
     return { success: true };
   } catch (error) {
     console.error('Delete Review Error:', error);
@@ -139,22 +143,21 @@ export async function removeFavoriteListing(listingId) {
     const viewer = await getViewer();
     if (!viewer) throw new Error('Could not fetch viewer data');
 
-    const currentFavorites = viewer.favorite_listings?.nodes.map(n => n.databaseId) || [];
+    // Field name from WPGraphQL is now inside userData.favoriteListings
+    const currentFavorites = viewer.userData?.favoriteListings?.nodes.map(n => n.databaseId) || [];
     
     // 2. Filter out the listingId to remove
-    // listingId coming from client might be GraphQL ID or Database ID, 
-    // we assume it's the databaseId for the Pods relationship update.
     const updatedFavorites = currentFavorites.filter(id => id.toString() !== listingId.toString());
 
-    // 3. Update the user's favorite_listings field
+    // 3. Update the user's favoriteListings field (CamelCase for input)
     const mutation = `
-      mutation UpdateUserFavorites($id: ID!, $favorites: [ID]) {
-        updateUser(input: { id: $id, favorite_listings: $favorites }) {
-          user {
-            id
-          }
+    mutation UpdateUserFavorites($userId: ID!, $favorites: [Int]) {
+      updateUser(input: { id: $userId, favoriteListings: $favorites }) {
+        user {
+          databaseId
         }
       }
+    }
     `;
 
     const res = await fetch(GRAPHQL_URL, {
@@ -166,7 +169,7 @@ export async function removeFavoriteListing(listingId) {
       body: JSON.stringify({
         query: mutation,
         variables: {
-          id: viewer.id,
+          userId: viewer.id,
           favorites: updatedFavorites,
         },
       }),
@@ -181,6 +184,186 @@ export async function removeFavoriteListing(listingId) {
     return { success: true };
   } catch (error) {
     console.error('Remove Favorite Error:', error);
+    return { success: false, error: error.message };
+  }
+}
+
+export async function toggleFavoriteListing(userId, newFavoritesArray) {
+  const cookieStore = await cookies();
+  const token = cookieStore.get('authToken')?.value;
+
+  if (!token) {
+    return { success: false, message: 'Unauthorized. Please log in.' };
+  }
+
+  // Bypass strict SSL for local staging development
+  process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
+
+  // Use 'favoriteListings' (CamelCase) for the input mapping
+  const mutation = `
+    mutation UpdateUserFavorites($userId: ID!, $favorites: [Int]) {
+      updateUser(input: { id: $userId, favoriteListings: $favorites }) {
+        user {
+          databaseId
+        }
+      }
+    }
+  `;
+
+  try {
+    const res = await fetch(process.env.NEXT_PUBLIC_WORDPRESS_API_URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      },
+      body: JSON.stringify({ 
+        query: mutation, 
+        variables: { userId: userId, favorites: newFavoritesArray } 
+      }),
+    });
+
+    const json = await res.json();
+    
+    if (json.errors) {
+      console.error('GraphQL Errors:', json.errors);
+      return { success: false, message: 'Failed to update favorites.' };
+    }
+
+    // Purge the server cache to ensure fresh data on refresh
+    revalidatePath('/directory');
+    revalidatePath('/dashboard/favorites');
+
+    return { success: true };
+  } catch (error) {
+    console.error('Action Error:', error);
+    return { success: false, message: 'Network error occurred.' };
+  }
+}
+
+/**
+ * Server Action to submit a user review.
+ */
+export async function submitUserReview(formData) {
+  const cookieStore = await cookies();
+  const token = cookieStore.get('authToken')?.value;
+
+  if (!token) {
+    return { success: false, message: 'Unauthorized. Please log in to leave a review.' };
+  }
+
+  // Bypass strict SSL for local staging development
+  process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
+
+  const mutation = `
+    mutation CreateReview($input: CreateCcrreviewInput!) {
+      createCcrreview(input: $input) {
+        ccrreview {
+          databaseId
+          title
+          content
+          reviewFields {
+            starRating
+          }
+        }
+      }
+    }
+  `;
+
+  try {
+    const res = await fetch(GRAPHQL_URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      },
+      body: JSON.stringify({
+        query: mutation,
+        variables: {
+          input: {
+            title: formData.title || `Review for Listing #${formData.listingId}`,
+            content: formData.content,
+            starRating: String(formData.rating),
+            relatedListing: [parseInt(formData.listingId, 10)], // Linking to listing
+            status: 'PUBLISH'
+          }
+        }
+      }),
+    });
+
+    const json = await res.json();
+
+    if (json.errors) {
+      console.error('GraphQL Review Errors:', json.errors);
+      return { success: false, message: json.errors[0].message || 'Failed to submit review.' };
+    }
+
+    revalidatePath('/dashboard/reviews');
+    revalidatePath(`/directory/[category]/${formData.listingSlug}`, 'page');
+    revalidatePath('/directory', 'layout'); 
+    return { success: true };
+  } catch (error) {
+    console.error('Submit Review Action Error:', error);
+    return { success: false, message: 'Network error occurred while submitting review.' };
+  }
+}
+
+/**
+ * Server Action to update an existing user review.
+ */
+export async function updateUserReview(reviewId, formData) {
+  const cookieStore = await cookies();
+  const authToken = cookieStore.get('authToken')?.value;
+
+  if (!authToken) {
+    return { success: false, error: 'Not authenticated' };
+  }
+
+  const mutation = `
+    mutation UpdateReview($input: UpdateCcrreviewInput!) {
+      updateCcrreview(input: $input) {
+        ccrreview {
+          id
+          content
+          reviewFields {
+            starRating
+          }
+        }
+      }
+    }
+  `;
+
+  try {
+    const res = await fetch(GRAPHQL_URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${authToken}`,
+      },
+      body: JSON.stringify({
+        query: mutation,
+        variables: {
+          input: {
+            id: reviewId,
+            starRating: String(formData.rating),
+            content: formData.content,
+          },
+        },
+      }),
+    });
+
+    const json = await res.json();
+
+    if (json.errors) {
+      throw new Error(json.errors[0].message);
+    }
+
+    revalidatePath('/dashboard/reviews');
+    revalidatePath('/directory', 'layout');
+
+    return { success: true };
+  } catch (error) {
+    console.error('Update Review Error:', error);
     return { success: false, error: error.message };
   }
 }

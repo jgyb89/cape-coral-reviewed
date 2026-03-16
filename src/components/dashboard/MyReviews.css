@@ -1,0 +1,232 @@
+.my-reviews {
+  padding: 1rem 0;
+}
+
+.my-reviews__empty {
+  text-align: center;
+  padding: 3rem;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+}
+
+.my-reviews__text {
+  font-size: 1.1rem;
+  color: #666;
+  margin-bottom: 1.5rem;
+}
+
+.my-reviews__link {
+  display: inline-block;
+  padding: 0.75rem 1.5rem;
+  background-color: var(--color-primary);
+  color: #fff;
+  text-decoration: none;
+  border-radius: 8px;
+  font-weight: 600;
+  transition: opacity 0.2s;
+}
+
+.my-reviews__link:hover {
+  opacity: 0.9;
+}
+
+.my-reviews__list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.user-review {
+  background: #fff;
+  padding: 1.5rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+  border: 1px solid #eee;
+}
+
+.user-review__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 0.5rem;
+}
+
+.user-review__listing {
+  font-size: 0.9rem;
+  color: #888;
+  margin-bottom: 0.25rem;
+}
+
+.user-review__listing-link {
+  color: var(--color-primary);
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.user-review__listing-link:hover {
+  text-decoration: underline;
+}
+
+.user-review__date {
+  font-size: 0.85rem;
+  color: #999;
+}
+
+.user-review__stars {
+  display: flex;
+  gap: 2px;
+}
+
+.user-review__star {
+  font-size: 1.25rem;
+}
+
+.user-review__content {
+  color: #444;
+  line-height: 1.6;
+  margin-bottom: 1.5rem;
+  font-size: 0.95rem;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.user-review__actions {
+  display: flex;
+  gap: 1rem;
+  border-top: 1px solid #eee;
+  padding-top: 1rem;
+}
+
+.user-review__edit-btn,
+.user-review__delete-btn {
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  border: none;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.user-review__edit-btn {
+  background-color: #f0f0f0;
+  color: #444;
+}
+
+.user-review__edit-btn:hover {
+  background-color: #e5e5e5;
+}
+
+.user-review__delete-btn {
+  background-color: #fff5f5;
+  color: #e53e3e;
+}
+
+.user-review__delete-btn:hover {
+  background-color: #fed7d7;
+}
+
+.user-review__edit-btn:disabled,
+.user-review__delete-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Custom Delete Modal */
+.my-reviews__modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 1rem;
+  backdrop-filter: blur(4px);
+}
+
+.my-reviews__modal {
+  background: white;
+  padding: 2.5rem;
+  border-radius: 16px;
+  max-width: 400px;
+  width: 100%;
+  text-align: center;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+}
+
+.my-reviews__modal-icon {
+  margin-bottom: 1.5rem;
+}
+
+.my-reviews__modal-icon .material-symbols-outlined {
+  font-size: 4rem;
+  color: var(--color-primary);
+}
+
+.my-reviews__modal-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  color: var(--color-text);
+  padding: 0;
+}
+
+.my-reviews__modal-text {
+  color: #666;
+  margin-bottom: 2rem;
+  line-height: 1.6;
+}
+
+.my-reviews__modal-actions {
+  display: flex;
+  gap: 1rem;
+}
+
+.my-reviews__modal-btn {
+  flex: 1;
+  padding: 0.75rem;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.my-reviews__modal-btn--cancel {
+  background: white;
+  border: 2px solid #eee;
+  color: #666;
+}
+
+.my-reviews__modal-btn--cancel:hover:not(:disabled) {
+  background: #f9f9f9;
+  border-color: #ddd;
+}
+
+.my-reviews__modal-btn--delete {
+  background: var(--color-primary);
+  border: 2px solid var(--color-primary);
+  color: white;
+}
+
+.my-reviews__modal-btn--delete:hover:not(:disabled) {
+  opacity: 0.9;
+}
+
+.my-reviews__modal-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}

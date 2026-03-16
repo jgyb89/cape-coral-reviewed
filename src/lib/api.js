@@ -4,44 +4,13 @@ export async function getListingBySlug(slug) {
   const query = `
     query GetListingBySlug($id: ID!) {
       ccrlisting(id: $id, idType: SLUG) {
+        id
+        databaseId
         title
         content
         
-        seo {
-          title
-          metaDesc
-          opengraphImage {
-            sourceUrl
-          }
-        }
-        
-        ccrdirectorytypes {
-          nodes {
-            name
-            slug
-          }
-        }
-        
-        addressStreet
-        addressCity
-        addressState
-        addressZipCode
-        phoneNumber
-        businessEmail
-        websiteUrl
-        socialUrl
-        priceRange
-        
-        hoursMonday
-        hoursTuesday
-        hoursWednesday
-        hoursThursday
-        hoursFriday
-        hoursSaturday
-        hoursSunday
-        
-        imageGallery {
-          nodes {
+        featuredImage {
+          node {
             sourceUrl
             altText
             mediaDetails {
@@ -50,14 +19,57 @@ export async function getListingBySlug(slug) {
             }
           }
         }
-        videoUrl
 
-        # FIX: Querying the node directly from the field
+        seo {
+          title
+          metaDesc
+          opengraphImage {
+            sourceUrl
+          }
+        }
+        
+        directoryTypes {
+          nodes {
+            name
+            slug
+          }
+        }
+        
+        listingdata {
+          addressStreet
+          addressCity
+          addressState
+          addressZipCode
+          phoneNumber
+          businessEmail
+          websiteUrl
+          socialUrl
+          priceRange
+          
+          hoursMonday
+          hoursTuesday
+          hoursWednesday
+          hoursThursday
+          hoursFriday
+          hoursSaturday
+          hoursSunday
+          
+          videoUrl
+        }
+
         reviews {
-          node {
+          nodes {
             title
             content
-            starRating
+            date
+            author {
+              node {
+                name
+              }
+            }
+            reviewFields {
+              starRating
+            }
           }
         }
       }
@@ -93,39 +105,43 @@ export async function getListingBySlug(slug) {
 
 export async function getListings(categorySlug = null) {
   const taxQuery = categorySlug
-    ? `, where: { taxQuery: { taxArray: { taxonomy: CCRDIRECTORYTYPE, field: SLUG, terms: ["${categorySlug}"] } } }`
+    ? `, where: { taxQuery: { taxArray: [{ taxonomy: CCRDIRECTORYTYPE, field: SLUG, terms: ["${categorySlug}"] }] } }`
     : "";
 
   const query = `
     query GetListings {
       ccrlistings(first: 100${taxQuery}) {
         nodes {
+          id
+          databaseId
           title
           slug
           content
-          addressStreet
-          addressCity
-          phoneNumber
-          priceRange
           
-          # FIX: Wrapped imageGallery in nodes to match WPGraphQL connection structure
-          imageGallery {
-            nodes {
+          featuredImage {
+            node {
               sourceUrl
+              altText
             }
           }
-          
-          ccrdirectorytypes {
+
+          listingdata {
+            addressStreet
+            addressCity
+            phoneNumber
+            priceRange
+          }
+          directoryTypes {
             nodes {
               name
               slug
             }
           }
-          
-          # FIX: Querying the node directly from the field
           reviews {
-            node {
-              starRating
+            nodes {
+              reviewFields {
+                starRating
+              }
             }
           }
         }
@@ -154,5 +170,52 @@ export async function getListings(categorySlug = null) {
   } catch (error) {
     console.error("Fetch Error:", error);
     return [];
+  }
+}
+
+export async function updateUserFavorites(userId, favoriteIdsArray, authToken) {
+  const mutation = `
+    mutation UpdateUserFavorites($id: ID!, $favorites: [Int]) {
+      updateUser(input: {
+        id: $id, 
+        favorite_listing: $favorites
+      }) {
+        user {
+          id
+          databaseId
+          favorite_listing {
+            nodes {
+              databaseId
+            }
+          }
+        }
+      }
+    }
+  `;
+
+  const variables = {
+    id: userId,
+    favorites: favoriteIdsArray,
+  };
+
+  try {
+    const res = await fetch(process.env.NEXT_PUBLIC_WORDPRESS_API_URL, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${authToken}`
+      },
+      body: JSON.stringify({ query: mutation, variables }),
+    });
+
+    const json = await res.json();
+    if (json.errors) {
+      console.error("GraphQL Errors:", json.errors);
+      throw new Error("Failed to update favorites");
+    }
+    return json.data.updateUser.user;
+  } catch (error) {
+    console.error("Error updating favorites:", error);
+    return null;
   }
 }

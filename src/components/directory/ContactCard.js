@@ -1,7 +1,7 @@
 // components/directory/ContactCard.js
 
 export default function ContactCard({ contactInfo }) {
-  // Destructure the props for clean reading
+  // Destructure the props from the new listingdata ACF wrapper
   const {
     addressStreet,
     addressCity,
@@ -10,8 +10,8 @@ export default function ContactCard({ contactInfo }) {
     phoneNumber,
     businessEmail,
     websiteUrl,
-    socialUrl // Note: You mentioned this is a repeatable field in Pods, so it might be an array
-  } = contactInfo;
+    socialUrl
+  } = contactInfo.listingdata || {};
 
   return (
     <div className="contact-card">

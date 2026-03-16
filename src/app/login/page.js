@@ -7,8 +7,9 @@ export const metadata = {
   description: 'Sign in to your Cape Coral Directory account to manage your profile, favorites, and reviews.',
 };
 
-export default function LoginPage({ searchParams }) {
-  const isVerified = searchParams?.verified === 'true';
+export default async function LoginPage({ searchParams }) {
+  const resolvedParams = await searchParams;
+  const isVerified = resolvedParams?.verified === 'true';
 
   return (
     <div className="login-page">

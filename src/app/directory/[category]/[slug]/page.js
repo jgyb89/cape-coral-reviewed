@@ -2,9 +2,12 @@ import DOMPurify from "isomorphic-dompurify";
 import Script from "next/script";
 import Image from "next/image";
 import { getListingBySlug } from "@/lib/api";
+import { getViewer } from "@/lib/auth";
 import ContactCard from "@/components/directory/ContactCard";
 import HoursCard from "@/components/directory/HoursCard";
 import ReviewList from "@/components/directory/ReviewList";
+import ReviewActionManager from "@/components/directory/ReviewActionManager";
+import FavoriteButton from "@/components/directory/FavoriteButton";
 import "./ListingPage.css";
 
 export async function generateMetadata({ params }) {
@@ -35,6 +38,7 @@ export async function generateMetadata({ params }) {
 export default async function DirectoryListingPage({ params }) {
   const { slug, category } = await params;
   const listing = await getListingBySlug(slug);
+  const currentUser = await getViewer();
 
   if (!listing) {
     return (
@@ -45,14 +49,16 @@ export default async function DirectoryListingPage({ params }) {
     );
   }
 
-  const reviewNodes = listing.reviews?.map(edge => edge.node) || [];
+  const listingdata = listing.listingdata || {};
+
+  const reviewNodes = listing.reviews?.nodes || [];
   const reviewCount = reviewNodes.length;
   const averageRating = reviewCount > 0 
-    ? (reviewNodes.reduce((acc, curr) => acc + (curr.starRating || 0), 0) / reviewCount).toFixed(1)
+    ? (reviewNodes.reduce((acc, curr) => acc + (parseFloat(curr.reviewFields?.starRating) || 0), 0) / reviewCount).toFixed(1)
     : null;
 
-  const galleryNodes = listing.imageGallery?.nodes || [];
-  const heroImage = listing.featuredImage?.node?.sourceUrl || galleryNodes[0]?.sourceUrl || "/placeholder-image.jpg";
+  const galleryNodes = listing.featuredImage?.node ? [listing.featuredImage.node] : [];
+  const heroImage = listing.featuredImage?.node?.sourceUrl || "/placeholder-image.jpg";
 
   const cleanContent = DOMPurify.sanitize(listing.content || "", {
     ALLOWED_TAGS: ["p", "br", "b", "i", "em", "strong", "a", "ul", "ol", "li", "h3", "h4"],
@@ -66,42 +72,21 @@ export default async function DirectoryListingPage({ params }) {
     "image": galleryNodes.map(img => img.sourceUrl) || [],
     "address": {
       "@type": "PostalAddress",
-      "streetAddress": listing.addressStreet || "",
-      "addressLocality": listing.addressCity || "Cape Coral",
-      "addressRegion": listing.addressState || "FL",
-      "postalCode": listing.addressZipCode || "",
+      "streetAddress": listingdata.addressStreet || "",
+      "addressLocality": listingdata.addressCity || "Cape Coral",
+      "addressRegion": listingdata.addressState || "FL",
+      "postalCode": listingdata.addressZipCode || "",
       "addressCountry": "US"
     },
-    "telephone": listing.phoneNumber || "",
-    "url": listing.websiteUrl || `https://capecoralreviewed.com/directory/${category}/${slug}`,
-    "priceRange": listing.priceRange ? "$".repeat(listing.priceRange) : undefined,
-    "email": listing.businessEmail || undefined,
+    "telephone": listingdata.phoneNumber || "",
+    "url": listingdata.websiteUrl || `https://capecoralreviewed.com/directory/${category}/${slug}`,
+    "priceRange": listingdata.priceRange ? "$".repeat(listingdata.priceRange) : undefined,
+    "email": listingdata.businessEmail || undefined,
     "aggregateRating": averageRating ? {
       "@type": "AggregateRating",
       "ratingValue": averageRating,
       "reviewCount": reviewCount
     } : undefined
-  };
-
-  const contactInfo = {
-    addressStreet: listing.addressStreet,
-    addressCity: listing.addressCity,
-    addressState: listing.addressState,
-    addressZipCode: listing.addressZipCode,
-    phoneNumber: listing.phoneNumber,
-    businessEmail: listing.businessEmail,
-    websiteUrl: listing.websiteUrl,
-    socialUrl: listing.socialUrl
-  };
-
-  const hoursData = {
-    hoursMonday: listing.hoursMonday,
-    hoursTuesday: listing.hoursTuesday,
-    hoursWednesday: listing.hoursWednesday,
-    hoursThursday: listing.hoursThursday,
-    hoursFriday: listing.hoursFriday,
-    hoursSaturday: listing.hoursSaturday,
-    hoursSunday: listing.hoursSunday
   };
 
   return (
@@ -139,14 +124,12 @@ export default async function DirectoryListingPage({ params }) {
             </div>
           </div>
           <div className="listing-header__actions">
-            <button className="btn-primary">
-              <span className="material-symbols-outlined">rate_review</span>
-              Write a Review
-            </button>
-            <button className="btn-secondary">
-              <span className="material-symbols-outlined">favorite_border</span>
-              Favorite
-            </button>
+            <ReviewActionManager 
+              currentUser={currentUser} 
+              listingId={listing.databaseId} 
+              listingSlug={slug}
+            />
+            <FavoriteButton listingId={listing.databaseId} currentUser={currentUser} />
             <button className="btn-secondary">
               <span className="material-symbols-outlined">share</span>
               Share
@@ -166,7 +149,7 @@ export default async function DirectoryListingPage({ params }) {
             />
           </section>
 
-          {listing.videoUrl && (
+          {listingdata.videoUrl && (
             <section className="listing-section">
               <h2 className="listing-section__title">Video</h2>
               {/* Video embed logic would go here */}
@@ -175,16 +158,16 @@ export default async function DirectoryListingPage({ params }) {
 
           <section className="listing-section">
             <h2 className="listing-section__title">Reviews</h2>
-            <ReviewList reviews={reviewNodes} />
+            <ReviewList reviews={listing.reviews} />
           </section>
         </main>
 
         <aside>
           <div style={{ position: "sticky", top: "2rem" }}>
             <div style={{ marginBottom: "2rem" }}>
-              <ContactCard contactInfo={contactInfo} />
+              <ContactCard contactInfo={listing} />
             </div>
-            <HoursCard hours={hoursData} />
+            <HoursCard hours={listing} />
             
             {/* Featured Listings Placeholder */}
             <div style={{ marginTop: "3rem" }}>

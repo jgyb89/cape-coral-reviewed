@@ -80,22 +80,23 @@ export async function getViewer() {
             name
           }
         }
-        favoritelistings {
-          nodes {
-            id
-            databaseId
-            title
-            slug
-            imageGallery {
-              nodes {
-                sourceUrl
-                altText
-              }
-            }
-            ccrdirectorytypes {
-              nodes {
-                name
+        userData {
+          favoriteListings {
+            nodes {
+              ... on Ccrlisting {
+                databaseId
+                title
                 slug
+                featuredImage {
+                  node {
+                    sourceUrl
+                  }
+                }
+                directoryTypes {
+                  nodes {
+                    slug
+                  }
+                }
               }
             }
           }
@@ -106,15 +107,19 @@ export async function getViewer() {
             databaseId
             title
             content
-            starRating
-            relatedListing {
-              node {
-                ... on Ccrlisting {
-                  title
-                  slug
-                  ccrdirectorytypes {
-                    nodes {
-                      slug
+            date
+            reviewFields {
+              starRating
+              relatedListing {
+                nodes {
+                  ... on Ccrlisting {
+                    databaseId
+                    title
+                    slug
+                    directoryTypes {
+                      nodes {
+                        slug
+                      }
                     }
                   }
                 }
@@ -127,6 +132,9 @@ export async function getViewer() {
   `;
 
   try {
+    // Bypass strict SSL for local staging development
+    process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
+
     const res = await fetch(GRAPHQL_URL, {
       method: 'POST',
       headers: {
@@ -140,7 +148,7 @@ export async function getViewer() {
     const json = await res.json();
 
     if (json.errors) {
-      console.error('Viewer Query Error:', json.errors);
+      console.error('Viewer Query Error:', JSON.stringify(json.errors, null, 2));
       return null;
     }
 
