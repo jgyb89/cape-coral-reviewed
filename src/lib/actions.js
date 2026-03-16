@@ -152,7 +152,7 @@ export async function removeFavoriteListing(listingId) {
     // 3. Update the user's favoriteListings field (CamelCase for input)
     const mutation = `
     mutation UpdateUserFavorites($userId: ID!, $favorites: [Int]) {
-      updateUser(input: { id: $userId, userData: { favoriteListings: $favorites } }) {
+      updateUser(input: { id: $userId, favoriteListings: $favorites }) {
         user {
           databaseId
         }
@@ -202,7 +202,7 @@ export async function toggleFavoriteListing(userId, newFavoritesArray) {
   // Use 'favoriteListings' (CamelCase) for the input mapping
   const mutation = `
     mutation UpdateUserFavorites($userId: ID!, $favorites: [Int]) {
-      updateUser(input: { id: $userId, userData: { favoriteListings: $favorites } }) {
+      updateUser(input: { id: $userId, favoriteListings: $favorites }) {
         user {
           databaseId
         }

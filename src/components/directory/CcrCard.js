@@ -15,6 +15,7 @@ export default function CcrCard({ listing, currentUser }) {
 
   const [isFavorite, setIsFavorite] = useState(initialFavoriteState);
   const [isUpdating, setIsUpdating] = useState(false);
+  const [toastMessage, setToastMessage] = useState("");
 
   if (!listing) return null;
 
@@ -38,7 +39,7 @@ export default function CcrCard({ listing, currentUser }) {
     : "0.0";
 
   return (
-    <div className="ccr-card">
+    <div className="ccr-card" style={{ position: 'relative', zIndex: toastMessage ? 50 : 1 }}>
       <div className="ccr-card__image-container">
         <div className="ccr-card__badge">Featured</div>
         <Image
@@ -88,63 +89,73 @@ export default function CcrCard({ listing, currentUser }) {
             {listingdata.addressCity || "Cape Coral"}, FL
           </div>
 
-          <button
-            className="ccr-card__favorite"
-            aria-label={isFavorite ? "Remove from favorites" : "Add to favorites"}
-            disabled={isUpdating}
-            style={{ opacity: isUpdating ? 0.6 : 1, position: 'relative', zIndex: 10 }}
-            onClick={async (e) => {
-              e.preventDefault();
-              
-              if (!listing.databaseId) {
-                alert("Listing data is incomplete.");
-                return;
-              }
-              
-              if (!currentUser) {
-                alert("Please log in to save favorites.");
-                return;
-              }
-              
-              setIsUpdating(true);
-              
-              // Optimistic UI update
-              const newFavoriteState = !isFavorite;
-              setIsFavorite(newFavoriteState);
+          <div style={{ position: 'relative', display: 'inline-block' }}>
+            <button
+              className="ccr-card__favorite"
+              aria-label={isFavorite ? "Remove from favorites" : "Add to favorites"}
+              disabled={isUpdating}
+              style={{ opacity: isUpdating ? 0.6 : 1, position: 'relative', zIndex: 10 }}
+              onClick={async (e) => {
+                e.preventDefault();
+                
+                if (!listing.databaseId) {
+                  alert("Listing data is incomplete.");
+                  return;
+                }
+                
+                if (!currentUser) {
+                  alert("Please log in to save favorites.");
+                  return;
+                }
+                
+                setIsUpdating(true);
+                
+                // Optimistic UI update
+                const newFavoriteState = !isFavorite;
+                setIsFavorite(newFavoriteState);
+                setToastMessage(newFavoriteState ? "Added to favorite" : "Removed from favorite");
+                setTimeout(() => setToastMessage(""), 3000);
 
-              // Calculate new array
-              const currentFavIds = currentUser.userData?.favoriteListings?.nodes?.map(node => node.databaseId).filter(Boolean) || [];
-              const listingId = listing.databaseId;
-              
-              let updatedArray;
-              if (newFavoriteState) {
-                updatedArray = [...currentFavIds, listingId];
-              } else {
-                updatedArray = currentFavIds.filter(id => id !== listingId);
-              }
+                // Calculate new array
+                const currentFavIds = currentUser.userData?.favoriteListings?.nodes?.map(node => node.databaseId).filter(Boolean) || [];
+                const listingId = listing.databaseId;
+                
+                let updatedArray;
+                if (newFavoriteState) {
+                  updatedArray = [...currentFavIds, listingId];
+                } else {
+                  updatedArray = currentFavIds.filter(id => id !== listingId);
+                }
 
-              // Fire Server Action
-              const result = await toggleFavoriteListing(currentUser.id, updatedArray);
-              
-              // Revert UI if server fails
-              if (!result.success) {
-                setIsFavorite(!newFavoriteState);
-                console.error(result.message);
-              }
-              
-              setIsUpdating(false);
-            }}
-          >
-            <span 
-              className="material-symbols-outlined"
-              style={{ 
-                color: isFavorite ? 'var(--color-primary, red)' : 'inherit',
-                fontVariationSettings: isFavorite ? "'FILL' 1" : "'FILL' 0"
+                // Fire Server Action
+                const result = await toggleFavoriteListing(currentUser.id, updatedArray);
+                
+                // Revert UI if server fails
+                if (!result.success) {
+                  setIsFavorite(!newFavoriteState);
+                  console.error(result.message);
+                }
+                
+                setIsUpdating(false);
               }}
             >
-              {isFavorite ? 'favorite' : 'favorite_border'}
-            </span>
-          </button>
+              <span 
+                className="material-symbols-outlined"
+                style={{ 
+                  color: isFavorite ? 'var(--color-primary, red)' : 'inherit',
+                  fontVariationSettings: isFavorite ? "'FILL' 1" : "'FILL' 0"
+                }}
+              >
+                {isFavorite ? 'favorite' : 'favorite_border'}
+              </span>
+            </button>
+            {toastMessage && (
+              <div style={{ position: 'absolute', bottom: '100%', left: '50%', transform: 'translateX(-50%)', marginBottom: '8px', backgroundColor: '#000', color: '#fff', padding: '6px 12px', borderRadius: '4px', fontSize: '0.8rem', whiteSpace: 'nowrap', zIndex: 50 }}>
+                {toastMessage}
+                <div style={{ position: 'absolute', top: '100%', left: '50%', transform: 'translateX(-50%)', borderWidth: '5px', borderStyle: 'solid', borderColor: '#000 transparent transparent transparent' }} />
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </div>

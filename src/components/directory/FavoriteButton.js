@@ -12,6 +12,7 @@ export default function FavoriteButton({ listingId, currentUser }) {
 
   const [isFavorite, setIsFavorite] = useState(initialIsFavorite);
   const [isUpdating, setIsUpdating] = useState(false);
+  const [toastMessage, setToastMessage] = useState("");
 
   const handleToggleFavorite = async (e) => {
     e.preventDefault();
@@ -31,6 +32,8 @@ export default function FavoriteButton({ listingId, currentUser }) {
     // Optimistic UI update
     const newFavoriteState = !isFavorite;
     setIsFavorite(newFavoriteState);
+    setToastMessage(newFavoriteState ? "Added to favorite" : "Removed from favorite");
+    setTimeout(() => setToastMessage(""), 3000);
 
     // Calculate the updated array of favorite IDs
     const currentFavIds =
@@ -74,28 +77,36 @@ export default function FavoriteButton({ listingId, currentUser }) {
     : {};
 
   return (
-    <button
-      className="btn-secondary"
-      onClick={handleToggleFavorite}
-      disabled={isUpdating}
-      style={{
-        ...activeStyle,
-        opacity: isUpdating ? 0.7 : 1,
-        cursor: isUpdating ? "not-allowed" : "pointer",
-        display: "inline-flex",
-        alignItems: "center",
-        gap: "0.5rem",
-      }}
-    >
-      <span
-        className="material-symbols-outlined"
+    <div style={{ position: 'relative', display: 'inline-block' }}>
+      <button
+        className="btn-secondary"
+        onClick={handleToggleFavorite}
+        disabled={isUpdating}
         style={{
-          fontVariationSettings: isFavorite ? "'FILL' 1" : "'FILL' 0",
+          ...activeStyle,
+          opacity: isUpdating ? 0.7 : 1,
+          cursor: isUpdating ? "not-allowed" : "pointer",
+          display: "inline-flex",
+          alignItems: "center",
+          gap: "0.5rem",
         }}
       >
-        {isFavorite ? "favorite" : "favorite_border"}
-      </span>
-      {isFavorite ? "Favorited" : "Favorite"}
-    </button>
+        <span
+          className="material-symbols-outlined"
+          style={{
+            fontVariationSettings: isFavorite ? "'FILL' 1" : "'FILL' 0",
+          }}
+        >
+          {isFavorite ? "favorite" : "favorite_border"}
+        </span>
+        {isFavorite ? "Favorited" : "Favorite"}
+      </button>
+      {toastMessage && (
+        <div style={{ position: 'absolute', bottom: '100%', left: '50%', transform: 'translateX(-50%)', marginBottom: '8px', backgroundColor: '#000', color: '#fff', padding: '6px 12px', borderRadius: '4px', fontSize: '0.8rem', whiteSpace: 'nowrap', zIndex: 50 }}>
+          {toastMessage}
+          <div style={{ position: 'absolute', top: '100%', left: '50%', transform: 'translateX(-50%)', borderWidth: '5px', borderStyle: 'solid', borderColor: '#000 transparent transparent transparent' }} />
+        </div>
+      )}
+    </div>
   );
 }
