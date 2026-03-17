@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { deleteUserReview } from '@/lib/actions';
-import EditReviewModal from './EditReviewModal';
+import ReviewModal from '../directory/ReviewModal';
 import './MyReviews.css';
 
 export default function MyReviews({ reviews: initialReviews }) {
@@ -144,13 +144,11 @@ export default function MyReviews({ reviews: initialReviews }) {
       </ul>
 
       {/* Edit Review Modal */}
-      {editingReview && (
-        <EditReviewModal
-          review={editingReview}
-          isOpen={isEditModalOpen}
-          onClose={handleCloseEditModal}
-        />
-      )}
+      <ReviewModal
+        review={editingReview}
+        isOpen={isEditModalOpen}
+        onClose={handleCloseEditModal}
+      />
 
       {/* Custom Delete Confirmation Modal */}
       {isDeleteModalOpen && (
