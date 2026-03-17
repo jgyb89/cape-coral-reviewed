@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import PropTypes from 'prop-types';
 import { deleteUserReview } from '@/lib/actions';
 import ReviewModal from '../directory/ReviewModal';
 import './MyReviews.css';
@@ -86,7 +87,7 @@ export default function MyReviews({ reviews: initialReviews }) {
             day: 'numeric'
           }) : '';
 
-          const starRating = parseInt(review.reviewFields?.starRating, 10) || 0;
+          const starRating = Number.parseInt(review.reviewFields?.starRating, 10) || 0;
 
           return (
             <li key={review.id} className="user-review">
@@ -127,7 +128,7 @@ export default function MyReviews({ reviews: initialReviews }) {
                   disabled={isDeleting}
                 >
                   <span className="material-symbols-outlined">edit</span>
-                  Edit
+                  <span>Edit</span>
                 </button>
                 <button
                   onClick={() => handleDeleteClick(review)}
@@ -135,7 +136,7 @@ export default function MyReviews({ reviews: initialReviews }) {
                   disabled={isDeleting}
                 >
                   <span className="material-symbols-outlined">delete</span>
-                  Delete
+                  <span>Delete</span>
                 </button>
               </div>
             </li>
@@ -152,8 +153,21 @@ export default function MyReviews({ reviews: initialReviews }) {
 
       {/* Custom Delete Confirmation Modal */}
       {isDeleteModalOpen && (
-        <div className="my-reviews__modal-overlay" onClick={handleCancelDelete}>
-          <div className="my-reviews__modal" onClick={(e) => e.stopPropagation()}>
+        <div 
+          className="my-reviews__modal-overlay" 
+          onClick={handleCancelDelete}
+          onKeyDown={(e) => { if (e.key === 'Escape') handleCancelDelete(); }}
+          role="button"
+          tabIndex={0}
+          aria-label="Close modal"
+        >
+          <div 
+            className="my-reviews__modal" 
+            onClick={(e) => e.stopPropagation()}
+            onKeyDown={(e) => e.stopPropagation()}
+            role="dialog"
+            aria-modal="true"
+          >
             <div className="my-reviews__modal-icon">
               <span className="material-symbols-outlined">warning</span>
             </div>
@@ -183,3 +197,7 @@ export default function MyReviews({ reviews: initialReviews }) {
     </div>
   );
 }
+
+MyReviews.propTypes = {
+  reviews: PropTypes.array,
+};

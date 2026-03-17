@@ -1,4 +1,5 @@
 import { Poppins, Open_Sans } from "next/font/google";
+import PropTypes from "prop-types";
 import "./globals.css";
 import 'material-symbols/outlined.css';
 
@@ -28,3 +29,7 @@ export default function RootLayout({ children }) {
     </html>
   );
 }
+
+RootLayout.propTypes = {
+  children: PropTypes.node.isRequired,
+};

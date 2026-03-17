@@ -1,5 +1,5 @@
-import DOMPurify from "isomorphic-dompurify";
 import Link from "next/link";
+import PropTypes from "prop-types";
 import { getListings } from "@/lib/api";
 import { getViewer } from "@/lib/auth";
 import CcrCardGrid from "@/components/directory/CcrCardGrid";
@@ -43,3 +43,7 @@ export default async function CategoryPage({ params }) {
     </main>
   );
 }
+
+CategoryPage.propTypes = {
+  params: PropTypes.object.isRequired,
+};

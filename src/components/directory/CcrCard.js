@@ -2,6 +2,7 @@
 "use client";
 
 import { useState } from "react";
+import PropTypes from "prop-types";
 import Image from "next/image";
 import Link from "next/link";
 import "./CcrCard.css";
@@ -35,7 +36,7 @@ export default function CcrCard({ listing, currentUser }) {
   const reviewNodes = listing.reviews?.nodes || [];
   const reviewCount = reviewNodes.length;
   const averageRating = reviewCount > 0 
-    ? (reviewNodes.reduce((acc, curr) => acc + (parseFloat(curr.reviewFields?.starRating) || 0), 0) / reviewCount).toFixed(1)
+    ? (reviewNodes.reduce((acc, curr) => acc + (Number.parseFloat(curr.reviewFields?.starRating) || 0), 0) / reviewCount).toFixed(1)
     : "0.0";
 
   return (
@@ -161,3 +162,46 @@ export default function CcrCard({ listing, currentUser }) {
     </div>
   );
 }
+
+CcrCard.propTypes = {
+  listing: PropTypes.shape({
+    databaseId: PropTypes.number,
+    title: PropTypes.string,
+    slug: PropTypes.string,
+    featuredImage: PropTypes.shape({
+      node: PropTypes.shape({
+        sourceUrl: PropTypes.string,
+        altText: PropTypes.string,
+      }),
+    }),
+    listingdata: PropTypes.object,
+    directoryTypes: PropTypes.shape({
+      nodes: PropTypes.arrayOf(
+        PropTypes.shape({
+          slug: PropTypes.string,
+        })
+      ),
+    }),
+    reviews: PropTypes.shape({
+      nodes: PropTypes.arrayOf(
+        PropTypes.shape({
+          reviewFields: PropTypes.shape({
+            starRating: PropTypes.string,
+          }),
+        })
+      ),
+    }),
+  }).isRequired,
+  currentUser: PropTypes.shape({
+    id: PropTypes.string,
+    userData: PropTypes.shape({
+      favoriteListings: PropTypes.shape({
+        nodes: PropTypes.arrayOf(
+          PropTypes.shape({
+            databaseId: PropTypes.number,
+          })
+        ),
+      }),
+    }),
+  }),
+};

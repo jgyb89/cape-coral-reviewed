@@ -1,4 +1,5 @@
 // components/directory/ContactCard.js
+import PropTypes from 'prop-types';
 
 export default function ContactCard({ contactInfo }) {
   // Destructure the props from the new listingdata ACF wrapper
@@ -10,7 +11,6 @@ export default function ContactCard({ contactInfo }) {
     phoneNumber,
     businessEmail,
     websiteUrl,
-    socialUrl
   } = contactInfo.listingdata || {};
 
   return (
@@ -54,3 +54,9 @@ export default function ContactCard({ contactInfo }) {
     </div>
   );
 }
+
+ContactCard.propTypes = {
+  contactInfo: PropTypes.shape({
+    listingdata: PropTypes.object,
+  }).isRequired,
+};

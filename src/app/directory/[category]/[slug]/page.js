@@ -1,6 +1,7 @@
 import DOMPurify from "isomorphic-dompurify";
 import Script from "next/script";
 import Image from "next/image";
+import PropTypes from "prop-types";
 import { getListingBySlug } from "@/lib/api";
 import { getViewer } from "@/lib/auth";
 import ContactCard from "@/components/directory/ContactCard";
@@ -44,7 +45,7 @@ export default async function DirectoryListingPage({ params }) {
     return (
       <main style={{ padding: "3rem", textAlign: "center" }}>
         <h1>404: Listing Not Found</h1>
-        <p>We couldn't find the business you're looking for.</p>
+        <p>We couldn&apos;t find the business you&apos;re looking for.</p>
       </main>
     );
   }
@@ -54,7 +55,7 @@ export default async function DirectoryListingPage({ params }) {
   const reviewNodes = listing.reviews?.nodes || [];
   const reviewCount = reviewNodes.length;
   const averageRating = reviewCount > 0 
-    ? (reviewNodes.reduce((acc, curr) => acc + (parseFloat(curr.reviewFields?.starRating) || 0), 0) / reviewCount).toFixed(1)
+    ? (reviewNodes.reduce((acc, curr) => acc + (Number.parseFloat(curr.reviewFields?.starRating) || 0), 0) / reviewCount).toFixed(1)
     : null;
 
   const galleryNodes = listing.featuredImage?.node ? [listing.featuredImage.node] : [];
@@ -132,7 +133,7 @@ export default async function DirectoryListingPage({ params }) {
             <FavoriteButton listingId={listing.databaseId} currentUser={currentUser} />
             <button className="btn-secondary">
               <span className="material-symbols-outlined">share</span>
-              Share
+              <span>Share</span>
             </button>
           </div>
         </div>
@@ -180,3 +181,7 @@ export default async function DirectoryListingPage({ params }) {
     </div>
   );
 }
+
+DirectoryListingPage.propTypes = {
+  params: PropTypes.object.isRequired,
+};

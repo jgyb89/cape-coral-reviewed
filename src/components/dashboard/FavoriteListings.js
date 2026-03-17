@@ -4,6 +4,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
+import PropTypes from 'prop-types';
 import { removeFavoriteListing } from '@/lib/actions';
 
 export default function FavoriteListings({ favorites: initialFavorites = [] }) {
@@ -116,3 +117,7 @@ export default function FavoriteListings({ favorites: initialFavorites = [] }) {
     </div>
   );
 }
+
+FavoriteListings.propTypes = {
+  favorites: PropTypes.array,
+};

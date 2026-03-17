@@ -1,5 +1,3 @@
-import DOMPurify from "isomorphic-dompurify";
-import Link from "next/link";
 import { getListings } from "@/lib/api";
 import { getViewer } from "@/lib/auth";
 import CcrCardGrid from "@/components/directory/CcrCardGrid";
