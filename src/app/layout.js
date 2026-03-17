@@ -2,6 +2,8 @@ import { Poppins, Open_Sans } from "next/font/google";
 import PropTypes from "prop-types";
 import "./globals.css";
 import 'material-symbols/outlined.css';
+import Navbar from '@/components/layout/Navbar';
+import { getViewer } from '@/lib/auth';
 
 const poppins = Poppins({
   subsets: ["latin"],
@@ -20,10 +22,13 @@ export const metadata = {
   description: "The premier local directory for Cape Coral, Florida.",
 };
 
-export default function RootLayout({ children }) {
+export default async function RootLayout({ children }) {
+  const viewer = await getViewer();
+
   return (
     <html lang="en">
       <body className={`${poppins.variable} ${openSans.variable}`}>
+        <Navbar currentUser={viewer} />
         {children}
       </body>
     </html>
