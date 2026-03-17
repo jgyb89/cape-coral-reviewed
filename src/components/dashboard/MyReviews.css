@@ -12,7 +12,7 @@
 
 .my-reviews__text {
   font-size: 1.1rem;
-  color: #666;
+  color: #555555;
   margin-bottom: 1.5rem;
 }
 
@@ -128,7 +128,7 @@
 
 .user-review__delete-btn {
   background-color: #fff5f5;
-  color: #e53e3e;
+  color: #c53030;
 }
 
 .user-review__delete-btn:hover {
@@ -157,6 +157,18 @@
   backdrop-filter: blur(4px);
 }
 
+.my-reviews__modal-overlay-btn {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: transparent;
+  border: none;
+  cursor: default;
+  z-index: -1;
+}
+
 .my-reviews__modal {
   background: white;
   padding: 2.5rem;
@@ -165,6 +177,7 @@
   width: 100%;
   text-align: center;
   box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  z-index: 1;
 }
 
 .my-reviews__modal-icon {

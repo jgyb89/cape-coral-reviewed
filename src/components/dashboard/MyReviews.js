@@ -126,6 +126,7 @@ export default function MyReviews({ reviews: initialReviews }) {
                   onClick={() => handleEdit(review)}
                   className="user-review__edit-btn"
                   disabled={isDeleting}
+                  type="button"
                 >
                   <span className="material-symbols-outlined">edit</span>
                   <span>Edit</span>
@@ -134,6 +135,7 @@ export default function MyReviews({ reviews: initialReviews }) {
                   onClick={() => handleDeleteClick(review)}
                   className="user-review__delete-btn"
                   disabled={isDeleting}
+                  type="button"
                 >
                   <span className="material-symbols-outlined">delete</span>
                   <span>Delete</span>
@@ -153,20 +155,23 @@ export default function MyReviews({ reviews: initialReviews }) {
 
       {/* Custom Delete Confirmation Modal */}
       {isDeleteModalOpen && (
-        <div 
-          className="my-reviews__modal-overlay" 
-          onClick={handleCancelDelete}
-        >
-          <div 
+        <div className="my-reviews__modal-overlay">
+          <button 
+            className="my-reviews__modal-overlay-btn"
+            onClick={handleCancelDelete}
+            aria-label="Close modal"
+            type="button"
+          />
+          <dialog 
             className="my-reviews__modal" 
-            onClick={(e) => e.stopPropagation()}
-            role="dialog"
+            open
             aria-modal="true"
+            aria-labelledby="delete-review-modal-title"
           >
             <div className="my-reviews__modal-icon">
               <span className="material-symbols-outlined">warning</span>
             </div>
-            <h3 className="my-reviews__modal-title">Delete Review?</h3>
+            <h3 id="delete-review-modal-title" className="my-reviews__modal-title">Delete Review?</h3>
             <p className="my-reviews__modal-text">
               Are you sure you want to delete this review? This action cannot be undone.
             </p>
@@ -175,6 +180,7 @@ export default function MyReviews({ reviews: initialReviews }) {
                 className="my-reviews__modal-btn my-reviews__modal-btn--cancel" 
                 onClick={handleCancelDelete}
                 disabled={isDeleting}
+                type="button"
               >
                 Cancel
               </button>
@@ -182,11 +188,12 @@ export default function MyReviews({ reviews: initialReviews }) {
                 className="my-reviews__modal-btn my-reviews__modal-btn--delete" 
                 onClick={handleConfirmDelete}
                 disabled={isDeleting}
+                type="button"
               >
                 {isDeleting ? 'Deleting...' : 'Delete Review'}
               </button>
             </div>
-          </div>
+          </dialog>
         </div>
       )}
     </div>

@@ -35,21 +35,29 @@ export default function LoginModal({ isOpen, onClose }) {
   };
 
   return (
-    <div 
-      className="login-modal-overlay" 
-      onClick={onClose}
-    >
-      <div 
+    <div className="login-modal-overlay">
+      <button 
+        className="login-modal-overlay__btn"
+        onClick={onClose}
+        aria-label="Close modal"
+        type="button"
+      />
+      <dialog 
         className="login-modal" 
-        onClick={(e) => e.stopPropagation()}
-        role="dialog"
+        open
         aria-modal="true"
+        aria-labelledby="login-modal-title"
       >
-        <button className="login-modal__close" onClick={onClose} aria-label="Close modal">
+        <button 
+          className="login-modal__close" 
+          onClick={onClose} 
+          aria-label="Close modal"
+          type="button"
+        >
           <span className="material-symbols-outlined">close</span>
         </button>
 
-        <h2 className="login-modal__title">Make a free account!</h2>
+        <h2 id="login-modal-title" className="login-modal__title">Make a free account!</h2>
         <p className="login-modal__subtitle">
           Sign up for free in order to leave reviews! This ensures we keep the site spam-free and a better experience for everyone!
         </p>
@@ -107,7 +115,7 @@ export default function LoginModal({ isOpen, onClose }) {
             Sign Up
           </Link>
         </div>
-      </div>
+      </dialog>
     </div>
   );
 }

@@ -29,7 +29,7 @@ export default async function LoginPage({ searchParams }) {
         
         <div className="login-page__footer">
           <p className="login-page__text">
-            Don't have an account?{' '}
+            Don&apos;t have an account?{' '}
             <Link href="/register" className="login-page__link">
               Register here
             </Link>

@@ -11,7 +11,7 @@ export default function CheckEmailPage() {
       <div className="check-email__container">
         <h1 className="check-email__title">Check Your Inbox!</h1>
         <p className="check-email__message">
-          We've sent a verification link to your email address. Please click the link to activate your account and access your dashboard.
+          We&apos;ve sent a verification link to your email address. Please click the link to activate your account and access your dashboard.
         </p>
         <div className="check-email__actions">
           <Link href="/login" className="check-email__button">

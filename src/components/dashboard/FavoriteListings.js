@@ -15,7 +15,7 @@ export default function FavoriteListings({ favorites: initialFavorites = [] }) {
   if (!favorites || favorites.length === 0) {
     return (
       <div className="favorite-listings__empty">
-        <p className="favorite-listings__text">You haven't saved any favorite listings yet.</p>
+        <p className="favorite-listings__text">You haven&apos;t saved any favorite listings yet.</p>
         <Link href="/directory" className="favorite-listings__link">
           Browse Directory
         </Link>

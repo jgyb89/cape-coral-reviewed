@@ -84,19 +84,33 @@ export default function ReviewModal({ listingId, listingSlug, isOpen, onClose, c
   const handleStarClick = (val) => setRating(val);
   const handleStarHover = (val) => setHoverRating(val);
 
+  // Extract nested ternary for better readability
+  let submitButtonText;
+  if (isUpdating) {
+    submitButtonText = isEditMode ? "Updating..." : "Submitting...";
+  } else {
+    submitButtonText = isEditMode ? "Update Your Review" : "Submit Your Review";
+  }
+
   return (
-    <div className="review-modal-overlay" onClick={onClose}>
-      <div 
+    <div className="review-modal-overlay">
+      <button 
+        className="review-modal-overlay__btn"
+        onClick={onClose}
+        aria-label="Close modal"
+        type="button"
+      />
+      <dialog 
         className="review-modal" 
-        onClick={(e) => e.stopPropagation()}
-        role="dialog"
+        open
         aria-modal="true"
+        aria-labelledby="review-modal-title"
       >
-        <button className="review-modal__close" onClick={onClose} aria-label="Close modal">
+        <button className="review-modal__close" onClick={onClose} aria-label="Close modal" type="button">
           <span className="material-symbols-outlined">close</span>
         </button>
 
-        <h2 className="review-modal__title">
+        <h2 id="review-modal-title" className="review-modal__title">
           {isEditMode ? "Edit Your Review" : "Leave a Review"}
         </h2>
 
@@ -155,11 +169,11 @@ export default function ReviewModal({ listingId, listingSlug, isOpen, onClose, c
               className="review-modal__submit"
               disabled={isUpdating || content.length < 10 || rating === 0}
             >
-              {isUpdating ? (isEditMode ? "Updating..." : "Submitting...") : (isEditMode ? "Update Your Review" : "Submit Your Review")}
+              {submitButtonText}
             </button>
           </form>
         )}
-      </div>
+      </dialog>
     </div>
   );
 }
