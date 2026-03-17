@@ -1,25 +1,40 @@
 // src/components/directory/ReviewModal.js
 "use client";
 
-import { useState } from "react";
-import { submitUserReview } from "@/lib/actions";
+import { useState, useEffect } from "react";
+import { submitUserReview, updateUserReview } from "@/lib/actions";
 import "./ReviewModal.css";
 
-export default function ReviewModal({ listingId, listingSlug, isOpen, onClose, currentUser }) {
+export default function ReviewModal({ listingId, listingSlug, isOpen, onClose, currentUser, review = null }) {
   const [rating, setRating] = useState(0);
   const [hoverRating, setHoverHoverRating] = useState(0);
   const [content, setContent] = useState("");
   const [isUpdating, setIsUpdating] = useState(false);
   const [error, setError] = useState(null);
 
+  const isEditMode = !!review;
+
+  useEffect(() => {
+    if (isEditMode && isOpen && review) {
+      setRating(review.reviewFields?.starRating || 0);
+      const cleanContent = review.content ? review.content.replace(/<[^>]*>?/gm, "") : "";
+      setContent(cleanContent);
+    } else if (!isOpen && !isEditMode) {
+      setRating(0);
+      setContent("");
+    }
+  }, [review, isOpen, isEditMode]);
+
   if (!isOpen) return null;
 
   const MAX_CHAR_COUNT = 2000;
 
   // Check if user has already reviewed this listing using updated ACF structure
-  const hasReviewed = currentUser?.ccrreviews?.nodes?.some(
+  const hasAlreadyReviewed = currentUser?.ccrreviews?.nodes?.some(
     review => review.reviewFields?.relatedListing?.nodes?.[0]?.databaseId === parseInt(listingId, 10)
   );
+
+  const hasReviewed = !isEditMode && hasAlreadyReviewed;
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -42,20 +57,24 @@ export default function ReviewModal({ listingId, listingSlug, isOpen, onClose, c
     setIsUpdating(true);
     setError(null);
 
-    const formData = {
-      listingId,
-      listingSlug,
-      rating,
-      content,
-      title: `${currentUser?.name || "User"}'s Review`
-    };
-
-    const result = await submitUserReview(formData);
+    let result;
+    if (isEditMode) {
+      result = await updateUserReview(review.id, { rating, content });
+    } else {
+      const formData = {
+        listingId,
+        listingSlug,
+        rating,
+        content,
+        title: `${currentUser?.name || "User"}'s Review`
+      };
+      result = await submitUserReview(formData);
+    }
 
     if (result.success) {
       onClose();
     } else {
-      setError(result.message);
+      setError(result.message || result.error);
     }
     
     setIsUpdating(false);
@@ -71,7 +90,9 @@ export default function ReviewModal({ listingId, listingSlug, isOpen, onClose, c
           <span className="material-symbols-outlined">close</span>
         </button>
 
-        <h2 className="review-modal__title">Leave a Review</h2>
+        <h2 className="review-modal__title">
+          {isEditMode ? "Edit Your Review" : "Leave a Review"}
+        </h2>
 
         {hasReviewed ? (
           <div className="review-modal__error">
@@ -122,7 +143,7 @@ export default function ReviewModal({ listingId, listingSlug, isOpen, onClose, c
               className="review-modal__submit"
               disabled={isUpdating || content.length < 10 || rating === 0}
             >
-              {isUpdating ? "Submitting..." : "Submit Your Review"}
+              {isUpdating ? (isEditMode ? "Updating..." : "Submitting...") : (isEditMode ? "Update Your Review" : "Submit Your Review")}
             </button>
           </form>
         )}
