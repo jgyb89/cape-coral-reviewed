@@ -1,4 +1,5 @@
 // src/components/directory/CcrCardGrid.js
+import PropTypes from 'prop-types';
 import CcrCard from './CcrCard';
 import './CcrCardGrid.css';
 
@@ -22,3 +23,8 @@ export default function CcrCardGrid({ listings, currentUser }) {
     </div>
   );
 }
+
+CcrCardGrid.propTypes = {
+  listings: PropTypes.array.isRequired,
+  currentUser: PropTypes.object,
+};

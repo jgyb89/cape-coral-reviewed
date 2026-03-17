@@ -1,4 +1,5 @@
 // components/directory/HoursCard.js
+import PropTypes from 'prop-types';
 
 export default function HoursCard({ hours }) {
   // 1. Get today's index using standard JavaScript Date
@@ -54,3 +55,9 @@ export default function HoursCard({ hours }) {
     </div>
   );
 }
+
+HoursCard.propTypes = {
+  hours: PropTypes.shape({
+    listingdata: PropTypes.object,
+  }).isRequired,
+};

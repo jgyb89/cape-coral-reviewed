@@ -1,5 +1,6 @@
 // components/directory/ImageGallery.js
 import Image from 'next/image';
+import PropTypes from 'prop-types';
 
 export default function ImageGallery({ images, videoUrl }) {
   if (!images || images.length === 0) {
@@ -27,11 +28,11 @@ export default function ImageGallery({ images, videoUrl }) {
       {/* Thumbnail Grid for the rest of the gallery */}
       {thumbnails.length > 0 && (
         <div className="image-gallery__thumbnails">
-          {thumbnails.map((img, index) => (
-            <figure key={index} className="image-gallery__thumb">
+          {thumbnails.map((img) => (
+            <figure key={img.id || img.sourceUrl} className="image-gallery__thumb">
               <Image
                 src={img.sourceUrl}
-                alt={img.altText || `Gallery image ${index + 1}`}
+                alt={img.altText || 'Gallery image'}
                 width={img.mediaDetails?.width || 400}
                 height={img.mediaDetails?.height || 300}
                 className="image-gallery__image"
@@ -53,3 +54,18 @@ export default function ImageGallery({ images, videoUrl }) {
     </section>
   );
 }
+
+ImageGallery.propTypes = {
+  images: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.string,
+      sourceUrl: PropTypes.string.isRequired,
+      altText: PropTypes.string,
+      mediaDetails: PropTypes.shape({
+        width: PropTypes.number,
+        height: PropTypes.number,
+      }),
+    })
+  ).isRequired,
+  videoUrl: PropTypes.string,
+};

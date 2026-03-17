@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import PropTypes from "prop-types";
 import { toggleFavoriteListing } from "@/lib/actions";
 
 export default function FavoriteButton({ listingId, currentUser }) {
@@ -110,3 +111,19 @@ export default function FavoriteButton({ listingId, currentUser }) {
     </div>
   );
 }
+
+FavoriteButton.propTypes = {
+  listingId: PropTypes.number.isRequired,
+  currentUser: PropTypes.shape({
+    id: PropTypes.string,
+    userData: PropTypes.shape({
+      favoriteListings: PropTypes.shape({
+        nodes: PropTypes.arrayOf(
+          PropTypes.shape({
+            databaseId: PropTypes.number,
+          })
+        ),
+      }),
+    }),
+  }),
+};

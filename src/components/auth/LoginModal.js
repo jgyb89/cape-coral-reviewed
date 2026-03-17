@@ -3,6 +3,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import PropTypes from "prop-types";
 import { handleLogin } from "@/lib/actions";
 import Link from "next/link";
 import "./LoginModal.css";
@@ -34,8 +35,21 @@ export default function LoginModal({ isOpen, onClose }) {
   };
 
   return (
-    <div className="login-modal-overlay" onClick={onClose}>
-      <div className="login-modal" onClick={(e) => e.stopPropagation()}>
+    <div 
+      className="login-modal-overlay" 
+      onClick={onClose}
+      onKeyDown={(e) => { if (e.key === 'Escape') onClose(); }}
+      role="button"
+      tabIndex={0}
+      aria-label="Close modal"
+    >
+      <div 
+        className="login-modal" 
+        onClick={(e) => e.stopPropagation()}
+        onKeyDown={(e) => e.stopPropagation()}
+        role="dialog"
+        aria-modal="true"
+      >
         <button className="login-modal__close" onClick={onClose}>
           <span className="material-symbols-outlined">close</span>
         </button>
@@ -102,3 +116,8 @@ export default function LoginModal({ isOpen, onClose }) {
     </div>
   );
 }
+
+LoginModal.propTypes = {
+  isOpen: PropTypes.bool.isRequired,
+  onClose: PropTypes.func.isRequired,
+};

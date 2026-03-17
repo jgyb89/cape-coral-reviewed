@@ -1,5 +1,6 @@
 // src/app/login/page.js
 import Link from 'next/link';
+import PropTypes from 'prop-types';
 import LoginForm from '@/components/auth/LoginForm';
 
 export const metadata = {
@@ -38,3 +39,7 @@ export default async function LoginPage({ searchParams }) {
     </div>
   );
 }
+
+LoginPage.propTypes = {
+  searchParams: PropTypes.object.isRequired,
+};

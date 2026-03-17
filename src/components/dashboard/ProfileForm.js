@@ -2,6 +2,7 @@
 'use client';
 
 import { useState } from 'react';
+import PropTypes from 'prop-types';
 import { updateUserProfile } from '@/lib/actions';
 
 export default function ProfileForm({ viewer }) {
@@ -102,7 +103,7 @@ export default function ProfileForm({ viewer }) {
               checked={formData.emailVisibility === 'everyone'}
               onChange={handleChange}
             />
-            Everyone
+            <span>Everyone</span>
           </label>
           <label className="profile-form__radio-label">
             <input
@@ -112,7 +113,7 @@ export default function ProfileForm({ viewer }) {
               checked={formData.emailVisibility === 'logged_in'}
               onChange={handleChange}
             />
-            Logged In Users
+            <span>Logged In Users</span>
           </label>
           <label className="profile-form__radio-label">
             <input
@@ -122,7 +123,7 @@ export default function ProfileForm({ viewer }) {
               checked={formData.emailVisibility === 'hidden'}
               onChange={handleChange}
             />
-            Hidden
+            <span>Hidden</span>
           </label>
         </div>
       </div>
@@ -143,3 +144,14 @@ export default function ProfileForm({ viewer }) {
     </form>
   );
 }
+
+ProfileForm.propTypes = {
+  viewer: PropTypes.shape({
+    id: PropTypes.string,
+    firstName: PropTypes.string,
+    lastName: PropTypes.string,
+    phoneNumber: PropTypes.string,
+    websiteUrl: PropTypes.string,
+    emailVisibility: PropTypes.string,
+  }),
+};
