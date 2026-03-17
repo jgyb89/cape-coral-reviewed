@@ -2,12 +2,13 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import PropTypes from "prop-types";
 import { submitUserReview, updateUserReview } from "@/lib/actions";
 import "./ReviewModal.css";
 
 export default function ReviewModal({ listingId, listingSlug, isOpen, onClose, currentUser, review = null }) {
   const [rating, setRating] = useState(0);
-  const [hoverRating, setHoverHoverRating] = useState(0);
+  const [hoverRating, setHoverRating] = useState(0);
   const [content, setContent] = useState("");
   const [isUpdating, setIsUpdating] = useState(false);
   const [error, setError] = useState(null);
@@ -17,7 +18,7 @@ export default function ReviewModal({ listingId, listingSlug, isOpen, onClose, c
   useEffect(() => {
     if (isEditMode && isOpen && review) {
       setRating(review.reviewFields?.starRating || 0);
-      const cleanContent = review.content ? review.content.replace(/<[^>]*>?/gm, "") : "";
+      const cleanContent = review.content ? review.content.replaceAll(/<[^>]*>?/gm, "") : "";
       setContent(cleanContent);
     } else if (!isOpen && !isEditMode) {
       setRating(0);
@@ -30,11 +31,11 @@ export default function ReviewModal({ listingId, listingSlug, isOpen, onClose, c
   const MAX_CHAR_COUNT = 2000;
 
   // Check if user has already reviewed this listing using updated ACF structure
-  const hasAlreadyReviewed = currentUser?.ccrreviews?.nodes?.some(
-    review => review.reviewFields?.relatedListing?.nodes?.[0]?.databaseId === parseInt(listingId, 10)
+  const alreadyReviewedListing = currentUser?.ccrreviews?.nodes?.some(
+    r => r.reviewFields?.relatedListing?.nodes?.[0]?.databaseId === Number.parseInt(listingId, 10)
   );
 
-  const hasReviewed = !isEditMode && hasAlreadyReviewed;
+  const hasReviewed = !isEditMode && alreadyReviewedListing;
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -81,12 +82,17 @@ export default function ReviewModal({ listingId, listingSlug, isOpen, onClose, c
   };
 
   const handleStarClick = (val) => setRating(val);
-  const handleStarHover = (val) => setHoverHoverRating(val);
+  const handleStarHover = (val) => setHoverRating(val);
 
   return (
     <div className="review-modal-overlay" onClick={onClose}>
-      <div className="review-modal" onClick={(e) => e.stopPropagation()}>
-        <button className="review-modal__close" onClick={onClose}>
+      <div 
+        className="review-modal" 
+        onClick={(e) => e.stopPropagation()}
+        role="dialog"
+        aria-modal="true"
+      >
+        <button className="review-modal__close" onClick={onClose} aria-label="Close modal">
           <span className="material-symbols-outlined">close</span>
         </button>
 
@@ -104,18 +110,24 @@ export default function ReviewModal({ listingId, listingSlug, isOpen, onClose, c
               <span className="review-modal__rating-label">Your Rating</span>
               <div className="review-modal__stars">
                 {[1, 2, 3, 4, 5].map((val) => (
-                  <span
+                  <button
                     key={val}
-                    className={`material-symbols-outlined review-modal__star ${
+                    type="button"
+                    className={`review-modal__star-btn ${
                       (hoverRating || rating) >= val ? "review-modal__star--active" : ""
                     }`}
                     onMouseEnter={() => handleStarHover(val)}
                     onMouseLeave={() => handleStarHover(0)}
                     onClick={() => handleStarClick(val)}
-                    style={{ fontVariationSettings: (hoverRating || rating) >= val ? "'FILL' 1" : "'FILL' 0" }}
+                    aria-label={`Rate ${val} stars`}
                   >
-                    star
-                  </span>
+                    <span 
+                      className="material-symbols-outlined"
+                      style={{ fontVariationSettings: (hoverRating || rating) >= val ? "'FILL' 1" : "'FILL' 0" }}
+                    >
+                      star
+                    </span>
+                  </button>
                 ))}
               </div>
             </div>
@@ -151,3 +163,23 @@ export default function ReviewModal({ listingId, listingSlug, isOpen, onClose, c
     </div>
   );
 }
+
+ReviewModal.propTypes = {
+  listingId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+  listingSlug: PropTypes.string,
+  isOpen: PropTypes.bool.isRequired,
+  onClose: PropTypes.func.isRequired,
+  currentUser: PropTypes.shape({
+    name: PropTypes.string,
+    ccrreviews: PropTypes.shape({
+      nodes: PropTypes.arrayOf(PropTypes.object),
+    }),
+  }),
+  review: PropTypes.shape({
+    id: PropTypes.string,
+    content: PropTypes.string,
+    reviewFields: PropTypes.shape({
+      starRating: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+    }),
+  }),
+};
