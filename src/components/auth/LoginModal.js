@@ -38,19 +38,14 @@ export default function LoginModal({ isOpen, onClose }) {
     <div 
       className="login-modal-overlay" 
       onClick={onClose}
-      onKeyDown={(e) => { if (e.key === 'Escape') onClose(); }}
-      role="button"
-      tabIndex={0}
-      aria-label="Close modal"
     >
       <div 
         className="login-modal" 
         onClick={(e) => e.stopPropagation()}
-        onKeyDown={(e) => e.stopPropagation()}
         role="dialog"
         aria-modal="true"
       >
-        <button className="login-modal__close" onClick={onClose}>
+        <button className="login-modal__close" onClick={onClose} aria-label="Close modal">
           <span className="material-symbols-outlined">close</span>
         </button>
 
@@ -107,7 +102,7 @@ export default function LoginModal({ isOpen, onClose }) {
         </form>
 
         <div className="login-modal__footer">
-          Don't have an account?{" "}
+          Don&apos;t have an account?{" "}
           <Link href="/register" className="login-modal__signup-link" onClick={onClose}>
             Sign Up
           </Link>

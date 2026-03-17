@@ -65,7 +65,7 @@ export default function MyReviews({ reviews: initialReviews }) {
     return (
       <div className="my-reviews">
         <div className="my-reviews__empty">
-          <p className="my-reviews__text">You haven't left any reviews yet.</p>
+          <p className="my-reviews__text">You haven&apos;t left any reviews yet.</p>
           <Link href="/directory" className="my-reviews__link">
             Explore the Directory
           </Link>
@@ -156,15 +156,10 @@ export default function MyReviews({ reviews: initialReviews }) {
         <div 
           className="my-reviews__modal-overlay" 
           onClick={handleCancelDelete}
-          onKeyDown={(e) => { if (e.key === 'Escape') handleCancelDelete(); }}
-          role="button"
-          tabIndex={0}
-          aria-label="Close modal"
         >
           <div 
             className="my-reviews__modal" 
             onClick={(e) => e.stopPropagation()}
-            onKeyDown={(e) => e.stopPropagation()}
             role="dialog"
             aria-modal="true"
           >

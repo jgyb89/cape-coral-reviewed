@@ -2,6 +2,7 @@
 "use client";
 
 import { useState } from "react";
+import PropTypes from "prop-types";
 import LoginModal from "@/components/auth/LoginModal";
 import ReviewModal from "./ReviewModal";
 
@@ -24,7 +25,7 @@ export default function ReviewActionManager({ currentUser, listingId, listingSlu
         onClick={handleWriteReviewClick}
       >
         <span className="material-symbols-outlined">rate_review</span>
-        Write a Review
+        <span>Write a Review</span>
       </button>
 
       <LoginModal 
@@ -42,3 +43,9 @@ export default function ReviewActionManager({ currentUser, listingId, listingSlu
     </>
   );
 }
+
+ReviewActionManager.propTypes = {
+  currentUser: PropTypes.object,
+  listingId: PropTypes.number,
+  listingSlug: PropTypes.string,
+};

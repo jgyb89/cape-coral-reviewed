@@ -284,7 +284,7 @@ export async function submitUserReview(formData) {
             title: formData.title || `Review for Listing #${formData.listingId}`,
             content: formData.content,
             starRating: String(formData.rating),
-            relatedListing: [parseInt(formData.listingId, 10)], // Linking to listing
+            relatedListing: [Number.parseInt(formData.listingId, 10)], // Linking to listing
             status: 'PUBLISH'
           }
         }

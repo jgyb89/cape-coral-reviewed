@@ -2,6 +2,7 @@
 "use client";
 
 import { useState } from 'react';
+import PropTypes from 'prop-types';
 import DOMPurify from 'isomorphic-dompurify';
 
 export default function ReviewList({ reviews }) {
@@ -52,14 +53,14 @@ export default function ReviewList({ reviews }) {
           });
 
           // Ensure star rating falls within 1-5, reading from ACF reviewFields
-          const rating = parseFloat(review.reviewFields?.starRating) || 0;
+          const rating = Number.parseFloat(review.reviewFields?.starRating) || 0;
           const activeStars = '★'.repeat(Math.round(rating));
           const inactiveStars = '☆'.repeat(5 - Math.round(rating));
           
           const isLongReview = (review.content || '').split(' ').length > WORD_LIMIT;
 
           return (
-            <article key={index} className="review-list__item">
+            <article key={review.id || index} className="review-list__item">
               <header className="review-list__item-header">
                 <div className="review-list__author-meta">
                   <div className="review-list__avatar">
@@ -108,3 +109,9 @@ export default function ReviewList({ reviews }) {
     </section>
   );
 }
+
+ReviewList.propTypes = {
+  reviews: PropTypes.shape({
+    nodes: PropTypes.arrayOf(PropTypes.object),
+  }),
+};
