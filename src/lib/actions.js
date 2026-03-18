@@ -202,8 +202,6 @@ export async function toggleFavoriteListing(userId, newFavoritesArray) {
     return { success: false, message: 'Unauthorized. Please log in.' };
   }
 
-  // Bypass strict SSL for local staging development
-  process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
 
   // Use 'favoriteListings' (CamelCase) for the input mapping
   const mutation = `
@@ -258,8 +256,6 @@ export async function submitUserReview(formData) {
     return { success: false, message: 'Unauthorized. Please log in to leave a review.' };
   }
 
-  // Bypass strict SSL for local staging development
-  process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
 
   const mutation = `
     mutation CreateReview($input: CreateCcrreviewInput!) {

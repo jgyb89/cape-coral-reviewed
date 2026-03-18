@@ -137,9 +137,6 @@ export async function getViewer() {
   `;
 
   try {
-    // Bypass strict SSL for local staging development
-    process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
-
     const res = await fetch(GRAPHQL_URL, {
       method: 'POST',
       headers: {
