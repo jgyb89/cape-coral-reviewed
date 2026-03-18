@@ -75,12 +75,17 @@ export async function getViewer() {
         databaseId
         name
         email
+        firstName
+        lastName
         roles {
           nodes {
             name
           }
         }
         userData {
+          phoneNumber
+          websiteUrl
+          emailVisibility
           favoriteListings {
             nodes {
               ... on Ccrlisting {

@@ -1,0 +1,306 @@
+.main-nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  background-color: #fff;
+  border-bottom: 1px solid #eaeaea;
+  position: relative;
+  z-index: 100;
+}
+.nav-logo {
+  width: 100%;
+  height: 100%;
+  max-height: 150px;
+  max-width: 200px;
+  padding: 10px 0 0;
+}
+.nav-brand {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #333;
+  text-decoration: none;
+  margin: 0;
+  padding: 0;
+}
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+.nav-link {
+  color: #333;
+  text-decoration: none;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  position: relative;
+  cursor: pointer;
+}
+.nav-link:hover {
+  color: var(--color-primary, #e94f37);
+}
+
+/* Dropdowns */
+.nav-dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background: #fff;
+  border: 1px solid #eaeaea;
+  border-radius: 8px;
+  padding: 0.5rem 0;
+  width: 100%;
+  min-width: 250px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  z-index: 100;
+}
+.nav-dropdown a,
+.nav-dropdown button {
+  padding: 0.5rem 1rem;
+  color: #333;
+  text-decoration: none;
+  text-align: left;
+  background: none;
+  border: none;
+  font-size: 0.95rem;
+  cursor: pointer;
+  width: 100%;
+}
+.nav-dropdown a:hover,
+.nav-dropdown button:hover {
+  background-color: #f5f5f5;
+  color: var(--color-primary, #e94f37);
+}
+
+/* Specific CTA Button Styles */
+.business-signup a {
+  background-color: #e94f37;
+  color: #fff !important;
+  padding: 10px 20px;
+  border-radius: 5px;
+  text-decoration: none;
+  font-weight: 500;
+  display: inline-block;
+}
+.business-signup a:hover {
+  background-color: #2e2e2e;
+  color: #fff;
+}
+.sign-up-button a {
+  background-color: #ffc845;
+  color: #000 !important;
+  padding: 10px 20px;
+  border-radius: 5px;
+  text-decoration: none;
+  font-weight: 500;
+  display: inline-block;
+}
+.sign-up-button a:hover {
+  background-color: #2e2e2e;
+  color: #fff !important;
+}
+
+/* Mobile Menu (Desktop Hide) */
+.mobile-menu-btn {
+  display: none;
+  background: none;
+  border: none;
+  font-size: 2rem;
+  cursor: pointer;
+  color: #333;
+}
+.mobile-flyout {
+  display: none;
+}
+
+@media (max-width: 1070px) {
+  .nav-links {
+    display: none;
+  } /* Hide desktop links */
+  .mobile-menu-btn {
+    display: block;
+  }
+  .mobile-flyout {
+    display: block;
+    font-family: var(--font-open-sans), sans-serif;
+  }
+
+  /* Overlay */
+  .flyout-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.4);
+    opacity: 0;
+    visibility: hidden;
+    transition:
+      opacity 0.3s ease,
+      visibility 0s linear 0.3s;
+    z-index: 9999;
+    backdrop-filter: blur(2px);
+  }
+  .flyout-overlay.open {
+    opacity: 1;
+    visibility: visible;
+    transition:
+      opacity 0.3s ease,
+      visibility 0s linear 0s;
+  }
+
+  /* Drawer */
+  .flyout-drawer {
+    position: fixed;
+    inset: 0 auto 0 0;
+    width: min(85vw, 350px);
+    background: #fff;
+    box-shadow: 5px 0 25px rgba(0, 0, 0, 0.15);
+    transform: translateX(-102%);
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    display: flex;
+    flex-direction: column;
+    z-index: 10000;
+  }
+  .flyout-drawer.open {
+    transform: translateX(0);
+  }
+
+  /* Header */
+  .flyout-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.25rem 1.5rem;
+    border-bottom: 1px solid #eaeaea;
+  }
+  .flyout-brand {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #333;
+    font-family: var(--font-poppins), sans-serif;
+    text-decoration: none;
+  }
+  .flyout-close {
+    background: none;
+    border: none;
+    font-size: 2rem;
+    color: #666;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    line-height: 1;
+  }
+
+  /* Panels */
+  .flyout-panels {
+    position: relative;
+    flex: 1;
+    overflow: hidden;
+  }
+  .flyout-panel {
+    position: absolute;
+    inset: 0;
+    background: #fff;
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .flyout-drawer[data-level="1"] .panel-1 {
+    transform: translateX(0);
+  }
+  .flyout-drawer[data-level="1"] .panel-2 {
+    transform: translateX(102%);
+  }
+  .flyout-drawer[data-level="2"] .panel-1 {
+    transform: translateX(-102%);
+  }
+  .flyout-drawer[data-level="2"] .panel-2 {
+    transform: translateX(0);
+  }
+
+  /* Links & Actions */
+  .flyout-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+  }
+  .flyout-item {
+    border-bottom: 1px solid #f5f5f5;
+  }
+  .flyout-link,
+  .flyout-action {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.1rem 1.5rem;
+    color: #333;
+    text-decoration: none;
+    font-size: 1.05rem;
+    font-weight: 500;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    text-align: left;
+  }
+  .flyout-link:hover,
+  .flyout-action:hover {
+    background: #fafafa;
+    color: var(--color-primary, #e94f37);
+  }
+  .flyout-icon {
+    font-size: 1.25rem;
+    color: #888;
+  }
+
+  /* Level 2 specifics */
+  .flyout-back {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 1rem 1.5rem;
+    background: #fafafa;
+    border: none;
+    border-bottom: 1px solid #eaeaea;
+    width: 100%;
+    text-align: left;
+    font-weight: 600;
+    font-size: 1rem;
+    color: #333;
+    cursor: pointer;
+  }
+  .flyout-panel-title {
+    padding: 1.5rem 1.5rem 0.5rem;
+    margin: 0;
+    font-size: 0.85rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #aaa;
+  }
+
+  /* Mobile CTAs */
+  .flyout-cta-wrap {
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    background: #fafafa;
+    border-top: 1px solid #eaeaea;
+    margin-top: auto;
+  }
+  .flyout-cta-wrap .sign-up-button a,
+  .flyout-cta-wrap .business-signup a {
+    width: 100%;
+    text-align: center;
+    justify-content: center;
+  }
+}

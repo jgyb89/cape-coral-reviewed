@@ -38,7 +38,11 @@ export async function updateUserProfile(formData) {
           id
           firstName
           lastName
-          email
+          userData {
+            phoneNumber
+            websiteUrl
+            emailVisibility
+          }
         }
       }
     }
@@ -71,6 +75,8 @@ export async function updateUserProfile(formData) {
     if (json.errors) {
       throw new Error(json.errors[0].message);
     }
+
+    revalidatePath('/dashboard', 'layout');
 
     return { success: true, user: json.data.updateUser.user };
   } catch (error) {
