@@ -56,10 +56,10 @@ export default async function DashboardLayout({ children }) {
           )}
 
           <li className="dashboard-nav__item" style={{ marginTop: 'auto' }}>
-            <Link href="/logout" className="dashboard-nav__link dashboard-nav__link--signout">
+            <a href="/logout" className="dashboard-nav__link dashboard-nav__link--signout">
               <span className="material-symbols-outlined" style={{ marginRight: '8px' }}>logout</span>
               <span>Sign Out</span>
-            </Link>
+            </a>
           </li>
         </ul>
       </aside>
