@@ -30,43 +30,49 @@ export default function LoginModal({ isOpen, onClose }) {
     } else {
       setError(result.error || "Invalid username or password.");
     }
-    
+
     setIsUpdating(false);
   };
 
   return (
     <div className="login-modal-overlay">
-      <button 
+      <button
         className="login-modal-overlay__btn"
         onClick={onClose}
         aria-label="Close modal"
         type="button"
       />
-      <dialog 
-        className="login-modal" 
+      <dialog
+        className="login-modal"
         open
         aria-modal="true"
         aria-labelledby="login-modal-title"
       >
-        <button 
-          className="login-modal__close" 
-          onClick={onClose} 
+        <button
+          className="login-modal__close"
+          onClick={onClose}
           aria-label="Close modal"
           type="button"
         >
           <span className="material-symbols-outlined">close</span>
         </button>
 
-        <h2 id="login-modal-title" className="login-modal__title">Make a free account!</h2>
+        <h2 id="login-modal-title" className="login-modal__title">
+          Make a free account!
+        </h2>
         <p className="login-modal__subtitle">
-          Sign up for free in order to leave reviews! This ensures we keep the site spam-free and a better experience for everyone!
+          Sign up for free in order to share, favorite, or leave reviews! This
+          ensures we keep the site spam-free and a better experience for
+          everyone!
         </p>
 
         {error && <div className="login-modal__error">{error}</div>}
 
         <form className="login-modal__form" onSubmit={handleSubmit}>
           <div className="login-modal__form-group">
-            <label className="login-modal__label" htmlFor="modal-username">Username or Email</label>
+            <label className="login-modal__label" htmlFor="modal-username">
+              Username or Email
+            </label>
             <input
               id="modal-username"
               type="text"
@@ -79,7 +85,9 @@ export default function LoginModal({ isOpen, onClose }) {
           </div>
 
           <div className="login-modal__form-group">
-            <label className="login-modal__label" htmlFor="modal-password">Password</label>
+            <label className="login-modal__label" htmlFor="modal-password">
+              Password
+            </label>
             <input
               id="modal-password"
               type="password"
@@ -111,7 +119,11 @@ export default function LoginModal({ isOpen, onClose }) {
 
         <div className="login-modal__footer">
           Don&apos;t have an account?{" "}
-          <Link href="/register" className="login-modal__signup-link" onClick={onClose}>
+          <Link
+            href="/register"
+            className="login-modal__signup-link"
+            onClick={onClose}
+          >
             Sign Up
           </Link>
         </div>
