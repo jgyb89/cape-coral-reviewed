@@ -137,6 +137,14 @@ export default function Navbar({ currentUser }) {
         <div
           className={`flyout-overlay ${isMobileOpen ? "open" : ""}`}
           onClick={closeMobileMenu}
+          onKeyDown={(e) => {
+            if (e.key === "Enter" || e.key === " ") {
+              closeMobileMenu();
+            }
+          }}
+          role="button"
+          tabIndex={isMobileOpen ? 0 : -1}
+          aria-label="Close menu"
         />
 
         <aside
