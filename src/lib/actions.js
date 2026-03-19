@@ -369,3 +369,56 @@ export async function updateUserReview(reviewId, formData) {
     return { success: false, error: error.message };
   }
 }
+
+/**
+ * Server Action to submit a bug report to Gravity Forms.
+ */
+export async function submitBugReport(formData) {
+  const mutation = `
+    mutation SubmitBugReport($input: SubmitGfFormInput!) {
+      submitGfForm(input: $input) {
+        confirmation {
+          message
+        }
+        errors {
+          message
+        }
+      }
+    }
+  `;
+
+  try {
+    const res = await fetch(GRAPHQL_URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        query: mutation,
+        variables: {
+          input: {
+            id: 10,
+            fieldValues: [
+              { id: 1, value: formData.name },
+              { id: 4, value: formData.pageUrl },
+              { id: 3, value: formData.description },
+            ],
+          },
+        },
+      }),
+    });
+
+    const json = await res.json();
+
+    if (json.errors || (json.data?.submitGfForm?.errors && json.data.submitGfForm.errors.length > 0)) {
+      const errorMsg = json.errors ? json.errors[0].message : json.data.submitGfForm.errors[0].message;
+      throw new Error(errorMsg);
+    }
+
+    return { success: true };
+  } catch (error) {
+    console.error('Bug Report Submission Error:', error);
+    return { success: false, message: error.message };
+  }
+}
+

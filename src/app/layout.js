@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 import "./globals.css";
 import 'material-symbols/outlined.css';
 import Navbar from '@/components/layout/Navbar';
+import BugReporter from '@/components/BugReporter';
 import { getViewer } from '@/lib/auth';
 
 const poppins = Poppins({
@@ -30,6 +31,7 @@ export default async function RootLayout({ children }) {
       <body className={`${poppins.variable} ${openSans.variable}`}>
         <Navbar currentUser={viewer} />
         {children}
+        <BugReporter />
       </body>
     </html>
   );
