@@ -1,0 +1,144 @@
+.wizard {
+  max-width: 800px;
+  margin: 2rem auto;
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+  font-family: inherit;
+}
+
+.wizard__header {
+  padding: 2rem;
+  background: #f9f9f9;
+  border-bottom: 1px solid #eee;
+}
+
+.wizard__stepper {
+  display: flex;
+  justify-content: space-between;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.wizard__step-indicator {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex: 1;
+  position: relative;
+  color: #888;
+}
+
+.wizard__step-indicator:not(:last-child)::after {
+  content: '';
+  position: absolute;
+  top: 15px;
+  right: -50%;
+  width: 100%;
+  height: 2px;
+  background: #eee;
+  z-index: 1;
+}
+
+.wizard__step-number {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: #eee;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+  z-index: 2;
+  transition: all 0.3s ease;
+}
+
+.wizard__step-label {
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
+/* Active State */
+.wizard__step-indicator--active {
+  color: #e04c4c;
+}
+
+.wizard__step-indicator--active .wizard__step-number {
+  background: #e04c4c;
+  color: white;
+  box-shadow: 0 0 0 4px rgba(224, 76, 76, 0.2);
+}
+
+/* Completed State */
+.wizard__step-indicator--completed {
+  color: #333;
+}
+
+.wizard__step-indicator--completed .wizard__step-number {
+  background: #333;
+  color: white;
+}
+
+.wizard__step-indicator--completed::after {
+  background: #333 !important;
+}
+
+/* Content Area */
+.wizard__content {
+  padding: 2.5rem;
+  min-height: 300px;
+  transition: opacity 0.3s ease;
+}
+
+.wizard__step h2 {
+  margin-top: 0;
+  margin-bottom: 1rem;
+  color: #333;
+}
+
+.wizard__step p {
+  color: #666;
+  line-height: 1.6;
+}
+
+/* Actions */
+.wizard__actions {
+  margin-top: 3rem;
+  display: flex;
+  justify-content: space-between;
+}
+
+.wizard__button {
+  padding: 0.75rem 1.5rem;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: none;
+}
+
+.wizard__button--primary {
+  background: #e04c4c;
+  color: white;
+}
+
+.wizard__button--primary:hover {
+  background: #c93d3d;
+}
+
+.wizard__button--secondary {
+  background: #f0f0f0;
+  color: #555;
+}
+
+.wizard__button--secondary:hover:not(:disabled) {
+  background: #e5e5e5;
+}
+
+.wizard__button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}

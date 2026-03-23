@@ -1,0 +1,79 @@
+'use client';
+
+import React, { useState } from 'react';
+import './ListingWizard.css';
+import Step1General from './Step1General';
+import Step2Contact from './Step2Contact';
+import Step3Hours from './Step3Hours';
+import Step4Media from './Step4Media';
+import Step5Finish from './Step5Finish';
+
+const ListingWizard = () => {
+  const [currentStep, setCurrentStep] = useState(1);
+  const [formData, setFormData] = useState({
+    title: '',
+    category: '',
+    description: '',
+    address: '',
+    phone: '',
+    email: '',
+    website: '',
+    socialUrls: [],
+    timezone: '',
+    hours: {},
+    featuredImage: null,
+    gallery: [],
+    videoUrl: ''
+  });
+
+  const nextStep = () => setCurrentStep((prev) => Math.min(prev + 1, 5));
+  const prevStep = () => setCurrentStep((prev) => Math.max(prev - 1, 1));
+
+  const updateFormData = (newData) => {
+    setFormData((prev) => ({
+      ...prev,
+      ...newData
+    }));
+  };
+
+  const renderStep = () => {
+    const props = { formData, updateFormData, nextStep, prevStep };
+    switch (currentStep) {
+      case 1:
+        return <Step1General {...props} />;
+      case 2:
+        return <Step2Contact {...props} />;
+      case 3:
+        return <Step3Hours {...props} />;
+      case 4:
+        return <Step4Media {...props} />;
+      case 5:
+        return <Step5Finish {...props} />;
+      default:
+        return <Step1General {...props} />;
+    }
+  };
+
+  return (
+    <div className="wizard">
+      <div className="wizard__header">
+        <ul className="wizard__stepper">
+          {[1, 2, 3, 4, 5].map((step) => (
+            <li
+              key={step}
+              className={`wizard__step-indicator ${currentStep === step ? 'wizard__step-indicator--active' : ''} ${currentStep > step ? 'wizard__step-indicator--completed' : ''}`}
+            >
+              <span className="wizard__step-number">{step}</span>
+              <span className="wizard__step-label">Step {step}</span>
+            </li>
+          ))}
+        </ul>
+      </div>
+      <div className="wizard__content">
+        {renderStep()}
+      </div>
+    </div>
+  );
+};
+
+export default ListingWizard;

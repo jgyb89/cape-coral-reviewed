@@ -1,0 +1,93 @@
+.step-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.step-form__header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 2rem;
+  border-bottom: 2px solid #f0f0f0;
+  padding-bottom: 1rem;
+}
+
+.step-form__header i {
+  color: #e04c4c;
+  font-size: 1.5rem;
+}
+
+.step-form__header h2 {
+  margin: 0;
+  font-size: 1.5rem;
+  color: #333;
+}
+
+.step-form__group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.step-form__label {
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: #444;
+  display: flex;
+  align-items: center;
+}
+
+.step-form__required {
+  color: #e04c4c;
+  margin-left: 4px;
+}
+
+.step-form__input,
+.step-form__select,
+.step-form__textarea {
+  padding: 0.8rem 1rem;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 1rem;
+  transition: all 0.2s ease;
+  background-color: #fff;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.step-form__input:focus,
+.step-form__select:focus,
+.step-form__textarea:focus {
+  outline: none;
+  border-color: #e04c4c;
+  box-shadow: 0 0 0 3px rgba(224, 76, 76, 0.1);
+}
+
+.step-form__input--error,
+.step-form__select--error,
+.step-form__textarea--error {
+  border-color: #e04c4c;
+  background-color: #fffcfc;
+}
+
+.step-form__error-message {
+  color: #e04c4c;
+  font-size: 0.85rem;
+  margin-top: 0.25rem;
+  font-weight: 500;
+}
+
+.step-form__textarea {
+  resize: vertical;
+}
+
+.wizard__actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 3rem;
+  padding-top: 2rem;
+  border-top: 1px solid #eee;
+}
