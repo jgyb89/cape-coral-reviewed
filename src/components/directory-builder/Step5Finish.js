@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { submitListing } from '@/lib/actions';
+import { submitListing, uploadWPImage } from '@/lib/actions';
 import './StepForm.css';
 
 const Step5Finish = ({ formData, prevStep }) => {
@@ -25,32 +25,53 @@ const Step5Finish = ({ formData, prevStep }) => {
   const handleSubmit = async () => {
     setIsSubmitting(true);
 
-    // Map wizard formData to Server Action expected keys
-    const submissionData = {
-      businessName: formData.title,
-      city: formData.city || '',
-      state: formData.state || '',
-      zipCode: formData.zipCode || '',
-      priceRange: '', // Optional/Not in wizard yet
-      phoneNumber: formData.phone,
-      businessEmail: formData.email || '',
-      websiteUrl: formData.website || '',
-      videoUrl: formData.videoUrl || '',
-      socialUrl: formData.socialUrls?.[0] || '',
-      hoursMonday: formData.hours?.Monday || '',
-      hoursTuesday: formData.hours?.Tuesday || '',
-      hoursWednesday: formData.hours?.Wednesday || '',
-      hoursThursday: formData.hours?.Thursday || '',
-      hoursFriday: formData.hours?.Friday || '',
-      hoursSaturday: formData.hours?.Saturday || '',
-      hoursSunday: formData.hours?.Sunday || '',
-      businessDescription: formData.description,
-      streetAddress: formData.address,
-      directoryType: formData.category,
-      businessTypeCategories: formData.category
-    };
-
     try {
+      // 1. Upload Featured Image
+      let featuredImageId = '';
+      if (formData.featuredImage) {
+        const fileData = new FormData();
+        fileData.append('file', formData.featuredImage);
+        featuredImageId = await uploadWPImage(fileData);
+      }
+
+      // 2. Upload Gallery Images
+      const galleryIds = [];
+      if (formData.gallery && formData.gallery.length > 0) {
+        for (const file of formData.gallery) {
+          const fileData = new FormData();
+          fileData.append('file', file);
+          const id = await uploadWPImage(fileData);
+          if (id) galleryIds.push(id);
+        }
+      }
+
+      // 3. Map wizard formData to Server Action expected keys
+      const submissionData = {
+        businessName: formData.title,
+        city: formData.city || '',
+        state: formData.state || '',
+        zipCode: formData.zipCode || '',
+        priceRange: '', // Optional/Not in wizard yet
+        phoneNumber: formData.phone,
+        businessEmail: formData.email || '',
+        websiteUrl: formData.website || '',
+        videoUrl: formData.videoUrl || '',
+        socialUrl: formData.socialUrls?.[0] || '',
+        hoursMonday: formData.hours?.Monday || '',
+        hoursTuesday: formData.hours?.Tuesday || '',
+        hoursWednesday: formData.hours?.Wednesday || '',
+        hoursThursday: formData.hours?.Thursday || '',
+        hoursFriday: formData.hours?.Friday || '',
+        hoursSaturday: formData.hours?.Saturday || '',
+        hoursSunday: formData.hours?.Sunday || '',
+        businessDescription: formData.description,
+        streetAddress: formData.address,
+        directoryType: formData.category,
+        businessTypeCategories: formData.category,
+        featuredImage: featuredImageId ? featuredImageId.toString() : '',
+        galleryImages: galleryIds.length > 0 ? galleryIds.join(',') : ''
+      };
+
       const result = await submitListing(submissionData);
 
       if (result.success) {
@@ -63,6 +84,7 @@ const Step5Finish = ({ formData, prevStep }) => {
         setIsSubmitting(false);
       }
     } catch (error) {
+      console.error('Submission error:', error);
       alert('An unexpected error occurred. Please try again.');
       setIsSubmitting(false);
     }

@@ -472,6 +472,8 @@ export async function submitListing(formData) {
               { id: 21, value: formData.streetAddress },
               { id: 22, value: formData.directoryType },
               { id: 23, value: formData.businessTypeCategories },
+              ...(formData.featuredImage ? [{ id: 27, value: formData.featuredImage }] : []),
+              ...(formData.galleryImages ? [{ id: 28, value: formData.galleryImages }] : []),
             ],
           },
         },
@@ -545,5 +547,37 @@ export async function registerBusiness(fieldValues) {
     console.error('Register Business Error:', error);
     return { success: false, message: error.message };
   }
+}
+
+/**
+ * Server Action to upload raw image files directly to the WordPress REST API.
+ */
+export async function uploadWPImage(formData) {
+  const file = formData.get('file');
+  if (!file) return null;
+
+  const cookieStore = await cookies();
+  const authToken = cookieStore.get('authToken')?.value;
+  if (!authToken) throw new Error('Unauthorized');
+
+  const wpFormData = new FormData();
+  wpFormData.append('file', file, file.name);
+
+  // Derive the base URL from the existing GraphQL endpoint, or fallback to the staging domain
+  const graphqlUrl = process.env.NEXT_PUBLIC_WORDPRESS_API_URL || process.env.NEXT_PUBLIC_GRAPHQL_ENDPOINT || 'https://staging.capecoralreviewed.com/graphql';
+  const baseUrl = graphqlUrl.replace('/graphql', '');
+
+  const res = await fetch(`${baseUrl}/wp-json/wp/v2/media`, {
+    method: 'POST',
+    headers: {
+      'Authorization': `Bearer ${authToken}`
+      // Let fetch automatically set the multipart boundary Content-Type
+    },
+    body: wpFormData
+  });
+
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.message || 'Image upload failed');
+  return data.id; // Return the ID for the Headless ID Strategy
 }
 
