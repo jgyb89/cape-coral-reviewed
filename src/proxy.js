@@ -25,6 +25,13 @@ export function middleware(request) {
     }
   }
 
+  // 2.5 Protect /submit-listing route
+  if (pathname.startsWith('/submit-listing')) {
+    if (!authToken) {
+      return NextResponse.redirect(new URL('/register-business', request.url));
+    }
+  }
+
   // 4. If everything passes, return NextResponse.next() with security headers
   const response = NextResponse.next();
 

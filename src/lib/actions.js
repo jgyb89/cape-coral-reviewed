@@ -422,3 +422,128 @@ export async function submitBugReport(formData) {
   }
 }
 
+/**
+ * Server Action to submit a new business listing to Gravity Forms (Form ID: 11).
+ */
+export async function submitListing(formData) {
+  const mutation = `
+    mutation SubmitListing($input: SubmitGfFormInput!) {
+      submitGfForm(input: $input) {
+        confirmation {
+          message
+        }
+        errors {
+          message
+        }
+      }
+    }
+  `;
+
+  try {
+    const res = await fetch(GRAPHQL_URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        query: mutation,
+        variables: {
+          input: {
+            id: 11,
+            fieldValues: [
+              { id: 1, value: formData.businessName },
+              { id: 3, value: formData.city },
+              { id: 4, value: formData.state },
+              { id: 5, value: formData.zipCode },
+              { id: 7, value: formData.priceRange || '' },
+              { id: 8, value: formData.phoneNumber },
+              { id: 9, value: formData.businessEmail },
+              { id: 10, value: formData.websiteUrl },
+              { id: 11, value: formData.videoUrl },
+              { id: 12, value: formData.socialUrl },
+              { id: 13, value: formData.hoursMonday },
+              { id: 14, value: formData.hoursWednesday },
+              { id: 15, value: formData.hoursTuesday },
+              { id: 16, value: formData.hoursThursday },
+              { id: 17, value: formData.hoursSaturday },
+              { id: 18, value: formData.hoursFriday },
+              { id: 19, value: formData.hoursSunday },
+              { id: 20, value: formData.businessDescription },
+              { id: 21, value: formData.streetAddress },
+              { id: 22, value: formData.directoryType },
+              { id: 23, value: formData.businessTypeCategories },
+            ],
+          },
+        },
+      }),
+    });
+
+    const json = await res.json();
+
+    if (json.errors || (json.data?.submitGfForm?.errors && json.data.submitGfForm.errors.length > 0)) {
+      const errorMsg = json.errors ? json.errors[0].message : json.data.submitGfForm.errors[0].message;
+      throw new Error(errorMsg);
+    }
+
+    revalidatePath('/directory', 'layout');
+
+    return { success: true };
+  } catch (error) {
+    console.error('Submit Listing Error:', error);
+    return { success: false, message: error.message };
+  }
+}
+
+/**
+ * Server Action to handle business registration via Gravity Form ID: 7.
+ */
+export async function registerBusiness(fieldValues) {
+  const mutation = `
+    mutation RegisterBusiness($input: SubmitGfFormInput!) {
+      submitGfForm(input: $input) {
+        confirmation {
+          message
+        }
+        errors {
+          id
+          message
+        }
+      }
+    }
+  `;
+
+  try {
+    const res = await fetch(GRAPHQL_URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        query: mutation,
+        variables: {
+          input: {
+            id: 7,
+            fieldValues: fieldValues,
+          },
+        },
+      }),
+    });
+
+    const json = await res.json();
+
+    if (json.errors || (json.data?.submitGfForm?.errors && json.data.submitGfForm.errors.length > 0)) {
+      if (json.data?.submitGfForm?.errors?.length > 0) {
+        const gfError = json.data.submitGfForm.errors[0];
+        throw new Error(`Field ID ${gfError.id} failed: ${gfError.message}`);
+      } else {
+        throw new Error(json.errors[0].message);
+      }
+    }
+
+    return { success: true };
+  } catch (error) {
+    console.error('Register Business Error:', error);
+    return { success: false, message: error.message };
+  }
+}
+

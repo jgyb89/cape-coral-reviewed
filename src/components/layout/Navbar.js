@@ -25,6 +25,17 @@ export default function Navbar({ currentUser }) {
     }, 300);
   };
 
+  const getSubmitHref = () => {
+    if (!currentUser) return "/register-business";
+    const userRoles = currentUser.roles?.nodes?.map(node => node.name.toLowerCase()) || [];
+    if (userRoles.includes("business") || userRoles.includes("administrator")) {
+      return "/submit-listing";
+    }
+    return "/user-to-business";
+  };
+
+  const submitHref = getSubmitHref();
+
   return (
     <>
       <nav className="main-nav">
@@ -108,7 +119,7 @@ export default function Navbar({ currentUser }) {
                 )}
               </div>
               <div className="business-signup">
-                <Link href="/submit-listing">Submit your Business</Link>
+                <Link href={submitHref}>Submit your Business</Link>
               </div>
             </>
           ) : (
@@ -125,7 +136,7 @@ export default function Navbar({ currentUser }) {
                 <Link href="/register">Join Community</Link>
               </div>
               <div className="business-signup">
-                <Link href="/submit-listing">Submit your Business</Link>
+                <Link href={submitHref}>Submit your Business</Link>
               </div>
             </>
           )}
@@ -249,7 +260,7 @@ export default function Navbar({ currentUser }) {
                   </div>
                 )}
                 <div className="business-signup">
-                  <Link href="/submit-listing" onClick={closeMobileMenu}>
+                  <Link href={submitHref} onClick={closeMobileMenu}>
                     Submit your Business
                   </Link>
                 </div>

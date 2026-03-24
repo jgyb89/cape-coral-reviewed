@@ -9,7 +9,7 @@ const Step1General = ({ formData, updateFormData, nextStep }) => {
   const validate = () => {
     const newErrors = {};
     if (!formData.title?.trim()) newErrors.title = 'Business Name is required';
-    if (!formData.category) newErrors.category = 'Category is required';
+    if (!formData.category) newErrors.category = 'Directory Type is required';
     if (!formData.description?.trim()) newErrors.description = 'Description is required';
 
     setErrors(newErrors);
@@ -39,24 +39,25 @@ const Step1General = ({ formData, updateFormData, nextStep }) => {
           placeholder="e.g. Cape Coral Plumbing"
           value={formData.title}
           onChange={(e) => updateFormData({ title: e.target.value })}
+          required
         />
         {errors.title && <span className="step-form__error-message">{errors.title}</span>}
       </div>
 
       <div className="step-form__group">
         <label className="step-form__label">
-          Category <span className="step-form__required">*</span>
+          Directory Type <span className="step-form__required">*</span>
         </label>
         <select
           className={`step-form__select ${errors.category ? 'step-form__select--error' : ''}`}
           value={formData.category}
           onChange={(e) => updateFormData({ category: e.target.value })}
+          required
         >
-          <option value="">Select One</option>
-          <option value="Construction">Construction</option>
-          <option value="Home Services">Home Services</option>
-          <option value="Restaurants">Restaurants</option>
-          <option value="Retail">Retail</option>
+          <option value="" disabled>Select a Directory Type</option>
+          <option value="Food & Drink">Food & Drink</option>
+          <option value="Health & Wellness">Health & Wellness</option>
+          <option value="Home & Local Services">Home & Local Services</option>
         </select>
         {errors.category && <span className="step-form__error-message">{errors.category}</span>}
       </div>
@@ -71,6 +72,7 @@ const Step1General = ({ formData, updateFormData, nextStep }) => {
           rows={5}
           value={formData.description}
           onChange={(e) => updateFormData({ description: e.target.value })}
+          required
         />
         {errors.description && <span className="step-form__error-message">{errors.description}</span>}
       </div>
