@@ -6,6 +6,7 @@ import { registerBusiness } from '@/lib/actions';
 import './RegisterBusinessForm.css';
 
 export default function RegisterBusinessForm() {
+  const router = useRouter();
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
@@ -20,20 +21,95 @@ export default function RegisterBusinessForm() {
     facelift: false,
   });
 
+  const [fieldErrors, setFieldErrors] = useState({});
+  const [showPassword, setShowPassword] = useState(false);
+  const [passwordStrength, setPasswordStrength] = useState(""); // "", "weak", "medium", "strong"
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState('');
 
+  // Phone number masking: (XXX) XXX-XXXX
+  const formatPhoneNumber = (value) => {
+    if (!value) return value;
+    const phoneNumber = value.replaceAll(/\D/g, "");
+    const phoneNumberLength = phoneNumber.length;
+    if (phoneNumberLength < 4) return phoneNumber;
+    if (phoneNumberLength < 7) {
+      return `(${phoneNumber.slice(0, 3)}) ${phoneNumber.slice(3)}`;
+    }
+    return `(${phoneNumber.slice(0, 3)}) ${phoneNumber.slice(3, 6)}-${phoneNumber.slice(6, 10)}`;
+  };
+
+  // Password strength logic
+  const checkPasswordStrength = (password) => {
+    if (!password) return "";
+    let strength = 0;
+    if (password.length >= 8) strength++;
+    if (/[A-Z]/.test(password) && /[a-z]/.test(password)) strength++;
+    if (/\d/.test(password) || /[^A-Za-z0-9]/.test(password)) strength++;
+
+    if (strength === 1) return "weak";
+    if (strength === 2) return "medium";
+    if (strength === 3) return "strong";
+    return "weak";
+  };
+
+  const validateField = (name, value) => {
+    let error = "";
+    if (name === "firstName") {
+      if (!value) error = "First name is required";
+    } else if (name === "lastName") {
+      if (!value) error = "Last name is required";
+    } else if (name === "businessName") {
+      if (!value) error = "Business name is required";
+    } else if (name === "email") {
+      const emailRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;
+      if (!value) error = "Email is required";
+      else if (!emailRegex.test(value)) error = "Please enter a valid email address";
+    } else if (name === "password") {
+      if (!value) error = "Password is required";
+      else if (checkPasswordStrength(value) === "weak") error = "Password is too weak";
+    } else if (name === "phone") {
+      if (!value) error = "Phone number is required";
+      else if (value.length < 14) error = "Please enter a valid phone number";
+    } else if (name === "consent") {
+      if (!value) error = "You must consent to being contacted";
+    }
+    return error;
+  };
+
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: type === 'checkbox' ? checked : value,
-    }));
+    let finalValue = type === "checkbox" ? checked : value;
+
+    if (name === "phone") {
+      finalValue = formatPhoneNumber(finalValue);
+    }
+
+    setFormData((prev) => ({ ...prev, [name]: finalValue }));
+
+    // Real-time validation
+    const error = validateField(name, finalValue);
+    setFieldErrors((prev) => ({ ...prev, [name]: error }));
+
+    if (name === "password") {
+      setPasswordStrength(checkPasswordStrength(finalValue));
+    }
+  };
+
+  const isFormValid = () => {
+    const requiredFields = ["firstName", "lastName", "businessName", "email", "password", "phone", "consent"];
+    const hasRequired = requiredFields.every((field) => formData[field]);
+    const hasNoErrors = Object.values(fieldErrors).every((err) => !err);
+    const isMediumStrength = passwordStrength === "medium" || passwordStrength === "strong";
+    
+    return hasRequired && hasNoErrors && isMediumStrength;
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!isFormValid()) return;
+
     setIsSubmitting(true);
     setError('');
 
@@ -119,11 +195,12 @@ export default function RegisterBusinessForm() {
             id="firstName"
             name="firstName"
             type="text"
-            className="register-form__input"
+            className={`register-form__input ${fieldErrors.firstName ? "register-form__input--invalid" : ""}`}
             required
             value={formData.firstName}
             onChange={handleChange}
           />
+          {fieldErrors.firstName && <span className="register-form__error-text">{fieldErrors.firstName}</span>}
         </div>
         <div className="register-form__group">
           <label htmlFor="lastName" className="register-form__label">Last Name</label>
@@ -131,11 +208,12 @@ export default function RegisterBusinessForm() {
             id="lastName"
             name="lastName"
             type="text"
-            className="register-form__input"
+            className={`register-form__input ${fieldErrors.lastName ? "register-form__input--invalid" : ""}`}
             required
             value={formData.lastName}
             onChange={handleChange}
           />
+          {fieldErrors.lastName && <span className="register-form__error-text">{fieldErrors.lastName}</span>}
         </div>
       </div>
 
@@ -145,11 +223,12 @@ export default function RegisterBusinessForm() {
           id="businessName"
           name="businessName"
           type="text"
-          className="register-form__input"
+          className={`register-form__input ${fieldErrors.businessName ? "register-form__input--invalid" : ""}`}
           required
           value={formData.businessName}
           onChange={handleChange}
         />
+        {fieldErrors.businessName && <span className="register-form__error-text">{fieldErrors.businessName}</span>}
       </div>
 
       <div className="register-form__group">
@@ -158,24 +237,51 @@ export default function RegisterBusinessForm() {
           id="email"
           name="email"
           type="email"
-          className="register-form__input"
+          className={`register-form__input ${fieldErrors.email ? "register-form__input--invalid" : ""}`}
           required
           value={formData.email}
           onChange={handleChange}
         />
+        {fieldErrors.email && <span className="register-form__error-text">{fieldErrors.email}</span>}
       </div>
 
       <div className="register-form__group">
         <label htmlFor="password" className="register-form__label">Password</label>
-        <input
-          id="password"
-          name="password"
-          type="password"
-          className="register-form__input"
-          required
-          value={formData.password}
-          onChange={handleChange}
-        />
+        <div className="register-form__password-wrapper">
+          <input
+            id="password"
+            name="password"
+            type={showPassword ? "text" : "password"}
+            className={`register-form__input ${fieldErrors.password ? "register-form__input--invalid" : ""}`}
+            required
+            value={formData.password}
+            onChange={handleChange}
+          />
+          <button 
+            type="button" 
+            className="register-form__toggle-icon" 
+            onClick={() => setShowPassword(!showPassword)}
+            aria-label={showPassword ? "Hide password" : "Show password"}
+            style={{ background: 'none', border: 'none', padding: 0 }}
+          >
+            <span className="material-symbols-outlined">
+              {showPassword ? 'visibility_off' : 'visibility'}
+            </span>
+          </button>
+        </div>
+        {passwordStrength && (
+          <>
+            <div className="register-form__strength-meter" data-strength={passwordStrength}>
+              <div className="register-form__strength-bar"></div>
+              <div className="register-form__strength-bar"></div>
+              <div className="register-form__strength-bar"></div>
+            </div>
+            <span className="register-form__strength-text">
+              Strength: {passwordStrength.charAt(0).toUpperCase() + passwordStrength.slice(1)}
+            </span>
+          </>
+        )}
+        {fieldErrors.password && <span className="register-form__error-text">{fieldErrors.password}</span>}
       </div>
 
       <div className="register-form__group">
@@ -184,11 +290,13 @@ export default function RegisterBusinessForm() {
           id="phone"
           name="phone"
           type="tel"
-          className="register-form__input"
+          className={`register-form__input ${fieldErrors.phone ? "register-form__input--invalid" : ""}`}
           required
           value={formData.phone}
           onChange={handleChange}
+          placeholder="(XXX) XXX-XXXX"
         />
+        {fieldErrors.phone && <span className="register-form__error-text">{fieldErrors.phone}</span>}
       </div>
 
       <div className="register-form__group">
@@ -218,6 +326,7 @@ export default function RegisterBusinessForm() {
             I consent to being contacted by Cape Coral Reviewed. (Required)
           </label>
         </div>
+        {fieldErrors.consent && <span className="register-form__error-text" style={{ marginBottom: '1.5rem', display: 'block' }}>{fieldErrors.consent}</span>}
 
         <p className="register-form__marketing-hint">Are you interested in any of these services?</p>
         
@@ -269,7 +378,7 @@ export default function RegisterBusinessForm() {
       <button
         type="submit"
         className="register-form__submit"
-        disabled={isSubmitting}
+        disabled={isSubmitting || !isFormValid()}
       >
         {isSubmitting ? 'Submitting...' : 'Register Business'}
       </button>
