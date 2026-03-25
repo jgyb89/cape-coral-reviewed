@@ -24,6 +24,59 @@ export default function RegisterBusinessForm() {
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState('');
 
+<<<<<<< Updated upstream
+=======
+  // Phone number masking: (XXX) XXX-XXXX
+  const formatPhoneNumber = (value) => {
+    if (!value) return value;
+    const phoneNumber = value.replaceAll(/\D/g, "");
+    const phoneNumberLength = phoneNumber.length;
+    if (phoneNumberLength < 4) return phoneNumber;
+    if (phoneNumberLength < 7) {
+      return `(${phoneNumber.slice(0, 3)}) ${phoneNumber.slice(3)}`;
+    }
+    return `(${phoneNumber.slice(0, 3)}) ${phoneNumber.slice(3, 6)}-${phoneNumber.slice(6, 10)}`;
+  };
+
+  // Password strength logic
+  const checkPasswordStrength = (password) => {
+    if (!password) return "";
+    let strength = 0;
+    if (password.length >= 8) strength++;
+    if (/[A-Z]/.test(password) && /[a-z]/.test(password)) strength++;
+    if (/\d/.test(password) || /[^A-Za-z0-9]/.test(password)) strength++;
+
+    if (strength === 1) return "weak";
+    if (strength === 2) return "medium";
+    if (strength === 3) return "strong";
+    return "weak";
+  };
+
+  const validateField = (name, value) => {
+    const validations = {
+      firstName: (v) => (!v ? "First name is required" : ""),
+      lastName: (v) => (!v ? "Last name is required" : ""),
+      businessName: (v) => (!v ? "Business name is required" : ""),
+      email: (v) => {
+        if (!v) return "Email is required";
+        const emailRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;
+        return !emailRegex.test(v) ? "Please enter a valid email address" : "";
+      },
+      password: (v) => {
+        if (!v) return "Password is required";
+        return checkPasswordStrength(v) === "weak" ? "Password is too weak" : "";
+      },
+      phone: (v) => {
+        if (!v) return "Phone number is required";
+        return v.length < 14 ? "Please enter a valid phone number" : "";
+      },
+      consent: (v) => (!v ? "You must consent to being contacted" : ""),
+    };
+
+    return validations[name] ? validations[name](value) : "";
+  };
+
+>>>>>>> Stashed changes
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
     setFormData((prev) => ({
