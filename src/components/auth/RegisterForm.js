@@ -3,7 +3,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import './Auth.css';
+import '../RegisterBusinessForm.css';
 
 export default function RegisterForm() {
   const router = useRouter();
@@ -161,50 +161,50 @@ export default function RegisterForm() {
   };
 
   return (
-    <form className="auth-form" onSubmit={handleSubmit}>
-      <div className="auth-form__group">
-        <label className="auth-form__label" htmlFor="username">Username</label>
+    <form className="register-form" onSubmit={handleSubmit}>
+      <div className="register-form__group">
+        <label className="register-form__label" htmlFor="username">Username</label>
         <input
           id="username"
           name="username"
           type="text"
-          className={`auth-form__input ${fieldErrors.username ? "auth-form__input--invalid" : ""}`}
+          className={`register-form__input ${fieldErrors.username ? "register-form__input--invalid" : ""}`}
           value={formData.username}
           onChange={handleChange}
           required
         />
-        {fieldErrors.username && <span className="auth-form__error-text">{fieldErrors.username}</span>}
+        {fieldErrors.username && <span className="register-form__error-text">{fieldErrors.username}</span>}
       </div>
 
-      <div className="auth-form__group">
-        <label className="auth-form__label" htmlFor="email">Email</label>
+      <div className="register-form__group">
+        <label className="register-form__label" htmlFor="email">Email</label>
         <input
           id="email"
           name="email"
           type="email"
-          className={`auth-form__input ${fieldErrors.email ? "auth-form__input--invalid" : ""}`}
+          className={`register-form__input ${fieldErrors.email ? "register-form__input--invalid" : ""}`}
           value={formData.email}
           onChange={handleChange}
           required
         />
-        {fieldErrors.email && <span className="auth-form__error-text">{fieldErrors.email}</span>}
+        {fieldErrors.email && <span className="register-form__error-text">{fieldErrors.email}</span>}
       </div>
 
-      <div className="auth-form__group">
-        <label className="auth-form__label" htmlFor="password">Password</label>
-        <div className="auth-form__password-wrapper">
+      <div className="register-form__group">
+        <label className="register-form__label" htmlFor="password">Password</label>
+        <div className="register-form__password-wrapper">
           <input
             id="password"
             name="password"
             type={showPassword ? "text" : "password"}
-            className={`auth-form__input ${fieldErrors.password ? "auth-form__input--invalid" : ""}`}
+            className={`register-form__input ${fieldErrors.password ? "register-form__input--invalid" : ""}`}
             value={formData.password}
             onChange={handleChange}
             required
           />
           <button 
             type="button" 
-            className="auth-form__toggle-icon" 
+            className="register-form__toggle-icon" 
             onClick={() => setShowPassword(!showPassword)}
             aria-label={showPassword ? "Hide password" : "Show password"}
             style={{ background: 'none', border: 'none', padding: 0 }}
@@ -216,78 +216,78 @@ export default function RegisterForm() {
         </div>
         {passwordStrength && (
           <>
-            <div className="auth-form__strength-meter" data-strength={passwordStrength}>
-              <div className="auth-form__strength-bar"></div>
-              <div className="auth-form__strength-bar"></div>
-              <div className="auth-form__strength-bar"></div>
+            <div className="register-form__strength-meter" data-strength={passwordStrength}>
+              <div className="register-form__strength-bar"></div>
+              <div className="register-form__strength-bar"></div>
+              <div className="register-form__strength-bar"></div>
             </div>
-            <span className="auth-form__strength-text">
+            <span className="register-form__strength-text">
               Strength: {passwordStrength.charAt(0).toUpperCase() + passwordStrength.slice(1)}
             </span>
           </>
         )}
-        {fieldErrors.password && <span className="auth-form__error-text">{fieldErrors.password}</span>}
+        {fieldErrors.password && <span className="register-form__error-text">{fieldErrors.password}</span>}
       </div>
 
-      <div className="auth-form__row">
-        <div className="auth-form__group">
-          <label className="auth-form__label" htmlFor="firstName">First Name</label>
+      <div className="register-form__row">
+        <div className="register-form__group">
+          <label className="register-form__label" htmlFor="firstName">First Name</label>
           <input
             id="firstName"
             name="firstName"
             type="text"
-            className="auth-form__input"
+            className="register-form__input"
             value={formData.firstName}
             onChange={handleChange}
           />
         </div>
-        <div className="auth-form__group">
-          <label className="auth-form__label" htmlFor="lastName">Last Name</label>
+        <div className="register-form__group">
+          <label className="register-form__label" htmlFor="lastName">Last Name</label>
           <input
             id="lastName"
             name="lastName"
             type="text"
-            className="auth-form__input"
+            className="register-form__input"
             value={formData.lastName}
             onChange={handleChange}
           />
         </div>
       </div>
 
-      <div className="auth-form__group">
-        <label className="auth-form__label" htmlFor="phoneNumber">Phone Number</label>
+      <div className="register-form__group">
+        <label className="register-form__label" htmlFor="phoneNumber">Phone Number</label>
         <input
           id="phoneNumber"
           name="phoneNumber"
           type="tel"
-          className="auth-form__input"
+          className="register-form__input"
           value={formData.phoneNumber}
           onChange={handleChange}
           placeholder="(XXX) XXX-XXXX"
         />
       </div>
 
-      <div className="auth-form__checkbox-group">
+      <div className="register-form__checkbox-group">
         <input
           id="consent"
           name="consent"
           type="checkbox"
-          className="auth-form__checkbox"
+          className="register-form__checkbox"
           checked={formData.consent}
           onChange={handleChange}
           required
         />
-        <label htmlFor="consent" className="auth-form__checkbox-label">
+        <label htmlFor="consent" className="register-form__checkbox-label">
           I agree to the <a href="/terms">Terms and Conditions</a> and <a href="/privacy">Privacy Policy</a>.
         </label>
       </div>
-      {fieldErrors.consent && <span className="auth-form__error-text" style={{ marginBottom: '1.5rem' }}>{fieldErrors.consent}</span>}
+      {fieldErrors.consent && <span className="register-form__error-text" style={{ marginBottom: '1.5rem', display: 'block' }}>{fieldErrors.consent}</span>}
 
-      {generalError && <p className="auth-form__error">{generalError}</p>}
+      {generalError && <p className="register-form__error">{generalError}</p>}
 
       <button
         type="submit"
-        className="auth-form__submit"
+        className="register-form__submit"
         disabled={isLoading || !isFormValid()}
       >
         {isLoading ? "Registering..." : "Create Account"}

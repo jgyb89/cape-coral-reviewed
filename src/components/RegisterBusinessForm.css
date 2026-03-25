@@ -48,6 +48,63 @@
   box-shadow: 0 0 0 3px rgba(var(--color-primary-rgb, 211, 61, 40), 0.1);
 }
 
+.register-form__input--invalid {
+  border-color: var(--color-primary);
+  background-color: #fff5f5;
+}
+
+.register-form__error-text {
+  color: var(--color-primary);
+  font-size: 0.85rem;
+  margin-top: 0.25rem;
+  display: block;
+}
+
+.register-form__password-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.register-form__toggle-icon {
+  position: absolute;
+  right: 15px;
+  cursor: pointer;
+  color: #718096;
+  user-select: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.register-form__strength-meter {
+  display: flex;
+  height: 4px;
+  margin-top: 10px;
+  gap: 4px;
+  border-radius: 2px;
+  overflow: hidden;
+  background-color: #edf2f7;
+}
+
+.register-form__strength-bar {
+  flex: 1;
+  transition: background-color 0.3s ease;
+}
+
+.register-form__strength-meter[data-strength="weak"] .register-form__strength-bar:nth-child(1) { background-color: var(--color-primary); }
+.register-form__strength-meter[data-strength="medium"] .register-form__strength-bar:nth-child(1),
+.register-form__strength-meter[data-strength="medium"] .register-form__strength-bar:nth-child(2) { background-color: var(--color-secondary); }
+.register-form__strength-meter[data-strength="strong"] .register-form__strength-bar { background-color: #38a169; }
+
+.register-form__strength-text {
+  font-size: 0.75rem;
+  color: #718096;
+  margin-top: 5px;
+  text-align: right;
+  display: block;
+}
+
 .register-form__checkbox-section {
   margin: 2.5rem 0;
   padding-top: 2rem;
@@ -83,6 +140,11 @@
   cursor: pointer;
 }
 
+.register-form__checkbox-label a {
+  color: var(--color-primary);
+  text-decoration: underline;
+}
+
 .register-form__error {
   color: #e53e3e;
   background-color: #fff5f5;
@@ -108,13 +170,13 @@
   box-shadow: 0 4px 12px rgba(var(--color-primary-rgb, 211, 61, 40), 0.2);
 }
 
-.register-form__submit:hover {
+.register-form__submit:hover:not(:disabled) {
   background-color: #c53030;
   transform: translateY(-1px);
   box-shadow: 0 6px 15px rgba(var(--color-primary-rgb, 211, 61, 40), 0.3);
 }
 
-.register-form__submit:active {
+.register-form__submit:active:not(:disabled) {
   transform: translateY(0);
 }
 
@@ -123,6 +185,7 @@
   cursor: not-allowed;
   transform: none;
   box-shadow: none;
+  opacity: 0.8;
 }
 
 /* Success Message Styles */

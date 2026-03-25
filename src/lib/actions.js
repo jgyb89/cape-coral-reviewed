@@ -472,6 +472,8 @@ export async function submitListing(formData) {
               { id: 21, value: formData.streetAddress },
               { id: 22, value: formData.directoryType },
               { id: 23, value: formData.businessTypeCategories },
+              ...(formData.featuredImage ? [{ id: 27, value: formData.featuredImage }] : []),
+              ...(formData.galleryImages ? [{ id: 28, value: formData.galleryImages }] : []),
             ],
           },
         },
@@ -544,6 +546,172 @@ export async function registerBusiness(fieldValues) {
   } catch (error) {
     console.error('Register Business Error:', error);
     return { success: false, message: error.message };
+  }
+}
+
+/**
+ * Server Action to upload raw image files directly to the WordPress REST API.
+ */
+export async function uploadWPImage(formData) {
+  const file = formData.get('file');
+  if (!file) return null;
+
+  const cookieStore = await cookies();
+  const authToken = cookieStore.get('authToken')?.value;
+  if (!authToken) throw new Error('Unauthorized');
+
+  const wpFormData = new FormData();
+  wpFormData.append('file', file, file.name);
+
+  // Derive the base URL from the existing GraphQL endpoint, or fallback to the staging domain
+  const graphqlUrl = process.env.NEXT_PUBLIC_WORDPRESS_API_URL || process.env.NEXT_PUBLIC_GRAPHQL_ENDPOINT || 'https://staging.capecoralreviewed.com/graphql';
+  const baseUrl = graphqlUrl.replace('/graphql', '');
+
+  const res = await fetch(`${baseUrl}/wp-json/wp/v2/media`, {
+    method: 'POST',
+    headers: {
+      'Authorization': `Bearer ${authToken}`
+      // Let fetch automatically set the multipart boundary Content-Type
+    },
+    body: wpFormData
+  });
+
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.message || 'Image upload failed');
+  return data.id; // Return the ID for the Headless ID Strategy
+}
+
+/**
+ * Server Action to fetch blog posts from WordPress.
+ */
+export async function getBlogPosts() {
+  const query = `
+    query GetBlogPosts {
+      posts(first: 100, where: { status: PUBLISH }) {
+        nodes {
+          databaseId
+          title
+          slug
+          excerpt
+          featuredImage {
+            node {
+              sourceUrl
+            }
+          }
+          categories {
+            nodes {
+              name
+            }
+          }
+        }
+      }
+    }
+  `;
+
+  try {
+    const res = await fetch(GRAPHQL_URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ query }),
+      next: { revalidate: 60 },
+    });
+
+    const json = await res.json();
+    return json.data?.posts?.nodes || [];
+  } catch (error) {
+    console.error('Error fetching blog posts:', error);
+    return [];
+  }
+}
+
+/**
+ * Server Action to fetch a single blog post by its slug from WordPress.
+ */
+export async function getBlogPostBySlug(slug) {
+  const query = `
+    query GetPostBySlug($id: ID!) {
+      post(id: $id, idType: SLUG) {
+        title
+        content
+        date
+        featuredImage {
+          node {
+            sourceUrl
+            altText
+          }
+        }
+        categories {
+          nodes {
+            name
+          }
+        }
+        seo {
+          title
+          metaDesc
+        }
+      }
+    }
+  `;
+
+  try {
+    const res = await fetch(GRAPHQL_URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        query,
+        variables: { id: slug },
+      }),
+      next: { revalidate: 60 },
+    });
+
+    const json = await res.json();
+    return json.data?.post || null;
+  } catch (error) {
+    console.error('Error fetching blog post by slug:', error);
+    return null;
+  }
+}
+
+/**
+ * Server Action to fetch recent listings for the blog sidebar.
+ */
+export async function getSidebarListings() {
+  const query = `
+    query GetSidebarListings {
+      ccrlistings(first: 4, where: { orderby: { field: DATE, order: DESC } }) {
+        nodes {
+          databaseId
+          title
+          slug
+          featuredImage {
+            node {
+              sourceUrl
+            }
+          }
+        }
+      }
+    }
+  `;
+
+  try {
+    const res = await fetch(GRAPHQL_URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ query }),
+      next: { revalidate: 60 },
+    });
+
+    const json = await res.json();
+    return json.data?.ccrlistings?.nodes || [];
+  } catch (error) {
+    console.error('Error fetching sidebar listings:', error);
+    return [];
   }
 }
 
