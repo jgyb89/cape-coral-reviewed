@@ -581,3 +581,137 @@ export async function uploadWPImage(formData) {
   return data.id; // Return the ID for the Headless ID Strategy
 }
 
+/**
+ * Server Action to fetch blog posts from WordPress.
+ */
+export async function getBlogPosts() {
+  const query = `
+    query GetBlogPosts {
+      posts(first: 100, where: { status: PUBLISH }) {
+        nodes {
+          databaseId
+          title
+          slug
+          excerpt
+          featuredImage {
+            node {
+              sourceUrl
+            }
+          }
+          categories {
+            nodes {
+              name
+            }
+          }
+        }
+      }
+    }
+  `;
+
+  try {
+    const res = await fetch(GRAPHQL_URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ query }),
+      next: { revalidate: 60 },
+    });
+
+    const json = await res.json();
+    return json.data?.posts?.nodes || [];
+  } catch (error) {
+    console.error('Error fetching blog posts:', error);
+    return [];
+  }
+}
+
+/**
+ * Server Action to fetch a single blog post by its slug from WordPress.
+ */
+export async function getBlogPostBySlug(slug) {
+  const query = `
+    query GetPostBySlug($id: ID!) {
+      post(id: $id, idType: SLUG) {
+        title
+        content
+        date
+        featuredImage {
+          node {
+            sourceUrl
+            altText
+          }
+        }
+        categories {
+          nodes {
+            name
+          }
+        }
+        seo {
+          title
+          metaDesc
+        }
+      }
+    }
+  `;
+
+  try {
+    const res = await fetch(GRAPHQL_URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        query,
+        variables: { id: slug },
+      }),
+      next: { revalidate: 60 },
+    });
+
+    const json = await res.json();
+    return json.data?.post || null;
+  } catch (error) {
+    console.error('Error fetching blog post by slug:', error);
+    return null;
+  }
+}
+
+/**
+ * Server Action to fetch recent listings for the blog sidebar.
+ */
+export async function getSidebarListings() {
+  const query = `
+    query GetSidebarListings {
+      ccrlistings(first: 4, where: { orderby: { field: DATE, order: DESC } }) {
+        nodes {
+          databaseId
+          title
+          slug
+          featuredImage {
+            node {
+              sourceUrl
+            }
+          }
+        }
+      }
+    }
+  `;
+
+  try {
+    const res = await fetch(GRAPHQL_URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ query }),
+      next: { revalidate: 60 },
+    });
+
+    const json = await res.json();
+    return json.data?.ccrlistings?.nodes || [];
+  } catch (error) {
+    console.error('Error fetching sidebar listings:', error);
+    return [];
+  }
+}
+

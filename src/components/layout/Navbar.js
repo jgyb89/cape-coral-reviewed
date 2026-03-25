@@ -27,7 +27,8 @@ export default function Navbar({ currentUser }) {
 
   const getSubmitHref = () => {
     if (!currentUser) return "/register-business";
-    const userRoles = currentUser.roles?.nodes?.map(node => node.name.toLowerCase()) || [];
+    const userRoles =
+      currentUser.roles?.nodes?.map((node) => node.name.toLowerCase()) || [];
     if (userRoles.includes("business") || userRoles.includes("administrator")) {
       return "/submit-listing";
     }
@@ -50,7 +51,9 @@ export default function Navbar({ currentUser }) {
 
         <button
           className="mobile-menu-btn"
-          onClick={() => (isMobileOpen ? closeMobileMenu() : setIsMobileOpen(true))}
+          onClick={() =>
+            isMobileOpen ? closeMobileMenu() : setIsMobileOpen(true)
+          }
         >
           <span className="material-symbols-outlined">
             {isMobileOpen ? "close" : "menu"}
@@ -88,7 +91,7 @@ export default function Navbar({ currentUser }) {
             )}
           </div>
 
-          <Link href="/news" className="nav-link">
+          <Link href="/blog" className="nav-link">
             News & Reviews
           </Link>
 
