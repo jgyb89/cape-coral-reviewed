@@ -17,8 +17,9 @@ const formatContentForTextarea = (html) => {
 
 const validateUrl = (value) => {
   if (!value.trim()) return ''; // Allow empty fields (they get filtered out on submit)
-  const pattern = /^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/i;
-  if (!pattern.test(value)) return 'Please enter a valid URL.';
+  // Safer URL regex to avoid ReDoS from nested quantifiers
+  const saferPattern = /^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})(\/[\w\.-]*)*\/?$/i;
+  if (!saferPattern.test(value)) return 'Please enter a valid URL.';
   if (!/^https?:\/\//i.test(value)) return 'URL must start with http:// or https://';
   return '';
 };
