@@ -21,11 +21,11 @@ export default function ReviewActionManager({ currentUser, listingId, listingSlu
   return (
     <>
       <button 
-        className="btn-primary" 
+        className="listing-primary-btn" 
         onClick={handleWriteReviewClick}
       >
         <span className="material-symbols-outlined">rate_review</span>
-        <span>Write a Review</span>
+        Write a Review
       </button>
 
       <LoginModal 

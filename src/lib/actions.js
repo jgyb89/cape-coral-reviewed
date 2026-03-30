@@ -311,6 +311,176 @@ export async function submitUserReview(formData) {
 }
 
 /**
+ * Server Action to fetch a listing for editing.
+ */
+export async function getListingForEdit(databaseId) {
+  const cookieStore = await cookies();
+  const authToken = cookieStore.get('authToken')?.value;
+  if (!authToken) throw new Error('Unauthorized');
+
+  const query = `
+    query GetListingForEdit($id: ID!) {
+      ccrlisting(id: $id, idType: DATABASE_ID) {
+        databaseId
+        title
+        content
+        listingdata {
+          addressStreet
+          addressCity
+          addressState
+          addressZipCode
+          phoneNumber
+          businessEmail
+          websiteUrl
+          videoUrl
+          socialUrl
+          hoursMonday
+          hoursTuesday
+          hoursWednesday
+          hoursThursday
+          hoursFriday
+          hoursSaturday
+          hoursSunday
+        }
+      }
+    }
+  `;
+
+  try {
+    const res = await fetch(GRAPHQL_URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${authToken}`,
+      },
+      body: JSON.stringify({ query, variables: { id: databaseId } }),
+    });
+
+    const json = await res.json();
+    if (json.errors) {
+      throw new Error(json.errors[0].message);
+    }
+    return json.data?.ccrlisting || null;
+  } catch (error) {
+    console.error('Get Listing For Edit Error:', error);
+    return null;
+  }
+}
+
+/**
+ * Server Action to update an existing user listing.
+ */
+export async function updateUserListing(databaseId, payload) {
+  const cookieStore = await cookies();
+  const authToken = cookieStore.get('authToken')?.value;
+  if (!authToken) throw new Error('Unauthorized');
+
+  const query = `
+    mutation UpdateUserListing($input: UpdateCcrlistingInput!) {
+      updateCcrlisting(input: $input) {
+        ccrlisting {
+          databaseId
+        }
+      }
+    }
+  `;
+
+  // Map frontend data directly to ACF snake_case keys
+  const acfData = {
+    address_street: payload.addressStreet || payload.listingdata?.addressStreet || '',
+    address_city: payload.addressCity || payload.listingdata?.addressCity || '',
+    address_state: payload.addressState || payload.listingdata?.addressState || '',
+    address_zip_code: payload.addressZipCode || payload.listingdata?.addressZipCode || '',
+    phone_number: payload.phoneNumber || payload.listingdata?.phoneNumber || '',
+    business_email: payload.businessEmail || payload.listingdata?.businessEmail || '',
+    website_url: payload.websiteUrl || payload.listingdata?.websiteUrl || '',
+    video_url: payload.videoUrl || payload.listingdata?.videoUrl || '',
+    social_url: payload.listingdata?.socialUrl || payload.socialUrl || '',
+    hours_monday: payload.listingdata?.hoursMonday || payload.hoursMonday || '',
+    hours_tuesday: payload.listingdata?.hoursTuesday || payload.hoursTuesday || '',
+    hours_wednesday: payload.listingdata?.hoursWednesday || payload.hoursWednesday || '',
+    hours_thursday: payload.listingdata?.hoursThursday || payload.hoursThursday || '',
+    hours_friday: payload.listingdata?.hoursFriday || payload.hoursFriday || '',
+    hours_saturday: payload.listingdata?.hoursSaturday || payload.hoursSaturday || '',
+    hours_sunday: payload.listingdata?.hoursSunday || payload.hoursSunday || '',
+  };
+
+  const variables = {
+    input: {
+      id: databaseId,
+      title: payload.title,
+      content: payload.content,
+      listingDataJson: JSON.stringify(acfData) // Send as a single JSON string
+    }
+  };
+
+  const res = await fetch(process.env.NEXT_PUBLIC_WORDPRESS_API_URL, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${authToken}`
+    },
+    body: JSON.stringify({ query, variables })
+  });
+
+  const json = await res.json();
+  if (json.errors) throw new Error(json.errors[0].message);
+
+  revalidatePath('/dashboard/listings');
+  revalidatePath('/directory', 'layout');
+
+  return { success: true };
+}
+
+/**
+ * Server Action to delete a user's listing.
+ */
+export async function deleteUserListing(listingId) {
+  const cookieStore = await cookies();
+  const authToken = cookieStore.get('authToken')?.value;
+
+  if (!authToken) {
+    throw new Error('Unauthorized');
+  }
+
+  const mutation = `
+    mutation DeleteUserListing($id: ID!) {
+      deleteCcrlisting(input: { id: $id }) {
+        deletedId
+      }
+    }
+  `;
+
+  try {
+    const res = await fetch(GRAPHQL_URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${authToken}`,
+      },
+      body: JSON.stringify({
+        query: mutation,
+        variables: { id: listingId },
+      }),
+    });
+
+    const json = await res.json();
+
+    if (json.errors) {
+      throw new Error(json.errors[0].message);
+    }
+
+    revalidatePath('/dashboard/listings');
+    revalidatePath('/directory', 'layout');
+
+    return { success: true };
+  } catch (error) {
+    console.error('Delete Listing Error:', error);
+    return { success: false, error: error.message };
+  }
+}
+
+/**
  * Server Action to update an existing user review.
  */
 export async function updateUserReview(reviewId, formData) {
@@ -426,6 +596,9 @@ export async function submitBugReport(formData) {
  * Server Action to submit a new business listing to Gravity Forms (Form ID: 11).
  */
 export async function submitListing(formData) {
+  const cookieStore = await cookies();
+  const authToken = cookieStore.get('authToken')?.value;
+
   const mutation = `
     mutation SubmitListing($input: SubmitGfFormInput!) {
       submitGfForm(input: $input) {
@@ -440,11 +613,17 @@ export async function submitListing(formData) {
   `;
 
   try {
+    const headers = {
+      'Content-Type': 'application/json',
+    };
+
+    if (authToken) {
+      headers['Authorization'] = `Bearer ${authToken}`;
+    }
+
     const res = await fetch(GRAPHQL_URL, {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      headers: headers,
       body: JSON.stringify({
         query: mutation,
         variables: {

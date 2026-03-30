@@ -2,34 +2,6 @@
   padding: 0px 0px 20px;
 }
 
-.blog-post__back-button {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem; /* Adds perfect spacing between the icon and text */
-  background: none;
-  color: #e94f37;
-  border: none;
-  padding: 0;
-  cursor: pointer;
-  font-size: 16px;
-  font-weight: 600;
-  font-family: inherit;
-  transition:
-    transform 0.2s ease,
-    color 0.2s ease;
-}
-
-/* Optional: Adds a nice micro-interaction to slide the arrow back slightly on hover */
-.blog-post__back-button:hover {
-  transform: translateX(-4px);
-  color: #c83d29; /* Slightly darker shade for hover state */
-}
-
-/* Ensure the icon itself inherits the size properly */
-.blog-post__back-button .material-symbols-outlined {
-  font-size: 20px;
-}
-
 .blog-post-layout {
   display: grid;
   grid-template-columns: 1fr 350px;

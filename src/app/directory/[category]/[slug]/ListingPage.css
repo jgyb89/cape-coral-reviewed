@@ -33,40 +33,6 @@
   gap: 0.5rem;
 }
 
-.listing-action-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.5rem 1.25rem;
-  background: #fff;
-  color: #e04c4c;
-  border: 1px solid #e04c4c;
-  border-radius: 8px;
-  font-weight: 600;
-  font-size: 0.95rem;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  text-decoration: none;
-}
-
-.listing-action-btn:hover {
-  background: #e04c4c;
-  color: #fff;
-}
-
-@media (max-width: 768px) {
-  .listing-action-btn__text {
-    display: none;
-  }
-  .listing-action-btn {
-    padding: 0.6rem;
-  }
-}
-
-.listing-action-btn .material-symbols-outlined {
-  font-size: 1.25rem;
-}
-
 .listing-header {
   margin-bottom: 2rem;
 }

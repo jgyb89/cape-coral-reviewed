@@ -37,6 +37,9 @@ export default function Navbar({ currentUser }) {
 
   const submitHref = getSubmitHref();
 
+  const userRoles = currentUser?.roles?.nodes?.map((node) => node.name.toLowerCase()) || [];
+  const isBusinessOrAdmin = userRoles.includes("business") || userRoles.includes("administrator");
+
   return (
     <>
       <nav className="main-nav">
@@ -115,6 +118,9 @@ export default function Navbar({ currentUser }) {
                     <Link href="/dashboard">Profile</Link>
                     <Link href="/dashboard/favorites">Favorites</Link>
                     <Link href="/dashboard/reviews">My Reviews</Link>
+                    {isBusinessOrAdmin && (
+                      <Link href="/dashboard/listings">My Listings</Link>
+                    )}
                     <button onClick={() => setIsLogoutModalOpen(true)}>
                       Sign Out
                     </button>
@@ -331,6 +337,17 @@ export default function Navbar({ currentUser }) {
                         My Reviews
                       </Link>
                     </li>
+                    {isBusinessOrAdmin && (
+                      <li className="flyout-item">
+                        <Link
+                          href="/dashboard/listings"
+                          className="flyout-link"
+                          onClick={closeMobileMenu}
+                        >
+                          My Listings
+                        </Link>
+                      </li>
+                    )}
                     <li className="flyout-item">
                       <button
                         className="flyout-link"

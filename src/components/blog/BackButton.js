@@ -7,7 +7,7 @@ export default function BackButton() {
 
   return (
     <div className="blog-post__back-wrapper">
-      <button onClick={() => router.back()} className="blog-post__back-button">
+      <button onClick={() => router.back()} className="listing-action-btn">
         <span className="material-symbols-outlined">arrow_back</span>
         <span className="listing-action-btn__text">Go Back</span>
       </button>
