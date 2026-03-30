@@ -8,25 +8,31 @@ const daysList = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Satur
 
 const formatContentForTextarea = (html) => {
   if (!html) return '';
+  // Use a simpler tag stripping approach or non-greedy match to reduce backtracking risk
   return html
-    .replace(/<\/?p>/gi, '\n\n') // Convert paragraphs to double line breaks
-    .replace(/<br\s*\/?>/gi, '\n') // Convert br tags to single line breaks
-    .replace(/<[^>]+>/g, '') // Strip all remaining HTML tags
+    .replace(/<\/?p>/gi, '\n\n')
+    .replace(/<br\s*\/?>/gi, '\n')
+    .replace(/<[^>]*>/g, '') // Strips tags safely
     .trim();
 };
 
 const validateUrl = (value) => {
-  if (!value.trim()) return ''; // Allow empty fields (they get filtered out on submit)
-  // Safer URL regex to avoid ReDoS from nested quantifiers
-  const saferPattern = /^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})(\/[\w\.-]*)*\/?$/i;
-  if (!saferPattern.test(value)) return 'Please enter a valid URL.';
-  if (!/^https?:\/\//i.test(value)) return 'URL must start with http:// or https://';
-  return '';
+  if (!value.trim()) return '';
+  try {
+    const urlString = value.match(/^https?:\/\//i) ? value : `https://${value}`;
+    const url = new URL(urlString);
+    // Basic check that it has a TLD-like structure (contains at least one dot in hostname)
+    if (!url.hostname.includes('.')) return 'Please enter a valid URL.';
+    return '';
+  } catch (e) {
+    return 'Please enter a valid URL.';
+  }
 };
 
 const parseExistingHours = (hoursStr) => {
   if (!hoursStr || hoursStr.toLowerCase() === 'closed') return { open: '', openAmPm: 'AM', close: '', closeAmPm: 'PM', closed: true };
-  const match = hoursStr.match(/([\d:]+)\s*(AM|PM)?\s*-\s*([\d:]+)\s*(AM|PM)?/i);
+  // Tightened regex to avoid potential ReDoS from excessive whitespace backtracking
+  const match = hoursStr.match(/^([\d:]+)\s*(AM|PM)?\s*-\s*([\d:]+)\s*(AM|PM)?$/i);
   if (match) return { open: match[1], openAmPm: (match[2]||'AM').toUpperCase(), close: match[3], closeAmPm: (match[4]||'PM').toUpperCase(), closed: false };
   return { open: '', openAmPm: 'AM', close: '', closeAmPm: 'PM', closed: false }; // Fallback for invalid text
 };
