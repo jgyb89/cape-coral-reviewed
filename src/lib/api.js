@@ -20,6 +20,12 @@ export async function getListingBySlug(slug) {
           }
         }
 
+        attachedMedia(first: 10) {
+          nodes {
+            sourceUrl
+          }
+        }
+
         seo {
           title
           metaDesc
