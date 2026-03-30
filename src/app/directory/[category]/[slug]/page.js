@@ -1,14 +1,15 @@
 import DOMPurify from "isomorphic-dompurify";
 import Script from "next/script";
-import Image from "next/image";
 import PropTypes from "prop-types";
 import { getListingBySlug } from "@/lib/api";
 import { getViewer } from "@/lib/auth";
-import ContactCard from "@/components/directory/ContactCard";
-import HoursCard from "@/components/directory/HoursCard";
+import ListingGallery from "@/components/directory/ListingGallery";
+import BlogSidebar from "@/components/blog/BlogSidebar";
+import BackButton from "@/components/blog/BackButton";
 import ReviewList from "@/components/directory/ReviewList";
 import ReviewActionManager from "@/components/directory/ReviewActionManager";
 import FavoriteButton from "@/components/directory/FavoriteButton";
+import StarRating from "@/components/ui/StarRating";
 import "./ListingPage.css";
 
 export async function generateMetadata({ params }) {
@@ -51,15 +52,18 @@ export default async function DirectoryListingPage({ params }) {
   }
 
   const listingdata = listing.listingdata || {};
-
   const reviewNodes = listing.reviews?.nodes || [];
   const reviewCount = reviewNodes.length;
   const averageRating = reviewCount > 0 
     ? (reviewNodes.reduce((acc, curr) => acc + (Number.parseFloat(curr.reviewFields?.starRating) || 0), 0) / reviewCount).toFixed(1)
     : null;
 
-  const galleryNodes = listing.featuredImage?.node ? [listing.featuredImage.node] : [];
-  const heroImage = listing.featuredImage?.node?.sourceUrl || "/placeholder-image.jpg";
+  const initialIsFavorite = currentUser?.userData?.favoriteListings?.nodes?.some(
+    (n) => n.databaseId === listing.databaseId
+  ) || false;
+
+  const featuredImage = listing.featuredImage?.node?.sourceUrl || "";
+  const galleryImages = listing.attachedMedia?.nodes?.map(node => node.sourceUrl) || [];
 
   const cleanContent = DOMPurify.sanitize(listing.content || "", {
     ALLOWED_TAGS: ["p", "br", "b", "i", "em", "strong", "a", "ul", "ol", "li", "h3", "h4"],
@@ -70,7 +74,7 @@ export default async function DirectoryListingPage({ params }) {
     "@context": "https://schema.org",
     "@type": "LocalBusiness",
     "name": listing.title,
-    "image": galleryNodes.map(img => img.sourceUrl) || [],
+    "image": [featuredImage, ...galleryImages].filter(Boolean),
     "address": {
       "@type": "PostalAddress",
       "streetAddress": listingdata.addressStreet || "",
@@ -90,94 +94,140 @@ export default async function DirectoryListingPage({ params }) {
     } : undefined
   };
 
+  const hours = [
+    { day: "Monday", time: listingdata.hoursMonday },
+    { day: "Tuesday", time: listingdata.hoursTuesday },
+    { day: "Wednesday", time: listingdata.hoursWednesday },
+    { day: "Thursday", time: listingdata.hoursThursday },
+    { day: "Friday", time: listingdata.hoursFriday },
+    { day: "Saturday", time: listingdata.hoursSaturday },
+    { day: "Sunday", time: listingdata.hoursSunday },
+  ];
+
   return (
-    <div className="listing-page">
+    <div className="listing-layout">
       <Script
         id="listing-jsonld"
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
 
-      <div className="listing-hero">
-        <Image 
-          src={heroImage} 
-          alt={listing.title} 
-          fill 
-          style={{ objectFit: 'cover' }}
-          priority
-        />
-      </div>
+      <main className="listing-main">
+        <div className="listing-top-actions">
+          <BackButton />
+          <div className="listing-action-group">
+            <FavoriteButton 
+              listingId={listing.databaseId} 
+              initialIsFavorite={initialIsFavorite}
+              currentUser={currentUser}
+            />
+            <button className="listing-action-btn">
+              <span className="material-symbols-outlined">share</span>
+              <span className="listing-action-btn__text">Share</span>
+            </button>
+            <button className="listing-action-btn">
+              <span className="material-symbols-outlined">flag</span>
+              <span className="listing-action-btn__text">Report</span>
+            </button>
+          </div>
+        </div>
 
-      <header className="listing-header">
-        <div className="listing-header__container">
-          <div className="listing-header__info">
-            <h1 className="listing-header__title">{listing.title}</h1>
-            <div className="ccr-card__rating" style={{ justifyContent: 'flex-start', marginBottom: '0' }}>
-              <span className="material-symbols-outlined" style={{ fontSize: '20px', color: 'var(--color-secondary)' }}>
-                star
-              </span>
-              <span style={{ fontSize: '1.1rem', fontWeight: '600', color: 'var(--color-text)' }}>
-                {averageRating || "0.0"}
-              </span>
-              <span style={{ color: '#666', fontSize: '0.9rem', marginLeft: '0.5rem' }}>
-                ({reviewCount} reviews)
-              </span>
+        <ListingGallery 
+          featuredImage={featuredImage} 
+          galleryImages={galleryImages} 
+        />
+
+        <header className="listing-header">
+          <h1 className="listing-title">{listing.title}</h1>
+          <div className="listing-header__meta">
+            <div className="listing-header__rating">
+              <StarRating rating={averageRating} />
+              <span style={{ marginLeft: '0.5rem' }}>{averageRating || "0.0"} ({reviewCount} reviews)</span>
+            </div>
+            <div className="listing-header__categories">
+              {listing.directoryTypes?.nodes?.map(cat => (
+                <span key={cat.slug} className="listing-category-tag">{cat.name}</span>
+              ))}
             </div>
           </div>
-          <div className="listing-header__actions">
+        </header>
+
+        <section className="listing-card">
+          <h2 className="listing-card__title">
+            <span className="material-symbols-outlined">info</span>
+            Business Info
+          </h2>
+          <div className="listing-card__item">
+            <span className="material-symbols-outlined listing-card__icon">location_on</span>
+            <span className="listing-card__text">
+              {listingdata.addressStreet}, {listingdata.addressCity}, {listingdata.addressState} {listingdata.addressZipCode}
+            </span>
+          </div>
+          <div className="listing-card__item">
+            <span className="material-symbols-outlined listing-card__icon">call</span>
+            <span className="listing-card__text">{listingdata.phoneNumber}</span>
+          </div>
+          {listingdata.websiteUrl && (
+            <div className="listing-card__item">
+              <span className="material-symbols-outlined listing-card__icon">language</span>
+              <a href={listingdata.websiteUrl} className="listing-card__link" target="_blank" rel="noopener noreferrer">
+                Visit Website
+              </a>
+            </div>
+          )}
+        </section>
+
+        <section className="listing-card">
+          <h2 className="listing-card__title">
+            <span className="material-symbols-outlined">schedule</span>
+            Business Hours
+          </h2>
+          {hours.map(h => (
+            <div key={h.day} className="listing-card__item" style={{ justifyContent: 'space-between' }}>
+              <span style={{ fontWeight: 600 }}>{h.day}</span>
+              <span>{h.time || "Closed"}</span>
+            </div>
+          ))}
+        </section>
+
+        <section className="listing-card">
+          <h2 className="listing-card__title">
+            <span className="material-symbols-outlined">description</span>
+            About the Business
+          </h2>
+          <div 
+            className="listing-card__text"
+            dangerouslySetInnerHTML={{ __html: cleanContent }}
+          />
+        </section>
+
+        <section className="listing-card">
+          <h2 className="listing-card__title">
+            <span className="material-symbols-outlined">reviews</span>
+            Recommended Reviews
+          </h2>
+          <div style={{ marginBottom: '2rem' }}>
             <ReviewActionManager 
               currentUser={currentUser} 
               listingId={listing.databaseId} 
               listingSlug={slug}
             />
+          </div>
+          <ReviewList reviews={listing.reviews} />
+        </section>
+      </main>
+
+      <aside className="listing-sidebar">
+        <div style={{ position: 'sticky', top: '2rem' }}>
+          <div className="listing-card">
+            <h3 className="listing-card__title" style={{ border: 'none', marginBottom: 0 }}>
+              Add to Favorites
+            </h3>
             <FavoriteButton listingId={listing.databaseId} currentUser={currentUser} />
-            <button className="btn-secondary">
-              <span className="material-symbols-outlined">share</span>
-              <span>Share</span>
-            </button>
           </div>
+          <BlogSidebar />
         </div>
-      </header>
-
-      <div className="listing-body">
-        <main>
-          <section className="listing-section">
-            <h2 className="listing-section__title">Overview</h2>
-            <div
-              className="listing-section__content"
-              style={{ fontSize: "1.1rem", lineHeight: "1.8", color: "#333" }}
-              dangerouslySetInnerHTML={{ __html: cleanContent }}
-            />
-          </section>
-
-          {listingdata.videoUrl && (
-            <section className="listing-section">
-              <h2 className="listing-section__title">Video</h2>
-              {/* Video embed logic would go here */}
-            </section>
-          )}
-
-          <section className="listing-section">
-            <h2 className="listing-section__title">Reviews</h2>
-            <ReviewList reviews={listing.reviews} />
-          </section>
-        </main>
-
-        <aside>
-          <div style={{ position: "sticky", top: "2rem" }}>
-            <div style={{ marginBottom: "2rem" }}>
-              <ContactCard contactInfo={listing} />
-            </div>
-            <HoursCard hours={listing} />
-            
-            {/* Featured Listings Placeholder */}
-            <div style={{ marginTop: "3rem" }}>
-              <h3 className="listing-section__title" style={{ fontSize: '1.2rem' }}>Featured Listings</h3>
-              {/* Featured Listings Grid/List would go here */}
-            </div>
-          </div>
-        </aside>
-      </div>
+      </aside>
     </div>
   );
 }

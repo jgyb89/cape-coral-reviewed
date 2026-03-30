@@ -1,83 +1,166 @@
-.listing-page {
-  background-color: var(--color-bg);
-}
-.listing-hero {
-  width: 100%;
-  height: 50vh;
-  min-height: 350px;
-  max-height: 600px;
-  position: relative;
-  background-color: var(--color-accent);
-}
-.listing-header {
-  padding: 2rem 0;
-  border-bottom: 1px solid #eee;
-}
-.listing-header__container {
+.listing-layout {
+  display: grid;
+  grid-template-columns: 1fr 350px;
+  gap: 2rem;
   max-width: 1200px;
   margin: 0 auto;
-  padding: 0 2rem;
+  padding: 2rem 1.5rem;
+  align-items: start;
+}
+
+@media (max-width: 992px) {
+  .listing-layout {
+    grid-template-columns: 1fr;
+    padding: 1.5rem 1rem;
+  }
+}
+
+.listing-main {
+  min-width: 0;
+}
+
+.listing-top-actions {
   display: flex;
   justify-content: space-between;
-  align-items: flex-start;
+  align-items: center;
+  margin-bottom: 1.5rem;
   flex-wrap: wrap;
-  gap: 1.5rem;
-}
-.listing-header__title {
-  font-size: 2.5rem;
-  margin-bottom: 0.5rem;
-}
-.listing-header__actions {
-  display: flex;
   gap: 1rem;
 }
-.btn-primary {
-  background-color: var(--color-primary);
-  color: white;
-  padding: 0.75rem 1.5rem;
+
+.listing-action-group {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.listing-action-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1.25rem;
+  background: #fff;
+  color: #e04c4c;
+  border: 1px solid #e04c4c;
   border-radius: 8px;
   font-weight: 600;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
   text-decoration: none;
-  border: none;
-  cursor: pointer;
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  transition: background 0.2s;
 }
-.btn-primary:hover { filter: brightness(0.9); }
-.btn-secondary {
-  background-color: transparent;
-  color: var(--color-text);
-  padding: 0.75rem 1.5rem;
-  border-radius: 8px;
-  font-weight: 500;
-  border: 1px solid #ccc;
-  cursor: pointer;
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  transition: background 0.2s;
+
+.listing-action-btn:hover {
+  background: #e04c4c;
+  color: #fff;
 }
-.btn-secondary:hover { background-color: var(--color-accent); }
-.listing-body {
-  max-width: 1200px;
-  margin: 3rem auto;
-  padding: 0 2rem;
-  display: grid;
-  grid-template-columns: 2fr 1fr;
-  gap: 3rem;
+
+@media (max-width: 768px) {
+  .listing-action-btn__text {
+    display: none;
+  }
+  .listing-action-btn {
+    padding: 0.6rem;
+  }
 }
-@media (max-width: 900px) {
-  .listing-body { grid-template-columns: 1fr; }
+
+.listing-action-btn .material-symbols-outlined {
+  font-size: 1.25rem;
 }
-.listing-section {
-  margin-bottom: 3rem;
+
+.listing-header {
+  margin-bottom: 2rem;
 }
-.listing-section__title {
+
+.listing-title {
+  font-size: 2.5rem;
   font-family: var(--font-heading);
-  border-bottom: 2px solid var(--color-primary);
-  padding-bottom: 0.5rem;
-  display: inline-block;
+  font-weight: 800;
+  margin-bottom: 0.5rem;
+  color: var(--color-text);
+}
+
+.listing-header__meta {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.listing-header__rating {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-weight: 600;
+}
+
+.listing-header__stars {
+  color: #f59e0b;
+  font-size: 1.2rem;
+}
+
+.listing-header__categories {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.listing-category-tag {
+  background: #edf2f7;
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+  font-size: 0.85rem;
+  color: #4a5568;
+}
+
+.listing-card {
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 1.5rem;
   margin-bottom: 1.5rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.02);
+}
+
+.listing-card__title {
+  font-family: var(--font-heading);
+  font-size: 1.25rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 0;
+  margin-bottom: 1rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid #e2e8f0;
+  color: var(--color-text);
+}
+
+.listing-card__item {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.listing-card__item:last-child {
+  margin-bottom: 0;
+}
+
+.listing-card__icon {
+  color: #718096;
+  font-size: 1.25rem;
+}
+
+.listing-card__text {
+  line-height: 1.5;
+  color: #2d3748;
+}
+
+.listing-card__link {
+  color: #e04c4c;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.listing-card__link:hover {
+  text-decoration: underline;
 }
