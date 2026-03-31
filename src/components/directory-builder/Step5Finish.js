@@ -18,7 +18,8 @@ const Step5Finish = ({ formData, prevStep }) => {
       .replaceAll(/&/g, '-and-')         // Replace & with 'and'
       // Use a more standard non-alphanumeric replacement
       .replaceAll(/[^a-z0-9]+/g, '-')     
-      .replaceAll(/^-+|-+$/g, '');        // Combined trim for leading/trailing hyphens
+      .replace(/^-/, '')                  // Safely trim single leading hyphen
+      .replace(/-$/, '');                 // Safely trim single trailing hyphen
   };
 
   const handleSubmit = async () => {

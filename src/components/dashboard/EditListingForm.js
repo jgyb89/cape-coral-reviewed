@@ -33,7 +33,7 @@ const validateUrl = (value) => {
 const parseExistingHours = (hoursStr) => {
   if (!hoursStr || hoursStr.toLowerCase() === 'closed') return { open: '', openAmPm: 'AM', close: '', closeAmPm: 'PM', closed: true };
   // Using a more rigid, non-overlapping pattern for time to avoid backtracking
-  const match = hoursStr.trim().match(/^(\d{1,2}(?::\d{2})?)\s*(AM|PM)?\s*-\s*(\d{1,2}(?::\d{2})?)\s*(AM|PM)?$/i);
+  const match = hoursStr.trim().match(/^(\d{1,2}(?::\d{2})?)(?:\s*(AM|PM))?\s*-\s*(\d{1,2}(?::\d{2})?)(?:\s*(AM|PM))?$/i);
   if (match) return { open: match[1], openAmPm: (match[2]||'AM').toUpperCase(), close: match[3], closeAmPm: (match[4]||'PM').toUpperCase(), closed: false };
   return { open: '', openAmPm: 'AM', close: '', closeAmPm: 'PM', closed: false }; // Fallback for invalid text
 };
