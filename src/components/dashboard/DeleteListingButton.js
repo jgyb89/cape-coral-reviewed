@@ -44,7 +44,9 @@ export default function DeleteListingButton({ listingId }) {
         fontSize: '0.9rem'
       }}
       onMouseOver={(e) => e.target.style.backgroundColor = '#b91c1c'}
+      onFocus={(e) => e.target.style.backgroundColor = '#b91c1c'}
       onMouseOut={(e) => e.target.style.backgroundColor = '#dc2626'}
+      onBlur={(e) => e.target.style.backgroundColor = '#dc2626'}
     >
       <span className="material-symbols-outlined" style={{ fontSize: '1.2rem' }}>delete</span>
       {isDeleting ? 'Deleting...' : 'Delete'}
