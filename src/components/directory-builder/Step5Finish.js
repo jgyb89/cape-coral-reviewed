@@ -15,10 +15,10 @@ const Step5Finish = ({ formData, prevStep }) => {
       .toString()
       .toLowerCase()
       .trim()
-      .replace(/&/g, '-and-')         // Replace & with 'and'
+      .replaceAll(/&/g, '-and-')         // Replace & with 'and'
       // Use a more standard non-alphanumeric replacement
-      .replace(/[^a-z0-9]+/g, '-')     
-      .replace(/^-+|-+$/g, '');        // Combined trim for leading/trailing hyphens
+      .replaceAll(/[^a-z0-9]+/g, '-')     
+      .replaceAll(/^-+|-+$/g, '');        // Combined trim for leading/trailing hyphens
   };
 
   const handleSubmit = async () => {

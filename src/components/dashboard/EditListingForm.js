@@ -8,11 +8,11 @@ const daysList = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Satur
 
 const formatContentForTextarea = (html) => {
   if (!html) return '';
-  // Use a simpler tag stripping approach or non-greedy match to reduce backtracking risk
+  // Use a more restricted approach or length limit to prevent ReDoS
   return html
-    .replace(/<\/?p>/gi, '\n\n')
-    .replace(/<br\s*\/?>/gi, '\n')
-    .replace(/<[^>]*>/g, '') // Strips tags safely
+    .replaceAll(/<\/?p>/gi, '\n\n')
+    .replaceAll(/<br\s*\/?>/gi, '\n')
+    .replaceAll(/<[^>]{1,512}>/g, '') // Added length limit to prevent catastrophic backtracking
     .trim();
 };
 
@@ -24,21 +24,22 @@ const validateUrl = (value) => {
     // Basic check that it has a TLD-like structure (contains at least one dot in hostname)
     if (!url.hostname.includes('.')) return 'Please enter a valid URL.';
     return '';
-  } catch (e) {
+  } catch {
+    // URL parsing fails if the input is not a valid URL. This is an expected validation result.
     return 'Please enter a valid URL.';
   }
 };
 
 const parseExistingHours = (hoursStr) => {
   if (!hoursStr || hoursStr.toLowerCase() === 'closed') return { open: '', openAmPm: 'AM', close: '', closeAmPm: 'PM', closed: true };
-  // Tightened regex to avoid potential ReDoS from excessive whitespace backtracking
-  const match = hoursStr.match(/^([\d:]+)\s*(AM|PM)?\s*-\s*([\d:]+)\s*(AM|PM)?$/i);
+  // Using a more rigid, non-overlapping pattern for time to avoid backtracking
+  const match = hoursStr.trim().match(/^(\d{1,2}(?::\d{2})?)\s*(AM|PM)?\s*-\s*(\d{1,2}(?::\d{2})?)\s*(AM|PM)?$/i);
   if (match) return { open: match[1], openAmPm: (match[2]||'AM').toUpperCase(), close: match[3], closeAmPm: (match[4]||'PM').toUpperCase(), closed: false };
   return { open: '', openAmPm: 'AM', close: '', closeAmPm: 'PM', closed: false }; // Fallback for invalid text
 };
 
 const smartFormatTime = (value, currentAmPm) => {
-  let digits = value.replace(/\D/g, '');
+  let digits = value.replaceAll(/\D/g, '');
   if (!digits) return { time: '', amPm: currentAmPm };
 
   let hours = 0;
@@ -136,7 +137,7 @@ export default function EditListingForm({ initialData }) {
 
   const handleTimeChange = (day, field, value) => {
     // Allow typing numbers and colons freely
-    const rawValue = field === 'closed' ? value : (field.includes('AmPm') ? value : value.replace(/[^\d:]/g, '').slice(0, 5));
+    const rawValue = field === 'closed' ? value : (field.includes('AmPm') ? value : value.replaceAll(/[^\d:]/g, '').slice(0, 5));
     const updatedDay = { ...formData.hoursParams[day], [field]: rawValue };
     setFormData({ ...formData, hoursParams: { ...formData.hoursParams, [day]: updatedDay } });
   };
