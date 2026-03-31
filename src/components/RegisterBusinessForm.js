@@ -60,7 +60,8 @@ export default function RegisterBusinessForm() {
       businessName: (v) => (!v ? "Business name is required" : ""),
       email: (v) => {
         if (!v) return "Email is required";
-        const emailRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;
+        // Flattened email regex to avoid ReDoS hotspots from nested optional groups
+        const emailRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
         return !emailRegex.test(v) ? "Please enter a valid email address" : "";
       },
       password: (v) => {

@@ -55,8 +55,8 @@ export default function RegisterForm() {
       if (!value) error = "Username is required";
       else if (value.length < 3) error = "Username must be at least 3 characters";
     } else if (name === "email") {
-      // Safer email regex to prevent ReDoS
-      const emailRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;
+      // Flattened email regex to avoid ReDoS hotspots from nested optional groups
+      const emailRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
       if (!value) error = "Email is required";
       else if (!emailRegex.test(value)) error = "Please enter a valid email address";
     } else if (name === "password") {
