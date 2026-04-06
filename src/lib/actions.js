@@ -324,6 +324,11 @@ export async function getListingForEdit(databaseId) {
         databaseId
         title
         content
+        author {
+          node {
+            databaseId
+          }
+        }
         listingdata {
           addressStreet
           addressCity
@@ -371,9 +376,14 @@ export async function getListingForEdit(databaseId) {
  * Server Action to update an existing user listing.
  */
 export async function updateUserListing(databaseId, payload) {
-  const cookieStore = await cookies();
-  const authToken = cookieStore.get('authToken')?.value;
-  if (!authToken) throw new Error('Unauthorized');
+  const viewer = await getViewer();
+  if (!viewer) throw new Error('Unauthorized');
+
+  // IDOR CHECK: Verify ownership before update
+  const listing = await getListingForEdit(databaseId);
+  if (!listing || listing.author?.node?.databaseId !== viewer.databaseId) {
+    throw new Error('You do not have permission to edit this listing.');
+  }
 
   const query = `
     mutation UpdateUserListing($input: UpdateCcrlistingInput!) {
@@ -384,6 +394,8 @@ export async function updateUserListing(databaseId, payload) {
       }
     }
   `;
+
+  const authToken = (await cookies()).get('authToken')?.value;
 
   // Map frontend data directly to ACF snake_case keys
   const acfData = {
@@ -436,11 +448,13 @@ export async function updateUserListing(databaseId, payload) {
  * Server Action to delete a user's listing.
  */
 export async function deleteUserListing(listingId) {
-  const cookieStore = await cookies();
-  const authToken = cookieStore.get('authToken')?.value;
+  const viewer = await getViewer();
+  if (!viewer) throw new Error('Unauthorized');
 
-  if (!authToken) {
-    throw new Error('Unauthorized');
+  // IDOR CHECK: Verify ownership before deletion
+  const listing = await getListingForEdit(listingId);
+  if (!listing || listing.author?.node?.databaseId !== viewer.databaseId) {
+    throw new Error('You do not have permission to delete this listing.');
   }
 
   const mutation = `
@@ -450,6 +464,8 @@ export async function deleteUserListing(listingId) {
       }
     }
   `;
+
+  const authToken = (await cookies()).get('authToken')?.value;
 
   try {
     const res = await fetch(GRAPHQL_URL, {

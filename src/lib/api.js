@@ -110,13 +110,13 @@ export async function getListingBySlug(slug) {
 }
 
 export async function getListings(categorySlug = null) {
-  const taxQuery = categorySlug
-    ? `, where: { taxQuery: { taxArray: [{ taxonomy: CCRDIRECTORYTYPE, field: SLUG, terms: ["${categorySlug}"] }] } }`
+  const where = categorySlug
+    ? `, where: { ccrListingCategory: "${categorySlug}" }`
     : "";
 
   const query = `
     query GetListings {
-      ccrlistings(first: 100${taxQuery}) {
+      ccrlistings(first: 100${where}) {
         nodes {
           id
           databaseId

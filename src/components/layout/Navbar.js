@@ -2,6 +2,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import LoginModal from "@/components/auth/LoginModal";
+import SearchModal from "@/components/layout/SearchModal";
 import "./Navbar.css";
 import capeCoralLogo from "../../../public/cape-coral-reviewed-logo.svg";
 import Image from "next/image";
@@ -12,6 +13,7 @@ export default function Navbar({ currentUser }) {
   const [isListingsOpen, setIsListingsOpen] = useState(false);
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
   const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
+  const [isSearchModalOpen, setIsSearchModalOpen] = useState(false);
 
   const [mobileLevel, setMobileLevel] = useState(1);
   const [activeSubMenu, setActiveSubMenu] = useState(null); // 'listings' or 'account'
@@ -64,7 +66,11 @@ export default function Navbar({ currentUser }) {
         </button>
 
         <div className={`nav-links ${isMobileOpen ? "mobile-open" : ""}`}>
-          <Link href="/search" className="nav-link">
+          <button 
+            onClick={() => setIsSearchModalOpen(true)} 
+            className="nav-link nav-link--search"
+            style={{ background: "none", border: "none", cursor: "pointer", display: "flex", alignItems: "center", gap: "5px" }}
+          >
             <span
               className="material-symbols-outlined"
               style={{ fontSize: "1.2rem" }}
@@ -72,7 +78,7 @@ export default function Navbar({ currentUser }) {
               search
             </span>{" "}
             Search
-          </Link>
+          </button>
 
           <div
             className="nav-link"
@@ -185,10 +191,13 @@ export default function Navbar({ currentUser }) {
             <section className="flyout-panel panel-1">
               <ul className="flyout-list">
                 <li className="flyout-item">
-                  <Link
-                    href="/search"
-                    className="flyout-link"
-                    onClick={closeMobileMenu}
+                  <button
+                    className="flyout-link flyout-link--search"
+                    onClick={() => {
+                      closeMobileMenu();
+                      setIsSearchModalOpen(true);
+                    }}
+                    style={{ background: "none", border: "none", width: "100%", textAlign: "left", cursor: "pointer" }}
                   >
                     <span>
                       <span
@@ -203,7 +212,7 @@ export default function Navbar({ currentUser }) {
                       </span>
                       Search
                     </span>
-                  </Link>
+                  </button>
                 </li>
                 <li className="flyout-item">
                   <button
@@ -366,6 +375,12 @@ export default function Navbar({ currentUser }) {
           </div>
         </aside>
       </div>
+
+      {/* Search Modal */}
+      <SearchModal 
+        isOpen={isSearchModalOpen} 
+        onClose={() => setIsSearchModalOpen(false)} 
+      />
 
       {/* Existing Login Modal */}
       <LoginModal

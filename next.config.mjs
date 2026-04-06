@@ -12,6 +12,11 @@ const nextConfig = {
       },
     ],
   },
+  experimental: {
+    serverActions: {
+      allowedOrigins: ["capecoralreviewed.com", "staging.capecoralreviewed.com"],
+    },
+  },
   async headers() {
     return [
       {
