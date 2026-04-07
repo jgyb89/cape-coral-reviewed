@@ -1,9 +1,17 @@
-"use client";
-
 import { useState, useMemo } from "react";
 import PropTypes from "prop-types";
 import CcrCardGrid from "./CcrCardGrid";
 import "./DirectoryFilterManager.css";
+
+const getListingRating = (listing) => {
+  const reviews = listing.reviews?.nodes || [];
+  if (reviews.length === 0) return 0;
+  const sum = reviews.reduce(
+    (acc, curr) => acc + (parseFloat(curr.reviewFields?.starRating) || 0),
+    0
+  );
+  return sum / reviews.length;
+};
 
 export default function DirectoryFilterManager({ listings, currentUser }) {
   const [activeCategory, setActiveCategory] = useState("All");
@@ -26,7 +34,9 @@ export default function DirectoryFilterManager({ listings, currentUser }) {
     // Filter by category
     if (activeCategory !== "All") {
       result = result.filter((listing) =>
-        listing.directoryTypes?.nodes?.some((node) => node.name === activeCategory)
+        listing.directoryTypes?.nodes?.some(
+          (node) => node.name === activeCategory
+        )
       );
     }
 
@@ -44,18 +54,8 @@ export default function DirectoryFilterManager({ listings, currentUser }) {
           return a.title.localeCompare(b.title);
         case "Z-A":
           return b.title.localeCompare(a.title);
-        case "Highest Rated": {
-          const getRating = (listing) => {
-            const reviews = listing.reviews?.nodes || [];
-            if (reviews.length === 0) return 0;
-            const sum = reviews.reduce(
-              (acc, curr) => acc + (parseFloat(curr.reviewFields?.starRating) || 0),
-              0
-            );
-            return sum / reviews.length;
-          };
-          return getRating(b) - getRating(a);
-        }
+        case "Highest Rated":
+          return getListingRating(b) - getListingRating(a);
         case "Newest":
           return new Date(b.date) - new Date(a.date);
         default:
