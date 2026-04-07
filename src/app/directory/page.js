@@ -1,6 +1,6 @@
 import { getListings } from "@/lib/api";
 import { getViewer } from "@/lib/auth";
-import CcrCardGrid from "@/components/directory/CcrCardGrid";
+import DirectoryFilterManager from "@/components/directory/DirectoryFilterManager";
 
 export const metadata = {
   title: "Local Business Directory - Cape Coral Reviewed",
@@ -29,7 +29,7 @@ export default async function DirectoryIndexPage() {
         </p>
       </header>
 
-      <CcrCardGrid listings={listings} currentUser={currentUser} />
+      <DirectoryFilterManager listings={listings} currentUser={currentUser} />
     </main>
   );
 }
