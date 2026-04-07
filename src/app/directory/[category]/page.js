@@ -2,7 +2,7 @@ import Link from "next/link";
 import PropTypes from "prop-types";
 import { getListings } from "@/lib/api";
 import { getViewer } from "@/lib/auth";
-import CcrCardGrid from "@/components/directory/CcrCardGrid";
+import DirectoryFilterManager from "@/components/directory/DirectoryFilterManager";
 
 export async function generateMetadata({ params }) {
   const { category } = await params;
@@ -38,7 +38,7 @@ export default async function CategoryPage({ params }) {
           <p>No listings found in this category yet.</p>
         </div>
       ) : (
-        <CcrCardGrid listings={listings} currentUser={currentUser} />
+        <DirectoryFilterManager listings={listings} currentUser={currentUser} />
       )}
     </main>
   );

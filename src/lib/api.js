@@ -121,6 +121,7 @@ export async function getListings(categorySlug = null) {
           id
           databaseId
           title
+          date
           slug
           content
           

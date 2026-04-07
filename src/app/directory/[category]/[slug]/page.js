@@ -22,8 +22,11 @@ export async function generateMetadata({ params }) {
     };
   }
 
-  const seoTitle = listing.seo?.title || `${listing.title} - Cape Coral Reviewed`;
-  const seoDesc = listing.seo?.metaDesc || `Find details, reviews, and contact info for ${listing.title} in Cape Coral, FL.`;
+  const seoTitle =
+    listing.seo?.title || `${listing.title} - Cape Coral Reviewed`;
+  const seoDesc =
+    listing.seo?.metaDesc ||
+    `Find details, reviews, and contact info for ${listing.title} in Cape Coral, FL.`;
   const ogImage = listing.seo?.opengraphImage?.sourceUrl;
 
   return {
@@ -54,44 +57,72 @@ export default async function DirectoryListingPage({ params }) {
   const listingdata = listing.listingdata || {};
   const reviewNodes = listing.reviews?.nodes || [];
   const reviewCount = reviewNodes.length;
-  const averageRating = reviewCount > 0 
-    ? (reviewNodes.reduce((acc, curr) => acc + (Number.parseFloat(curr.reviewFields?.starRating) || 0), 0) / reviewCount).toFixed(1)
-    : null;
+  const averageRating =
+    reviewCount > 0
+      ? (
+          reviewNodes.reduce(
+            (acc, curr) =>
+              acc + (Number.parseFloat(curr.reviewFields?.starRating) || 0),
+            0,
+          ) / reviewCount
+        ).toFixed(1)
+      : null;
 
-  const initialIsFavorite = currentUser?.userData?.favoriteListings?.nodes?.some(
-    (n) => n.databaseId === listing.databaseId
-  ) || false;
+  const initialIsFavorite =
+    currentUser?.userData?.favoriteListings?.nodes?.some(
+      (n) => n.databaseId === listing.databaseId,
+    ) || false;
 
   const featuredImage = listing.featuredImage?.node?.sourceUrl || "";
-  const galleryImages = listing.attachedMedia?.nodes?.map(node => node.sourceUrl) || [];
+  const galleryImages =
+    listing.attachedMedia?.nodes?.map((node) => node.sourceUrl) || [];
 
   const cleanContent = DOMPurify.sanitize(listing.content || "", {
-    ALLOWED_TAGS: ["p", "br", "b", "i", "em", "strong", "a", "ul", "ol", "li", "h3", "h4"],
+    ALLOWED_TAGS: [
+      "p",
+      "br",
+      "b",
+      "i",
+      "em",
+      "strong",
+      "a",
+      "ul",
+      "ol",
+      "li",
+      "h3",
+      "h4",
+    ],
     ALLOWED_ATTR: ["href", "target", "rel"],
   });
 
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "LocalBusiness",
-    "name": listing.title,
-    "image": [featuredImage, ...galleryImages].filter(Boolean),
-    "address": {
+    name: listing.title,
+    image: [featuredImage, ...galleryImages].filter(Boolean),
+    address: {
       "@type": "PostalAddress",
-      "streetAddress": listingdata.addressStreet || "",
-      "addressLocality": listingdata.addressCity || "Cape Coral",
-      "addressRegion": listingdata.addressState || "FL",
-      "postalCode": listingdata.addressZipCode || "",
-      "addressCountry": "US"
+      streetAddress: listingdata.addressStreet || "",
+      addressLocality: listingdata.addressCity || "Cape Coral",
+      addressRegion: listingdata.addressState || "FL",
+      postalCode: listingdata.addressZipCode || "",
+      addressCountry: "US",
     },
-    "telephone": listingdata.phoneNumber || "",
-    "url": listingdata.websiteUrl || `https://capecoralreviewed.com/directory/${category}/${slug}`,
-    "priceRange": listingdata.priceRange ? "$".repeat(listingdata.priceRange) : undefined,
-    "email": listingdata.businessEmail || undefined,
-    "aggregateRating": averageRating ? {
-      "@type": "AggregateRating",
-      "ratingValue": averageRating,
-      "reviewCount": reviewCount
-    } : undefined
+    telephone: listingdata.phoneNumber || "",
+    url:
+      listingdata.websiteUrl ||
+      `https://capecoralreviewed.com/directory/${category}/${slug}`,
+    priceRange: listingdata.priceRange
+      ? "$".repeat(listingdata.priceRange)
+      : undefined,
+    email: listingdata.businessEmail || undefined,
+    aggregateRating: averageRating
+      ? {
+          "@type": "AggregateRating",
+          ratingValue: averageRating,
+          reviewCount: reviewCount,
+        }
+      : undefined,
   };
 
   const hours = [
@@ -116,8 +147,8 @@ export default async function DirectoryListingPage({ params }) {
         <div className="listing-top-actions">
           <BackButton />
           <div className="listing-action-group">
-            <FavoriteButton 
-              listingId={listing.databaseId} 
+            <FavoriteButton
+              listingId={listing.databaseId}
               initialIsFavorite={initialIsFavorite}
               currentUser={currentUser}
             />
@@ -132,9 +163,9 @@ export default async function DirectoryListingPage({ params }) {
           </div>
         </div>
 
-        <ListingGallery 
-          featuredImage={featuredImage} 
-          galleryImages={galleryImages} 
+        <ListingGallery
+          featuredImage={featuredImage}
+          galleryImages={galleryImages}
         />
 
         <header className="listing-header">
@@ -142,11 +173,15 @@ export default async function DirectoryListingPage({ params }) {
           <div className="listing-header__meta">
             <div className="listing-header__rating">
               <StarRating rating={averageRating} />
-              <span style={{ marginLeft: '0.5rem' }}>{averageRating || "0.0"} ({reviewCount} reviews)</span>
+              <span style={{ marginLeft: "0.5rem" }}>
+                {averageRating || "0.0"} ({reviewCount} reviews)
+              </span>
             </div>
             <div className="listing-header__categories">
-              {listing.directoryTypes?.nodes?.map(cat => (
-                <span key={cat.slug} className="listing-category-tag">{cat.name}</span>
+              {listing.directoryTypes?.nodes?.map((cat) => (
+                <span key={cat.slug} className="listing-category-tag">
+                  {cat.name}
+                </span>
               ))}
             </div>
           </div>
@@ -158,19 +193,33 @@ export default async function DirectoryListingPage({ params }) {
             Business Info
           </h2>
           <div className="listing-card__item">
-            <span className="material-symbols-outlined listing-card__icon">location_on</span>
+            <span className="material-symbols-outlined listing-card__icon">
+              location_on
+            </span>
             <span className="listing-card__text">
-              {listingdata.addressStreet}, {listingdata.addressCity}, {listingdata.addressState} {listingdata.addressZipCode}
+              {listingdata.addressStreet}, {listingdata.addressCity},{" "}
+              {listingdata.addressState} {listingdata.addressZipCode}
             </span>
           </div>
           <div className="listing-card__item">
-            <span className="material-symbols-outlined listing-card__icon">call</span>
-            <span className="listing-card__text">{listingdata.phoneNumber}</span>
+            <span className="material-symbols-outlined listing-card__icon">
+              call
+            </span>
+            <span className="listing-card__text">
+              {listingdata.phoneNumber}
+            </span>
           </div>
           {listingdata.websiteUrl && (
             <div className="listing-card__item">
-              <span className="material-symbols-outlined listing-card__icon">language</span>
-              <a href={listingdata.websiteUrl} className="listing-card__link" target="_blank" rel="noopener noreferrer">
+              <span className="material-symbols-outlined listing-card__icon">
+                language
+              </span>
+              <a
+                href={listingdata.websiteUrl}
+                className="listing-card__link"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
                 Visit Website
               </a>
             </div>
@@ -182,8 +231,12 @@ export default async function DirectoryListingPage({ params }) {
             <span className="material-symbols-outlined">schedule</span>
             Business Hours
           </h2>
-          {hours.map(h => (
-            <div key={h.day} className="listing-card__item" style={{ justifyContent: 'space-between' }}>
+          {hours.map((h) => (
+            <div
+              key={h.day}
+              className="listing-card__item"
+              style={{ justifyContent: "space-between" }}
+            >
               <span style={{ fontWeight: 600 }}>{h.day}</span>
               <span>{h.time || "Closed"}</span>
             </div>
@@ -195,7 +248,7 @@ export default async function DirectoryListingPage({ params }) {
             <span className="material-symbols-outlined">description</span>
             About the Business
           </h2>
-          <div 
+          <div
             className="listing-card__text"
             dangerouslySetInnerHTML={{ __html: cleanContent }}
           />
@@ -206,10 +259,10 @@ export default async function DirectoryListingPage({ params }) {
             <span className="material-symbols-outlined">reviews</span>
             Recommended Reviews
           </h2>
-          <div style={{ marginBottom: '2rem' }}>
-            <ReviewActionManager 
-              currentUser={currentUser} 
-              listingId={listing.databaseId} 
+          <div style={{ marginBottom: "2rem" }}>
+            <ReviewActionManager
+              currentUser={currentUser}
+              listingId={listing.databaseId}
               listingSlug={slug}
             />
           </div>
@@ -218,12 +271,18 @@ export default async function DirectoryListingPage({ params }) {
       </main>
 
       <aside className="listing-sidebar">
-        <div style={{ position: 'sticky', top: '2rem' }}>
+        <div style={{ position: "sticky", top: "2rem" }}>
           <div className="listing-card">
-            <h3 className="listing-card__title" style={{ border: 'none', marginBottom: 0 }}>
+            <h3
+              className="listing-card__title"
+              style={{ border: "none", marginBottom: 0 }}
+            >
               Add to Favorites
             </h3>
-            <FavoriteButton listingId={listing.databaseId} currentUser={currentUser} />
+            <FavoriteButton
+              listingId={listing.databaseId}
+              currentUser={currentUser}
+            />
           </div>
           <BlogSidebar />
         </div>
