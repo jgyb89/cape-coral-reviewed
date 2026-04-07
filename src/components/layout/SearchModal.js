@@ -104,7 +104,18 @@ export default function SearchModal({ isOpen, onClose }) {
 
   return (
     <div className={`search-modal ${isOpen ? "search-modal--open" : ""}`}>
-      <div className="search-modal__overlay" onClick={onClose}></div>
+      <div 
+        className="search-modal__overlay" 
+        onClick={onClose}
+        onKeyDown={(e) => {
+          if (e.key === "Enter" || e.key === " ") {
+            onClose();
+          }
+        }}
+        role="button"
+        tabIndex="-1"
+        aria-label="Close modal"
+      ></div>
       
       <div className="search-modal__container">
         <button className="search-modal__close" onClick={onClose}>
