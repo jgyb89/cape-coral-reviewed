@@ -7,7 +7,7 @@ const getListingRating = (listing) => {
   const reviews = listing.reviews?.nodes || [];
   if (reviews.length === 0) return 0;
   const sum = reviews.reduce(
-    (acc, curr) => acc + (parseFloat(curr.reviewFields?.starRating) || 0),
+    (acc, curr) => acc + (Number.parseFloat(curr.reviewFields?.starRating) || 0),
     0
   );
   return sum / reviews.length;
@@ -23,7 +23,7 @@ export default function DirectoryFilterManager({ listings, currentUser }) {
     const allCats = listings.flatMap((listing) =>
       listing.directoryTypes?.nodes?.map((node) => node.name) || []
     );
-    return ["All", ...new Set(allCats)].sort();
+    return ["All", ...new Set(allCats)].sort((a, b) => a.localeCompare(b));
   }, [listings]);
 
   const priceRanges = ["All", "$", "$$", "$$$", "$$$$"];
