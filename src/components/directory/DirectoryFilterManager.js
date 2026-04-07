@@ -1,3 +1,5 @@
+"use client";
+
 import { useState, useMemo } from "react";
 import PropTypes from "prop-types";
 import CcrCardGrid from "./CcrCardGrid";
