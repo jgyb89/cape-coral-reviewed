@@ -6,6 +6,97 @@ import SearchModal from "@/components/layout/SearchModal";
 import "./Navbar.css";
 import capeCoralLogo from "../../../public/cape-coral-reviewed-logo.svg";
 import Image from "next/image";
+import {
+  Utensils,
+  HeartPulse,
+  Home,
+  Coffee,
+  Pizza,
+  Beer,
+  Wine,
+  IceCream,
+  ChefHat,
+  Stethoscope,
+  Dumbbell,
+  Flower,
+  Smile,
+  Pill,
+  Hammer,
+  Wrench,
+  Brush,
+  Zap,
+  Leaf,
+} from "lucide-react";
+
+const categories = [
+  {
+    title: "Food & Drink",
+    slug: "food-drink",
+    icon: <Utensils size={20} />,
+    subs: [
+      { name: "Restaurants", slug: "restaurants", icon: <ChefHat size={16} /> },
+      { name: "Coffee & Tea", slug: "coffee-tea", icon: <Coffee size={16} /> },
+      {
+        name: "Bars & Nightlife",
+        slug: "bars-nightlife",
+        icon: <Beer size={16} />,
+      },
+      { name: "Pizza", slug: "pizza", icon: <Pizza size={16} /> },
+      { name: "Bakeries", slug: "bakeries", icon: <IceCream size={16} /> },
+      { name: "Wine Bars", slug: "wine-bars", icon: <Wine size={16} /> },
+      { name: "Breweries", slug: "breweries", icon: <Beer size={16} /> },
+      { name: "Juice Bars", slug: "juice-bars", icon: <Leaf size={16} /> },
+      {
+        name: "Breakfast & Brunch",
+        slug: "breakfast-brunch",
+        icon: <Coffee size={16} />,
+      },
+      { name: "Seafood", slug: "seafood", icon: <ChefHat size={16} /> },
+    ],
+  },
+  {
+    title: "Health & Wellness",
+    slug: "health-wellness",
+    icon: <HeartPulse size={20} />,
+    subs: [
+      { name: "Doctors", slug: "doctors", icon: <Stethoscope size={16} /> },
+      { name: "Gyms", slug: "gyms", icon: <Dumbbell size={16} /> },
+      { name: "Spas", slug: "spas", icon: <Flower size={16} /> },
+      { name: "Dentists", slug: "dentists", icon: <Smile size={16} /> },
+      { name: "Pharmacies", slug: "pharmacies", icon: <Pill size={16} /> },
+      { name: "Yoga", slug: "yoga", icon: <Dumbbell size={16} /> },
+      { name: "Massage", slug: "massage", icon: <Flower size={16} /> },
+      {
+        name: "Physical Therapy",
+        slug: "physical-therapy",
+        icon: <HeartPulse size={16} />,
+      },
+      {
+        name: "Acupuncture",
+        slug: "acupuncture",
+        icon: <HeartPulse size={16} />,
+      },
+      { name: "Eye Care", slug: "eye-care", icon: <Smile size={16} /> },
+    ],
+  },
+  {
+    title: "Home & Local Services",
+    slug: "home-local-services",
+    icon: <Home size={20} />,
+    subs: [
+      { name: "Contractors", slug: "contractors", icon: <Hammer size={16} /> },
+      { name: "Plumbers", slug: "plumbers", icon: <Wrench size={16} /> },
+      { name: "Electricians", slug: "electricians", icon: <Zap size={16} /> },
+      { name: "Landscaping", slug: "landscaping", icon: <Leaf size={16} /> },
+      { name: "Cleaning", slug: "cleaning", icon: <Brush size={16} /> },
+      { name: "HVAC", slug: "hvac", icon: <Zap size={16} /> },
+      { name: "Roofing", slug: "roofing", icon: <Hammer size={16} /> },
+      { name: "Painters", slug: "painters", icon: <Brush size={16} /> },
+      { name: "Locksmiths", slug: "locksmiths", icon: <Wrench size={16} /> },
+      { name: "Pest Control", slug: "pest-control", icon: <Zap size={16} /> },
+    ],
+  },
+];
 
 export default function Navbar({ currentUser }) {
   const [isMobileOpen, setIsMobileOpen] = useState(false);
@@ -17,6 +108,7 @@ export default function Navbar({ currentUser }) {
 
   const [mobileLevel, setMobileLevel] = useState(1);
   const [activeSubMenu, setActiveSubMenu] = useState(null); // 'listings' or 'account'
+  const [activeCategory, setActiveCategory] = useState(null);
 
   const closeMobileMenu = () => {
     setIsMobileOpen(false);
@@ -24,6 +116,7 @@ export default function Navbar({ currentUser }) {
     setTimeout(() => {
       setMobileLevel(1);
       setActiveSubMenu(null);
+      setActiveCategory(null);
     }, 300);
   };
 
@@ -69,33 +162,57 @@ export default function Navbar({ currentUser }) {
           <button 
             onClick={() => setIsSearchModalOpen(true)} 
             className="nav-link nav-link--search"
-            style={{ background: "none", border: "none", cursor: "pointer", display: "flex", alignItems: "center", gap: "5px" }}
           >
-            <span
-              className="material-symbols-outlined"
-              style={{ fontSize: "1.2rem" }}
-            >
+            <span className="material-symbols-outlined nav-link__icon">
               search
             </span>{" "}
             Search
           </button>
 
           <div
-            className="nav-link"
+            className="nav-link nav-link--all-listings"
             onMouseEnter={() => setIsListingsOpen(true)}
             onMouseLeave={() => setIsListingsOpen(false)}
           >
-            All Listings{" "}
-            <span
-              className="material-symbols-outlined"
-              style={{ fontSize: "1.2rem" }}
-            >
-              expand_more
-            </span>
+            <div className="nav-link__trigger">
+              All Listings{" "}
+              <span className="material-symbols-outlined nav-link__icon">
+                expand_more
+              </span>
+            </div>
+            
             {isListingsOpen && (
-              <div className="nav-dropdown">
-                <Link href="/directory">View All Directory</Link>
-                {/* Future categories will go here */}
+              <div className="mega-menu">
+                <div className="mega-menu-grid">
+                  {categories.map((cat) => (
+                    <div key={cat.slug} className="mega-menu-column">
+                      <h4 className="mega-menu-title">
+                        {cat.icon} {cat.title}
+                      </h4>
+                      <div className="mega-menu-subs">
+                        {cat.subs.map((sub) => (
+                          <Link
+                            key={sub.slug}
+                            href={`/directory/${cat.slug}/${sub.slug}`}
+                            className="mega-menu-sub-link"
+                            onClick={() => setIsListingsOpen(false)}
+                          >
+                            {sub.icon} {sub.name}
+                          </Link>
+                        ))}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+                <div className="mega-menu-footer">
+                  <Link 
+                    href="/directory" 
+                    className="mega-menu-all-link" 
+                    onClick={() => setIsListingsOpen(false)}
+                  >
+                    View All Directory
+                  </Link>
+                </div>
               </div>
             )}
           </div>
@@ -112,13 +229,12 @@ export default function Navbar({ currentUser }) {
                 onMouseEnter={() => setIsAccountOpen(true)}
                 onMouseLeave={() => setIsAccountOpen(false)}
               >
-                My Account{" "}
-                <span
-                  className="material-symbols-outlined"
-                  style={{ fontSize: "1.2rem" }}
-                >
-                  expand_more
-                </span>
+                <div className="nav-link__trigger">
+                  My Account{" "}
+                  <span className="material-symbols-outlined nav-link__icon">
+                    expand_more
+                  </span>
+                </div>
                 {isAccountOpen && (
                   <div className="nav-dropdown">
                     <Link href="/dashboard">Profile</Link>
@@ -142,8 +258,7 @@ export default function Navbar({ currentUser }) {
             <>
               <button
                 onClick={() => setIsLoginModalOpen(true)}
-                className="nav-link"
-                style={{ background: "none", border: "none", fontSize: "1rem" }}
+                className="nav-link nav-login-btn"
               >
                 Log in
               </button>
@@ -197,17 +312,9 @@ export default function Navbar({ currentUser }) {
                       closeMobileMenu();
                       setIsSearchModalOpen(true);
                     }}
-                    style={{ background: "none", border: "none", width: "100%", textAlign: "left", cursor: "pointer" }}
                   >
                     <span>
-                      <span
-                        className="material-symbols-outlined"
-                        style={{
-                          fontSize: "1.2rem",
-                          verticalAlign: "middle",
-                          marginRight: "8px",
-                        }}
-                      >
+                      <span className="material-symbols-outlined flyout-icon--search">
                         search
                       </span>
                       Search
@@ -230,7 +337,7 @@ export default function Navbar({ currentUser }) {
                 </li>
                 <li className="flyout-item">
                   <Link
-                    href="/news"
+                    href="/blog"
                     className="flyout-link"
                     onClick={closeMobileMenu}
                   >
@@ -288,10 +395,7 @@ export default function Navbar({ currentUser }) {
             {/* LEVEL 2: Sub Menus */}
             <section className="flyout-panel panel-2">
               <button className="flyout-back" onClick={() => setMobileLevel(1)}>
-                <span
-                  className="material-symbols-outlined"
-                  style={{ fontSize: "1.2rem" }}
-                >
+                <span className="material-symbols-outlined flyout-back-icon">
                   chevron_left
                 </span>{" "}
                 Back
@@ -310,7 +414,24 @@ export default function Navbar({ currentUser }) {
                         View All Directory
                       </Link>
                     </li>
-                    {/* Future categories map here */}
+                    {categories.map((cat) => (
+                      <li key={cat.slug} className="flyout-item">
+                        <button
+                          className="flyout-action"
+                          onClick={() => {
+                            setMobileLevel(3);
+                            setActiveCategory(cat);
+                          }}
+                        >
+                          <span className="flyout-category-btn">
+                            {cat.icon} {cat.title}
+                          </span>
+                          <span className="material-symbols-outlined flyout-icon">
+                            chevron_right
+                          </span>
+                        </button>
+                      </li>
+                    ))}
                   </ul>
                 </>
               )}
@@ -372,6 +493,37 @@ export default function Navbar({ currentUser }) {
                 </>
               )}
             </section>
+
+            {/* LEVEL 3: Categories */}
+            <section className="flyout-panel panel-3">
+              <button className="flyout-back" onClick={() => setMobileLevel(2)}>
+                <span className="material-symbols-outlined flyout-back-icon">
+                  chevron_left
+                </span>{" "}
+                Back
+              </button>
+
+              {activeCategory && (
+                <>
+                  <h3 className="flyout-panel-title">{activeCategory.title}</h3>
+                  <ul className="flyout-list">
+                    {activeCategory.subs.map((sub) => (
+                      <li key={sub.slug} className="flyout-item">
+                        <Link
+                          href={`/directory/${activeCategory.slug}/${sub.slug}`}
+                          className="flyout-link"
+                          onClick={closeMobileMenu}
+                        >
+                          <span className="flyout-category-btn">
+                            {sub.icon} {sub.name}
+                          </span>
+                        </Link>
+                      </li>
+                    ))}
+                  </ul>
+                </>
+              )}
+            </section>
           </div>
         </aside>
       </div>
@@ -390,66 +542,21 @@ export default function Navbar({ currentUser }) {
 
       {/* Logout Confirmation Modal */}
       {isLogoutModalOpen && (
-        <div
-          style={{
-            position: "fixed",
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            backgroundColor: "rgba(0,0,0,0.5)",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            zIndex: 1000,
-          }}
-        >
-          <div
-            style={{
-              backgroundColor: "#fff",
-              padding: "2.5rem",
-              borderRadius: "12px",
-              textAlign: "center",
-              boxShadow: "0 10px 25px rgba(0,0,0,0.1)",
-            }}
-          >
-            <p
-              style={{
-                color: "#333",
-                marginBottom: "1.5rem",
-                fontSize: "1.1rem",
-                fontWeight: 500,
-              }}
-            >
+        <div className="logout-modal">
+          <div className="logout-modal__dialog">
+            <p className="logout-modal__text">
               Are you sure you want to log out?
             </p>
-            <div
-              style={{ display: "flex", gap: "1rem", justifyContent: "center" }}
-            >
+            <div className="logout-modal__actions">
               <a
                 href="/logout"
-                style={{
-                  padding: "0.6rem 1.5rem",
-                  borderRadius: "6px",
-                  backgroundColor: "#d3302f",
-                  color: "#fff",
-                  textDecoration: "none",
-                  fontWeight: 600,
-                }}
+                className="logout-modal__button logout-modal__button--confirm"
               >
                 Yes, Log Out
               </a>
               <button
                 onClick={() => setIsLogoutModalOpen(false)}
-                style={{
-                  padding: "0.6rem 1.5rem",
-                  borderRadius: "6px",
-                  border: "none",
-                  backgroundColor: "#bdbdbd",
-                  color: "#333",
-                  cursor: "pointer",
-                  fontWeight: 600,
-                }}
+                className="logout-modal__button logout-modal__button--cancel"
               >
                 Cancel
               </button>
