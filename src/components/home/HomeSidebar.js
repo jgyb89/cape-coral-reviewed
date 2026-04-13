@@ -5,7 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { Star } from "lucide-react";
 
-export default function HomeSidebar({ featuredBusinesses = [], popularNearYou = [] }) {
+export default function HomeSidebar({ featuredBusinesses = [], popularNearYou = [], dict = {}, locale = "en" }) {
   const renderList = (title, items) => (
     <div style={{ marginBottom: "40px" }}>
       <h3 style={{ 
@@ -19,7 +19,7 @@ export default function HomeSidebar({ featuredBusinesses = [], popularNearYou = 
       <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
         {items.map((item) => {
           const categorySlug = item.directoryTypes?.nodes?.[0]?.slug || "uncategorized";
-          const listingUrl = `/directory/${categorySlug}/${item.slug}`;
+          const listingUrl = `/${locale}/directory/${categorySlug}/${item.slug}`;
           const imageUrl = item.featuredImage?.node?.sourceUrl || "/placeholder-mini.jpg";
           
           const reviewNodes = item.reviews?.nodes || [];
@@ -88,8 +88,8 @@ export default function HomeSidebar({ featuredBusinesses = [], popularNearYou = 
 
   return (
     <aside style={{ width: "100%" }}>
-      {renderList("Featured Businesses", featuredBusinesses.slice(0, 5))}
-      {renderList("Popular Near You", popularNearYou.slice(0, 5))}
+      {renderList(dict.featuredBusinesses || "Featured Businesses", featuredBusinesses.slice(0, 5))}
+      {renderList(dict.popularNearYou || "Popular Near You", popularNearYou.slice(0, 5))}
     </aside>
   );
 }

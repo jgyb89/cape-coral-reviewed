@@ -1,10 +1,13 @@
 import { getListings } from "@/lib/api";
 import { getViewer } from "@/lib/auth";
+import { getDictionary } from "@/lib/dictionaries";
 import HeroSlideshow from "@/components/home/HeroSlideshow";
 import TabbedListingFeed from "@/components/home/TabbedListingFeed";
 import HomeSidebar from "@/components/home/HomeSidebar";
 
-export default async function HomePage() {
+export default async function HomePage({ params }) {
+  const { locale } = await params;
+  const dict = await getDictionary(locale);
   const listings = await getListings();
   const currentUser = await getViewer();
 
@@ -16,7 +19,7 @@ export default async function HomePage() {
   return (
     <main style={{ backgroundColor: "#fdfdfd", minHeight: "100vh" }}>
       {/* Hero Section */}
-      <HeroSlideshow featuredListings={featuredListings} />
+      <HeroSlideshow featuredListings={featuredListings} locale={locale} />
 
       {/* Main Content Layout */}
       <div
@@ -63,6 +66,8 @@ export default async function HomePage() {
             <HomeSidebar
               featuredBusinesses={featuredListings}
               popularNearYou={popularNearYou}
+              dict={dict.home}
+              locale={locale}
             />
           </div>
 
@@ -71,6 +76,8 @@ export default async function HomePage() {
             <TabbedListingFeed
               initialListings={feedListings}
               currentUser={currentUser}
+              dict={dict.home}
+              locale={locale}
             />
           </div>
         </div>

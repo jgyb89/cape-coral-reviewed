@@ -1,0 +1,96 @@
+{
+  "nav": {
+    "search": "Buscar",
+    "allListings": "Todos los Listados",
+    "news": "Noticias y Reseñas",
+    "login": "Iniciar sesión",
+    "joinCommunity": "Unirse a la Comunidad",
+    "submitBusiness": "Publicar su Negocio",
+    "myAccount": "Mi Cuenta",
+    "profile": "Perfil",
+    "favorites": "Favoritos",
+    "myReviews": "Mis Reseñas",
+    "myListings": "Mis Listados",
+    "signOut": "Cerrar sesión",
+    "viewAllDirectory": "Ver Todo el Directorio"
+  },
+  "home": {
+    "viewAll": "Ver todo",
+    "featuredBusinesses": "Negocios Destacados",
+    "popularNearYou": "Populares Cerca de Ti",
+    "newest": "Más Recientes",
+    "topRated": "Mejor Valorados",
+    "hottest": "Más Populares"
+  },
+  "listing": {
+    "goBack": "Regresar",
+    "favorite": "Favorito",
+    "share": "Compartir",
+    "report": "Reportar",
+    "businessHours": "Horario Comercial",
+    "aboutBusiness": "Acerca del Negocio",
+    "recommendedReviews": "Reseñas Recomendadas",
+    "writeReview": "Escribir una Reseña",
+    "noReviewsYet": "Aún no hay reseñas. ¡Sé el primero en dejar una!",
+    "closed": "Cerrado",
+    "days": {
+      "monday": "Lunes",
+      "tuesday": "Martes",
+      "wednesday": "Miércoles",
+      "thursday": "Jueves",
+      "friday": "Viernes",
+      "saturday": "Sábado",
+      "sunday": "Domingo"
+    }
+  },
+  "auth": {
+    "modalTitle": "¡Crea una cuenta gratis!",
+    "modalSubtitle": "¡Regístrate gratis para compartir, agregar a favoritos o dejar reseñas! ¡Esto asegura que mantengamos el sitio libre de spam y una mejor experiencia para todos!",
+    "usernameEmail": "Nombre de usuario o correo",
+    "password": "Contraseña",
+    "rememberMe": "Recuérdame",
+    "recoverPassword": "Recuperar Contraseña",
+    "logIn": "Acceder",
+    "noAccount": "¿No tienes una cuenta?",
+    "signUp": "Regístrate"
+  },
+  "search": {
+    "title": "Buscar",
+    "placeholder": "¿Qué estás buscando?",
+    "button": "Buscar Negocio"
+  },
+  "register": {
+    "title": "Crear una Cuenta",
+    "subtitle": "Únete a nuestra comunidad para anunciar tu negocio, dejar reseñas y guardar tus favoritos.",
+    "username": "Nombre de usuario",
+    "email": "Correo electrónico",
+    "password": "Contraseña",
+    "firstName": "Nombre",
+    "lastName": "Apellido",
+    "phone": "Número de teléfono",
+    "terms": "Acepto los Términos y Condiciones y la Política de Privacidad.",
+    "button": "Crear Cuenta"
+  },
+  "blog": {
+    "title": "Noticias y Reseñas de Cape Coral",
+    "subtitle": "Mantente al día con los últimos eventos, negocios destacados y guías locales en la comunidad de Cape Coral.",
+    "tabs": {
+      "all": "Todas las publicaciones",
+      "featured": "Negocios Destacados",
+      "news": "Noticias y Reseñas",
+      "food": "Comida y Bebida",
+      "home": "Servicios Locales y Hogar",
+      "health": "Salud y Bienestar"
+    }
+  },
+  "directory": {
+    "title": "Directorio de Negocios",
+    "subtitle": "Explora los mejores servicios locales, restaurantes y tiendas en Cape Coral.",
+    "filterCategory": "CATEGORÍA",
+    "filterPrice": "PRECIO",
+    "filterSort": "ORDENAR POR",
+    "all": "Todos",
+    "sortAZ": "A-Z",
+    "listingsFound": "negocios encontrados"
+  }
+}

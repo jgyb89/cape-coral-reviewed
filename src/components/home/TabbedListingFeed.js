@@ -7,14 +7,19 @@ import CcrCard from "@/components/directory/CcrCard";
 export default function TabbedListingFeed({
   initialListings = [],
   currentUser,
+  dict = {},
+  locale = "en",
 }) {
-  const [activeTab, setActiveTab] = useState("Newest");
+  const tabs = [
+    { id: "Newest", label: dict.newest || "Newest" },
+    { id: "Top Rated", label: dict.topRated || "Top Rated" },
+    { id: "Hottest", label: dict.hottest || "Hottest" },
+  ];
+
+  const [activeTab, setActiveTab] = useState(tabs[0].id);
 
   // For now, we use the same listings for all tabs.
-  // Real logic for sorting will be connected later.
   const displayListings = initialListings.slice(0, 9);
-
-  const tabs = ["Newest", "Top Rated", "Hottest"];
 
   return (
     <div style={{ width: "100%" }}>
@@ -36,8 +41,8 @@ export default function TabbedListingFeed({
         >
           {tabs.map((tab) => (
             <button
-              key={tab}
-              onClick={() => setActiveTab(tab)}
+              key={tab.id}
+              onClick={() => setActiveTab(tab.id)}
               style={{
                 padding: "12px 0",
                 fontSize: "1.1rem",
@@ -45,22 +50,22 @@ export default function TabbedListingFeed({
                 background: "none",
                 border: "none",
                 cursor: "pointer",
-                color: activeTab === tab ? "#d32323" : "#666",
+                color: activeTab === tab.id ? "#d32323" : "#666",
                 borderBottom:
-                  activeTab === tab
+                  activeTab === tab.id
                     ? "3px solid #d32323"
                     : "3px solid transparent",
                 transition: "all 0.2s",
                 marginBottom: "-2px",
               }}
             >
-              {tab}
+              {tab.label}
             </button>
           ))}
         </div>
 
         <Link
-          href="/directory"
+          href={`/${locale}/directory`}
           style={{
             backgroundColor: "#d32323",
             color: "white",
@@ -71,7 +76,7 @@ export default function TabbedListingFeed({
             fontSize: "0.9rem",
           }}
         >
-          View All
+          {dict.viewAll || "View All"}
         </Link>
       </div>
 
@@ -88,6 +93,7 @@ export default function TabbedListingFeed({
             key={listing.databaseId}
             listing={listing}
             currentUser={currentUser}
+            locale={locale}
           />
         ))}
         {displayListings.length === 0 && (

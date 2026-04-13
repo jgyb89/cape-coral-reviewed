@@ -3,6 +3,7 @@ import Script from "next/script";
 import PropTypes from "prop-types";
 import { getListingBySlug } from "@/lib/api";
 import { getViewer } from "@/lib/auth";
+import { getDictionary } from "@/lib/dictionaries";
 import ListingGallery from "@/components/directory/ListingGallery";
 import BlogSidebar from "@/components/blog/BlogSidebar";
 import BackButton from "@/components/blog/BackButton";
@@ -41,7 +42,8 @@ export async function generateMetadata({ params }) {
 }
 
 export default async function DirectoryListingPage({ params }) {
-  const { slug, category } = await params;
+  const { slug, category, locale } = await params;
+  const dict = await getDictionary(locale);
   const listing = await getListingBySlug(slug);
   const currentUser = await getViewer();
 
@@ -54,6 +56,7 @@ export default async function DirectoryListingPage({ params }) {
     );
   }
 
+  const t = dict?.listing || {};
   const listingdata = listing.listingdata || {};
   const reviewNodes = listing.reviews?.nodes || [];
   const reviewCount = reviewNodes.length;
@@ -111,7 +114,7 @@ export default async function DirectoryListingPage({ params }) {
     telephone: listingdata.phoneNumber || "",
     url:
       listingdata.websiteUrl ||
-      `https://capecoralreviewed.com/directory/${category}/${slug}`,
+      `https://capecoralreviewed.com/${locale}/directory/${category}/${slug}`,
     priceRange: listingdata.priceRange
       ? "$".repeat(listingdata.priceRange)
       : undefined,
@@ -125,14 +128,15 @@ export default async function DirectoryListingPage({ params }) {
       : undefined,
   };
 
+  const dayLabels = t.days || {};
   const hours = [
-    { day: "Monday", time: listingdata.hoursMonday },
-    { day: "Tuesday", time: listingdata.hoursTuesday },
-    { day: "Wednesday", time: listingdata.hoursWednesday },
-    { day: "Thursday", time: listingdata.hoursThursday },
-    { day: "Friday", time: listingdata.hoursFriday },
-    { day: "Saturday", time: listingdata.hoursSaturday },
-    { day: "Sunday", time: listingdata.hoursSunday },
+    { day: dayLabels.monday || "Monday", time: listingdata.hoursMonday },
+    { day: dayLabels.tuesday || "Tuesday", time: listingdata.hoursTuesday },
+    { day: dayLabels.wednesday || "Wednesday", time: listingdata.hoursWednesday },
+    { day: dayLabels.thursday || "Thursday", time: listingdata.hoursThursday },
+    { day: dayLabels.friday || "Friday", time: listingdata.hoursFriday },
+    { day: dayLabels.saturday || "Saturday", time: listingdata.hoursSaturday },
+    { day: dayLabels.sunday || "Sunday", time: listingdata.hoursSunday },
   ];
 
   return (
@@ -145,20 +149,21 @@ export default async function DirectoryListingPage({ params }) {
 
       <main className="listing-main">
         <div className="listing-top-actions">
-          <BackButton />
+          <BackButton label={t.goBack || "Go Back"} />
           <div className="listing-action-group">
             <FavoriteButton
               listingId={listing.databaseId}
               initialIsFavorite={initialIsFavorite}
               currentUser={currentUser}
+              label={t.favorite || "Favorite"}
             />
             <button className="listing-action-btn">
               <span className="material-symbols-outlined">share</span>
-              <span className="listing-action-btn__text">Share</span>
+              <span className="listing-action-btn__text">{t.share || "Share"}</span>
             </button>
             <button className="listing-action-btn">
               <span className="material-symbols-outlined">flag</span>
-              <span className="listing-action-btn__text">Report</span>
+              <span className="listing-action-btn__text">{t.report || "Report"}</span>
             </button>
           </div>
         </div>
@@ -229,7 +234,7 @@ export default async function DirectoryListingPage({ params }) {
         <section className="listing-card">
           <h2 className="listing-card__title">
             <span className="material-symbols-outlined">schedule</span>
-            Business Hours
+            {t.businessHours || "Business Hours"}
           </h2>
           {hours.map((h) => (
             <div
@@ -238,7 +243,7 @@ export default async function DirectoryListingPage({ params }) {
               style={{ justifyContent: "space-between" }}
             >
               <span style={{ fontWeight: 600 }}>{h.day}</span>
-              <span>{h.time || "Closed"}</span>
+              <span>{h.time || (t.closed || "Closed")}</span>
             </div>
           ))}
         </section>
@@ -246,7 +251,7 @@ export default async function DirectoryListingPage({ params }) {
         <section className="listing-card">
           <h2 className="listing-card__title">
             <span className="material-symbols-outlined">description</span>
-            About the Business
+            {t.aboutBusiness || "About the Business"}
           </h2>
           <div
             className="listing-card__text"
@@ -257,16 +262,18 @@ export default async function DirectoryListingPage({ params }) {
         <section className="listing-card">
           <h2 className="listing-card__title">
             <span className="material-symbols-outlined">reviews</span>
-            Recommended Reviews
+            {t.recommendedReviews || "Recommended Reviews"}
           </h2>
           <div style={{ marginBottom: "2rem" }}>
             <ReviewActionManager
               currentUser={currentUser}
               listingId={listing.databaseId}
               listingSlug={slug}
+              dict={dict}
+              locale={locale}
             />
           </div>
-          <ReviewList reviews={listing.reviews} />
+          <ReviewList reviews={listing.reviews} noReviewsYet={t.noReviewsYet} />
         </section>
       </main>
 
@@ -282,6 +289,7 @@ export default async function DirectoryListingPage({ params }) {
             <FavoriteButton
               listingId={listing.databaseId}
               currentUser={currentUser}
+              label={t.favorite || "Favorite"}
             />
           </div>
           <BlogSidebar />

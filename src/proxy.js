@@ -3,20 +3,56 @@ import { NextResponse } from 'next/server';
 /**
  * Next.js Edge Logic (proxy.js)
  * Consolidated handling for:
- * 1. Rate Limiting (IP-based)
- * 2. Route Protection (Dashboard & Submit Listing)
- * 3. Security Headers
+ * 1. Locale Redirection
+ * 2. Rate Limiting (IP-based)
+ * 3. Route Protection (Dashboard & Submit Listing)
+ * 4. Security Headers
  */
 
 // Basic in-memory rate limiter for Edge Functions
 const rateLimitMap = new Map();
+
+const locales = ['en', 'es'];
+const defaultLocale = 'en';
 
 export function middleware(request) {
   const { pathname } = request.nextUrl;
   const authToken = request.cookies.get('authToken')?.value;
   const ip = request.ip || request.headers.get('x-forwarded-for') || 'anonymous';
 
-  // --- 1. RATE LIMITING LOGIC ---
+  // --- 1. LOCALE REDIRECTION ---
+  const pathnameIsMissingLocale = locales.every(
+    (locale) => !pathname.startsWith(`/${locale}/`) && pathname !== `/${locale}`
+  );
+
+  if (pathnameIsMissingLocale) {
+    // Check if it's a static file or API route that shouldn't be localized
+    const isExcluded = pathname.startsWith('/_next') || 
+                       pathname.startsWith('/api') || 
+                       pathname.includes('.'); // Very basic check for file extensions
+    
+    if (!isExcluded) {
+      return NextResponse.redirect(
+        new URL(`/${defaultLocale}${pathname}`, request.url)
+      );
+    }
+  }
+
+  // Helper to check path regardless of locale
+  const matchesPath = (path) => {
+    return locales.some(locale => 
+      pathname === `/${locale}${path}` || pathname.startsWith(`/${locale}${path}/`)
+    );
+  };
+
+  const getLocale = () => {
+    const segment = pathname.split('/')[1];
+    return locales.includes(segment) ? segment : defaultLocale;
+  };
+
+  const currentLocale = getLocale();
+
+  // --- 2. RATE LIMITING LOGIC ---
   const sensitivePaths = [
     '/login',
     '/register-business',
@@ -24,7 +60,7 @@ export function middleware(request) {
     '/api/auth',
   ];
 
-  const isSensitive = sensitivePaths.some((path) => pathname.startsWith(path));
+  const isSensitive = sensitivePaths.some((path) => matchesPath(path) || pathname.startsWith(path));
 
   if (isSensitive) {
     const limit = 10; // Max requests per minute
@@ -53,22 +89,22 @@ export function middleware(request) {
     }
   }
 
-  // --- 2. ROUTE PROTECTION LOGIC ---
-  if (pathname.startsWith('/dashboard')) {
+  // --- 3. ROUTE PROTECTION LOGIC ---
+  if (matchesPath('/dashboard')) {
     if (!authToken) {
-      const loginUrl = new URL('/login', request.url);
+      const loginUrl = new URL(`/${currentLocale}/login`, request.url);
       loginUrl.searchParams.set('redirect', pathname);
       return NextResponse.redirect(loginUrl);
     }
   }
 
-  if (pathname.startsWith('/submit-listing')) {
+  if (matchesPath('/submit-listing')) {
     if (!authToken) {
-      return NextResponse.redirect(new URL('/register-business', request.url));
+      return NextResponse.redirect(new URL(`/${currentLocale}/register-business`, request.url));
     }
   }
 
-  // --- 3. SUCCESS & SECURITY HEADERS ---
+  // --- 4. SUCCESS & SECURITY HEADERS ---
   const response = NextResponse.next();
   response.headers.set("X-Frame-Options", "DENY");
   response.headers.set("X-Content-Type-Options", "nosniff");

@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { toggleFavoriteListing } from '@/lib/actions';
 
-export default function FavoriteButton({ listingId, initialIsFavorite = false, currentUser }) {
+export default function FavoriteButton({ listingId, initialIsFavorite = false, currentUser, label = "Favorite" }) {
   const [isFavorite, setIsFavorite] = useState(initialIsFavorite);
   const [toastMessage, setToastMessage] = useState(null);
 
@@ -23,8 +23,6 @@ export default function FavoriteButton({ listingId, initialIsFavorite = false, c
 
     try {
       // In a real scenario, you'd calculate the new favorites array here
-      // For now, using the logic from your actions.js or similar
-      // await toggleFavoriteListing(currentUser.databaseId, updatedArray);
     } catch (error) {
       setIsFavorite(!newState); // Revert if the server fails
       setToastMessage("Error saving favorite.");
@@ -41,7 +39,7 @@ export default function FavoriteButton({ listingId, initialIsFavorite = false, c
         >
           favorite
         </span>
-        <span className="listing-action-btn__text">Favorite</span>
+        <span className="listing-action-btn__text">{label}</span>
       </button>
 
       {toastMessage && (

@@ -6,7 +6,7 @@ import PropTypes from "prop-types";
 import LoginModal from "@/components/auth/LoginModal";
 import ReviewModal from "./ReviewModal";
 
-export default function ReviewActionManager({ currentUser, listingId, listingSlug }) {
+export default function ReviewActionManager({ currentUser, listingId, listingSlug, dict = {}, locale = "en" }) {
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
   const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
 
@@ -18,6 +18,8 @@ export default function ReviewActionManager({ currentUser, listingId, listingSlu
     }
   };
 
+  const t = dict?.listing || {};
+
   return (
     <>
       <button 
@@ -25,12 +27,14 @@ export default function ReviewActionManager({ currentUser, listingId, listingSlu
         onClick={handleWriteReviewClick}
       >
         <span className="material-symbols-outlined">rate_review</span>
-        Write a Review
+        {t.writeReview || "Write a Review"}
       </button>
 
       <LoginModal 
         isOpen={isLoginModalOpen} 
         onClose={() => setIsLoginModalOpen(false)} 
+        dict={dict}
+        locale={locale}
       />
 
       <ReviewModal 
@@ -48,4 +52,6 @@ ReviewActionManager.propTypes = {
   currentUser: PropTypes.object,
   listingId: PropTypes.number,
   listingSlug: PropTypes.string,
+  dict: PropTypes.object,
+  locale: PropTypes.string,
 };

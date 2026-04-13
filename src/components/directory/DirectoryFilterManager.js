@@ -15,7 +15,9 @@ const getListingRating = (listing) => {
   return sum / reviews.length;
 };
 
-export default function DirectoryFilterManager({ listings, currentUser }) {
+export default function DirectoryFilterManager({ listings, currentUser, dict = {}, locale = "en" }) {
+  const t = dict?.directory || {};
+  
   const [activeCategory, setActiveCategory] = useState("All");
   const [activePrice, setActivePrice] = useState("All");
   const [sortBy, setSortBy] = useState("A-Z");
@@ -78,7 +80,7 @@ export default function DirectoryFilterManager({ listings, currentUser }) {
     <div className="directory-filter-manager">
       <div className="directory-controls">
         <div className="control-group">
-          <label htmlFor="category-filter">Category</label>
+          <label htmlFor="category-filter">{t.filterCategory || "CATEGORY"}</label>
           <select
             id="category-filter"
             value={activeCategory}
@@ -86,14 +88,14 @@ export default function DirectoryFilterManager({ listings, currentUser }) {
           >
             {categories.map((cat) => (
               <option key={cat} value={cat}>
-                {cat}
+                {cat === "All" ? (t.all || "All") : cat}
               </option>
             ))}
           </select>
         </div>
 
         <div className="control-group">
-          <label htmlFor="price-filter">Price</label>
+          <label htmlFor="price-filter">{t.filterPrice || "PRICE"}</label>
           <select
             id="price-filter"
             value={activePrice}
@@ -101,20 +103,20 @@ export default function DirectoryFilterManager({ listings, currentUser }) {
           >
             {priceRanges.map((price) => (
               <option key={price} value={price}>
-                {price}
+                {price === "All" ? (t.all || "All") : price}
               </option>
             ))}
           </select>
         </div>
 
         <div className="control-group">
-          <label htmlFor="sort-by">Sort By</label>
+          <label htmlFor="sort-by">{t.filterSort || "SORT BY"}</label>
           <select
             id="sort-by"
             value={sortBy}
             onChange={(e) => setSortBy(e.target.value)}
           >
-            <option value="A-Z">A-Z</option>
+            <option value="A-Z">{t.sortAZ || "A-Z"}</option>
             <option value="Z-A">Z-A</option>
             <option value="Highest Rated">Highest Rated</option>
             <option value="Newest">Newest</option>
@@ -130,10 +132,10 @@ export default function DirectoryFilterManager({ listings, currentUser }) {
 
       <div className="results-count">
         {filteredAndSortedListings.length}{" "}
-        {filteredAndSortedListings.length === 1 ? "listing" : "listings"} found
+        {t.listingsFound || "listings found"}
       </div>
 
-      <CcrCardGrid listings={filteredAndSortedListings} currentUser={currentUser} />
+      <CcrCardGrid listings={filteredAndSortedListings} currentUser={currentUser} locale={locale} />
     </div>
   );
 }
@@ -141,4 +143,6 @@ export default function DirectoryFilterManager({ listings, currentUser }) {
 DirectoryFilterManager.propTypes = {
   listings: PropTypes.array.isRequired,
   currentUser: PropTypes.object,
+  dict: PropTypes.object,
+  locale: PropTypes.string,
 };

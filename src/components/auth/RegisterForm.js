@@ -5,7 +5,8 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import '../RegisterBusinessForm.css';
 
-export default function RegisterForm() {
+export default function RegisterForm({ dict = {}, locale = "en" }) {
+  const t = dict?.register || {};
   const router = useRouter();
   const [formData, setFormData] = useState({
     username: "",
@@ -55,7 +56,6 @@ export default function RegisterForm() {
       if (!value) error = "Username is required";
       else if (value.length < 3) error = "Username must be at least 3 characters";
     } else if (name === "email") {
-      // Flattened email regex to avoid ReDoS hotspots from nested optional groups
       const emailRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
       if (!value) error = "Email is required";
       else if (!emailRegex.test(value)) error = "Please enter a valid email address";
@@ -152,7 +152,7 @@ export default function RegisterForm() {
         return;
       }
 
-      router.push("/check-email");
+      router.push(`/${locale}/check-email`);
     } catch (err) {
       setGeneralError(err.message || "An unexpected error occurred.");
     } finally {
@@ -163,7 +163,7 @@ export default function RegisterForm() {
   return (
     <form className="register-form" onSubmit={handleSubmit}>
       <div className="register-form__group">
-        <label className="register-form__label" htmlFor="username">Username</label>
+        <label className="register-form__label" htmlFor="username">{t.username || "Username"}</label>
         <input
           id="username"
           name="username"
@@ -177,7 +177,7 @@ export default function RegisterForm() {
       </div>
 
       <div className="register-form__group">
-        <label className="register-form__label" htmlFor="email">Email</label>
+        <label className="register-form__label" htmlFor="email">{t.email || "Email"}</label>
         <input
           id="email"
           name="email"
@@ -191,7 +191,7 @@ export default function RegisterForm() {
       </div>
 
       <div className="register-form__group">
-        <label className="register-form__label" htmlFor="password">Password</label>
+        <label className="register-form__label" htmlFor="password">{t.password || "Password"}</label>
         <div className="register-form__password-wrapper">
           <input
             id="password"
@@ -231,7 +231,7 @@ export default function RegisterForm() {
 
       <div className="register-form__row">
         <div className="register-form__group">
-          <label className="register-form__label" htmlFor="firstName">First Name</label>
+          <label className="register-form__label" htmlFor="firstName">{t.firstName || "First Name"}</label>
           <input
             id="firstName"
             name="firstName"
@@ -242,7 +242,7 @@ export default function RegisterForm() {
           />
         </div>
         <div className="register-form__group">
-          <label className="register-form__label" htmlFor="lastName">Last Name</label>
+          <label className="register-form__label" htmlFor="lastName">{t.lastName || "Last Name"}</label>
           <input
             id="lastName"
             name="lastName"
@@ -255,7 +255,7 @@ export default function RegisterForm() {
       </div>
 
       <div className="register-form__group">
-        <label className="register-form__label" htmlFor="phoneNumber">Phone Number</label>
+        <label className="register-form__label" htmlFor="phoneNumber">{t.phone || "Phone Number"}</label>
         <input
           id="phoneNumber"
           name="phoneNumber"
@@ -278,7 +278,7 @@ export default function RegisterForm() {
           required
         />
         <label htmlFor="consent" className="register-form__checkbox-label">
-          I agree to the <a href="/terms">Terms and Conditions</a> and <a href="/privacy">Privacy Policy</a>.
+          {t.terms || "I agree to the Terms and Conditions and Privacy Policy."}
         </label>
       </div>
       {fieldErrors.consent && <span className="register-form__error-text" style={{ marginBottom: '1.5rem', display: 'block' }}>{fieldErrors.consent}</span>}
@@ -290,7 +290,7 @@ export default function RegisterForm() {
         className="register-form__submit"
         disabled={isLoading || !isFormValid()}
       >
-        {isLoading ? "Registering..." : "Create Account"}
+        {isLoading ? "..." : (t.button || "Create Account")}
       </button>
     </form>
   );
