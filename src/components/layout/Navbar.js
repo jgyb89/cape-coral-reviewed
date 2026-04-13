@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
 import Link from "next/link";
+import { useRouter, usePathname } from "next/navigation";
 import LoginModal from "@/components/auth/LoginModal";
 import SearchModal from "@/components/layout/SearchModal";
 import "./Navbar.css";
@@ -98,7 +99,10 @@ const categories = [
   },
 ];
 
-export default function Navbar({ currentUser }) {
+export default function Navbar({ currentUser, dict, locale }) {
+  const router = useRouter();
+  const pathname = usePathname();
+
   const [isMobileOpen, setIsMobileOpen] = useState(false);
   const [isAccountOpen, setIsAccountOpen] = useState(false);
   const [isListingsOpen, setIsListingsOpen] = useState(false);
@@ -109,6 +113,13 @@ export default function Navbar({ currentUser }) {
   const [mobileLevel, setMobileLevel] = useState(1);
   const [activeSubMenu, setActiveSubMenu] = useState(null); // 'listings' or 'account'
   const [activeCategory, setActiveCategory] = useState(null);
+
+  const toggleLocale = () => {
+    const newLocale = locale === "en" ? "es" : "en";
+    const pathParts = pathname.split("/");
+    pathParts[1] = newLocale;
+    router.push(pathParts.join("/"));
+  };
 
   const closeMobileMenu = () => {
     setIsMobileOpen(false);
@@ -121,13 +132,13 @@ export default function Navbar({ currentUser }) {
   };
 
   const getSubmitHref = () => {
-    if (!currentUser) return "/register-business";
+    if (!currentUser) return `/${locale}/register-business`;
     const userRoles =
       currentUser.roles?.nodes?.map((node) => node.name.toLowerCase()) || [];
     if (userRoles.includes("business") || userRoles.includes("administrator")) {
-      return "/submit-listing";
+      return `/${locale}/submit-listing`;
     }
-    return "/user-to-business";
+    return `/${locale}/user-to-business`;
   };
 
   const submitHref = getSubmitHref();
@@ -135,10 +146,12 @@ export default function Navbar({ currentUser }) {
   const userRoles = currentUser?.roles?.nodes?.map((node) => node.name.toLowerCase()) || [];
   const isBusinessOrAdmin = userRoles.includes("business") || userRoles.includes("administrator");
 
+  const t = dict?.nav || {};
+
   return (
     <>
       <nav className="main-nav">
-        <Link href="/" className="nav-brand">
+        <Link href={`/${locale}`} className="nav-brand">
           <Image
             src={capeCoralLogo}
             alt="Cape Coral Reviewed Logo"
@@ -147,26 +160,39 @@ export default function Navbar({ currentUser }) {
           />
         </Link>
 
-        <button
-          className="mobile-menu-btn"
-          onClick={() =>
-            isMobileOpen ? closeMobileMenu() : setIsMobileOpen(true)
-          }
-        >
-          <span className="material-symbols-outlined">
-            {isMobileOpen ? "close" : "menu"}
-          </span>
-        </button>
+        <div className="mobile-actions">
+          <button
+            className="mobile-search-btn"
+            onClick={() => setIsSearchModalOpen(true)}
+            aria-label="Open Search"
+          >
+            <span className="material-symbols-outlined">search</span>
+          </button>
+
+          <button
+            className="mobile-menu-btn"
+            onClick={() =>
+              isMobileOpen ? closeMobileMenu() : setIsMobileOpen(true)
+            }
+          >
+            <span className="material-symbols-outlined">
+              {isMobileOpen ? "close" : "menu"}
+            </span>
+          </button>
+        </div>
 
         <div className={`nav-links ${isMobileOpen ? "mobile-open" : ""}`}>
-          <button 
-            onClick={() => setIsSearchModalOpen(true)} 
-            className="nav-link nav-link--search"
+          <button
+            onClick={() => setIsSearchModalOpen(true)}
+            className="nav-link"
           >
-            <span className="material-symbols-outlined nav-link__icon">
+            <span
+              className="material-symbols-outlined"
+              style={{ fontSize: "1.2rem", marginTop: "-2px" }}
+            >
               search
             </span>{" "}
-            Search
+            {t.search || "Search"}
           </button>
 
           <div
@@ -175,7 +201,7 @@ export default function Navbar({ currentUser }) {
             onMouseLeave={() => setIsListingsOpen(false)}
           >
             <div className="nav-link__trigger">
-              All Listings{" "}
+              {t.allListings || "All Listings"}{" "}
               <span className="material-symbols-outlined nav-link__icon">
                 expand_more
               </span>
@@ -193,7 +219,7 @@ export default function Navbar({ currentUser }) {
                         {cat.subs.map((sub) => (
                           <Link
                             key={sub.slug}
-                            href={`/directory/${cat.slug}/${sub.slug}`}
+                            href={`/${locale}/directory/${cat.slug}/${sub.slug}`}
                             className="mega-menu-sub-link"
                             onClick={() => setIsListingsOpen(false)}
                           >
@@ -206,20 +232,29 @@ export default function Navbar({ currentUser }) {
                 </div>
                 <div className="mega-menu-footer">
                   <Link 
-                    href="/directory" 
+                    href={`/${locale}/directory`} 
                     className="mega-menu-all-link" 
                     onClick={() => setIsListingsOpen(false)}
                   >
-                    View All Directory
+                    {t.viewAllDirectory || "View All Directory"}
                   </Link>
                 </div>
               </div>
             )}
           </div>
 
-          <Link href="/blog" className="nav-link">
-            News & Reviews
+          <Link href={`/${locale}/blog`} className="nav-link">
+            {t.news || "News & Reviews"}
           </Link>
+
+          <div className="locale-toggle-container">
+            <button 
+              className={`locale-btn ${locale === 'en' ? 'active' : ''}`}
+              onClick={toggleLocale}
+            >
+              {locale === 'en' ? 'ES' : 'EN'}
+            </button>
+          </div>
 
           {currentUser ? (
             // LOGGED IN STATE
@@ -230,27 +265,27 @@ export default function Navbar({ currentUser }) {
                 onMouseLeave={() => setIsAccountOpen(false)}
               >
                 <div className="nav-link__trigger">
-                  My Account{" "}
+                  {t.myAccount || "My Account"}{" "}
                   <span className="material-symbols-outlined nav-link__icon">
                     expand_more
                   </span>
                 </div>
                 {isAccountOpen && (
                   <div className="nav-dropdown">
-                    <Link href="/dashboard">Profile</Link>
-                    <Link href="/dashboard/favorites">Favorites</Link>
-                    <Link href="/dashboard/reviews">My Reviews</Link>
+                    <Link href={`/${locale}/dashboard`}>{t.profile || "Profile"}</Link>
+                    <Link href={`/${locale}/dashboard/favorites`}>{t.favorites || "Favorites"}</Link>
+                    <Link href={`/${locale}/dashboard/reviews`}>{t.myReviews || "My Reviews"}</Link>
                     {isBusinessOrAdmin && (
-                      <Link href="/dashboard/listings">My Listings</Link>
+                      <Link href={`/${locale}/dashboard/listings`}>{t.myListings || "My Listings"}</Link>
                     )}
                     <button onClick={() => setIsLogoutModalOpen(true)}>
-                      Sign Out
+                      {t.signOut || "Sign Out"}
                     </button>
                   </div>
                 )}
               </div>
               <div className="business-signup">
-                <Link href={submitHref}>Submit your Business</Link>
+                <Link href={submitHref}>{t.submitBusiness || "Submit your Business"}</Link>
               </div>
             </>
           ) : (
@@ -260,13 +295,13 @@ export default function Navbar({ currentUser }) {
                 onClick={() => setIsLoginModalOpen(true)}
                 className="nav-link nav-login-btn"
               >
-                Log in
+                {t.login || "Log in"}
               </button>
               <div className="sign-up-button">
-                <Link href="/register">Join Community</Link>
+                <Link href={`/${locale}/register`}>{t.joinCommunity || "Join Community"}</Link>
               </div>
               <div className="business-signup">
-                <Link href={submitHref}>Submit your Business</Link>
+                <Link href={submitHref}>{t.submitBusiness || "Submit your Business"}</Link>
               </div>
             </>
           )}
@@ -293,7 +328,7 @@ export default function Navbar({ currentUser }) {
           data-level={mobileLevel}
         >
           <div className="flyout-header">
-            <Link href="/" className="flyout-brand" onClick={closeMobileMenu}>
+            <Link href={`/${locale}`} className="flyout-brand" onClick={closeMobileMenu}>
               Cape Coral Directory
             </Link>
             <button className="flyout-close" onClick={closeMobileMenu}>
@@ -317,7 +352,7 @@ export default function Navbar({ currentUser }) {
                       <span className="material-symbols-outlined flyout-icon--search">
                         search
                       </span>
-                      Search
+                      {t.search || "Search"}
                     </span>
                   </button>
                 </li>
@@ -329,7 +364,7 @@ export default function Navbar({ currentUser }) {
                       setActiveSubMenu("listings");
                     }}
                   >
-                    All Listings{" "}
+                    {t.allListings || "All Listings"}{" "}
                     <span className="material-symbols-outlined flyout-icon">
                       chevron_right
                     </span>
@@ -337,11 +372,11 @@ export default function Navbar({ currentUser }) {
                 </li>
                 <li className="flyout-item">
                   <Link
-                    href="/blog"
+                    href={`/${locale}/blog`}
                     className="flyout-link"
                     onClick={closeMobileMenu}
                   >
-                    News & Reviews
+                    {t.news || "News & Reviews"}
                   </Link>
                 </li>
 
@@ -354,7 +389,7 @@ export default function Navbar({ currentUser }) {
                         setActiveSubMenu("account");
                       }}
                     >
-                      My Account{" "}
+                      {t.myAccount || "My Account"}{" "}
                       <span className="material-symbols-outlined flyout-icon">
                         chevron_right
                       </span>
@@ -369,24 +404,33 @@ export default function Navbar({ currentUser }) {
                         setIsLoginModalOpen(true);
                       }}
                     >
-                      Log in
+                      {t.login || "Log in"}
                     </button>
                   </li>
                 )}
+
+                <li className="flyout-item">
+                  <button
+                    className="flyout-link"
+                    onClick={toggleLocale}
+                  >
+                    Language: {locale.toUpperCase() === 'EN' ? 'Spanish (ES)' : 'English (EN)'}
+                  </button>
+                </li>
               </ul>
 
               {/* Bottom CTAs */}
               <div className="flyout-cta-wrap">
                 {!currentUser && (
                   <div className="sign-up-button">
-                    <Link href="/register" onClick={closeMobileMenu}>
-                      Join Community
+                    <Link href={`/${locale}/register`} onClick={closeMobileMenu}>
+                      {t.joinCommunity || "Join Community"}
                     </Link>
                   </div>
                 )}
                 <div className="business-signup">
                   <Link href={submitHref} onClick={closeMobileMenu}>
-                    Submit your Business
+                    {t.submitBusiness || "Submit your Business"}
                   </Link>
                 </div>
               </div>
@@ -407,11 +451,11 @@ export default function Navbar({ currentUser }) {
                   <ul className="flyout-list">
                     <li className="flyout-item">
                       <Link
-                        href="/directory"
+                        href={`/${locale}/directory`}
                         className="flyout-link"
                         onClick={closeMobileMenu}
                       >
-                        View All Directory
+                        {t.viewAllDirectory || "View All Directory"}
                       </Link>
                     </li>
                     {categories.map((cat) => (
@@ -442,39 +486,39 @@ export default function Navbar({ currentUser }) {
                   <ul className="flyout-list">
                     <li className="flyout-item">
                       <Link
-                        href="/dashboard"
+                        href={`/${locale}/dashboard`}
                         className="flyout-link"
                         onClick={closeMobileMenu}
                       >
-                        Profile Settings
+                        {t.profile || "Profile Settings"}
                       </Link>
                     </li>
                     <li className="flyout-item">
                       <Link
-                        href="/dashboard/favorites"
+                        href={`/${locale}/dashboard/favorites`}
                         className="flyout-link"
                         onClick={closeMobileMenu}
                       >
-                        Favorite Listings
+                        {t.favorites || "Favorite Listings"}
                       </Link>
                     </li>
                     <li className="flyout-item">
                       <Link
-                        href="/dashboard/reviews"
+                        href={`/${locale}/dashboard/reviews`}
                         className="flyout-link"
                         onClick={closeMobileMenu}
                       >
-                        My Reviews
+                        {t.myReviews || "My Reviews"}
                       </Link>
                     </li>
                     {isBusinessOrAdmin && (
                       <li className="flyout-item">
                         <Link
-                          href="/dashboard/listings"
+                          href={`/${locale}/dashboard/listings`}
                           className="flyout-link"
                           onClick={closeMobileMenu}
                         >
-                          My Listings
+                          {t.myListings || "My Listings"}
                         </Link>
                       </li>
                     )}
@@ -486,7 +530,7 @@ export default function Navbar({ currentUser }) {
                           setIsLogoutModalOpen(true);
                         }}
                       >
-                        Sign Out
+                        {t.signOut || "Sign Out"}
                       </button>
                     </li>
                   </ul>
@@ -510,7 +554,7 @@ export default function Navbar({ currentUser }) {
                     {activeCategory.subs.map((sub) => (
                       <li key={sub.slug} className="flyout-item">
                         <Link
-                          href={`/directory/${activeCategory.slug}/${sub.slug}`}
+                          href={`/${locale}/directory/${activeCategory.slug}/${sub.slug}`}
                           className="flyout-link"
                           onClick={closeMobileMenu}
                         >
@@ -532,12 +576,16 @@ export default function Navbar({ currentUser }) {
       <SearchModal 
         isOpen={isSearchModalOpen} 
         onClose={() => setIsSearchModalOpen(false)} 
+        dict={dict}
+        locale={locale}
       />
 
       {/* Existing Login Modal */}
       <LoginModal
         isOpen={isLoginModalOpen}
         onClose={() => setIsLoginModalOpen(false)}
+        dict={dict}
+        locale={locale}
       />
 
       {/* Logout Confirmation Modal */}
@@ -548,12 +596,12 @@ export default function Navbar({ currentUser }) {
               Are you sure you want to log out?
             </p>
             <div className="logout-modal__actions">
-              <a
-                href="/logout"
+              <Link
+                href={`/${locale}/logout`}
                 className="logout-modal__button logout-modal__button--confirm"
               >
                 Yes, Log Out
-              </a>
+              </Link>
               <button
                 onClick={() => setIsLogoutModalOpen(false)}
                 className="logout-modal__button logout-modal__button--cancel"

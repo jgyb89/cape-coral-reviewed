@@ -5,6 +5,7 @@ import "material-symbols/outlined.css";
 import Navbar from "@/components/layout/Navbar";
 import BugReporter from "@/components/BugReporter";
 import { getViewer } from "@/lib/auth";
+import { getDictionary } from "@/lib/dictionaries";
 import Link from "next/link";
 
 const poppins = Poppins({
@@ -24,13 +25,19 @@ export const metadata = {
   description: "The premier local directory for Cape Coral, Florida.",
 };
 
-export default async function RootLayout({ children }) {
+export async function generateStaticParams() {
+  return [{ locale: "en" }, { locale: "es" }];
+}
+
+export default async function RootLayout({ children, params }) {
+  const { locale } = await params;
+  const dict = await getDictionary(locale);
   const viewer = await getViewer();
 
   return (
-    <html lang="en">
+    <html lang={locale}>
       <body className={`${poppins.variable} ${openSans.variable}`}>
-        <Navbar currentUser={viewer} />
+        <Navbar currentUser={viewer} dict={dict} locale={locale} />
         {children}
         <BugReporter />
       </body>

@@ -1,6 +1,7 @@
 /* src/app/blog/page.js */
 import BlogView from "@/components/blog/BlogView";
 import { getBlogPosts } from "@/lib/actions";
+import { getDictionary } from "@/lib/dictionaries";
 import DOMPurify from "isomorphic-dompurify";
 
 export const metadata = {
@@ -8,8 +9,12 @@ export const metadata = {
   description: "Explore the latest news, reviews, and featured businesses in Cape Coral.",
 };
 
-export default async function BlogPage() {
+export default async function BlogPage({ params }) {
+  const { locale } = await params;
+  const dict = await getDictionary(locale);
   const posts = await getBlogPosts();
+
+  const t = dict?.blog || {};
 
   const formattedPosts = posts.map(node => ({
     id: node.databaseId,
@@ -30,7 +35,7 @@ export default async function BlogPage() {
           marginBottom: '1rem',
           color: 'var(--color-text)' 
         }}>
-          Cape Coral News & Reviews
+          {t.title || "Cape Coral News & Reviews"}
         </h1>
         <p style={{ 
           fontSize: '1.25rem', 
@@ -38,11 +43,11 @@ export default async function BlogPage() {
           maxWidth: '800px', 
           marginBottom: '3rem' 
         }}>
-          Stay up to date with the latest happenings, business spotlights, and local guides in the Cape Coral community.
+          {t.subtitle || "Stay up to date with the latest happenings, business spotlights, and local guides in the Cape Coral community."}
         </p>
       </div>
       
-      <BlogView posts={formattedPosts} />
+      <BlogView posts={formattedPosts} dict={dict} locale={locale} />
     </main>
   );
 }

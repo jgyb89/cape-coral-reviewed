@@ -5,16 +5,18 @@ import { useState } from "react";
 import BlogCard from "./BlogCard";
 import "./Blog.css";
 
-const TABS = [
-  'All Posts',
-  'Featured Businesses',
-  'News & Reviews',
-  'Food & Drink',
-  'Home & Local Services',
-  'Health & Wellness'
-];
+export default function BlogView({ posts, dict = {}, locale = "en" }) {
+  const t = dict?.blog?.tabs || {};
+  
+  const TABS = [
+    { id: 'All Posts', label: t.all || 'All Posts' },
+    { id: 'Featured Businesses', label: t.featured || 'Featured Businesses' },
+    { id: 'News & Reviews', label: t.news || 'News & Reviews' },
+    { id: 'Food & Drink', label: t.food || 'Food & Drink' },
+    { id: 'Home & Local Services', label: t.home || 'Home & Local Services' },
+    { id: 'Health & Wellness', label: t.health || 'Health & Wellness' }
+  ];
 
-export default function BlogView({ posts }) {
   const [activeTab, setActiveTab] = useState('All Posts');
 
   const filteredPosts = posts.filter(post => {
@@ -27,19 +29,19 @@ export default function BlogView({ posts }) {
       <nav className="blog-tabs" aria-label="Blog categories">
         {TABS.map((tab) => (
           <button
-            key={tab}
-            className={`blog-tabs__item ${activeTab === tab ? "blog-tabs__item--active" : ""}`}
-            onClick={() => setActiveTab(tab)}
+            key={tab.id}
+            className={`blog-tabs__item ${activeTab === tab.id ? "blog-tabs__item--active" : ""}`}
+            onClick={() => setActiveTab(tab.id)}
             type="button"
           >
-            {tab}
+            {tab.label}
           </button>
         ))}
       </nav>
 
       <div className="blog-grid">
         {filteredPosts.map((post) => (
-          <BlogCard key={post.id} post={post} />
+          <BlogCard key={post.id} post={post} locale={locale} />
         ))}
       </div>
     </div>

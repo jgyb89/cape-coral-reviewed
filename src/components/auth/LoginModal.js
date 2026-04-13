@@ -8,7 +8,7 @@ import { handleLogin } from "@/lib/actions";
 import Link from "next/link";
 import "./LoginModal.css";
 
-export default function LoginModal({ isOpen, onClose }) {
+export default function LoginModal({ isOpen, onClose, dict = {}, locale = "en" }) {
   const router = useRouter();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -16,6 +16,8 @@ export default function LoginModal({ isOpen, onClose }) {
   const [error, setError] = useState(null);
 
   if (!isOpen) return null;
+
+  const t = dict?.auth || {};
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -58,12 +60,10 @@ export default function LoginModal({ isOpen, onClose }) {
         </button>
 
         <h2 id="login-modal-title" className="login-modal__title">
-          Make a free account!
+          {t.modalTitle || "Make a free account!"}
         </h2>
         <p className="login-modal__subtitle">
-          Sign up for free in order to share, favorite, or leave reviews! This
-          ensures we keep the site spam-free and a better experience for
-          everyone!
+          {t.modalSubtitle || "Sign up for free in order to share, favorite, or leave reviews! This ensures we keep the site spam-free and a better experience for everyone!"}
         </p>
 
         {error && <div className="login-modal__error">{error}</div>}
@@ -71,7 +71,7 @@ export default function LoginModal({ isOpen, onClose }) {
         <form className="login-modal__form" onSubmit={handleSubmit}>
           <div className="login-modal__form-group">
             <label className="login-modal__label" htmlFor="modal-username">
-              Username or Email
+              {t.usernameEmail || "Username or Email"}
             </label>
             <input
               id="modal-username"
@@ -86,7 +86,7 @@ export default function LoginModal({ isOpen, onClose }) {
 
           <div className="login-modal__form-group">
             <label className="login-modal__label" htmlFor="modal-password">
-              Password
+              {t.password || "Password"}
             </label>
             <input
               id="modal-password"
@@ -101,10 +101,10 @@ export default function LoginModal({ isOpen, onClose }) {
 
           <div className="login-modal__options">
             <label className="login-modal__remember">
-              <input type="checkbox" /> Remember Me
+              <input type="checkbox" /> {t.rememberMe || "Remember Me"}
             </label>
-            <Link href="/login?recover=true" className="login-modal__forgot">
-              Recover Password
+            <Link href={`/${locale}/login?recover=true`} className="login-modal__forgot">
+              {t.recoverPassword || "Recover Password"}
             </Link>
           </div>
 
@@ -113,18 +113,18 @@ export default function LoginModal({ isOpen, onClose }) {
             className="login-modal__submit"
             disabled={isUpdating}
           >
-            {isUpdating ? "Logging In..." : "Log In"}
+            {isUpdating ? "..." : (t.logIn || "Log In")}
           </button>
         </form>
 
         <div className="login-modal__footer">
-          Don&apos;t have an account?{" "}
+          {t.noAccount || "Don't have an account?"}{" "}
           <Link
-            href="/register"
+            href={`/${locale}/register`}
             className="login-modal__signup-link"
             onClick={onClose}
           >
-            Sign Up
+            {t.signUp || "Sign Up"}
           </Link>
         </div>
       </dialog>
@@ -135,4 +135,6 @@ export default function LoginModal({ isOpen, onClose }) {
 LoginModal.propTypes = {
   isOpen: PropTypes.bool.isRequired,
   onClose: PropTypes.func.isRequired,
+  dict: PropTypes.object,
+  locale: PropTypes.string,
 };

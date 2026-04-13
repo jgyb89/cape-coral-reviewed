@@ -1,5 +1,6 @@
 import { getListings } from "@/lib/api";
 import { getViewer } from "@/lib/auth";
+import { getDictionary } from "@/lib/dictionaries";
 import DirectoryFilterManager from "@/components/directory/DirectoryFilterManager";
 
 export const metadata = {
@@ -7,9 +8,13 @@ export const metadata = {
   description: "Browse our comprehensive directory of local businesses in Cape Coral, Florida.",
 };
 
-export default async function DirectoryIndexPage() {
+export default async function DirectoryIndexPage({ params }) {
+  const { locale } = await params;
+  const dict = await getDictionary(locale);
   const listings = await getListings();
   const currentUser = await getViewer();
+
+  const t = dict?.directory || {};
 
   return (
     <main
@@ -22,14 +27,14 @@ export default async function DirectoryIndexPage() {
     >
       <header style={{ marginBottom: "3rem", textAlign: "center" }}>
         <h1 style={{ fontSize: "3rem", fontWeight: "800", marginBottom: "1rem" }}>
-          Business Directory
+          {t.title || "Business Directory"}
         </h1>
         <p style={{ fontSize: "1.2rem", color: "#666" }}>
-          Explore the best local services, restaurants, and shops in Cape Coral.
+          {t.subtitle || "Explore the best local services, restaurants, and shops in Cape Coral."}
         </p>
       </header>
 
-      <DirectoryFilterManager listings={listings} currentUser={currentUser} />
+      <DirectoryFilterManager listings={listings} currentUser={currentUser} dict={dict} locale={locale} />
     </main>
   );
 }

@@ -1,0 +1,96 @@
+{
+  "nav": {
+    "search": "Search",
+    "allListings": "All Listings",
+    "news": "News & Reviews",
+    "login": "Log in",
+    "joinCommunity": "Join Community",
+    "submitBusiness": "Submit your Business",
+    "myAccount": "My Account",
+    "profile": "Profile",
+    "favorites": "Favorites",
+    "myReviews": "My Reviews",
+    "myListings": "My Listings",
+    "signOut": "Sign Out",
+    "viewAllDirectory": "View All Directory"
+  },
+  "home": {
+    "viewAll": "View All",
+    "featuredBusinesses": "Featured Businesses",
+    "popularNearYou": "Popular Near You",
+    "newest": "Newest",
+    "topRated": "Top Rated",
+    "hottest": "Hottest"
+  },
+  "listing": {
+    "goBack": "Go Back",
+    "favorite": "Favorite",
+    "share": "Share",
+    "report": "Report",
+    "businessHours": "Business Hours",
+    "aboutBusiness": "About the Business",
+    "recommendedReviews": "Recommended Reviews",
+    "writeReview": "Write a Review",
+    "noReviewsYet": "No reviews yet. Be the first to leave one!",
+    "closed": "Closed",
+    "days": {
+      "monday": "Monday",
+      "tuesday": "Tuesday",
+      "wednesday": "Wednesday",
+      "thursday": "Thursday",
+      "friday": "Friday",
+      "saturday": "Saturday",
+      "sunday": "Sunday"
+    }
+  },
+  "auth": {
+    "modalTitle": "Make a free account!",
+    "modalSubtitle": "Sign up for free in order to share, favorite, or leave reviews! This ensures we keep the site spam-free and a better experience for everyone!",
+    "usernameEmail": "Username or Email",
+    "password": "Password",
+    "rememberMe": "Remember Me",
+    "recoverPassword": "Recover Password",
+    "logIn": "Log In",
+    "noAccount": "Don't have an account?",
+    "signUp": "Sign Up"
+  },
+  "search": {
+    "title": "Search",
+    "placeholder": "What are you looking for?",
+    "button": "Search Listing"
+  },
+  "register": {
+    "title": "Create an Account",
+    "subtitle": "Join our community to list your business, leave reviews, and save your favorites.",
+    "username": "Username",
+    "email": "Email",
+    "password": "Password",
+    "firstName": "First Name",
+    "lastName": "Last Name",
+    "phone": "Phone Number",
+    "terms": "I agree to the Terms and Conditions and Privacy Policy.",
+    "button": "Create Account"
+  },
+  "blog": {
+    "title": "Cape Coral News & Reviews",
+    "subtitle": "Stay up to date with the latest happenings, business spotlights, and local guides in the Cape Coral community.",
+    "tabs": {
+      "all": "All Posts",
+      "featured": "Featured Businesses",
+      "news": "News & Reviews",
+      "food": "Food & Drink",
+      "home": "Home & Local Services",
+      "health": "Health & Wellness"
+    }
+  },
+  "directory": {
+    "title": "Business Directory",
+    "subtitle": "Explore the best local services, restaurants, and shops in Cape Coral.",
+    "filterCategory": "CATEGORY",
+    "filterPrice": "PRICE",
+    "filterSort": "SORT BY",
+    "all": "All",
+    "sortAZ": "A-Z",
+    "listingsFound": "listings found"
+  }
+}

@@ -6,19 +6,20 @@ import PropTypes from 'prop-types';
 import Sidebar from '@/components/dashboard/Sidebar';
 import './Dashboard.css';
 
-export default async function DashboardLayout({ children }) {
+export default async function DashboardLayout({ children, params }) {
+  const { locale } = await params;
   const viewer = await getViewer();
 
   // Redundancy check if middleware is bypassed
   if (!viewer) {
-    redirect('/login');
+    redirect(`/${locale}/login`);
   }
 
   const userRoles = viewer.roles.nodes.map((role) => role.name.toLowerCase());
 
   return (
     <div className="dashboard-layout">
-      <Sidebar userRoles={userRoles} />
+      <Sidebar userRoles={userRoles} locale={locale} />
 
       <main className="dashboard-content">
         {children}

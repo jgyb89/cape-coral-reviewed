@@ -5,7 +5,7 @@ import { useState } from 'react';
 import PropTypes from 'prop-types';
 import DOMPurify from 'isomorphic-dompurify';
 
-export default function ReviewList({ reviews }) {
+export default function ReviewList({ reviews, noReviewsYet = "No reviews yet. Be the first to leave one!" }) {
   const [visibleCount, setVisibleCount] = useState(5);
   const [expandedReviews, setExpandedReviews] = useState({});
 
@@ -14,7 +14,7 @@ export default function ReviewList({ reviews }) {
   if (!nodes || nodes.length === 0) {
     return (
       <div className="review-list review-list--empty">
-        <p>No reviews yet. Be the first to leave one!</p>
+        <p>{noReviewsYet}</p>
       </div>
     );
   }
