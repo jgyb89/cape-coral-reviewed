@@ -68,10 +68,10 @@ export default function ProfileForm({ viewer }) {
 
   if (!isEditing) {
     return (
-      <div style={{ backgroundColor: '#fff', padding: '2rem', borderRadius: '8px', border: '1px solid #eaeaea' }}>
+      <div className={styles['profile-form']}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
           <h3 style={{ margin: 0, fontSize: '1.5rem', color: '#333' }}>Personal Information</h3>
-          <button onClick={() => setIsEditing(true)} style={{ backgroundColor: '#fff', border: '1px solid #ccc', padding: '0.5rem 1rem', borderRadius: '6px', cursor: 'pointer', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+          <button onClick={() => setIsEditing(true)} className={styles['profile-form__button']} style={{ backgroundColor: '#fff', border: '1px solid #ccc', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
             <span className="material-symbols-outlined" style={{ fontSize: '1.1rem' }}>edit</span> Edit Profile
           </button>
         </div>
@@ -200,10 +200,10 @@ export default function ProfileForm({ viewer }) {
         </p>
       )}
 
-      <div style={{ display: 'flex', gap: '1rem' }}>
+      <div className={styles['profile-form__actions']}>
         <button
           type="submit"
-          className={styles['profile-form__submit']}
+          className={`${styles['profile-form__button']} ${styles['profile-form__button--primary']}`}
           disabled={isSaving}
           style={{ flex: 1 }}
         >
@@ -212,8 +212,8 @@ export default function ProfileForm({ viewer }) {
         <button
           type="button"
           onClick={() => setIsEditing(false)}
-          className={styles['profile-form__submit']}
-          style={{ flex: 1, backgroundColor: '#bdbdbd' }}
+          className={styles['profile-form__button']}
+          style={{ flex: 1, backgroundColor: '#cbd5e1', color: '#1e293b' }}
           disabled={isSaving}
         >
           Cancel

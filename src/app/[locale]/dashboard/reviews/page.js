@@ -24,9 +24,9 @@ export default async function ReviewsPage({ params }) {
 
   return (
     <div className="reviews-page">
-      <header className="reviews-page__header">
-        <h1 className="reviews-page__title">My Reviews</h1>
-        <p className="reviews-page__subtitle">
+      <header style={{ marginBottom: '2.5rem', paddingBottom: '1rem', borderBottom: '1px solid #f1f5f9' }}>
+        <h1 style={{ margin: '0 0 0.5rem 0' }}>My Reviews</h1>
+        <p style={{ margin: 0 }}>
           Manage the reviews you have written for businesses in the directory.
         </p>
       </header>

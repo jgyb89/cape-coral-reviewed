@@ -21,9 +21,9 @@ export default async function DashboardPage() {
 
   return (
     <div className="profile-settings">
-      <header className="profile-settings__header">
-        <h1 className="profile-settings__title">Profile Settings</h1>
-        <p className="profile-settings__subtitle">
+      <header style={{ marginBottom: '2.5rem', paddingBottom: '1rem', borderBottom: '1px solid #f1f5f9' }}>
+        <h1 style={{ margin: '0 0 0.5rem 0' }}>Profile Settings</h1>
+        <p style={{ margin: 0 }}>
           Update your personal information and manage how your email is displayed on the directory.
         </p>
       </header>

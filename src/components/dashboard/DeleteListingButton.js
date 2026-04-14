@@ -1,55 +1,62 @@
-"use client";
-
+'use client';
 import { useState } from "react";
 import { deleteUserListing } from "@/lib/actions";
 
-export default function DeleteListingButton({ listingId }) {
+export default function DeleteListingButton({ listingId, className = "btn-delete" }) {
   const [isDeleting, setIsDeleting] = useState(false);
+  const [showConfirmModal, setShowConfirmModal] = useState(false);
 
-  const handleDelete = async () => {
-    if (window.confirm('Are you sure you want to delete this listing? This action cannot be undone.')) {
-      setIsDeleting(true);
-      try {
-        const result = await deleteUserListing(listingId);
-        if (result.success) {
-          // Revalidation handled by Server Action
-        } else {
-          alert(`Error: ${result.error}`);
-        }
-      } catch (error) {
-        alert(`An error occurred: ${error.message}`);
-      } finally {
-        setIsDeleting(false);
-      }
+  const executeDelete = async () => {
+    setShowConfirmModal(false);
+    setIsDeleting(true);
+    try {
+      await deleteUserListing(listingId);
+    } catch (error) {
+      console.error("Failed to delete listing", error);
+      alert("Failed to delete listing.");
     }
+    setIsDeleting(false);
   };
 
   return (
-    <button 
-      onClick={handleDelete} 
-      disabled={isDeleting}
-      className="delete-listing-btn"
-      style={{
-        display: 'inline-flex',
-        alignItems: 'center',
-        gap: '0.5rem',
-        padding: '0.5rem 1rem',
-        backgroundColor: '#dc2626',
-        color: '#fff',
-        border: 'none',
-        borderRadius: '8px',
-        fontWeight: '600',
-        cursor: isDeleting ? 'not-allowed' : 'pointer',
-        transition: 'background 0.2s ease',
-        fontSize: '0.9rem'
-      }}
-      onMouseOver={(e) => e.target.style.backgroundColor = '#b91c1c'}
-      onFocus={(e) => e.target.style.backgroundColor = '#b91c1c'}
-      onMouseOut={(e) => e.target.style.backgroundColor = '#dc2626'}
-      onBlur={(e) => e.target.style.backgroundColor = '#dc2626'}
-    >
-      <span className="material-symbols-outlined" style={{ fontSize: '1.2rem' }}>delete</span>
-      {isDeleting ? 'Deleting...' : 'Delete'}
-    </button>
+    <>
+      <button
+        onClick={() => setShowConfirmModal(true)}
+        disabled={isDeleting}
+        className={className}
+        type="button"
+      >
+        <span className="material-symbols-outlined">delete</span>
+        <span>{isDeleting ? 'Deleting...' : 'Delete'}</span>
+      </button>
+
+      {showConfirmModal && (
+        <div className="dashboard-modal-overlay">
+          <div className="dashboard-modal-dialog">
+            <div className="material-symbols-outlined dashboard-modal-icon dashboard-modal-icon--warning">
+              warning
+            </div>
+            <h3 className="dashboard-modal-title">Delete Listing?</h3>
+            <p className="dashboard-modal-text">
+              Are you sure you want to permanently delete this listing? This action cannot be undone.
+            </p>
+            <div className="dashboard-modal-actions">
+              <button 
+                className="dashboard-modal-btn dashboard-modal-btn--cancel"
+                onClick={() => setShowConfirmModal(false)}
+              >
+                Cancel
+              </button>
+              <button 
+                className="dashboard-modal-btn dashboard-modal-btn--danger"
+                onClick={executeDelete}
+              >
+                Yes, Delete
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+    </>
   );
 }

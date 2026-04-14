@@ -78,6 +78,7 @@ const smartFormatTime = (value, currentAmPm) => {
 export default function EditListingForm({ initialData }) {
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [socialErrors, setSocialErrors] = useState(
     initialData.listingdata?.socialUrl 
       ? initialData.listingdata.socialUrl.split(',').map(() => '') 
@@ -189,8 +190,7 @@ export default function EditListingForm({ initialData }) {
     try {
       const result = await updateUserListing(initialData.databaseId, payload);
       if (result.success) {
-        alert("Listing updated successfully!");
-        router.push("/dashboard/listings");
+        setShowSuccessModal(true);
       } else {
         alert(`Error: ${result.error}`);
       }
@@ -202,191 +202,220 @@ export default function EditListingForm({ initialData }) {
   };
 
   return (
-    <form onSubmit={handleSubmit} style={{ display: "grid", gap: "2.5rem", maxWidth: "800px" }}>
-      {/* Section 1: General */}
-      <section style={{ display: "grid", gap: "1.5rem", background: "#fff", padding: "2rem", borderRadius: "12px", border: "1px solid #e2e8f0" }}>
-        <h2 style={{ fontSize: "1.5rem", margin: 0 }}>General Information</h2>
-        <div style={{ display: "grid", gap: "0.5rem" }}>
-          <label htmlFor="title" style={{ fontWeight: "600" }}>Business Name</label>
-          <input
-            type="text"
-            id="title"
-            name="title"
-            value={formData.title}
-            onChange={handleChange}
-            required
-            style={{ 
-              padding: "0.75rem", 
-              borderRadius: "8px", 
-              border: "1px solid",
-              borderColor: titleError ? '#e04c4c' : '#e2e8f0'
-            }}
-          />
-          {titleError && (
-            <span style={{ color: '#e04c4c', fontSize: '0.8rem' }}>{titleError}</span>
-          )}
-        </div>
-        <div style={{ display: "grid", gap: "0.5rem" }}>
-          <label htmlFor="content" style={{ fontWeight: "600" }}>Description</label>
-          <textarea
-            id="content"
-            name="content"
-            value={formData.content}
-            onChange={handleChange}
-            rows={6}
-            style={{ 
-              padding: "0.75rem", 
-              borderRadius: "8px", 
-              border: "1px solid",
-              borderColor: descriptionError ? '#e04c4c' : '#e2e8f0',
-              fontFamily: "inherit" 
-            }}
-          />
-          {descriptionError && (
-            <span style={{ color: '#e04c4c', fontSize: '0.8rem' }}>{descriptionError}</span>
-          )}
-        </div>
-      </section>
+    <div className="edit-listing-form-container">
+      <form onSubmit={handleSubmit} style={{ display: "grid", gap: "2.5rem", maxWidth: "800px" }}>
+        {/* Section 1: General */}
+        <section style={{ display: "grid", gap: "1.5rem", background: "#fff", padding: "2rem", borderRadius: "12px", border: "1px solid #e2e8f0" }}>
+          <h2 style={{ fontSize: "1.5rem", margin: 0 }}>General Information</h2>
+          <div style={{ display: "grid", gap: "0.5rem" }}>
+            <label htmlFor="title" style={{ fontWeight: "600" }}>Business Name</label>
+            <input
+              type="text"
+              id="title"
+              name="title"
+              value={formData.title}
+              onChange={handleChange}
+              required
+              style={{ 
+                padding: "0.75rem", 
+                borderRadius: "8px", 
+                border: "1px solid",
+                borderColor: titleError ? '#e04c4c' : '#e2e8f0'
+              }}
+            />
+            {titleError && (
+              <span style={{ color: '#e04c4c', fontSize: '0.8rem' }}>{titleError}</span>
+            )}
+          </div>
+          <div style={{ display: "grid", gap: "0.5rem" }}>
+            <label htmlFor="content" style={{ fontWeight: "600" }}>Description</label>
+            <textarea
+              id="content"
+              name="content"
+              value={formData.content}
+              onChange={handleChange}
+              rows={6}
+              style={{ 
+                padding: "0.75rem", 
+                borderRadius: "8px", 
+                border: "1px solid",
+                borderColor: descriptionError ? '#e04c4c' : '#e2e8f0',
+                fontFamily: "inherit" 
+              }}
+            />
+            {descriptionError && (
+              <span style={{ color: '#e04c4c', fontSize: '0.8rem' }}>{descriptionError}</span>
+            )}
+          </div>
+        </section>
 
-      {/* Section 2: Contact */}
-      <section style={{ display: "grid", gap: "1.5rem", background: "#fff", padding: "2rem", borderRadius: "12px", border: "1px solid #e2e8f0" }}>
-        <h2 style={{ fontSize: "1.5rem", margin: 0 }}>Contact & Location</h2>
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1.5rem" }}>
-          <div style={{ display: "grid", gap: "0.5rem", gridColumn: "span 2" }}>
-            <label htmlFor="addressStreet" style={{ fontWeight: "600" }}>Street Address</label>
-            <input type="text" id="addressStreet" name="addressStreet" value={formData.addressStreet} onChange={handleChange} style={{ padding: "0.75rem", borderRadius: "8px", border: "1px solid #e2e8f0" }} />
-          </div>
-          <div style={{ display: "grid", gap: "0.5rem" }}>
-            <label htmlFor="addressCity" style={{ fontWeight: "600" }}>City</label>
-            <input type="text" id="addressCity" name="addressCity" value={formData.addressCity} onChange={handleChange} style={{ padding: "0.75rem", borderRadius: "8px", border: "1px solid #e2e8f0" }} />
-          </div>
-          <div style={{ display: "grid", gap: "0.5rem" }}>
-            <label htmlFor="addressState" style={{ fontWeight: "600" }}>State</label>
-            <input type="text" id="addressState" name="addressState" value={formData.addressState} onChange={handleChange} style={{ padding: "0.75rem", borderRadius: "8px", border: "1px solid #e2e8f0" }} />
-          </div>
-          <div style={{ display: "grid", gap: "0.5rem" }}>
-            <label htmlFor="addressZipCode" style={{ fontWeight: "600" }}>Zip Code</label>
-            <input type="text" id="addressZipCode" name="addressZipCode" value={formData.addressZipCode} onChange={handleChange} style={{ padding: "0.75rem", borderRadius: "8px", border: "1px solid #e2e8f0" }} />
-          </div>
-          <div style={{ display: "grid", gap: "0.5rem" }}>
-            <label htmlFor="phoneNumber" style={{ fontWeight: "600" }}>Phone Number</label>
-            <input type="text" id="phoneNumber" name="phoneNumber" value={formData.phoneNumber} onChange={handleChange} style={{ padding: "0.75rem", borderRadius: "8px", border: "1px solid #e2e8f0" }} />
-          </div>
-          <div style={{ display: "grid", gap: "0.5rem" }}>
-            <label htmlFor="businessEmail" style={{ fontWeight: "600" }}>Business Email</label>
-            <input type="email" id="businessEmail" name="businessEmail" value={formData.businessEmail} onChange={handleChange} style={{ padding: "0.75rem", borderRadius: "8px", border: "1px solid #e2e8f0" }} />
-          </div>
-          <div style={{ display: "grid", gap: "0.5rem" }}>
-            <label htmlFor="websiteUrl" style={{ fontWeight: "600" }}>Website URL</label>
-            <input type="url" id="websiteUrl" name="websiteUrl" value={formData.websiteUrl} onChange={handleChange} style={{ padding: "0.75rem", borderRadius: "8px", border: "1px solid #e2e8f0" }} />
-          </div>
-          <div style={{ display: "grid", gap: "0.5rem" }}>
-            <label htmlFor="videoUrl" style={{ fontWeight: "600" }}>Video URL (YouTube/Vimeo)</label>
-            <input type="url" id="videoUrl" name="videoUrl" value={formData.videoUrl} onChange={handleChange} style={{ padding: "0.75rem", borderRadius: "8px", border: "1px solid #e2e8f0" }} />
-          </div>
-          
-          <div style={{ display: "grid", gap: "0.5rem", gridColumn: "span 2" }}>
-            <label style={{ fontWeight: "600" }}>Social Media URLs</label>
-            {formData.socialUrls.map((url, index) => (
-              <div key={index} style={{ marginBottom: '1rem' }}>
-                <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '0.25rem' }}>
-                  <input
-                    type="url"
-                    value={url}
-                    onChange={(e) => handleSocialUrlChange(index, e.target.value)}
-                    placeholder="https://..."
-                    style={{ 
-                      flex: 1, 
-                      padding: "0.75rem", 
-                      borderRadius: "8px", 
-                      border: "1px solid",
-                      borderColor: socialErrors[index] ? '#e04c4c' : '#e2e8f0'
-                    }}
-                  />
-                  {formData.socialUrls.length > 1 && (
-                    <button type="button" onClick={() => removeSocialUrl(index)} style={{ background: 'none', border: 'none', color: '#e04c4c', cursor: 'pointer', padding: '0 0.5rem' }} title="Remove link">
-                      <span className="material-symbols-outlined">delete</span>
-                    </button>
+        {/* Section 2: Contact */}
+        <section style={{ display: "grid", gap: "1.5rem", background: "#fff", padding: "2rem", borderRadius: "12px", border: "1px solid #e2e8f0" }}>
+          <h2 style={{ fontSize: "1.5rem", margin: 0 }}>Contact & Location</h2>
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1.5rem" }}>
+            <div style={{ display: "grid", gap: "0.5rem", gridColumn: "span 2" }}>
+              <label htmlFor="addressStreet" style={{ fontWeight: "600" }}>Street Address</label>
+              <input type="text" id="addressStreet" name="addressStreet" value={formData.addressStreet} onChange={handleChange} style={{ padding: "0.75rem", borderRadius: "8px", border: "1px solid #e2e8f0" }} />
+            </div>
+            <div style={{ display: "grid", gap: "0.5rem" }}>
+              <label htmlFor="addressCity" style={{ fontWeight: "600" }}>City</label>
+              <input type="text" id="addressCity" name="addressCity" value={formData.addressCity} onChange={handleChange} style={{ padding: "0.75rem", borderRadius: "8px", border: "1px solid #e2e8f0" }} />
+            </div>
+            <div style={{ display: "grid", gap: "0.5rem" }}>
+              <label htmlFor="addressState" style={{ fontWeight: "600" }}>State</label>
+              <input type="text" id="addressState" name="addressState" value={formData.addressState} onChange={handleChange} style={{ padding: "0.75rem", borderRadius: "8px", border: "1px solid #e2e8f0" }} />
+            </div>
+            <div style={{ display: "grid", gap: "0.5rem" }}>
+              <label htmlFor="addressZipCode" style={{ fontWeight: "600" }}>Zip Code</label>
+              <input type="text" id="addressZipCode" name="addressZipCode" value={formData.addressZipCode} onChange={handleChange} style={{ padding: "0.75rem", borderRadius: "8px", border: "1px solid #e2e8f0" }} />
+            </div>
+            <div style={{ display: "grid", gap: "0.5rem" }}>
+              <label htmlFor="phoneNumber" style={{ fontWeight: "600" }}>Phone Number</label>
+              <input type="text" id="phoneNumber" name="phoneNumber" value={formData.phoneNumber} onChange={handleChange} style={{ padding: "0.75rem", borderRadius: "8px", border: "1px solid #e2e8f0" }} />
+            </div>
+            <div style={{ display: "grid", gap: "0.5rem" }}>
+              <label htmlFor="businessEmail" style={{ fontWeight: "600" }}>Business Email</label>
+              <input type="email" id="businessEmail" name="businessEmail" value={formData.businessEmail} onChange={handleChange} style={{ padding: "0.75rem", borderRadius: "8px", border: "1px solid #e2e8f0" }} />
+            </div>
+            <div style={{ display: "grid", gap: "0.5rem" }}>
+              <label htmlFor="websiteUrl" style={{ fontWeight: "600" }}>Website URL</label>
+              <input type="url" id="websiteUrl" name="websiteUrl" value={formData.websiteUrl} onChange={handleChange} style={{ padding: "0.75rem", borderRadius: "8px", border: "1px solid #e2e8f0" }} />
+            </div>
+            <div style={{ display: "grid", gap: "0.5rem" }}>
+              <label htmlFor="videoUrl" style={{ fontWeight: "600" }}>Video URL (YouTube/Vimeo)</label>
+              <input type="url" id="videoUrl" name="videoUrl" value={formData.videoUrl} onChange={handleChange} style={{ padding: "0.75rem", borderRadius: "8px", border: "1px solid #e2e8f0" }} />
+            </div>
+            
+            <div style={{ display: "grid", gap: "0.5rem", gridColumn: "span 2" }}>
+              <label style={{ fontWeight: "600" }}>Social Media URLs</label>
+              {formData.socialUrls.map((url, index) => (
+                <div key={index} style={{ marginBottom: '1rem' }}>
+                  <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '0.25rem' }}>
+                    <input
+                      type="url"
+                      value={url}
+                      onChange={(e) => handleSocialUrlChange(index, e.target.value)}
+                      placeholder="https://..."
+                      style={{ 
+                        flex: 1, 
+                        padding: "0.75rem", 
+                        borderRadius: "8px", 
+                        border: "1px solid",
+                        borderColor: socialErrors[index] ? '#e04c4c' : '#e2e8f0'
+                      }}
+                    />
+                    {formData.socialUrls.length > 1 && (
+                      <button type="button" onClick={() => removeSocialUrl(index)} style={{ background: 'none', border: 'none', color: '#e04c4c', cursor: 'pointer', padding: '0 0.5rem' }} title="Remove link">
+                        <span className="material-symbols-outlined">delete</span>
+                      </button>
+                    )}
+                  </div>
+                  {socialErrors[index] && (
+                    <span style={{ color: '#e04c4c', fontSize: '0.8rem', display: 'block', marginTop: '0.25rem' }}>
+                      {socialErrors[index]}
+                    </span>
                   )}
                 </div>
-                {socialErrors[index] && (
-                  <span style={{ color: '#e04c4c', fontSize: '0.8rem', display: 'block', marginTop: '0.25rem' }}>
-                    {socialErrors[index]}
-                  </span>
-                )}
+              ))}
+              <button type="button" onClick={addSocialUrl} style={{ background: 'none', border: 'none', color: '#4a5568', cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: '0.25rem', fontSize: '0.85rem', fontWeight: 600, marginTop: '0.25rem', padding: 0 }}>
+                <span className="material-symbols-outlined" style={{ fontSize: '1.1rem' }}>add_circle</span>
+                Add another link
+              </button>
+            </div>
+          </div>
+        </section>
+
+        {/* Section 3: Hours */}
+        <section style={{ display: "grid", gap: "1.5rem", background: "#fff", padding: "2rem", borderRadius: "12px", border: "1px solid #e2e8f0" }}>
+          <h2 style={{ fontSize: "1.5rem", margin: 0 }}>Business Hours</h2>
+          <div style={{ display: "grid", gap: "1rem" }}>
+            {daysList.map((day) => (
+              <div key={day} style={{ display: 'grid', gridTemplateColumns: '100px 1fr', alignItems: 'center', gap: '1rem', marginBottom: '1rem' }}>
+                <label style={{ fontWeight: "600", marginBottom: 0 }}>{day}</label>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', flexWrap: 'wrap' }}>
+                  <label style={{ display: 'flex', alignItems: 'center', gap: '0.25rem', fontSize: '0.9rem', marginRight: '1rem' }}>
+                    <input type="checkbox" checked={formData.hoursParams[day].closed} onChange={(e) => handleTimeChange(day, 'closed', e.target.checked)} />
+                    Closed
+                  </label>
+
+                  {!formData.hoursParams[day].closed && (
+                    <>
+                      <input 
+                        type="text" 
+                        placeholder="09:00" 
+                        value={formData.hoursParams[day].open} 
+                        onChange={(e) => handleTimeChange(day, 'open', e.target.value)} 
+                        onBlur={(e) => handleTimeBlur(day, 'open', e.target.value)}
+                        style={{ padding: "0.5rem", borderRadius: "8px", border: "1px solid #e2e8f0", width: '80px', textAlign: 'center' }} 
+                      />
+                      <select value={formData.hoursParams[day].openAmPm} onChange={(e) => handleTimeChange(day, 'openAmPm', e.target.value)} style={{ width: 'auto', padding: '0.5rem', borderRadius: "8px", border: "1px solid #e2e8f0" }}>
+                        <option>AM</option><option>PM</option>
+                      </select>
+                      <span style={{ color: '#718096', fontSize: '0.9rem' }}>to</span>
+                      <input 
+                        type="text" 
+                        placeholder="05:00" 
+                        value={formData.hoursParams[day].close} 
+                        onChange={(e) => handleTimeChange(day, 'close', e.target.value)} 
+                        onBlur={(e) => handleTimeBlur(day, 'close', e.target.value)}
+                        style={{ padding: "0.5rem", borderRadius: "8px", border: "1px solid #e2e8f0", width: '80px', textAlign: 'center' }} 
+                      />
+                      <select value={formData.hoursParams[day].closeAmPm} onChange={(e) => handleTimeChange(day, 'closeAmPm', e.target.value)} style={{ width: 'auto', padding: '0.5rem', borderRadius: "8px", border: "1px solid #e2e8f0" }}>
+                        <option>AM</option><option>PM</option>
+                      </select>
+                    </>
+                  )}
+                </div>
               </div>
             ))}
-            <button type="button" onClick={addSocialUrl} style={{ background: 'none', border: 'none', color: '#4a5568', cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: '0.25rem', fontSize: '0.85rem', fontWeight: 600, marginTop: '0.25rem', padding: 0 }}>
-              <span className="material-symbols-outlined" style={{ fontSize: '1.1rem' }}>add_circle</span>
-              Add another link
-            </button>
+          </div>
+        </section>
+
+        {/* Submit Button */}
+        <div style={{ display: "flex", justifyContent: "flex-end", gap: "1rem", marginTop: '2rem' }}>
+          <button
+            type="button"
+            onClick={() => router.back()}
+            style={{ padding: "0.75rem 2rem", borderRadius: "8px", border: "1px solid #e2e8f0", background: "#fff", fontWeight: "600", cursor: "pointer" }}
+          >
+            Cancel
+          </button>
+          <button
+            type="submit"
+            disabled={isSubmitting || hasErrors}
+            className="listing-primary-btn"
+            style={{ padding: "0.75rem 2rem", border: "none", opacity: (isSubmitting || hasErrors) ? 0.6 : 1, cursor: (isSubmitting || hasErrors) ? 'not-allowed' : 'pointer' }}
+          >
+            {isSubmitting ? "Saving Changes..." : "Save Changes"}
+          </button>
+        </div>
+      </form>
+
+      {/* Success Modal */}
+      {showSuccessModal && (
+        <div className="dashboard-modal-overlay">
+          <div className="dashboard-modal-dialog">
+            <div className="material-symbols-outlined dashboard-modal-icon dashboard-modal-icon--success">
+              check_circle
+            </div>
+            <h3 className="dashboard-modal-title">Success!</h3>
+            <p className="dashboard-modal-text">
+              Your listing has been updated successfully.
+            </p>
+            <div className="dashboard-modal-actions">
+              <button 
+                className="dashboard-modal-btn dashboard-modal-btn--primary"
+                onClick={() => {
+                  setShowSuccessModal(false);
+                  router.push("/dashboard/listings");
+                }}
+              >
+                OK
+              </button>
+            </div>
           </div>
         </div>
-      </section>
-
-      {/* Section 3: Hours */}
-      <section style={{ display: "grid", gap: "1.5rem", background: "#fff", padding: "2rem", borderRadius: "12px", border: "1px solid #e2e8f0" }}>
-        <h2 style={{ fontSize: "1.5rem", margin: 0 }}>Business Hours</h2>
-        <div style={{ display: "grid", gap: "1rem" }}>
-          {daysList.map((day) => (
-            <div key={day} style={{ display: 'grid', gridTemplateColumns: '100px 1fr', alignItems: 'center', gap: '1rem', marginBottom: '1rem' }}>
-              <label style={{ fontWeight: "600", marginBottom: 0 }}>{day}</label>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', flexWrap: 'wrap' }}>
-                <label style={{ display: 'flex', alignItems: 'center', gap: '0.25rem', fontSize: '0.9rem', marginRight: '1rem' }}>
-                  <input type="checkbox" checked={formData.hoursParams[day].closed} onChange={(e) => handleTimeChange(day, 'closed', e.target.checked)} />
-                  Closed
-                </label>
-
-                {!formData.hoursParams[day].closed && (
-                  <>
-                    <input 
-                      type="text" 
-                      placeholder="09:00" 
-                      value={formData.hoursParams[day].open} 
-                      onChange={(e) => handleTimeChange(day, 'open', e.target.value)} 
-                      onBlur={(e) => handleTimeBlur(day, 'open', e.target.value)}
-                      style={{ padding: "0.5rem", borderRadius: "8px", border: "1px solid #e2e8f0", width: '80px', textAlign: 'center' }} 
-                    />
-                    <select value={formData.hoursParams[day].openAmPm} onChange={(e) => handleTimeChange(day, 'openAmPm', e.target.value)} style={{ width: 'auto', padding: '0.5rem', borderRadius: "8px", border: "1px solid #e2e8f0" }}>
-                      <option>AM</option><option>PM</option>
-                    </select>
-                    <span style={{ color: '#718096', fontSize: '0.9rem' }}>to</span>
-                    <input 
-                      type="text" 
-                      placeholder="05:00" 
-                      value={formData.hoursParams[day].close} 
-                      onChange={(e) => handleTimeChange(day, 'close', e.target.value)} 
-                      onBlur={(e) => handleTimeBlur(day, 'close', e.target.value)}
-                      style={{ padding: "0.5rem", borderRadius: "8px", border: "1px solid #e2e8f0", width: '80px', textAlign: 'center' }} 
-                    />
-                    <select value={formData.hoursParams[day].closeAmPm} onChange={(e) => handleTimeChange(day, 'closeAmPm', e.target.value)} style={{ width: 'auto', padding: '0.5rem', borderRadius: "8px", border: "1px solid #e2e8f0" }}>
-                      <option>AM</option><option>PM</option>
-                    </select>
-                  </>
-                )}
-              </div>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      <div style={{ display: "flex", justifyContent: "flex-end", gap: "1rem" }}>
-        <button
-          type="button"
-          onClick={() => router.back()}
-          style={{ padding: "0.75rem 2rem", borderRadius: "8px", border: "1px solid #e2e8f0", background: "#fff", fontWeight: "600", cursor: "pointer" }}
-        >
-          Cancel
-        </button>
-        <button
-          type="submit"
-          disabled={isSubmitting || hasErrors}
-          className="listing-primary-btn"
-          style={{ padding: "0.75rem 2rem", border: "none", opacity: (isSubmitting || hasErrors) ? 0.6 : 1, cursor: (isSubmitting || hasErrors) ? 'not-allowed' : 'pointer' }}
-        >
-          {isSubmitting ? "Saving Changes..." : "Save Changes"}
-        </button>
-      </div>
-    </form>
+      )}
+    </div>
   );
 }

@@ -1,5 +1,6 @@
 // src/lib/auth.js
 import { cookies } from 'next/headers';
+import { redirect } from 'next/navigation';
 
 const GRAPHQL_URL = process.env.NEXT_PUBLIC_WORDPRESS_API_URL;
 
@@ -151,6 +152,18 @@ export async function getViewer() {
     const json = await res.json();
 
     if (json.errors) {
+      // Detect if the WPGraphQL token has expired
+      const isExpired = json.errors.some(e => 
+        e.extensions?.debugMessage === 'Expired token' || 
+        e.message?.includes('Expired token')
+      );
+
+      if (isExpired) {
+        // Instantly redirect to the logout route to destroy the dead cookie 
+        // The logout route will then gracefully redirect them to the homepage
+        redirect('/logout');
+      }
+
       console.error('Viewer Query Error:', JSON.stringify(json.errors, null, 2));
       return null;
     }

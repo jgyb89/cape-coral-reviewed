@@ -54,7 +54,6 @@ export function middleware(request) {
 
   // --- 2. RATE LIMITING LOGIC ---
   const sensitivePaths = [
-    '/login',
     '/register-business',
     '/register',
     '/api/auth',
@@ -92,9 +91,7 @@ export function middleware(request) {
   // --- 3. ROUTE PROTECTION LOGIC ---
   if (matchesPath('/dashboard')) {
     if (!authToken) {
-      const loginUrl = new URL(`/${currentLocale}/login`, request.url);
-      loginUrl.searchParams.set('redirect', pathname);
-      return NextResponse.redirect(loginUrl);
+      return NextResponse.redirect(new URL(`/${currentLocale}`, request.url));
     }
   }
 

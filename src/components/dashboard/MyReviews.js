@@ -90,15 +90,25 @@ export default function MyReviews({ reviews: initialReviews, locale = 'en' }) {
 
           return (
             <li key={review.id} className={styles['user-review']}>
-              <div className={styles['user-review__header']}>
-                <div className={styles['user-review__info']}>
-                  {listing && (
-                    <p className={styles['user-review__listing']}>
-                      Review for: <Link href={listingUrl} className={styles['user-review__listing-link']}>{listing.title}</Link>
-                    </p>
-                  )}
-                  {formattedDate && <span className={styles['user-review__date']}>{formattedDate}</span>}
+              <div className={styles['user-review__content-wrapper']}>
+                <div className={styles['user-review__header']}>
+                  <div className={styles['user-review__info']}>
+                    {listing && (
+                      <p className={styles['user-review__listing']}>
+                        Review for: <Link href={listingUrl} className={styles['user-review__listing-link']}>{listing.title}</Link>
+                      </p>
+                    )}
+                    {formattedDate && <span className={styles['user-review__date']}>{formattedDate}</span>}
+                  </div>
                 </div>
+
+                <div 
+                  className={styles['user-review__content']} 
+                  dangerouslySetInnerHTML={{ __html: review.content }} 
+                />
+              </div>
+
+              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '0.75rem' }}>
                 <div className={styles['user-review__stars']} aria-label={`${starRating} out of 5 stars`}>
                   {[1, 2, 3, 4, 5].map((val) => (
                     <span
@@ -113,32 +123,39 @@ export default function MyReviews({ reviews: initialReviews, locale = 'en' }) {
                     </span>
                   ))}
                 </div>
-              </div>
 
-              <div 
-                className={styles['user-review__content']} 
-                dangerouslySetInnerHTML={{ __html: review.content }} 
-              />
-
-              <div className={styles['user-review__actions']}>
-                <button
-                  onClick={() => handleEdit(review)}
-                  className={styles['user-review__edit-btn']}
-                  disabled={isDeleting}
-                  type="button"
-                >
-                  <span className="material-symbols-outlined">edit</span>
-                  <span>Edit</span>
-                </button>
-                <button
-                  onClick={() => handleDeleteClick(review)}
-                  className={styles['user-review__delete-btn']}
-                  disabled={isDeleting}
-                  type="button"
-                >
-                  <span className="material-symbols-outlined">delete</span>
-                  <span>Delete</span>
-                </button>
+                <div className={styles['user-review__actions']}>
+                  <button
+                    onClick={() => handleEdit(review)}
+                    className={styles['user-review__edit-btn']}
+                    disabled={isDeleting}
+                    style={{ 
+                      background: 'transparent', 
+                      border: 'none', 
+                      color: '#4a5568', 
+                      fontWeight: '600', 
+                      cursor: 'pointer', 
+                      display: 'inline-flex', 
+                      alignItems: 'center', 
+                      gap: '0.4rem', 
+                      marginRight: '1rem',
+                      fontSize: '0.9rem'
+                    }}
+                    type="button"
+                  >
+                    <span className="material-symbols-outlined" style={{ fontSize: '1.2rem' }}>edit</span>
+                    <span>Edit</span>
+                  </button>
+                  <button
+                    onClick={() => handleDeleteClick(review)}
+                    className={styles['btn-delete']}
+                    disabled={isDeleting}
+                    type="button"
+                  >
+                    <span className="material-symbols-outlined">delete</span>
+                    <span>Delete</span>
+                  </button>
+                </div>
               </div>
             </li>
           );

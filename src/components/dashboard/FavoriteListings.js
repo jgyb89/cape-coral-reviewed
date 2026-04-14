@@ -8,6 +8,8 @@ import PropTypes from 'prop-types';
 import { removeFavoriteListing } from '@/lib/actions';
 import { formatImageUrl } from "@/lib/formatImageUrl";
 
+import styles from './FavoriteListings.module.css';
+
 export default function FavoriteListings({ favorites: initialFavorites = [], locale = 'en' }) {
   const [favorites, setFavorites] = useState(initialFavorites);
   const [isRemoving, setIsRemoving] = useState(null);
@@ -15,9 +17,9 @@ export default function FavoriteListings({ favorites: initialFavorites = [], loc
 
   if (!favorites || favorites.length === 0) {
     return (
-      <div className="favorite-listings__empty">
-        <p className="favorite-listings__text">You haven&apos;t saved any favorite listings yet.</p>
-        <Link href="/directory" className="favorite-listings__link">
+      <div className={styles['favorite-listings__empty']}>
+        <p className={styles['favorite-listings__text']}>You haven&apos;t saved any favorite listings yet.</p>
+        <Link href="/directory" className={styles['favorite-listings__link']}>
           Browse Directory
         </Link>
       </div>
@@ -37,18 +39,16 @@ export default function FavoriteListings({ favorites: initialFavorites = [], loc
   };
 
   return (
-    <div className="favorite-listings">
-      <div className="favorite-listings__grid">
+    <div className={styles['favorite-listings']}>
+      <div className={styles['favorite-listings__grid']}>
         {favorites.map((listing) => {
           const imageUrl = formatImageUrl(listing.featuredImage?.node?.sourceUrl);
           const listingUrl = `/${locale}/listing/${listing.slug}`;
 
           return (
-            <article key={listing.databaseId} style={{ backgroundColor: '#fff', borderRadius: '8px', padding: '1.5rem', display: 'flex', flexDirection: 'column', border: '1px solid #eaeaea', marginBottom: '1rem' }}>
-              
-              {/* Top Row: Image and Info */}
-              <div style={{ display: 'flex', gap: '1.5rem', alignItems: 'flex-start' }}>
-                <div style={{ flexShrink: 0, width: '120px', height: '80px', position: 'relative', borderRadius: '6px', overflow: 'hidden' }}>
+            <article key={listing.databaseId} className={styles['favorite-item']}>
+              <div className={styles['favorite-item__content-wrapper']}>
+                <div className={styles['favorite-item__image-container']}>
                   <Image
                     src={imageUrl}
                     alt={listing.title}
@@ -57,29 +57,25 @@ export default function FavoriteListings({ favorites: initialFavorites = [], loc
                     style={{ objectFit: 'cover' }}
                   />
                 </div>
-                <div style={{ display: 'flex', flexDirection: 'column', flexGrow: 1 }}>
-                  <h4 style={{ margin: '0 0 0.5rem 0', color: '#333', fontSize: '1.1rem', fontWeight: '600' }}>{listing.title}</h4>
-                  <Link href={listingUrl} style={{ color: '#666', fontSize: '0.9rem', textDecoration: 'none' }}>
+                <div className={styles['favorite-item__info']}>
+                  <h4 className={styles['favorite-item__title']}>{listing.title}</h4>
+                  <Link href={listingUrl} className={styles['favorite-item__link']}>
                     View Listing
                   </Link>
                 </div>
               </div>
 
-              {/* Divider */}
-              <hr style={{ border: 'none', borderTop: '1px solid #eaeaea', margin: '1rem 0' }} />
-
-              {/* Bottom Row: Actions */}
-              <div style={{ display: 'flex', gap: '1rem' }}>
+              <div className={styles['favorite-item__actions']}>
                 <button 
                   onClick={() => setListingToDelete(listing)}
                   disabled={isRemoving === listing.databaseId}
-                  style={{ backgroundColor: '#fff0f0', color: '#e04a3d', border: 'none', padding: '0.5rem 1rem', borderRadius: '6px', cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: '0.5rem', fontWeight: 500, fontSize: '0.9rem', opacity: isRemoving === listing.databaseId ? 0.5 : 1 }}
+                  className={styles['btn-delete']}
+                  type="button"
                 >
-                  <span className="material-symbols-outlined" style={{ fontSize: '1.2rem' }}>delete</span>
-                  {isRemoving === listing.databaseId ? 'Removing...' : 'Delete'}
+                  <span className="material-symbols-outlined">delete</span>
+                  <span>{isRemoving === listing.databaseId ? 'Removing...' : 'Delete'}</span>
                 </button>
               </div>
-
             </article>
           );
         })}

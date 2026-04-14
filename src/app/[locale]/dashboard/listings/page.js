@@ -3,12 +3,13 @@ import { redirect } from 'next/navigation';
 import Link from 'next/link';
 import DeleteListingButton from '@/components/dashboard/DeleteListingButton';
 
-export default async function MyListingsPage() {
+export default async function MyListingsPage({ params }) {
+  const { locale } = await params;
   const cookieStore = await cookies();
   const authToken = cookieStore.get('authToken')?.value;
 
   if (!authToken) {
-    redirect('/login');
+    redirect(`/${locale}/login`);
   }
 
   const query = `
@@ -41,21 +42,24 @@ export default async function MyListingsPage() {
   const viewer = json.data?.viewer;
 
   if (!viewer) {
-    redirect('/login');
+    redirect(`/${locale}/login`);
   }
 
   const roles = viewer.roles.nodes.map(r => r.name.toLowerCase());
   if (!roles.includes('business') && !roles.includes('administrator')) {
-    redirect('/dashboard');
+    redirect(`/${locale}/dashboard`);
   }
 
   const listings = viewer.ccrlistings?.nodes || [];
 
   return (
     <div className="my-listings-page">
-      <header style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' }}>
-        <h1 style={{ margin: 0 }}>My Listings</h1>
-        <Link href="/submit-listing" className="listing-primary-btn" style={{ textDecoration: 'none' }}>
+      <header style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2.5rem', paddingBottom: '1rem', borderBottom: '1px solid #f1f5f9' }}>
+        <div>
+          <h1 style={{ margin: '0 0 0.5rem 0' }}>My Listings</h1>
+          <p style={{ margin: 0 }}>Manage your business listings and update their details.</p>
+        </div>
+        <Link href={`/${locale}/submit-listing`} className="listing-primary-btn" style={{ textDecoration: 'none' }}>
           <span className="material-symbols-outlined">add_business</span>
           Add New Listing
         </Link>
@@ -64,21 +68,12 @@ export default async function MyListingsPage() {
       {listings.length === 0 ? (
         <div className="blank-state" style={{ textAlign: 'center', padding: '3rem', background: '#f9f9f9', borderRadius: '12px' }}>
           <p style={{ fontSize: '1.2rem', color: '#666', marginBottom: '1.5rem' }}>You haven't posted any listings yet.</p>
-          <Link href="/submit-listing" style={{ color: '#e04c4c', fontWeight: '600' }}>Create your first listing now</Link>
+          <Link href={`/${locale}/submit-listing`} style={{ color: '#e04c4c', fontWeight: '600' }}>Create your first listing now</Link>
         </div>
       ) : (
         <div className="listings-grid" style={{ display: 'grid', gap: '1.5rem' }}>
           {listings.map((listing) => (
-            <div key={listing.databaseId} className="listing-item" style={{ 
-              background: '#fff', 
-              border: '1px solid #e2e8f0', 
-              borderRadius: '12px', 
-              padding: '1.5rem',
-              display: 'flex',
-              justifyContent: 'space-between',
-              alignItems: 'center',
-              boxShadow: '0 2px 4px rgba(0,0,0,0.05)'
-            }}>
+            <div key={listing.databaseId} className="listing-item" style={{ backgroundColor: '#ffffff', padding: '1.5rem 2rem', borderRadius: '12px', boxShadow: '0 4px 20px rgba(0, 0, 0, 0.04)', border: '1px solid #f1f5f9', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
               <div>
                 <h3 style={{ margin: '0 0 0.5rem 0', fontSize: '1.2rem' }}>{listing.title}</h3>
                 <p style={{ margin: 0, color: '#666', fontSize: '0.9rem' }}>
@@ -86,15 +81,15 @@ export default async function MyListingsPage() {
                 </p>
               </div>
               <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
-                <Link href={`/directory/general/${listing.slug}`} style={{ color: '#e04c4c', fontWeight: '600', textDecoration: 'none', fontSize: '0.95rem' }}>
+                <Link href={`/${locale}/listing/${listing.slug}`} style={{ color: '#e04c4c', fontWeight: '600', textDecoration: 'none', fontSize: '0.95rem' }}>
                   View
                 </Link>
                 <span style={{ color: '#e2e8f0' }}>|</span>
-                <Link href={`/dashboard/listings/edit/${listing.databaseId}`} style={{ color: '#4a5568', fontWeight: '600', textDecoration: 'none', fontSize: '0.95rem' }}>
+                <Link href={`/${locale}/dashboard/listings/edit/${listing.databaseId}`} style={{ color: '#4a5568', fontWeight: '600', textDecoration: 'none', fontSize: '0.95rem' }}>
                   Edit
                 </Link>
                 <span style={{ color: '#e2e8f0' }}>|</span>
-                <DeleteListingButton listingId={listing.databaseId} />
+                <DeleteListingButton listingId={listing.databaseId} className="btn-delete" />
               </div>
             </div>
           ))}
