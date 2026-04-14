@@ -6,7 +6,8 @@ export const metadata = {
   title: 'Favorite Listings | Dashboard',
 };
 
-export default async function FavoritesPage() {
+export default async function FavoritesPage({ params }) {
+  const { locale } = await params;
   const viewer = await getViewer();
 
   // Handle case where viewer is null (though middleware/layout should prevent this)
@@ -23,15 +24,15 @@ export default async function FavoritesPage() {
 
   return (
     <div className="favorites-page">
-      <header className="favorites-page__header">
-        <h1 className="favorites-page__title">Favorite Listings</h1>
-        <p className="favorites-page__subtitle">
+      <header style={{ marginBottom: '2.5rem', paddingBottom: '1rem', borderBottom: '1px solid #f1f5f9' }}>
+        <h1 style={{ margin: '0 0 0.5rem 0' }}>Favorite Listings</h1>
+        <p style={{ margin: 0 }}>
           Manage your saved business listings here.
         </p>
       </header>
 
       <div className="favorites-page__content">
-        <FavoriteListings favorites={favorites} />
+        <FavoriteListings favorites={favorites} locale={locale} />
       </div>
     </div>
   );

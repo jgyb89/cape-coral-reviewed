@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { usePathname } from 'next/navigation';
 import { submitBugReport } from '@/lib/actions';
-import './BugReporter.css';
+import styles from './BugReporter.module.css';
 
 export default function BugReporter() {
   const [isOpen, setIsOpen] = useState(false);
@@ -47,10 +47,10 @@ export default function BugReporter() {
   };
 
   return (
-    <div className="bug-reporter">
+    <div className={styles['bug-reporter']}>
       {/* The Floating Action Button */}
       <button 
-        className="bug-reporter__trigger" 
+        className={styles['bug-reporter__trigger']} 
         onClick={() => setIsOpen(!isOpen)}
         aria-label="Report a bug"
       >
@@ -61,23 +61,23 @@ export default function BugReporter() {
 
       {/* The Pop-Up Modal */}
       {isOpen && (
-        <div className="bug-reporter__modal">
-          <div className="bug-reporter__header">
-            <h3 className="bug-reporter__title">Report an Issue</h3>
+        <div className={styles['bug-reporter__modal']}>
+          <div className={styles['bug-reporter__header']}>
+            <h3 className={styles['bug-reporter__title']}>Report an Issue</h3>
           </div>
 
           {success ? (
-            <div className="bug-reporter__success">
+            <div className={styles['bug-reporter__success']}>
               <span className="material-symbols-outlined">check_circle</span>
               <p>Thanks! Report sent.</p>
             </div>
           ) : (
-            <form className="bug-reporter__form" onSubmit={handleSubmit}>
-              <div className="bug-reporter__field">
-                <label className="bug-reporter__label" htmlFor="bugName">Name</label>
+            <form className={styles['bug-reporter__form']} onSubmit={handleSubmit}>
+              <div className={styles['bug-reporter__field']}>
+                <label className={styles['bug-reporter__label']} htmlFor="bugName">Name</label>
                 <input
                   id="bugName"
-                  className="bug-reporter__input"
+                  className={styles['bug-reporter__input']}
                   type="text"
                   required
                   value={formData.name}
@@ -86,11 +86,11 @@ export default function BugReporter() {
                 />
               </div>
 
-              <div className="bug-reporter__field">
-                <label className="bug-reporter__label" htmlFor="bugDesc">Description</label>
+              <div className={styles['bug-reporter__field']}>
+                <label className={styles['bug-reporter__label']} htmlFor="bugDesc">Description</label>
                 <textarea
                   id="bugDesc"
-                  className="bug-reporter__input bug-reporter__input--textarea"
+                  className={`${styles['bug-reporter__input']} ${styles['bug-reporter__input--textarea']}`}
                   required
                   rows="4"
                   value={formData.description}
@@ -101,7 +101,7 @@ export default function BugReporter() {
 
               <button 
                 type="submit" 
-                className="bug-reporter__submit"
+                className={styles['bug-reporter__submit']}
                 disabled={isSubmitting}
               >
                 {isSubmitting ? 'Sending...' : 'Send Report'}

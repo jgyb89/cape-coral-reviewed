@@ -1,33 +1,35 @@
 import Image from "next/image";
 import Link from "next/link";
 import { getSidebarListings } from "@/lib/actions";
+import { formatImageUrl } from "@/lib/formatImageUrl";
+import styles from "./Blog.module.css";
 
 export default async function BlogSidebar() {
   const listings = await getSidebarListings();
 
   return (
-    <aside className="blog-sidebar">
-      <div className="sidebar-widget">
-        <h3 className="sidebar-widget__title">Featured Listings</h3>
-        <div className="sidebar-listings-list">
+    <aside className={styles['blog-sidebar']}>
+      <div className={styles['sidebar-widget']}>
+        <h3 className={styles['sidebar-widget__title']}>Featured Listings</h3>
+        <div className={styles['sidebar-listings-list']}>
           {listings.map((listing) => (
             <Link
               key={listing.databaseId}
               href={`/directory/general/${listing.slug}`}
-              className="sidebar-listing"
+              className={styles['sidebar-listing']}
             >
-              <div className="sidebar-listing__image">
+              <div className={styles['sidebar-listing__image']}>
                 <Image
-                  src={listing.featuredImage?.node?.sourceUrl || "/placeholder-image.jpg"}
+                  src={formatImageUrl(listing.featuredImage?.node?.sourceUrl)}
                   alt={listing.title}
                   fill
                   style={{ objectFit: "cover" }}
                 />
               </div>
-              <div className="sidebar-listing__info">
-                <h4 className="sidebar-listing__title">{listing.title}</h4>
-                <div className="sidebar-listing__rating">
-                  <span className="sidebar-listing__stars">★★★★★</span>
+              <div className={styles['sidebar-listing__info']}>
+                <h4 className={styles['sidebar-listing__title']}>{listing.title}</h4>
+                <div className={styles['sidebar-listing__rating']}>
+                  <span className={styles['sidebar-listing__stars']}>★★★★★</span>
                   <span>5 (Reviews)</span>
                 </div>
               </div>

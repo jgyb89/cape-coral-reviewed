@@ -2,7 +2,7 @@
 .dashboard-layout {
   display: flex;
   min-height: 100vh;
-  background-color: var(--color-accent);
+  background-color: #f8fafc;
 }
 
 .dashboard-nav {
@@ -48,3 +48,103 @@
   flex: 1;
   padding: 2rem;
 }
+
+.btn-delete {
+  color: #ef4444;
+  background: transparent;
+  border: none;
+  font-weight: 600;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  border-radius: 6px;
+  transition: background-color 0.2s ease;
+}
+.btn-delete:hover {
+  background-color: #fef2f2;
+}
+
+/* Custom Dashboard Modals */
+.dashboard-modal-overlay {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background-color: rgba(15, 23, 42, 0.6);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  padding: 1rem;
+}
+
+.dashboard-modal-dialog {
+  background-color: #ffffff;
+  padding: 2.5rem 2rem;
+  border-radius: 16px;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  max-width: 400px;
+  width: 100%;
+  text-align: center;
+  animation: modalFadeIn 0.2s ease-out forwards;
+}
+
+@keyframes modalFadeIn {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+.dashboard-modal-icon {
+  font-size: 3.5rem;
+  margin-bottom: 1rem;
+}
+.dashboard-modal-icon--warning { color: #ef4444; }
+.dashboard-modal-icon--success { color: #10b981; }
+
+.dashboard-modal-title {
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: #1e293b;
+  margin-bottom: 0.75rem;
+}
+
+.dashboard-modal-text {
+  color: #64748b;
+  margin-bottom: 2rem;
+  line-height: 1.5;
+  font-size: 1rem;
+}
+
+.dashboard-modal-actions {
+  display: flex; gap: 1rem;
+  justify-content: center;
+}
+
+.dashboard-modal-btn {
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  transition: all 0.2s ease;
+  flex: 1;
+}
+
+.dashboard-modal-btn--cancel {
+  background-color: #f1f5f9;
+  color: #475569;
+}
+.dashboard-modal-btn--cancel:hover { background-color: #e2e8f0; }
+
+.dashboard-modal-btn--danger {
+  background-color: #ef4444;
+  color: #ffffff;
+}
+.dashboard-modal-btn--danger:hover { background-color: #dc2626; }
+
+.dashboard-modal-btn--primary {
+  background-color: #e04c4c;
+  color: #ffffff;
+}
+.dashboard-modal-btn--primary:hover { background-color: #c94343; }

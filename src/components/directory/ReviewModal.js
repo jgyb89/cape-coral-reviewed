@@ -4,7 +4,7 @@
 import { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import { submitUserReview, updateUserReview } from "@/lib/actions";
-import "./ReviewModal.css";
+import styles from "./ReviewModal.module.css";
 
 export default function ReviewModal({ listingId, listingSlug, isOpen, onClose, currentUser, review = null }) {
   const [rating, setRating] = useState(0);
@@ -93,42 +93,42 @@ export default function ReviewModal({ listingId, listingSlug, isOpen, onClose, c
   }
 
   return (
-    <div className="review-modal-overlay">
+    <div className={styles['review-modal-overlay']}>
       <button 
-        className="review-modal-overlay__btn"
+        className={styles['review-modal-overlay__btn']}
         onClick={onClose}
         aria-label="Close modal"
         type="button"
       />
       <dialog 
-        className="review-modal" 
+        className={styles['review-modal']} 
         open
         aria-modal="true"
         aria-labelledby="review-modal-title"
       >
-        <button className="review-modal__close" onClick={onClose} aria-label="Close modal" type="button">
+        <button className={styles['review-modal__close']} onClick={onClose} aria-label="Close modal" type="button">
           <span className="material-symbols-outlined">close</span>
         </button>
 
-        <h2 id="review-modal-title" className="review-modal__title">
+        <h2 id="review-modal-title" className={styles['review-modal__title']}>
           {isEditMode ? "Edit Your Review" : "Leave a Review"}
         </h2>
 
         {hasReviewed ? (
-          <div className="review-modal__error">
+          <div className={styles['review-modal__error']}>
             You have already reviewed this listing. You can only post one review per business.
           </div>
         ) : (
-          <form className="review-modal__form" onSubmit={handleSubmit}>
-            <div className="review-modal__rating-container">
-              <span className="review-modal__rating-label">Your Rating</span>
-              <div className="review-modal__stars">
+          <form className={styles['review-modal__form']} onSubmit={handleSubmit}>
+            <div className={styles['review-modal__rating-container']}>
+              <span className={styles['review-modal__rating-label']}>Your Rating</span>
+              <div className={styles['review-modal__stars']}>
                 {[1, 2, 3, 4, 5].map((val) => (
                   <button
                     key={val}
                     type="button"
-                    className={`review-modal__star-btn ${
-                      (hoverRating || rating) >= val ? "review-modal__star--active" : ""
+                    className={`${styles['review-modal__star-btn']} ${
+                      (hoverRating || rating) >= val ? styles['review-modal__star--active'] : ""
                     }`}
                     onMouseEnter={() => handleStarHover(val)}
                     onMouseLeave={() => handleStarHover(0)}
@@ -146,27 +146,27 @@ export default function ReviewModal({ listingId, listingSlug, isOpen, onClose, c
               </div>
             </div>
 
-            <div className="review-modal__form-group">
-              <label className="review-modal__label" htmlFor="review-content">Your Review</label>
+            <div className={styles['review-modal__form-group']}>
+              <label className={styles['review-modal__label']} htmlFor="review-content">Your Review</label>
               <textarea
                 id="review-content"
-                className="review-modal__textarea"
+                className={styles['review-modal__textarea']}
                 value={content}
                 onChange={(e) => setContent(e.target.value)}
                 maxLength={MAX_CHAR_COUNT}
                 placeholder="Share your experience with this business..."
                 disabled={isUpdating}
               />
-              <div className={`review-modal__count ${content.length >= MAX_CHAR_COUNT ? "review-modal__count--error" : ""}`}>
+              <div className={`${styles['review-modal__count']} ${content.length >= MAX_CHAR_COUNT ? styles['review-modal__count--error'] : ""}`}>
                 {content.length}/{MAX_CHAR_COUNT}
               </div>
             </div>
 
-            {error && <div className="review-modal__error">{error}</div>}
+            {error && <div className={styles['review-modal__error']}>{error}</div>}
 
             <button
               type="submit"
-              className="review-modal__submit"
+              className={styles['review-modal__submit']}
               disabled={isUpdating || content.length < 10 || rating === 0}
             >
               {submitButtonText}

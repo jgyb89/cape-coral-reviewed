@@ -4,7 +4,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { handleLogin } from '@/lib/actions';
-import './Auth.css';
+import styles from './Auth.module.css';
 
 export default function LoginForm() {
   const router = useRouter();
@@ -36,14 +36,14 @@ export default function LoginForm() {
   };
 
   return (
-    <form className="auth-form" onSubmit={handleSubmit}>
-      <div className="auth-form__group">
-        <label className="auth-form__label" htmlFor="username">Username or Email</label>
+    <form className={styles['auth-form']} onSubmit={handleSubmit}>
+      <div className={styles['auth-form__group']}>
+        <label className={styles['auth-form__label']} htmlFor="username">Username or Email</label>
         <input
           id="username"
           name="username"
           type="text"
-          className="auth-form__input"
+          className={styles['auth-form__input']}
           value={formData.username}
           onChange={handleChange}
           required
@@ -51,13 +51,13 @@ export default function LoginForm() {
         />
       </div>
 
-      <div className="auth-form__group">
-        <label className="auth-form__label" htmlFor="password">Password</label>
+      <div className={styles['auth-form__group']}>
+        <label className={styles['auth-form__label']} htmlFor="password">Password</label>
         <input
           id="password"
           name="password"
           type="password"
-          className="auth-form__input"
+          className={styles['auth-form__input']}
           value={formData.password}
           onChange={handleChange}
           required
@@ -65,11 +65,11 @@ export default function LoginForm() {
         />
       </div>
 
-      {error && <div className="auth-form__error" dangerouslySetInnerHTML={{ __html: error }} />}
+      {error && <div className={styles['auth-form__error']} dangerouslySetInnerHTML={{ __html: error }} />}
 
       <button
         type="submit"
-        className="auth-form__submit"
+        className={styles['auth-form__submit']}
         disabled={isLoading}
       >
         {isLoading ? 'Signing in...' : 'Sign In'}

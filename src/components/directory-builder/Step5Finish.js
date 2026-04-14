@@ -1,12 +1,15 @@
 'use client';
 
 import React, { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useParams } from 'next/navigation';
 import { submitListing, uploadWPImage } from '@/lib/actions';
-import './StepForm.css';
+import styles from './StepForm.module.css';
+import wizardStyles from './ListingWizard.module.css';
 
 const Step5Finish = ({ formData, prevStep }) => {
   const router = useRouter();
+  const params = useParams();
+  const locale = params?.locale || 'en';
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const slugify = (text) => {
@@ -75,10 +78,7 @@ const Step5Finish = ({ formData, prevStep }) => {
       const result = await submitListing(submissionData);
 
       if (result.success) {
-        const expectedSlug = slugify(submissionData.businessName);
-        const directoryTypeSlug = slugify(submissionData.directoryType);
-        
-        router.push(`/directory/${directoryTypeSlug}/${expectedSlug}`);
+        router.push(`/${locale}/submission-success`);
       } else {
         alert(`Error: ${result.message}`);
         setIsSubmitting(false);
@@ -91,13 +91,13 @@ const Step5Finish = ({ formData, prevStep }) => {
   };
 
   return (
-    <div className="step-form">
-      <header className="step-form__header">
+    <div className={styles['step-form']}>
+      <header className={styles['step-form__header']}>
         <span className="material-symbols-outlined">task_alt</span>
         <h2>Review & Submit</h2>
       </header>
 
-      <div className="step-form__summary" style={{ background: '#f9f9f9', padding: '1.5rem', borderRadius: '12px', border: '1px solid #eee' }}>
+      <div className={styles['step-form__summary']} style={{ background: '#f9f9f9', padding: '1.5rem', borderRadius: '12px', border: '1px solid #eee' }}>
         <h3 style={{ marginTop: 0, marginBottom: '1rem', borderBottom: '1px solid #ddd', paddingBottom: '0.5rem' }}>Listing Summary</h3>
         
         <div style={{ display: 'grid', gridTemplateColumns: '120px 1fr', gap: '0.75rem', fontSize: '0.95rem' }}>
@@ -125,16 +125,16 @@ const Step5Finish = ({ formData, prevStep }) => {
         By submitting this listing, you agree to our terms of service and confirm that the information provided is accurate.
       </p>
 
-      <div className="wizard__actions">
+      <div className={wizardStyles['wizard__actions']}>
         <button 
-          className="wizard__button wizard__button--secondary" 
+          className={`${wizardStyles['wizard__button']} ${wizardStyles['wizard__button--secondary']}`} 
           onClick={prevStep}
           disabled={isSubmitting}
         >
           Back
         </button>
         <button 
-          className="wizard__button wizard__button--primary" 
+          className={`${wizardStyles['wizard__button']} ${wizardStyles['wizard__button--primary']}`} 
           onClick={handleSubmit}
           disabled={isSubmitting}
           style={{ backgroundColor: isSubmitting ? '#ccc' : '#e04c4c' }}

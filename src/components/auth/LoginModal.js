@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import PropTypes from "prop-types";
 import { handleLogin } from "@/lib/actions";
 import Link from "next/link";
-import "./LoginModal.css";
+import styles from "./LoginModal.module.css";
 
 export default function LoginModal({ isOpen, onClose, dict = {}, locale = "en" }) {
   const router = useRouter();
@@ -37,21 +37,21 @@ export default function LoginModal({ isOpen, onClose, dict = {}, locale = "en" }
   };
 
   return (
-    <div className="login-modal-overlay">
+    <div className={styles['login-modal-overlay']}>
       <button
-        className="login-modal-overlay__btn"
+        className={styles['login-modal-overlay__btn']}
         onClick={onClose}
         aria-label="Close modal"
         type="button"
       />
       <dialog
-        className="login-modal"
+        className={styles['login-modal']}
         open
         aria-modal="true"
         aria-labelledby="login-modal-title"
       >
         <button
-          className="login-modal__close"
+          className={styles['login-modal__close']}
           onClick={onClose}
           aria-label="Close modal"
           type="button"
@@ -59,24 +59,24 @@ export default function LoginModal({ isOpen, onClose, dict = {}, locale = "en" }
           <span className="material-symbols-outlined">close</span>
         </button>
 
-        <h2 id="login-modal-title" className="login-modal__title">
+        <h2 id="login-modal-title" className={styles['login-modal__title']}>
           {t.modalTitle || "Make a free account!"}
         </h2>
-        <p className="login-modal__subtitle">
+        <p className={styles['login-modal__subtitle']}>
           {t.modalSubtitle || "Sign up for free in order to share, favorite, or leave reviews! This ensures we keep the site spam-free and a better experience for everyone!"}
         </p>
 
-        {error && <div className="login-modal__error">{error}</div>}
+        {error && <div className={styles['login-modal__error']}>{error}</div>}
 
-        <form className="login-modal__form" onSubmit={handleSubmit}>
-          <div className="login-modal__form-group">
-            <label className="login-modal__label" htmlFor="modal-username">
+        <form className={styles['login-modal__form']} onSubmit={handleSubmit}>
+          <div className={styles['login-modal__form-group']}>
+            <label className={styles['login-modal__label']} htmlFor="modal-username">
               {t.usernameEmail || "Username or Email"}
             </label>
             <input
               id="modal-username"
               type="text"
-              className="login-modal__input"
+              className={styles['login-modal__input']}
               value={username}
               onChange={(e) => setUsername(e.target.value)}
               required
@@ -84,14 +84,14 @@ export default function LoginModal({ isOpen, onClose, dict = {}, locale = "en" }
             />
           </div>
 
-          <div className="login-modal__form-group">
-            <label className="login-modal__label" htmlFor="modal-password">
+          <div className={styles['login-modal__form-group']}>
+            <label className={styles['login-modal__label']} htmlFor="modal-password">
               {t.password || "Password"}
             </label>
             <input
               id="modal-password"
               type="password"
-              className="login-modal__input"
+              className={styles['login-modal__input']}
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
@@ -99,29 +99,29 @@ export default function LoginModal({ isOpen, onClose, dict = {}, locale = "en" }
             />
           </div>
 
-          <div className="login-modal__options">
-            <label className="login-modal__remember">
+          <div className={styles['login-modal__options']}>
+            <label className={styles['login-modal__remember']}>
               <input type="checkbox" /> {t.rememberMe || "Remember Me"}
             </label>
-            <Link href={`/${locale}/login?recover=true`} className="login-modal__forgot">
+            <Link href={`/${locale}/login?recover=true`} className={styles['login-modal__forgot']}>
               {t.recoverPassword || "Recover Password"}
             </Link>
           </div>
 
           <button
             type="submit"
-            className="login-modal__submit"
+            className={styles['login-modal__submit']}
             disabled={isUpdating}
           >
             {isUpdating ? "..." : (t.logIn || "Log In")}
           </button>
         </form>
 
-        <div className="login-modal__footer">
+        <div className={styles['login-modal__footer']}>
           {t.noAccount || "Don't have an account?"}{" "}
           <Link
             href={`/${locale}/register`}
-            className="login-modal__signup-link"
+            className={styles['login-modal__signup-link']}
             onClick={onClose}
           >
             {t.signUp || "Sign Up"}

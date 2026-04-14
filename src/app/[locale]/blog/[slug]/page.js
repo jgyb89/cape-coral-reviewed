@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import Image from "next/image";
 import DOMPurify from "isomorphic-dompurify";
 import { getBlogPostBySlug } from "@/lib/actions";
+import { formatImageUrl } from "@/lib/formatImageUrl";
 import BlogSidebar from "@/components/blog/BlogSidebar";
 import BackButton from "@/components/blog/BackButton";
 import "./BlogPost.css";
@@ -65,7 +66,7 @@ export default async function BlogPostPage({ params }) {
         {post.featuredImage?.node?.sourceUrl && (
           <div className="blog-post__featured-image">
             <Image
-              src={post.featuredImage.node.sourceUrl}
+              src={formatImageUrl(post.featuredImage.node.sourceUrl)}
               alt={post.featuredImage.node.altText || post.title}
               fill
               style={{ objectFit: "cover" }}

@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { registerBusiness } from '@/lib/actions';
-import './RegisterBusinessForm.css';
+import styles from './RegisterBusinessForm.module.css';
 
 export default function RegisterBusinessForm() {
   const [formData, setFormData] = useState({
@@ -182,87 +182,87 @@ export default function RegisterBusinessForm() {
 
   if (success) {
     return (
-      <div className="register-success">
-        <h2 className="register-success__title">Success!</h2>
-        <p className="register-success__message">Please check your email to activate your account.</p>
+      <div className={styles['register-success']}>
+        <h2 className={styles['register-success__title']}>Success!</h2>
+        <p className={styles['register-success__message']}>Please check your email to activate your account.</p>
       </div>
     );
   }
 
   return (
-    <form className="register-form" onSubmit={handleSubmit}>
-      <div className="register-form__row">
-        <div className="register-form__group">
-          <label htmlFor="firstName" className="register-form__label">First Name</label>
+    <form className={styles['register-form']} onSubmit={handleSubmit}>
+      <div className={styles['register-form__row']}>
+        <div className={styles['register-form__group']}>
+          <label htmlFor="firstName" className={styles['register-form__label']}>First Name</label>
           <input
             id="firstName"
             name="firstName"
             type="text"
-            className={`register-form__input ${fieldErrors.firstName ? "register-form__input--invalid" : ""}`}
+            className={`${styles['register-form__input']} ${fieldErrors.firstName ? styles['register-form__input--invalid'] : ""}`}
             required
             value={formData.firstName}
             onChange={handleChange}
           />
-          {fieldErrors.firstName && <span className="register-form__error-text">{fieldErrors.firstName}</span>}
+          {fieldErrors.firstName && <span className={styles['register-form__error-text']}>{fieldErrors.firstName}</span>}
         </div>
-        <div className="register-form__group">
-          <label htmlFor="lastName" className="register-form__label">Last Name</label>
+        <div className={styles['register-form__group']}>
+          <label htmlFor="lastName" className={styles['register-form__label']}>Last Name</label>
           <input
             id="lastName"
             name="lastName"
             type="text"
-            className={`register-form__input ${fieldErrors.lastName ? "register-form__input--invalid" : ""}`}
+            className={`${styles['register-form__input']} ${fieldErrors.lastName ? styles['register-form__input--invalid'] : ""}`}
             required
             value={formData.lastName}
             onChange={handleChange}
           />
-          {fieldErrors.lastName && <span className="register-form__error-text">{fieldErrors.lastName}</span>}
+          {fieldErrors.lastName && <span className={styles['register-form__error-text']}>{fieldErrors.lastName}</span>}
         </div>
       </div>
 
-      <div className="register-form__group">
-        <label htmlFor="businessName" className="register-form__label">Business Name</label>
+      <div className={styles['register-form__group']}>
+        <label htmlFor="businessName" className={styles['register-form__label']}>Business Name</label>
         <input
           id="businessName"
           name="businessName"
           type="text"
-          className={`register-form__input ${fieldErrors.businessName ? "register-form__input--invalid" : ""}`}
+          className={`${styles['register-form__input']} ${fieldErrors.businessName ? styles['register-form__input--invalid'] : ""}`}
           required
           value={formData.businessName}
           onChange={handleChange}
         />
-        {fieldErrors.businessName && <span className="register-form__error-text">{fieldErrors.businessName}</span>}
+        {fieldErrors.businessName && <span className={styles['register-form__error-text']}>{fieldErrors.businessName}</span>}
       </div>
 
-      <div className="register-form__group">
-        <label htmlFor="email" className="register-form__label">Email</label>
+      <div className={styles['register-form__group']}>
+        <label htmlFor="email" className={styles['register-form__label']}>Email</label>
         <input
           id="email"
           name="email"
           type="email"
-          className={`register-form__input ${fieldErrors.email ? "register-form__input--invalid" : ""}`}
+          className={`${styles['register-form__input']} ${fieldErrors.email ? styles['register-form__input--invalid'] : ""}`}
           required
           value={formData.email}
           onChange={handleChange}
         />
-        {fieldErrors.email && <span className="register-form__error-text">{fieldErrors.email}</span>}
+        {fieldErrors.email && <span className={styles['register-form__error-text']}>{fieldErrors.email}</span>}
       </div>
 
-      <div className="register-form__group">
-        <label htmlFor="password" className="register-form__label">Password</label>
-        <div className="register-form__password-wrapper">
+      <div className={styles['register-form__group']}>
+        <label htmlFor="password" className={styles['register-form__label']}>Password</label>
+        <div className={styles['register-form__password-wrapper']}>
           <input
             id="password"
             name="password"
             type={showPassword ? "text" : "password"}
-            className={`register-form__input ${fieldErrors.password ? "register-form__input--invalid" : ""}`}
+            className={`${styles['register-form__input']} ${fieldErrors.password ? styles['register-form__input--invalid'] : ""}`}
             required
             value={formData.password}
             onChange={handleChange}
           />
           <button 
             type="button" 
-            className="register-form__toggle-icon" 
+            className={styles['register-form__toggle-icon']} 
             onClick={() => setShowPassword(!showPassword)}
             aria-label={showPassword ? "Hide password" : "Show password"}
             style={{ background: 'none', border: 'none', padding: 0 }}
@@ -274,113 +274,113 @@ export default function RegisterBusinessForm() {
         </div>
         {passwordStrength && (
           <>
-            <div className="register-form__strength-meter" data-strength={passwordStrength}>
-              <div className="register-form__strength-bar"></div>
-              <div className="register-form__strength-bar"></div>
-              <div className="register-form__strength-bar"></div>
+            <div className={styles['register-form__strength-meter']} data-strength={passwordStrength}>
+              <div className={styles['register-form__strength-bar']}></div>
+              <div className={styles['register-form__strength-bar']}></div>
+              <div className={styles['register-form__strength-bar']}></div>
             </div>
-            <span className="register-form__strength-text">
+            <span className={styles['register-form__strength-text']}>
               Strength: {passwordStrength.charAt(0).toUpperCase() + passwordStrength.slice(1)}
             </span>
           </>
         )}
-        {fieldErrors.password && <span className="register-form__error-text">{fieldErrors.password}</span>}
+        {fieldErrors.password && <span className={styles['register-form__error-text']}>{fieldErrors.password}</span>}
       </div>
 
-      <div className="register-form__group">
-        <label htmlFor="phone" className="register-form__label">Phone Number</label>
+      <div className={styles['register-form__group']}>
+        <label htmlFor="phone" className={styles['register-form__label']}>Phone Number</label>
         <input
           id="phone"
           name="phone"
           type="tel"
-          className={`register-form__input ${fieldErrors.phone ? "register-form__input--invalid" : ""}`}
+          className={`${styles['register-form__input']} ${fieldErrors.phone ? styles['register-form__input--invalid'] : ""}`}
           required
           value={formData.phone}
           onChange={handleChange}
           placeholder="(XXX) XXX-XXXX"
         />
-        {fieldErrors.phone && <span className="register-form__error-text">{fieldErrors.phone}</span>}
+        {fieldErrors.phone && <span className={styles['register-form__error-text']}>{fieldErrors.phone}</span>}
       </div>
 
-      <div className="register-form__group">
-        <label htmlFor="website" className="register-form__label">Website URL</label>
+      <div className={styles['register-form__group']}>
+        <label htmlFor="website" className={styles['register-form__label']}>Website URL</label>
         <input
           id="website"
           name="website"
           type="url"
-          className="register-form__input"
+          className={styles['register-form__input']}
           value={formData.website}
           onChange={handleChange}
         />
       </div>
 
-      <div className="register-form__checkbox-section">
-        <div className="register-form__checkbox-group">
+      <div className={styles['register-form__checkbox-section']}>
+        <div className={styles['register-form__checkbox-group']}>
           <input
             id="consent"
             name="consent"
             type="checkbox"
-            className="register-form__checkbox"
+            className={styles['register-form__checkbox']}
             required
             checked={formData.consent}
             onChange={handleChange}
           />
-          <label htmlFor="consent" className="register-form__checkbox-label">
+          <label htmlFor="consent" className={styles['register-form__checkbox-label']}>
             I consent to being contacted by Cape Coral Reviewed. (Required)
           </label>
         </div>
-        {fieldErrors.consent && <span className="register-form__error-text" style={{ marginBottom: '1.5rem', display: 'block' }}>{fieldErrors.consent}</span>}
+        {fieldErrors.consent && <span className={styles['register-form__error-text']} style={{ marginBottom: '1.5rem', display: 'block' }}>{fieldErrors.consent}</span>}
 
-        <p className="register-form__marketing-hint">Are you interested in any of these services?</p>
+        <p className={styles['register-form__marketing-hint']}>Are you interested in any of these services?</p>
         
-        <div className="register-form__checkbox-group">
+        <div className={styles['register-form__checkbox-group']}>
           <input
             id="top3Spots"
             name="top3Spots"
             type="checkbox"
-            className="register-form__checkbox"
+            className={styles['register-form__checkbox']}
             checked={formData.top3Spots}
             onChange={handleChange}
           />
-          <label htmlFor="top3Spots" className="register-form__checkbox-label">
+          <label htmlFor="top3Spots" className={styles['register-form__checkbox-label']}>
             Claim one of the Top 3 Spots in your category
           </label>
         </div>
 
-        <div className="register-form__checkbox-group">
+        <div className={styles['register-form__checkbox-group']}>
           <input
             id="generateLeads"
             name="generateLeads"
             type="checkbox"
-            className="register-form__checkbox"
+            className={styles['register-form__checkbox']}
             checked={formData.generateLeads}
             onChange={handleChange}
           />
-          <label htmlFor="generateLeads" className="register-form__checkbox-label">
+          <label htmlFor="generateLeads" className={styles['register-form__checkbox-label']}>
             Generate more leads
           </label>
         </div>
 
-        <div className="register-form__checkbox-group">
+        <div className={styles['register-form__checkbox-group']}>
           <input
             id="facelift"
             name="facelift"
             type="checkbox"
-            className="register-form__checkbox"
+            className={styles['register-form__checkbox']}
             checked={formData.facelift}
             onChange={handleChange}
           />
-          <label htmlFor="facelift" className="register-form__checkbox-label">
+          <label htmlFor="facelift" className={styles['register-form__checkbox-label']}>
             Website or Brand Facelift
           </label>
         </div>
       </div>
 
-      {error && <p className="register-form__error">{error}</p>}
+      {error && <p className={styles['register-form__error']}>{error}</p>}
 
       <button
         type="submit"
-        className="register-form__submit"
+        className={styles['register-form__submit']}
         disabled={isSubmitting || !isFormValid()}
       >
         {isSubmitting ? 'Submitting...' : 'Register Business'}

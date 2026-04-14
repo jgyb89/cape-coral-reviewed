@@ -3,6 +3,7 @@ import BlogView from "@/components/blog/BlogView";
 import { getBlogPosts } from "@/lib/actions";
 import { getDictionary } from "@/lib/dictionaries";
 import DOMPurify from "isomorphic-dompurify";
+import { formatImageUrl } from "@/lib/formatImageUrl";
 
 export const metadata = {
   title: "Cape Coral News & Reviews | Blog",
@@ -21,7 +22,7 @@ export default async function BlogPage({ params }) {
     title: node.title,
     slug: node.slug,
     categories: node.categories.nodes.map(cat => cat.name),
-    imageUrl: node.featuredImage?.node?.sourceUrl || '/placeholder-image.jpg',
+    imageUrl: formatImageUrl(node.featuredImage?.node?.sourceUrl),
     excerpt: node.excerpt ? DOMPurify.sanitize(node.excerpt, { ALLOWED_TAGS: [] }) : ""
   }));
 

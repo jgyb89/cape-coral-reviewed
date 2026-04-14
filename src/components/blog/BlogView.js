@@ -3,7 +3,7 @@
 
 import { useState } from "react";
 import BlogCard from "./BlogCard";
-import "./Blog.css";
+import styles from "./Blog.module.css";
 
 export default function BlogView({ posts, dict = {}, locale = "en" }) {
   const t = dict?.blog?.tabs || {};
@@ -25,12 +25,12 @@ export default function BlogView({ posts, dict = {}, locale = "en" }) {
   });
 
   return (
-    <div className="blog-view">
-      <nav className="blog-tabs" aria-label="Blog categories">
+    <div className={styles['blog-view']}>
+      <nav className={styles['blog-tabs']} aria-label="Blog categories">
         {TABS.map((tab) => (
           <button
             key={tab.id}
-            className={`blog-tabs__item ${activeTab === tab.id ? "blog-tabs__item--active" : ""}`}
+            className={`${styles['blog-tabs__item']} ${activeTab === tab.id ? styles['blog-tabs__item--active'] : ""}`}
             onClick={() => setActiveTab(tab.id)}
             type="button"
           >
@@ -39,7 +39,7 @@ export default function BlogView({ posts, dict = {}, locale = "en" }) {
         ))}
       </nav>
 
-      <div className="blog-grid">
+      <div className={styles['blog-grid']}>
         {filteredPosts.map((post) => (
           <BlogCard key={post.id} post={post} locale={locale} />
         ))}

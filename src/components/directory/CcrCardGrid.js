@@ -1,12 +1,12 @@
 // src/components/directory/CcrCardGrid.js
 import PropTypes from 'prop-types';
 import CcrCard from './CcrCard';
-import './CcrCardGrid.css';
+import styles from './CcrCardGrid.module.css';
 
-export default function CcrCardGrid({ listings, currentUser }) {
+export default function CcrCardGrid({ listings, currentUser, locale = 'en' }) {
   if (!listings || listings.length === 0) {
     return (
-      <div className="ccr-card-grid--empty" style={{ padding: '3rem', textAlign: 'center', backgroundColor: 'var(--color-bg)', borderRadius: '12px' }}>
+      <div className={styles['ccr-card-grid--empty']} style={{ padding: '3rem', textAlign: 'center', backgroundColor: 'var(--color-bg)', borderRadius: '12px' }}>
         <span className="material-symbols-outlined" style={{ fontSize: '48px', color: '#ccc', marginBottom: '1rem' }}>
           search_off
         </span>
@@ -16,9 +16,9 @@ export default function CcrCardGrid({ listings, currentUser }) {
   }
 
   return (
-    <div className="ccr-card-grid">
+    <div className={styles['ccr-card-grid']}>
       {listings.map((listing) => (
-        <CcrCard key={listing.id || listing.slug} listing={listing} currentUser={currentUser} />
+        <CcrCard key={listing.id || listing.slug} listing={listing} currentUser={currentUser} locale={locale} />
       ))}
     </div>
   );

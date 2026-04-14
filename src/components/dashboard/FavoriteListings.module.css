@@ -1,0 +1,118 @@
+.favorite-listings {
+  background-color: #ffffff;
+  padding: 1.5rem 2rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+  border: 1px solid #f1f5f9;
+}
+
+.favorite-listings__grid {
+  display: flex;
+  flex-direction: column;
+}
+
+.favorite-item {
+  padding: 1.5rem 0;
+  border-bottom: 1px solid #f1f5f9;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 2rem;
+}
+
+.favorite-item:first-child {
+  padding-top: 0;
+}
+
+.favorite-item:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.favorite-item__content-wrapper {
+  flex: 1;
+  display: flex;
+  gap: 1.5rem;
+  align-items: center;
+}
+
+.favorite-item__image-container {
+  flex-shrink: 0;
+  width: 120px;
+  height: 80px;
+  position: relative;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid #f1f5f9;
+}
+
+.favorite-item__info {
+  display: flex;
+  flex-direction: column;
+}
+
+.favorite-item__title {
+  margin: 0 0 0.25rem 0;
+  color: #334155;
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.favorite-item__link {
+  color: #e04c4c;
+  font-size: 0.9rem;
+  text-decoration: none;
+}
+
+.favorite-item__link:hover {
+  text-decoration: underline;
+}
+
+.favorite-item__actions {
+  display: flex;
+  align-items: center;
+}
+
+.btn-delete {
+  color: #ef4444;
+  background: transparent;
+  border: none;
+  font-weight: 600;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  border-radius: 6px;
+  transition: background-color 0.2s ease;
+}
+
+.btn-delete:hover {
+  background-color: #fef2f2;
+}
+
+/* Empty state */
+.favorite-listings__empty {
+  text-align: center;
+  padding: 3rem;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+}
+
+.favorite-listings__text {
+  font-size: 1.1rem;
+  color: #475569;
+  margin-bottom: 1.5rem;
+}
+
+.favorite-listings__link {
+  display: inline-block;
+  padding: 0.75rem 1.5rem;
+  background-color: #e04c4c;
+  color: #fff;
+  text-decoration: none;
+  border-radius: 8px;
+  font-weight: 600;
+  transition: opacity 0.2s;
+}

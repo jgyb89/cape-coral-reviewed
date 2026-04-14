@@ -1,0 +1,64 @@
+.profile-form {
+  background-color: #ffffff;
+  padding: 2.5rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+  border: 1px solid #f1f5f9;
+  max-width: 800px;
+}
+
+.profile-form__group {
+  margin-bottom: 1.5rem;
+}
+
+.profile-form__label {
+  display: block;
+  font-weight: 600;
+  color: #334155;
+  margin-bottom: 0.5rem;
+  font-size: 0.95rem;
+}
+
+.profile-form__input {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  font-size: 1rem;
+  color: #1e293b;
+  transition: all 0.2s ease;
+  background-color: #fcfcfc;
+}
+
+.profile-form__input:focus {
+  border-color: #e04c4c;
+  outline: none;
+  background-color: #ffffff;
+  box-shadow: 0 0 0 3px rgba(224, 76, 76, 0.1);
+}
+
+.profile-form__actions {
+  display: flex;
+  gap: 1rem;
+  margin-top: 2.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid #f1f5f9;
+}
+
+.profile-form__button {
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  border: none;
+}
+
+.profile-form__button--primary {
+  background-color: #e04c4c;
+  color: white;
+}
+
+.profile-form__button--primary:hover {
+  background-color: #c94343;
+}

@@ -1,7 +1,8 @@
 'use client';
 
 import React, { useState } from 'react';
-import './StepForm.css';
+import styles from './StepForm.module.css';
+import wizardStyles from './ListingWizard.module.css';
 
 const Step1General = ({ formData, updateFormData, nextStep }) => {
   const [errors, setErrors] = useState({});
@@ -23,33 +24,33 @@ const Step1General = ({ formData, updateFormData, nextStep }) => {
   };
 
   return (
-    <div className="step-form">
-      <header className="step-form__header">
+    <div className={styles['step-form']}>
+      <header className={styles['step-form__header']}>
         <span className="material-symbols-outlined" style={{ color: '#e04c4c' }}>edit</span>
         <h2>General Information</h2>
       </header>
 
-      <div className="step-form__group">
-        <label className="step-form__label">
-          Business Name <span className="step-form__required">*</span>
+      <div className={styles['step-form__group']}>
+        <label className={styles['step-form__label']}>
+          Business Name <span className={styles['step-form__required']}>*</span>
         </label>
         <input
           type="text"
-          className={`step-form__input ${errors.title ? 'step-form__input--error' : ''}`}
+          className={`${styles['step-form__input']} ${errors.title ? styles['step-form__input--error'] : ''}`}
           placeholder="e.g. Cape Coral Plumbing"
           value={formData.title}
           onChange={(e) => updateFormData({ title: e.target.value })}
           required
         />
-        {errors.title && <span className="step-form__error-message">{errors.title}</span>}
+        {errors.title && <span className={styles['step-form__error-message']}>{errors.title}</span>}
       </div>
 
-      <div className="step-form__group">
-        <label className="step-form__label">
-          Directory Type <span className="step-form__required">*</span>
+      <div className={styles['step-form__group']}>
+        <label className={styles['step-form__label']}>
+          Directory Type <span className={styles['step-form__required']}>*</span>
         </label>
         <select
-          className={`step-form__select ${errors.category ? 'step-form__select--error' : ''}`}
+          className={`${styles['step-form__select']} ${errors.category ? styles['step-form__select--error'] : ''}`}
           value={formData.category}
           onChange={(e) => updateFormData({ category: e.target.value })}
           required
@@ -59,26 +60,26 @@ const Step1General = ({ formData, updateFormData, nextStep }) => {
           <option value="Health & Wellness">Health & Wellness</option>
           <option value="Home & Local Services">Home & Local Services</option>
         </select>
-        {errors.category && <span className="step-form__error-message">{errors.category}</span>}
+        {errors.category && <span className={styles['step-form__error-message']}>{errors.category}</span>}
       </div>
 
-      <div className="step-form__group">
-        <label className="step-form__label">
-          Description <span className="step-form__required">*</span>
+      <div className={styles['step-form__group']}>
+        <label className={styles['step-form__label']}>
+          Description <span className={styles['step-form__required']}>*</span>
         </label>
         <textarea
-          className={`step-form__textarea ${errors.description ? 'step-form__textarea--error' : ''}`}
+          className={`${styles['step-form__textarea']} ${errors.description ? styles['step-form__textarea--error'] : ''}`}
           placeholder="Tell us about your business..."
           rows={5}
           value={formData.description}
           onChange={(e) => updateFormData({ description: e.target.value })}
           required
         />
-        {errors.description && <span className="step-form__error-message">{errors.description}</span>}
+        {errors.description && <span className={styles['step-form__error-message']}>{errors.description}</span>}
       </div>
 
-      <div className="wizard__actions">
-        <button className="wizard__button wizard__button--primary" onClick={handleNext}>
+      <div className={wizardStyles['wizard__actions']}>
+        <button className={`${wizardStyles['wizard__button']} ${wizardStyles['wizard__button--primary']}`} onClick={handleNext}>
           Next
         </button>
       </div>

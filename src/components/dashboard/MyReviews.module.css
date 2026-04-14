@@ -1,0 +1,193 @@
+.my-reviews {
+  background-color: #ffffff;
+  padding: 1.5rem 2rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+  border: 1px solid #f1f5f9;
+}
+
+.my-reviews__list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.user-review {
+  padding: 1.5rem 0;
+  border-bottom: 1px solid #f1f5f9;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 2rem;
+}
+
+.user-review:first-child {
+  padding-top: 0;
+}
+
+.user-review:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.user-review__content-wrapper {
+  flex: 1;
+}
+
+.user-review__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 1rem;
+}
+
+.user-review__listing {
+  font-weight: 600;
+  color: #334155;
+  margin: 0 0 0.25rem 0;
+  font-size: 1.1rem;
+}
+
+.user-review__listing-link {
+  color: #e04c4c;
+  text-decoration: none;
+}
+
+.user-review__listing-link:hover {
+  text-decoration: underline;
+}
+
+.user-review__date {
+  font-size: 0.85rem;
+  color: #94a3b8;
+}
+
+.user-review__stars {
+  display: flex;
+  gap: 2px;
+}
+
+.user-review__star {
+  font-size: 1.25rem;
+}
+
+.user-review__content {
+  color: #475569;
+  line-height: 1.6;
+  font-size: 0.95rem;
+}
+
+.user-review__actions {
+  display: flex;
+  align-items: center;
+}
+
+.btn-delete {
+  color: #ef4444;
+  background: transparent;
+  border: none;
+  font-weight: 600;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  border-radius: 6px;
+  transition: background-color 0.2s ease;
+}
+
+.btn-delete:hover {
+  background-color: #fef2f2;
+}
+
+/* Modal and other styles preserved from previous version if needed, 
+   but user provided a specific replacement block in previous turn. 
+   I will keep the modal styles to ensure functionality. */
+
+.my-reviews__modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 1rem;
+  backdrop-filter: blur(4px);
+}
+
+.my-reviews__modal-overlay-btn {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: transparent;
+  border: none;
+  cursor: default;
+  z-index: -1;
+}
+
+.my-reviews__modal {
+  background: white;
+  padding: 2.5rem;
+  border-radius: 16px;
+  max-width: 400px;
+  width: 100%;
+  text-align: center;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  z-index: 1;
+}
+
+.my-reviews__modal-icon {
+  margin-bottom: 1.5rem;
+}
+
+.my-reviews__modal-icon .material-symbols-outlined {
+  font-size: 4rem;
+  color: #e04c4c;
+}
+
+.my-reviews__modal-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  color: #334155;
+  padding: 0;
+}
+
+.my-reviews__modal-text {
+  color: #475569;
+  margin-bottom: 2rem;
+  line-height: 1.6;
+}
+
+.my-reviews__modal-actions {
+  display: flex;
+  gap: 1rem;
+}
+
+.my-reviews__modal-btn {
+  flex: 1;
+  padding: 0.75rem;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.my-reviews__modal-btn--cancel {
+  background: white;
+  border: 2px solid #f1f5f9;
+  color: #475569;
+}
+
+.my-reviews__modal-btn--delete {
+  background: #e04c4c;
+  border: 2px solid #e04c4c;
+  color: white;
+}

@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useRouter, usePathname } from "next/navigation";
 import LoginModal from "@/components/auth/LoginModal";
 import SearchModal from "@/components/layout/SearchModal";
-import "./Navbar.css";
+import styles from "./Navbar.module.css";
 import capeCoralLogo from "../../../public/cape-coral-reviewed-logo.svg";
 import Image from "next/image";
 import {
@@ -150,19 +150,19 @@ export default function Navbar({ currentUser, dict, locale }) {
 
   return (
     <>
-      <nav className="main-nav">
-        <Link href={`/${locale}`} className="nav-brand">
+      <nav className={styles['main-nav']}>
+        <Link href={`/${locale}`} className={styles['nav-brand']}>
           <Image
             src={capeCoralLogo}
             alt="Cape Coral Reviewed Logo"
-            className="nav-logo"
+            className={styles['nav-logo']}
             priority // Recommended for logos/above-the-fold content
           />
         </Link>
 
-        <div className="mobile-actions">
+        <div className={styles['mobile-actions']}>
           <button
-            className="mobile-search-btn"
+            className={styles['mobile-search-btn']}
             onClick={() => setIsSearchModalOpen(true)}
             aria-label="Open Search"
           >
@@ -170,7 +170,7 @@ export default function Navbar({ currentUser, dict, locale }) {
           </button>
 
           <button
-            className="mobile-menu-btn"
+            className={styles['mobile-menu-btn']}
             onClick={() =>
               isMobileOpen ? closeMobileMenu() : setIsMobileOpen(true)
             }
@@ -181,10 +181,10 @@ export default function Navbar({ currentUser, dict, locale }) {
           </button>
         </div>
 
-        <div className={`nav-links ${isMobileOpen ? "mobile-open" : ""}`}>
+        <div className={`${styles['nav-links']} ${isMobileOpen ? styles['mobile-open'] : ""}`}>
           <button
             onClick={() => setIsSearchModalOpen(true)}
-            className="nav-link"
+            className={styles['nav-link']}
           >
             <span
               className="material-symbols-outlined"
@@ -196,31 +196,31 @@ export default function Navbar({ currentUser, dict, locale }) {
           </button>
 
           <div
-            className="nav-link nav-link--all-listings"
+            className={`${styles['nav-link']} ${styles['nav-link--all-listings']}`}
             onMouseEnter={() => setIsListingsOpen(true)}
             onMouseLeave={() => setIsListingsOpen(false)}
           >
-            <div className="nav-link__trigger">
+            <div className={styles['nav-link__trigger']}>
               {t.allListings || "All Listings"}{" "}
-              <span className="material-symbols-outlined nav-link__icon">
+              <span className={`material-symbols-outlined ${styles['nav-link__icon']}`}>
                 expand_more
               </span>
             </div>
             
             {isListingsOpen && (
-              <div className="mega-menu">
-                <div className="mega-menu-grid">
+              <div className={styles['mega-menu']}>
+                <div className={styles['mega-menu-grid']}>
                   {categories.map((cat) => (
-                    <div key={cat.slug} className="mega-menu-column">
-                      <h4 className="mega-menu-title">
+                    <div key={cat.slug} className={styles['mega-menu-column']}>
+                      <h4 className={styles['mega-menu-title']}>
                         {cat.icon} {cat.title}
                       </h4>
-                      <div className="mega-menu-subs">
+                      <div className={styles['mega-menu-subs']}>
                         {cat.subs.map((sub) => (
                           <Link
                             key={sub.slug}
                             href={`/${locale}/directory/${cat.slug}/${sub.slug}`}
-                            className="mega-menu-sub-link"
+                            className={styles['mega-menu-sub-link']}
                             onClick={() => setIsListingsOpen(false)}
                           >
                             {sub.icon} {sub.name}
@@ -230,10 +230,10 @@ export default function Navbar({ currentUser, dict, locale }) {
                     </div>
                   ))}
                 </div>
-                <div className="mega-menu-footer">
+                <div className={styles['mega-menu-footer']}>
                   <Link 
                     href={`/${locale}/directory`} 
-                    className="mega-menu-all-link" 
+                    className={styles['mega-menu-all-link']} 
                     onClick={() => setIsListingsOpen(false)}
                   >
                     {t.viewAllDirectory || "View All Directory"}
@@ -243,13 +243,13 @@ export default function Navbar({ currentUser, dict, locale }) {
             )}
           </div>
 
-          <Link href={`/${locale}/blog`} className="nav-link">
+          <Link href={`/${locale}/blog`} className={styles['nav-link']}>
             {t.news || "News & Reviews"}
           </Link>
 
-          <div className="locale-toggle-container">
+          <div className={styles['locale-toggle-container']}>
             <button 
-              className={`locale-btn ${locale === 'en' ? 'active' : ''}`}
+              className={`${styles['locale-btn']} ${locale === 'en' ? styles['active'] : ''}`}
               onClick={toggleLocale}
             >
               {locale === 'en' ? 'ES' : 'EN'}
@@ -260,18 +260,18 @@ export default function Navbar({ currentUser, dict, locale }) {
             // LOGGED IN STATE
             <>
               <div
-                className="nav-link"
+                className={styles['nav-link']}
                 onMouseEnter={() => setIsAccountOpen(true)}
                 onMouseLeave={() => setIsAccountOpen(false)}
               >
-                <div className="nav-link__trigger">
+                <div className={styles['nav-link__trigger']}>
                   {t.myAccount || "My Account"}{" "}
-                  <span className="material-symbols-outlined nav-link__icon">
+                  <span className={`material-symbols-outlined ${styles['nav-link__icon']}`}>
                     expand_more
                   </span>
                 </div>
                 {isAccountOpen && (
-                  <div className="nav-dropdown">
+                  <div className={styles['nav-dropdown']}>
                     <Link href={`/${locale}/dashboard`}>{t.profile || "Profile"}</Link>
                     <Link href={`/${locale}/dashboard/favorites`}>{t.favorites || "Favorites"}</Link>
                     <Link href={`/${locale}/dashboard/reviews`}>{t.myReviews || "My Reviews"}</Link>
@@ -284,7 +284,7 @@ export default function Navbar({ currentUser, dict, locale }) {
                   </div>
                 )}
               </div>
-              <div className="business-signup">
+              <div className={styles['business-signup']}>
                 <Link href={submitHref}>{t.submitBusiness || "Submit your Business"}</Link>
               </div>
             </>
@@ -293,14 +293,14 @@ export default function Navbar({ currentUser, dict, locale }) {
             <>
               <button
                 onClick={() => setIsLoginModalOpen(true)}
-                className="nav-link nav-login-btn"
+                className={`${styles['nav-link']} ${styles['nav-login-btn']}`}
               >
                 {t.login || "Log in"}
               </button>
-              <div className="sign-up-button">
+              <div className={styles['sign-up-button']}>
                 <Link href={`/${locale}/register`}>{t.joinCommunity || "Join Community"}</Link>
               </div>
-              <div className="business-signup">
+              <div className={styles['business-signup']}>
                 <Link href={submitHref}>{t.submitBusiness || "Submit your Business"}</Link>
               </div>
             </>
@@ -309,9 +309,9 @@ export default function Navbar({ currentUser, dict, locale }) {
       </nav>
 
       {/* MOBILE FLYOUT MENU */}
-      <div className="mobile-flyout">
+      <div className={styles['mobile-flyout']}>
         <div
-          className={`flyout-overlay ${isMobileOpen ? "open" : ""}`}
+          className={`${styles['flyout-overlay']} ${isMobileOpen ? styles['open'] : ""}`}
           onClick={closeMobileMenu}
           onKeyDown={(e) => {
             if (e.key === "Enter" || e.key === " ") {
@@ -324,56 +324,56 @@ export default function Navbar({ currentUser, dict, locale }) {
         />
 
         <aside
-          className={`flyout-drawer ${isMobileOpen ? "open" : ""}`}
+          className={`${styles['flyout-drawer']} ${isMobileOpen ? styles['open'] : ""}`}
           data-level={mobileLevel}
         >
-          <div className="flyout-header">
-            <Link href={`/${locale}`} className="flyout-brand" onClick={closeMobileMenu}>
+          <div className={styles['flyout-header']}>
+            <Link href={`/${locale}`} className={styles['flyout-brand']} onClick={closeMobileMenu}>
               Cape Coral Directory
             </Link>
-            <button className="flyout-close" onClick={closeMobileMenu}>
+            <button className={styles['flyout-close']} onClick={closeMobileMenu}>
               <span className="material-symbols-outlined">close</span>
             </button>
           </div>
 
-          <div className="flyout-panels">
+          <div className={styles['flyout-panels']}>
             {/* LEVEL 1: Main Menu */}
-            <section className="flyout-panel panel-1">
-              <ul className="flyout-list">
-                <li className="flyout-item">
+            <section className={`${styles['flyout-panel']} ${styles['panel-1']}`}>
+              <ul className={styles['flyout-list']}>
+                <li className={styles['flyout-item']}>
                   <button
-                    className="flyout-link flyout-link--search"
+                    className={`${styles['flyout-link']} ${styles['flyout-link--search']}`}
                     onClick={() => {
                       closeMobileMenu();
                       setIsSearchModalOpen(true);
                     }}
                   >
                     <span>
-                      <span className="material-symbols-outlined flyout-icon--search">
+                      <span className={`material-symbols-outlined ${styles['flyout-icon--search']}`}>
                         search
                       </span>
                       {t.search || "Search"}
                     </span>
                   </button>
                 </li>
-                <li className="flyout-item">
+                <li className={styles['flyout-item']}>
                   <button
-                    className="flyout-action"
+                    className={styles['flyout-action']}
                     onClick={() => {
                       setMobileLevel(2);
                       setActiveSubMenu("listings");
                     }}
                   >
                     {t.allListings || "All Listings"}{" "}
-                    <span className="material-symbols-outlined flyout-icon">
+                    <span className={`material-symbols-outlined ${styles['flyout-icon']}`}>
                       chevron_right
                     </span>
                   </button>
                 </li>
-                <li className="flyout-item">
+                <li className={styles['flyout-item']}>
                   <Link
                     href={`/${locale}/blog`}
-                    className="flyout-link"
+                    className={styles['flyout-link']}
                     onClick={closeMobileMenu}
                   >
                     {t.news || "News & Reviews"}
@@ -381,24 +381,24 @@ export default function Navbar({ currentUser, dict, locale }) {
                 </li>
 
                 {currentUser ? (
-                  <li className="flyout-item">
+                  <li className={styles['flyout-item']}>
                     <button
-                      className="flyout-action"
+                      className={styles['flyout-action']}
                       onClick={() => {
                         setMobileLevel(2);
                         setActiveSubMenu("account");
                       }}
                     >
                       {t.myAccount || "My Account"}{" "}
-                      <span className="material-symbols-outlined flyout-icon">
+                      <span className={`material-symbols-outlined ${styles['flyout-icon']}`}>
                         chevron_right
                       </span>
                     </button>
                   </li>
                 ) : (
-                  <li className="flyout-item">
+                  <li className={styles['flyout-item']}>
                     <button
-                      className="flyout-link"
+                      className={styles['flyout-link']}
                       onClick={() => {
                         closeMobileMenu();
                         setIsLoginModalOpen(true);
@@ -409,9 +409,9 @@ export default function Navbar({ currentUser, dict, locale }) {
                   </li>
                 )}
 
-                <li className="flyout-item">
+                <li className={styles['flyout-item']}>
                   <button
-                    className="flyout-link"
+                    className={styles['flyout-link']}
                     onClick={toggleLocale}
                   >
                     Language: {locale.toUpperCase() === 'EN' ? 'Spanish (ES)' : 'English (EN)'}
@@ -420,15 +420,15 @@ export default function Navbar({ currentUser, dict, locale }) {
               </ul>
 
               {/* Bottom CTAs */}
-              <div className="flyout-cta-wrap">
+              <div className={styles['flyout-cta-wrap']}>
                 {!currentUser && (
-                  <div className="sign-up-button">
+                  <div className={styles['sign-up-button']}>
                     <Link href={`/${locale}/register`} onClick={closeMobileMenu}>
                       {t.joinCommunity || "Join Community"}
                     </Link>
                   </div>
                 )}
-                <div className="business-signup">
+                <div className={styles['business-signup']}>
                   <Link href={submitHref} onClick={closeMobileMenu}>
                     {t.submitBusiness || "Submit your Business"}
                   </Link>
@@ -437,9 +437,9 @@ export default function Navbar({ currentUser, dict, locale }) {
             </section>
 
             {/* LEVEL 2: Sub Menus */}
-            <section className="flyout-panel panel-2">
-              <button className="flyout-back" onClick={() => setMobileLevel(1)}>
-                <span className="material-symbols-outlined flyout-back-icon">
+            <section className={`${styles['flyout-panel']} ${styles['panel-2']}`}>
+              <button className={styles['flyout-back']} onClick={() => setMobileLevel(1)}>
+                <span className={`material-symbols-outlined ${styles['flyout-back-icon']}`}>
                   chevron_left
                 </span>{" "}
                 Back
@@ -447,30 +447,30 @@ export default function Navbar({ currentUser, dict, locale }) {
 
               {activeSubMenu === "listings" && (
                 <>
-                  <h3 className="flyout-panel-title">Categories</h3>
-                  <ul className="flyout-list">
-                    <li className="flyout-item">
+                  <h3 className={styles['flyout-panel-title']}>Categories</h3>
+                  <ul className={styles['flyout-list']}>
+                    <li className={styles['flyout-item']}>
                       <Link
                         href={`/${locale}/directory`}
-                        className="flyout-link"
+                        className={styles['flyout-link']}
                         onClick={closeMobileMenu}
                       >
                         {t.viewAllDirectory || "View All Directory"}
                       </Link>
                     </li>
                     {categories.map((cat) => (
-                      <li key={cat.slug} className="flyout-item">
+                      <li key={cat.slug} className={styles['flyout-item']}>
                         <button
-                          className="flyout-action"
+                          className={styles['flyout-action']}
                           onClick={() => {
                             setMobileLevel(3);
                             setActiveCategory(cat);
                           }}
                         >
-                          <span className="flyout-category-btn">
+                          <span className={styles['flyout-category-btn']}>
                             {cat.icon} {cat.title}
                           </span>
-                          <span className="material-symbols-outlined flyout-icon">
+                          <span className={`material-symbols-outlined ${styles['flyout-icon']}`}>
                             chevron_right
                           </span>
                         </button>
@@ -482,49 +482,49 @@ export default function Navbar({ currentUser, dict, locale }) {
 
               {activeSubMenu === "account" && (
                 <>
-                  <h3 className="flyout-panel-title">Dashboard</h3>
-                  <ul className="flyout-list">
-                    <li className="flyout-item">
+                  <h3 className={styles['flyout-panel-title']}>Dashboard</h3>
+                  <ul className={styles['flyout-list']}>
+                    <li className={styles['flyout-item']}>
                       <Link
                         href={`/${locale}/dashboard`}
-                        className="flyout-link"
+                        className={styles['flyout-link']}
                         onClick={closeMobileMenu}
                       >
                         {t.profile || "Profile Settings"}
                       </Link>
                     </li>
-                    <li className="flyout-item">
+                    <li className={styles['flyout-item']}>
                       <Link
                         href={`/${locale}/dashboard/favorites`}
-                        className="flyout-link"
+                        className={styles['flyout-link']}
                         onClick={closeMobileMenu}
                       >
                         {t.favorites || "Favorite Listings"}
                       </Link>
                     </li>
-                    <li className="flyout-item">
+                    <li className={styles['flyout-item']}>
                       <Link
                         href={`/${locale}/dashboard/reviews`}
-                        className="flyout-link"
+                        className={styles['flyout-link']}
                         onClick={closeMobileMenu}
                       >
                         {t.myReviews || "My Reviews"}
                       </Link>
                     </li>
                     {isBusinessOrAdmin && (
-                      <li className="flyout-item">
+                      <li className={styles['flyout-item']}>
                         <Link
                           href={`/${locale}/dashboard/listings`}
-                          className="flyout-link"
+                          className={styles['flyout-link']}
                           onClick={closeMobileMenu}
                         >
                           {t.myListings || "My Listings"}
                         </Link>
                       </li>
                     )}
-                    <li className="flyout-item">
+                    <li className={styles['flyout-item']}>
                       <button
-                        className="flyout-link"
+                        className={styles['flyout-link']}
                         onClick={() => {
                           closeMobileMenu();
                           setIsLogoutModalOpen(true);
@@ -539,9 +539,9 @@ export default function Navbar({ currentUser, dict, locale }) {
             </section>
 
             {/* LEVEL 3: Categories */}
-            <section className="flyout-panel panel-3">
-              <button className="flyout-back" onClick={() => setMobileLevel(2)}>
-                <span className="material-symbols-outlined flyout-back-icon">
+            <section className={`${styles['flyout-panel']} ${styles['panel-3']}`}>
+              <button className={styles['flyout-back']} onClick={() => setMobileLevel(2)}>
+                <span className={`material-symbols-outlined ${styles['flyout-back-icon']}`}>
                   chevron_left
                 </span>{" "}
                 Back
@@ -549,16 +549,16 @@ export default function Navbar({ currentUser, dict, locale }) {
 
               {activeCategory && (
                 <>
-                  <h3 className="flyout-panel-title">{activeCategory.title}</h3>
-                  <ul className="flyout-list">
+                  <h3 className={styles['flyout-panel-title']}>{activeCategory.title}</h3>
+                  <ul className={styles['flyout-list']}>
                     {activeCategory.subs.map((sub) => (
-                      <li key={sub.slug} className="flyout-item">
+                      <li key={sub.slug} className={styles['flyout-item']}>
                         <Link
                           href={`/${locale}/directory/${activeCategory.slug}/${sub.slug}`}
-                          className="flyout-link"
+                          className={styles['flyout-link']}
                           onClick={closeMobileMenu}
                         >
-                          <span className="flyout-category-btn">
+                          <span className={styles['flyout-category-btn']}>
                             {sub.icon} {sub.name}
                           </span>
                         </Link>
@@ -590,21 +590,21 @@ export default function Navbar({ currentUser, dict, locale }) {
 
       {/* Logout Confirmation Modal */}
       {isLogoutModalOpen && (
-        <div className="logout-modal">
-          <div className="logout-modal__dialog">
-            <p className="logout-modal__text">
+        <div className={styles['logout-modal']}>
+          <div className={styles['logout-modal__dialog']}>
+            <p className={styles['logout-modal__text']}>
               Are you sure you want to log out?
             </p>
-            <div className="logout-modal__actions">
-              <Link
+            <div className={styles['logout-modal__actions']}>
+              <a
                 href={`/${locale}/logout`}
-                className="logout-modal__button logout-modal__button--confirm"
+                className={`${styles['logout-modal__button']} ${styles['logout-modal__button--confirm']}`}
               >
                 Yes, Log Out
-              </Link>
+              </a>
               <button
                 onClick={() => setIsLogoutModalOpen(false)}
-                className="logout-modal__button logout-modal__button--cancel"
+                className={`${styles['logout-modal__button']} ${styles['logout-modal__button--cancel']}`}
               >
                 Cancel
               </button>
