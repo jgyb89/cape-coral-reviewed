@@ -138,6 +138,8 @@ export async function getViewer() {
     }
   `;
 
+  let isTokenExpired = false;
+
   try {
     const res = await fetch(GRAPHQL_URL, {
       method: 'POST',
@@ -153,26 +155,28 @@ export async function getViewer() {
 
     if (json.errors) {
       // Detect if the WPGraphQL token has expired
-      const isExpired = json.errors.some(e => 
+      isTokenExpired = json.errors.some(e => 
         e.extensions?.debugMessage === 'Expired token' || 
         e.message?.includes('Expired token')
       );
 
-      if (isExpired) {
-        // Instantly redirect to the logout route to destroy the dead cookie 
-        // The logout route will then gracefully redirect them to the homepage
-        redirect('/logout');
+      if (!isTokenExpired) {
+        console.error('Viewer Query Error:', JSON.stringify(json.errors, null, 2));
       }
-
-      console.error('Viewer Query Error:', JSON.stringify(json.errors, null, 2));
-      return null;
+    } else {
+      return json.data.viewer;
     }
-
-    return json.data.viewer;
   } catch (error) {
     console.error('Fetch Viewer Error:', error);
-    return null;
   }
+
+  // CRITICAL: Next.js redirects throw an error. 
+  // This MUST sit outside the try/catch block to work properly.
+  if (isTokenExpired) {
+    redirect('/logout');
+  }
+
+  return null;
 }
 
 /**

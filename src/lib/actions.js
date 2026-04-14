@@ -123,8 +123,8 @@ export async function deleteUserReview(reviewId) {
       throw new Error(json.errors[0].message);
     }
 
-    revalidatePath('/dashboard/reviews');
-    revalidatePath('/directory', 'layout');
+    // Purge the entire Next.js cache globally to update star averages everywhere
+    revalidatePath('/', 'layout'); 
 
     return { success: true };
   } catch (error) {
@@ -300,9 +300,8 @@ export async function submitUserReview(formData) {
       return { success: false, message: json.errors[0].message || 'Failed to submit review.' };
     }
 
-    revalidatePath('/dashboard/reviews');
-    revalidatePath(`/directory/[category]/${formData.listingSlug}`, 'page');
-    revalidatePath('/directory', 'layout'); 
+    // Purge the entire Next.js cache globally to update star averages everywhere
+    revalidatePath('/', 'layout'); 
     return { success: true };
   } catch (error) {
     console.error('Submit Review Action Error:', error);
@@ -546,8 +545,8 @@ export async function updateUserReview(reviewId, formData) {
       throw new Error(json.errors[0].message);
     }
 
-    revalidatePath('/dashboard/reviews');
-    revalidatePath('/directory', 'layout');
+    // Purge the entire Next.js cache globally to update star averages everywhere
+    revalidatePath('/', 'layout'); 
 
     return { success: true };
   } catch (error) {
