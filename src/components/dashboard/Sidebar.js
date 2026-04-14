@@ -36,10 +36,10 @@ export default function Sidebar({ userRoles, locale }) {
         )}
 
         <li className="dashboard-nav__item" style={{ marginTop: 'auto' }}>
-          <Link href={`/${locale}/logout`} className="dashboard-nav__link dashboard-nav__link--signout">
+          <a href={`/${locale}/logout`} className="dashboard-nav__link dashboard-nav__link--signout">
             <span className="material-symbols-outlined" style={{ marginRight: '8px' }}>logout</span>
             <span>Sign Out</span>
-          </Link>
+          </a>
         </li>
       </ul>
     </aside>
