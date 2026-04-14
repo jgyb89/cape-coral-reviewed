@@ -1,7 +1,7 @@
 import React from 'react';
 
 export default function StarRating({ rating }) {
-  const numRating = parseFloat(rating) || 0;
+  const numRating = Number.parseFloat(rating) || 0;
   const fullStars = Math.floor(numRating);
   const hasHalfStar = numRating % 1 >= 0.5;
   const emptyStars = Math.max(0, 5 - fullStars - (hasHalfStar ? 1 : 0));

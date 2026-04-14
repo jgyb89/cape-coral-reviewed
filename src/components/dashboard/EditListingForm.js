@@ -48,13 +48,13 @@ const smartFormatTime = (value, currentAmPm) => {
 
   // Parse digit groupings
   if (digits.length <= 2) {
-    hours = parseInt(digits);
+    hours = Number.parseInt(digits);
   } else if (digits.length === 3) {
-    hours = parseInt(digits.slice(0, 1));
-    minutes = parseInt(digits.slice(1, 3));
+    hours = Number.parseInt(digits.slice(0, 1));
+    minutes = Number.parseInt(digits.slice(1, 3));
   } else {
-    hours = parseInt(digits.slice(0, 2));
-    minutes = parseInt(digits.slice(2, 4));
+    hours = Number.parseInt(digits.slice(0, 2));
+    minutes = Number.parseInt(digits.slice(2, 4));
   }
 
   // Cap maximums to prevent impossible times like 44:99
@@ -287,12 +287,13 @@ export default function EditListingForm({ initialData }) {
             </div>
             
             <div style={{ display: "grid", gap: "0.5rem", gridColumn: "span 2" }}>
-              <label style={{ fontWeight: "600" }}>Social Media URLs</label>
+              <label htmlFor="socialUrl-0" style={{ fontWeight: "600" }}>Social Media URLs</label>
               {formData.socialUrls.map((url, index) => (
                 <div key={index} style={{ marginBottom: '1rem' }}>
                   <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '0.25rem' }}>
                     <input
                       type="url"
+                      id={`socialUrl-${index}`}
                       value={url}
                       onChange={(e) => handleSocialUrlChange(index, e.target.value)}
                       placeholder="https://..."
@@ -331,10 +332,10 @@ export default function EditListingForm({ initialData }) {
           <div style={{ display: "grid", gap: "1rem" }}>
             {daysList.map((day) => (
               <div key={day} style={{ display: 'grid', gridTemplateColumns: '100px 1fr', alignItems: 'center', gap: '1rem', marginBottom: '1rem' }}>
-                <label style={{ fontWeight: "600", marginBottom: 0 }}>{day}</label>
+                <label htmlFor={`hours-${day}-open`} style={{ fontWeight: "600", marginBottom: 0 }}>{day}</label>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', flexWrap: 'wrap' }}>
-                  <label style={{ display: 'flex', alignItems: 'center', gap: '0.25rem', fontSize: '0.9rem', marginRight: '1rem' }}>
-                    <input type="checkbox" checked={formData.hoursParams[day].closed} onChange={(e) => handleTimeChange(day, 'closed', e.target.checked)} />
+                  <label htmlFor={`hours-${day}-closed`} style={{ display: 'flex', alignItems: 'center', gap: '0.25rem', fontSize: '0.9rem', marginRight: '1rem' }}>
+                    <input type="checkbox" id={`hours-${day}-closed`} checked={formData.hoursParams[day].closed} onChange={(e) => handleTimeChange(day, 'closed', e.target.checked)} />
                     Closed
                   </label>
 
@@ -342,25 +343,27 @@ export default function EditListingForm({ initialData }) {
                     <>
                       <input 
                         type="text" 
+                        id={`hours-${day}-open`}
                         placeholder="09:00" 
                         value={formData.hoursParams[day].open} 
                         onChange={(e) => handleTimeChange(day, 'open', e.target.value)} 
                         onBlur={(e) => handleTimeBlur(day, 'open', e.target.value)}
                         style={{ padding: "0.5rem", borderRadius: "8px", border: "1px solid #e2e8f0", width: '80px', textAlign: 'center' }} 
                       />
-                      <select value={formData.hoursParams[day].openAmPm} onChange={(e) => handleTimeChange(day, 'openAmPm', e.target.value)} style={{ width: 'auto', padding: '0.5rem', borderRadius: "8px", border: "1px solid #e2e8f0" }}>
+                      <select value={formData.hoursParams[day].openAmPm} onChange={(e) => handleTimeChange(day, 'openAmPm', e.target.value)} style={{ width: 'auto', padding: '0.5rem', borderRadius: "8px", border: "1px solid #e2e8f0" }} aria-label={`${day} opening AM/PM`}>
                         <option>AM</option><option>PM</option>
                       </select>
                       <span style={{ color: '#718096', fontSize: '0.9rem' }}>to</span>
                       <input 
                         type="text" 
+                        id={`hours-${day}-close`}
                         placeholder="05:00" 
                         value={formData.hoursParams[day].close} 
                         onChange={(e) => handleTimeChange(day, 'close', e.target.value)} 
                         onBlur={(e) => handleTimeBlur(day, 'close', e.target.value)}
                         style={{ padding: "0.5rem", borderRadius: "8px", border: "1px solid #e2e8f0", width: '80px', textAlign: 'center' }} 
                       />
-                      <select value={formData.hoursParams[day].closeAmPm} onChange={(e) => handleTimeChange(day, 'closeAmPm', e.target.value)} style={{ width: 'auto', padding: '0.5rem', borderRadius: "8px", border: "1px solid #e2e8f0" }}>
+                      <select value={formData.hoursParams[day].closeAmPm} onChange={(e) => handleTimeChange(day, 'closeAmPm', e.target.value)} style={{ width: 'auto', padding: '0.5rem', borderRadius: "8px", border: "1px solid #e2e8f0" }} aria-label={`${day} closing AM/PM`}>
                         <option>AM</option><option>PM</option>
                       </select>
                     </>
