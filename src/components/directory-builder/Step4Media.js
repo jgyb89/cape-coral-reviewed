@@ -58,7 +58,7 @@ const Step4Media = ({ formData, updateFormData, nextStep, prevStep }) => {
       </header>
 
       <div className={styles['step-form__group']}>
-        <label className={styles['step-form__label']}>Featured Image</label>
+        <label htmlFor="featuredImage" className={styles['step-form__label']}>Featured Image</label>
         <div style={{ border: '2px dashed #ddd', padding: '2rem', borderRadius: '8px', textAlign: 'center' }}>
           <input
             type="file"
@@ -74,7 +74,7 @@ const Step4Media = ({ formData, updateFormData, nextStep, prevStep }) => {
       </div>
 
       <div className={styles['step-form__group']}>
-        <label className={styles['step-form__label']}>Gallery Images</label>
+        <label htmlFor="gallery" className={styles['step-form__label']}>Gallery Images</label>
         <div style={{ border: '2px dashed #ddd', padding: '2rem', borderRadius: '8px', textAlign: 'center' }}>
           <input
             type="file"
@@ -93,9 +93,10 @@ const Step4Media = ({ formData, updateFormData, nextStep, prevStep }) => {
       </div>
 
       <div className={styles['step-form__group']}>
-        <label className={styles['step-form__label']}>Video URL (YouTube/Vimeo)</label>
+        <label htmlFor="videoUrl" className={styles['step-form__label']}>Video URL (YouTube/Vimeo)</label>
         <input
           type="url"
+          id="videoUrl"
           className={`${styles['step-form__input']} ${errors.videoUrl ? styles['step-form__input--error'] : ''}`}
           placeholder="https://www.youtube.com/watch?v=..."
           value={formData.videoUrl}

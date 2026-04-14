@@ -16,11 +16,11 @@ const Step3Hours = ({ formData, updateFormData, nextStep, prevStep }) => {
 
     let h, m = 0;
     if (digits.length <= 2) {
-      h = parseInt(digits, 10);
+      h = Number.parseInt(digits, 10);
     } else {
       const splitAt = digits.length === 3 ? 1 : 2;
-      h = parseInt(digits.slice(0, splitAt), 10);
-      m = Math.min(parseInt(digits.slice(splitAt, splitAt + 2), 10), 59);
+      h = Number.parseInt(digits.slice(0, splitAt), 10);
+      m = Math.min(Number.parseInt(digits.slice(splitAt, splitAt + 2), 10), 59);
     }
 
     h = Math.min(h, 24);
@@ -86,8 +86,8 @@ const Step3Hours = ({ formData, updateFormData, nextStep, prevStep }) => {
       </header>
       
       <div className={styles['step-form__group']}>
-        <label className={styles['step-form__label']}>Timezone</label>
-        <select className={styles['step-form__select']} value={formData.timezone} onChange={(e) => updateFormData({ timezone: e.target.value })}>
+        <label htmlFor="timezone" className={styles['step-form__label']}>Timezone</label>
+        <select id="timezone" className={styles['step-form__select']} value={formData.timezone} onChange={(e) => updateFormData({ timezone: e.target.value })}>
           <option value="America/New_York">Eastern Time (ET)</option>
           <option value="America/Chicago">Central Time (CT)</option>
           <option value="America/Denver">Mountain Time (MT)</option>
@@ -120,16 +120,16 @@ const Step3Hours = ({ formData, updateFormData, nextStep, prevStep }) => {
 
             return (
               <div key={day} style={{ display: 'grid', gridTemplateColumns: '100px 1fr 60px', alignItems: 'center', gap: '1rem' }}>
-                <label className={styles['step-form__label']} style={{ marginBottom: 0, color: isClosed ? '#999' : 'inherit' }}>{day}</label>
+                <label htmlFor={`${day}-open`} className={styles['step-form__label']} style={{ marginBottom: 0, color: isClosed ? '#999' : 'inherit' }}>{day}</label>
                 
                 <div style={{ display: 'flex', gap: '0.5rem', opacity: isClosed ? 0.5 : 1, pointerEvents: isClosed ? 'none' : 'auto', alignItems: 'center' }}>
                   <input 
-                    type="text" className={styles['step-form__input']} style={{ width: '70px', textAlign: 'center', padding: '0.5rem' }} 
+                    type="text" id={`${day}-open`} className={styles['step-form__input']} style={{ width: '70px', textAlign: 'center', padding: '0.5rem' }} 
                     value={displayOpen} 
                     onChange={(e) => setTempInputs(prev => ({ ...prev, [`${day}-open`]: e.target.value }))} 
                     onBlur={(e) => handleTimeBlur(day, 'open', e.target.value)} 
                   />
-                  <select className={styles['step-form__select']} style={{ width: 'auto', padding: '0.5rem' }} value={openAmPm} onChange={(e) => handleAmPmChange(day, 'open', e.target.value)}>
+                  <select className={styles['step-form__select']} style={{ width: 'auto', padding: '0.5rem' }} value={openAmPm} onChange={(e) => handleAmPmChange(day, 'open', e.target.value)} aria-label={`${day} opening AM/PM`}>
                     <option value="AM">AM</option><option value="PM">PM</option>
                   </select>
 
@@ -140,14 +140,15 @@ const Step3Hours = ({ formData, updateFormData, nextStep, prevStep }) => {
                     value={displayClose} 
                     onChange={(e) => setTempInputs(prev => ({ ...prev, [`${day}-close`]: e.target.value }))} 
                     onBlur={(e) => handleTimeBlur(day, 'close', e.target.value)} 
+                    aria-label={`${day} closing time`}
                   />
-                  <select className={styles['step-form__select']} style={{ width: 'auto', padding: '0.5rem' }} value={closeAmPm} onChange={(e) => handleAmPmChange(day, 'close', e.target.value)}>
+                  <select className={styles['step-form__select']} style={{ width: 'auto', padding: '0.5rem' }} value={closeAmPm} onChange={(e) => handleAmPmChange(day, 'close', e.target.value)} aria-label={`${day} closing AM/PM`}>
                     <option value="AM">AM</option><option value="PM">PM</option>
                   </select>
                 </div>
 
                 <div style={{ display: 'flex', justifyContent: 'center' }}>
-                  <input type="checkbox" checked={isClosed} onChange={(e) => handleClosedToggle(day, e.target.checked)} style={{ width: 'auto', margin: 0, cursor: 'pointer', transform: 'scale(1.2)' }} />
+                  <input type="checkbox" id={`${day}-closed`} checked={isClosed} onChange={(e) => handleClosedToggle(day, e.target.checked)} style={{ width: 'auto', margin: 0, cursor: 'pointer', transform: 'scale(1.2)' }} aria-label={`${day} closed`} />
                 </div>
               </div>
             );

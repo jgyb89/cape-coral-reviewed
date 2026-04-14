@@ -77,7 +77,8 @@ export default function RegisterBusinessForm() {
       },
       website: (v) => {
         if (!v) return "";
-        const urlRegex = /^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/i;
+        // Safe regex: removed the nested quantifier ([\/\w \.-]*)* to prevent catastrophic backtracking (ReDoS)
+        const urlRegex = /^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)\/?$/i;
         return !urlRegex.test(v) ? "Please enter a valid URL" : "";
       },
       consent: (v) => (!v ? "You must agree to the Terms of Services and Privacy Policy" : ""),
@@ -141,7 +142,7 @@ export default function RegisterBusinessForm() {
       { id: 13, value: formData.phone },
       { id: 20, value: formData.website },
     ].map((field) => ({
-      id: parseInt(field.id, 10),
+      id: Number.parseInt(field.id, 10),
       value: field.value,
     }));
 
