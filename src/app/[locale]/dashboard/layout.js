@@ -12,7 +12,7 @@ export default async function DashboardLayout({ children, params }) {
 
   // Redundancy check if middleware is bypassed
   if (!viewer) {
-    redirect(`/${locale}/login`);
+    redirect(`/${locale}`);
   }
 
   const userRoles = viewer.roles.nodes.map((role) => role.name.toLowerCase());

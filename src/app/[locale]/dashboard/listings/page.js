@@ -9,7 +9,7 @@ export default async function MyListingsPage({ params }) {
   const authToken = cookieStore.get('authToken')?.value;
 
   if (!authToken) {
-    redirect(`/${locale}/login`);
+    redirect(`/${locale}`);
   }
 
   const query = `
@@ -42,7 +42,7 @@ export default async function MyListingsPage({ params }) {
   const viewer = json.data?.viewer;
 
   if (!viewer) {
-    redirect(`/${locale}/login`);
+    redirect(`/${locale}`);
   }
 
   const roles = viewer.roles.nodes.map(r => r.name.toLowerCase());
