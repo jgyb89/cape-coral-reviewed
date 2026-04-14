@@ -1,19 +1,19 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
-import { registerBusiness } from '@/lib/actions';
-import styles from './RegisterBusinessForm.module.css';
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { registerBusiness } from "@/lib/actions";
+import styles from "./RegisterBusinessForm.module.css";
 
 export default function RegisterBusinessForm() {
   const [formData, setFormData] = useState({
-    firstName: '',
-    lastName: '',
-    businessName: '',
-    email: '',
-    password: '',
-    phone: '',
-    website: '',
+    firstName: "",
+    lastName: "",
+    businessName: "",
+    email: "",
+    password: "",
+    phone: "",
+    website: "",
     consent: false,
     top3Spots: false,
     generateLeads: false,
@@ -25,7 +25,7 @@ export default function RegisterBusinessForm() {
   const [passwordStrength, setPasswordStrength] = useState(""); // "", "weak", "medium", "strong"
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [success, setSuccess] = useState(false);
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
 
   // Phone number masking: (XXX) XXX-XXXX
   const formatPhoneNumber = (value) => {
@@ -61,18 +61,26 @@ export default function RegisterBusinessForm() {
       email: (v) => {
         if (!v) return "Email is required";
         // Flattened email regex to avoid ReDoS hotspots from nested optional groups
-        const emailRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
+        const emailRegex =
+          /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
         return !emailRegex.test(v) ? "Please enter a valid email address" : "";
       },
       password: (v) => {
         if (!v) return "Password is required";
-        return checkPasswordStrength(v) === "weak" ? "Password is too weak" : "";
+        return checkPasswordStrength(v) === "weak"
+          ? "Password is too weak"
+          : "";
       },
       phone: (v) => {
         if (!v) return "Phone number is required";
         return v.length < 14 ? "Please enter a valid phone number" : "";
       },
-      consent: (v) => (!v ? "You must consent to being contacted" : ""),
+      website: (v) => {
+        if (!v) return "";
+        const urlRegex = /^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/i;
+        return !urlRegex.test(v) ? "Please enter a valid URL" : "";
+      },
+      consent: (v) => (!v ? "You must agree to the Terms of Services and Privacy Policy" : ""),
     };
 
     return validations[name] ? validations[name](value) : "";
@@ -80,7 +88,7 @@ export default function RegisterBusinessForm() {
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
-    let finalValue = type === 'checkbox' ? checked : value;
+    let finalValue = type === "checkbox" ? checked : value;
 
     if (name === "phone") {
       finalValue = formatPhoneNumber(finalValue);
@@ -101,11 +109,20 @@ export default function RegisterBusinessForm() {
   };
 
   const isFormValid = () => {
-    const requiredFields = ["firstName", "lastName", "businessName", "email", "password", "phone", "consent"];
+    const requiredFields = [
+      "firstName",
+      "lastName",
+      "businessName",
+      "email",
+      "password",
+      "phone",
+      "consent",
+    ];
     const hasRequired = requiredFields.every((field) => formData[field]);
     const hasNoErrors = Object.values(fieldErrors).every((err) => !err);
-    const isMediumStrength = passwordStrength === "medium" || passwordStrength === "strong";
-    
+    const isMediumStrength =
+      passwordStrength === "medium" || passwordStrength === "strong";
+
     return hasRequired && hasNoErrors && isMediumStrength;
   };
 
@@ -114,7 +131,7 @@ export default function RegisterBusinessForm() {
     if (!isFormValid()) return;
 
     setIsSubmitting(true);
-    setError('');
+    setError("");
 
     // Map basic fields and ensure IDs are strict integers
     const fieldValues = [
@@ -123,21 +140,21 @@ export default function RegisterBusinessForm() {
       { id: 3, value: formData.businessName },
       { id: 13, value: formData.phone },
       { id: 20, value: formData.website },
-    ].map(field => ({
+    ].map((field) => ({
       id: parseInt(field.id, 10),
-      value: field.value
+      value: field.value,
     }));
 
     // Fix Email Field (ID 2) to use emailValues as required by GraphQL schema
-    fieldValues.push({ 
-      id: 2, 
-      emailValues: { value: formData.email } 
+    fieldValues.push({
+      id: 2,
+      emailValues: { value: formData.email },
     });
 
     // Field 4 is the Password field.
-    fieldValues.push({ 
-      id: 4, 
-      value: formData.password 
+    fieldValues.push({
+      id: 4,
+      value: formData.password,
     });
 
     // Field 17 is the Consent checkbox. WPGraphQL expects a single 'value' string.
@@ -151,13 +168,22 @@ export default function RegisterBusinessForm() {
     const marketingValues = [];
 
     if (formData.top3Spots) {
-      marketingValues.push({ inputId: 19.1, value: "Do you want to be in the top 3 spots on Google Maps?" });
+      marketingValues.push({
+        inputId: 19.1,
+        value: "Do you want to be in the top 3 spots on Google Maps?",
+      });
     }
     if (formData.generateLeads) {
-      marketingValues.push({ inputId: 19.2, value: "Does your website generate leads for you?" });
+      marketingValues.push({
+        inputId: 19.2,
+        value: "Does your website generate leads for you?",
+      });
     }
     if (formData.facelift) {
-      marketingValues.push({ inputId: 19.3, value: "Could your website use a facelift?" });
+      marketingValues.push({
+        inputId: 19.3,
+        value: "Could your website use a facelift?",
+      });
     }
 
     // Only push the field if at least one checkbox was selected
@@ -170,11 +196,11 @@ export default function RegisterBusinessForm() {
       if (result.success) {
         setSuccess(true);
       } else {
-        setError(result.message || 'Something went wrong. Please try again.');
+        setError(result.message || "Something went wrong. Please try again.");
       }
     } catch (err) {
-      console.error('Submission Error:', err);
-      setError('A network error occurred. Please try again.');
+      console.error("Submission Error:", err);
+      setError("A network error occurred. Please try again.");
     } finally {
       setIsSubmitting(false);
     }
@@ -182,208 +208,283 @@ export default function RegisterBusinessForm() {
 
   if (success) {
     return (
-      <div className={styles['register-success']}>
-        <h2 className={styles['register-success__title']}>Success!</h2>
-        <p className={styles['register-success__message']}>Please check your email to activate your account.</p>
+      <div className={styles["register-success"]}>
+        <h2 className={styles["register-success__title"]}>Success!</h2>
+        <p className={styles["register-success__message"]}>
+          Please check your email to activate your account.
+        </p>
       </div>
     );
   }
 
   return (
-    <form className={styles['register-form']} onSubmit={handleSubmit}>
-      <div className={styles['register-form__row']}>
-        <div className={styles['register-form__group']}>
-          <label htmlFor="firstName" className={styles['register-form__label']}>First Name</label>
+    <form className={styles["register-form"]} onSubmit={handleSubmit}>
+      <div className={styles["register-form__row"]}>
+        <div className={styles["register-form__group"]}>
+          <label htmlFor="firstName" className={styles["register-form__label"]}>
+            First Name
+          </label>
           <input
             id="firstName"
             name="firstName"
             type="text"
-            className={`${styles['register-form__input']} ${fieldErrors.firstName ? styles['register-form__input--invalid'] : ""}`}
+            className={`${styles["register-form__input"]} ${fieldErrors.firstName ? styles["register-form__input--invalid"] : ""}`}
             required
             value={formData.firstName}
             onChange={handleChange}
           />
-          {fieldErrors.firstName && <span className={styles['register-form__error-text']}>{fieldErrors.firstName}</span>}
+          {fieldErrors.firstName && (
+            <span className={styles["register-form__error-text"]}>
+              {fieldErrors.firstName}
+            </span>
+          )}
         </div>
-        <div className={styles['register-form__group']}>
-          <label htmlFor="lastName" className={styles['register-form__label']}>Last Name</label>
+        <div className={styles["register-form__group"]}>
+          <label htmlFor="lastName" className={styles["register-form__label"]}>
+            Last Name
+          </label>
           <input
             id="lastName"
             name="lastName"
             type="text"
-            className={`${styles['register-form__input']} ${fieldErrors.lastName ? styles['register-form__input--invalid'] : ""}`}
+            className={`${styles["register-form__input"]} ${fieldErrors.lastName ? styles["register-form__input--invalid"] : ""}`}
             required
             value={formData.lastName}
             onChange={handleChange}
           />
-          {fieldErrors.lastName && <span className={styles['register-form__error-text']}>{fieldErrors.lastName}</span>}
+          {fieldErrors.lastName && (
+            <span className={styles["register-form__error-text"]}>
+              {fieldErrors.lastName}
+            </span>
+          )}
         </div>
       </div>
 
-      <div className={styles['register-form__group']}>
-        <label htmlFor="businessName" className={styles['register-form__label']}>Business Name</label>
+      <div className={styles["register-form__group"]}>
+        <label
+          htmlFor="businessName"
+          className={styles["register-form__label"]}
+        >
+          Business Name
+        </label>
         <input
           id="businessName"
           name="businessName"
           type="text"
-          className={`${styles['register-form__input']} ${fieldErrors.businessName ? styles['register-form__input--invalid'] : ""}`}
+          className={`${styles["register-form__input"]} ${fieldErrors.businessName ? styles["register-form__input--invalid"] : ""}`}
           required
           value={formData.businessName}
           onChange={handleChange}
         />
-        {fieldErrors.businessName && <span className={styles['register-form__error-text']}>{fieldErrors.businessName}</span>}
+        {fieldErrors.businessName && (
+          <span className={styles["register-form__error-text"]}>
+            {fieldErrors.businessName}
+          </span>
+        )}
       </div>
 
-      <div className={styles['register-form__group']}>
-        <label htmlFor="email" className={styles['register-form__label']}>Email</label>
+      <div className={styles["register-form__group"]}>
+        <label htmlFor="email" className={styles["register-form__label"]}>
+          Email
+        </label>
         <input
           id="email"
           name="email"
           type="email"
-          className={`${styles['register-form__input']} ${fieldErrors.email ? styles['register-form__input--invalid'] : ""}`}
+          className={`${styles["register-form__input"]} ${fieldErrors.email ? styles["register-form__input--invalid"] : ""}`}
           required
           value={formData.email}
           onChange={handleChange}
         />
-        {fieldErrors.email && <span className={styles['register-form__error-text']}>{fieldErrors.email}</span>}
+        {fieldErrors.email && (
+          <span className={styles["register-form__error-text"]}>
+            {fieldErrors.email}
+          </span>
+        )}
       </div>
 
-      <div className={styles['register-form__group']}>
-        <label htmlFor="password" className={styles['register-form__label']}>Password</label>
-        <div className={styles['register-form__password-wrapper']}>
+      <div className={styles["register-form__group"]}>
+        <label htmlFor="password" className={styles["register-form__label"]}>
+          Password
+        </label>
+        <div className={styles["register-form__password-wrapper"]}>
           <input
             id="password"
             name="password"
             type={showPassword ? "text" : "password"}
-            className={`${styles['register-form__input']} ${fieldErrors.password ? styles['register-form__input--invalid'] : ""}`}
+            className={`${styles["register-form__input"]} ${fieldErrors.password ? styles["register-form__input--invalid"] : ""}`}
             required
             value={formData.password}
             onChange={handleChange}
           />
-          <button 
-            type="button" 
-            className={styles['register-form__toggle-icon']} 
+          <button
+            type="button"
+            className={styles["register-form__toggle-icon"]}
             onClick={() => setShowPassword(!showPassword)}
             aria-label={showPassword ? "Hide password" : "Show password"}
-            style={{ background: 'none', border: 'none', padding: 0 }}
+            style={{ background: "none", border: "none", padding: 0 }}
           >
             <span className="material-symbols-outlined">
-              {showPassword ? 'visibility_off' : 'visibility'}
+              {showPassword ? "visibility_off" : "visibility"}
             </span>
           </button>
         </div>
         {passwordStrength && (
           <>
-            <div className={styles['register-form__strength-meter']} data-strength={passwordStrength}>
-              <div className={styles['register-form__strength-bar']}></div>
-              <div className={styles['register-form__strength-bar']}></div>
-              <div className={styles['register-form__strength-bar']}></div>
+            <div
+              className={styles["register-form__strength-meter"]}
+              data-strength={passwordStrength}
+            >
+              <div className={styles["register-form__strength-bar"]}></div>
+              <div className={styles["register-form__strength-bar"]}></div>
+              <div className={styles["register-form__strength-bar"]}></div>
             </div>
-            <span className={styles['register-form__strength-text']}>
-              Strength: {passwordStrength.charAt(0).toUpperCase() + passwordStrength.slice(1)}
+            <span className={styles["register-form__strength-text"]}>
+              Strength:{" "}
+              {passwordStrength.charAt(0).toUpperCase() +
+                passwordStrength.slice(1)}
             </span>
           </>
         )}
-        {fieldErrors.password && <span className={styles['register-form__error-text']}>{fieldErrors.password}</span>}
+        {fieldErrors.password && (
+          <span className={styles["register-form__error-text"]}>
+            {fieldErrors.password}
+          </span>
+        )}
       </div>
 
-      <div className={styles['register-form__group']}>
-        <label htmlFor="phone" className={styles['register-form__label']}>Phone Number</label>
+      <div className={styles["register-form__group"]}>
+        <label htmlFor="phone" className={styles["register-form__label"]}>
+          Phone Number
+        </label>
         <input
           id="phone"
           name="phone"
           type="tel"
-          className={`${styles['register-form__input']} ${fieldErrors.phone ? styles['register-form__input--invalid'] : ""}`}
+          className={`${styles["register-form__input"]} ${fieldErrors.phone ? styles["register-form__input--invalid"] : ""}`}
           required
           value={formData.phone}
           onChange={handleChange}
           placeholder="(XXX) XXX-XXXX"
         />
-        {fieldErrors.phone && <span className={styles['register-form__error-text']}>{fieldErrors.phone}</span>}
+        {fieldErrors.phone && (
+          <span className={styles["register-form__error-text"]}>
+            {fieldErrors.phone}
+          </span>
+        )}
       </div>
 
-      <div className={styles['register-form__group']}>
-        <label htmlFor="website" className={styles['register-form__label']}>Website URL</label>
+      <div className={styles["register-form__group"]}>
+        <label htmlFor="website" className={styles["register-form__label"]}>
+          Website URL
+        </label>
         <input
           id="website"
           name="website"
           type="url"
-          className={styles['register-form__input']}
+          className={`${styles["register-form__input"]} ${fieldErrors.website ? styles["register-form__input--invalid"] : ""}`}
           value={formData.website}
           onChange={handleChange}
+          placeholder="https://example.com"
         />
+        {fieldErrors.website && (
+          <span className={styles["register-form__error-text"]}>
+            {fieldErrors.website}
+          </span>
+        )}
       </div>
 
-      <div className={styles['register-form__checkbox-section']}>
-        <div className={styles['register-form__checkbox-group']}>
+      <div className={styles["register-form__checkbox-section"]}>
+        <div className={styles["register-form__checkbox-group"]}>
           <input
             id="consent"
             name="consent"
             type="checkbox"
-            className={styles['register-form__checkbox']}
+            className={styles["register-form__checkbox"]}
             required
             checked={formData.consent}
             onChange={handleChange}
           />
-          <label htmlFor="consent" className={styles['register-form__checkbox-label']}>
-            I consent to being contacted by Cape Coral Reviewed. (Required)
+          <label
+            htmlFor="consent"
+            className={styles["register-form__checkbox-label"]}
+          >
+            I agree to the Terms of Services and Privacy Policy.
           </label>
         </div>
-        {fieldErrors.consent && <span className={styles['register-form__error-text']} style={{ marginBottom: '1.5rem', display: 'block' }}>{fieldErrors.consent}</span>}
+        {fieldErrors.consent && (
+          <span
+            className={styles["register-form__error-text"]}
+            style={{ marginBottom: "1.5rem", display: "block" }}
+          >
+            {fieldErrors.consent}
+          </span>
+        )}
 
-        <p className={styles['register-form__marketing-hint']}>Are you interested in any of these services?</p>
-        
-        <div className={styles['register-form__checkbox-group']}>
+        <p className={styles["register-form__marketing-hint"]}>
+          Are you interested in any of these services?
+        </p>
+
+        <div className={styles["register-form__checkbox-group"]}>
           <input
             id="top3Spots"
             name="top3Spots"
             type="checkbox"
-            className={styles['register-form__checkbox']}
+            className={styles["register-form__checkbox"]}
             checked={formData.top3Spots}
             onChange={handleChange}
           />
-          <label htmlFor="top3Spots" className={styles['register-form__checkbox-label']}>
+          <label
+            htmlFor="top3Spots"
+            className={styles["register-form__checkbox-label"]}
+          >
             Claim one of the Top 3 Spots in your category
           </label>
         </div>
 
-        <div className={styles['register-form__checkbox-group']}>
+        <div className={styles["register-form__checkbox-group"]}>
           <input
             id="generateLeads"
             name="generateLeads"
             type="checkbox"
-            className={styles['register-form__checkbox']}
+            className={styles["register-form__checkbox"]}
             checked={formData.generateLeads}
             onChange={handleChange}
           />
-          <label htmlFor="generateLeads" className={styles['register-form__checkbox-label']}>
+          <label
+            htmlFor="generateLeads"
+            className={styles["register-form__checkbox-label"]}
+          >
             Generate more leads
           </label>
         </div>
 
-        <div className={styles['register-form__checkbox-group']}>
+        <div className={styles["register-form__checkbox-group"]}>
           <input
             id="facelift"
             name="facelift"
             type="checkbox"
-            className={styles['register-form__checkbox']}
+            className={styles["register-form__checkbox"]}
             checked={formData.facelift}
             onChange={handleChange}
           />
-          <label htmlFor="facelift" className={styles['register-form__checkbox-label']}>
+          <label
+            htmlFor="facelift"
+            className={styles["register-form__checkbox-label"]}
+          >
             Website or Brand Facelift
           </label>
         </div>
       </div>
 
-      {error && <p className={styles['register-form__error']}>{error}</p>}
+      {error && <p className={styles["register-form__error"]}>{error}</p>}
 
       <button
         type="submit"
-        className={styles['register-form__submit']}
+        className={styles["register-form__submit"]}
         disabled={isSubmitting || !isFormValid()}
       >
-        {isSubmitting ? 'Submitting...' : 'Register Business'}
+        {isSubmitting ? "Submitting..." : "Register Business"}
       </button>
     </form>
   );

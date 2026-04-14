@@ -11,40 +11,30 @@ const Step3Hours = ({ formData, updateFormData, nextStep, prevStep }) => {
 
   // Smart Parser: Converts "9", "1430", "2100", etc. into standard "HH:MM PM"
   const parseTimeInput = (val, currentAmPm) => {
-    let digits = val.replace(/\D/g, '');
-    if (!digits) return { time: '12:00', ampm: currentAmPm }; // Fallback
+    const digits = val.replace(/\D/g, '');
+    if (!digits) return { time: '12:00', ampm: currentAmPm };
 
-    let hours = 0;
-    let minutes = 0;
-    let ampm = currentAmPm;
-
+    let h, m = 0;
     if (digits.length <= 2) {
-      let h = parseInt(digits, 10);
-      if (h > 24) h = 24;
-      if (h === 0 || h === 24) { hours = 12; ampm = 'AM'; }
-      else if (h === 12) { hours = 12; ampm = 'PM'; }
-      else if (h > 12) { hours = h - 12; ampm = 'PM'; }
-      else { hours = h; }
-    } else if (digits.length === 3) {
-      let h = parseInt(digits.slice(0, 1), 10);
-      let m = parseInt(digits.slice(1, 3), 10);
-      if (m > 59) m = 59;
-      if (h === 0) { hours = 12; ampm = 'AM'; }
-      else { hours = h; }
-      minutes = m;
+      h = parseInt(digits, 10);
     } else {
-      let h = parseInt(digits.slice(0, 2), 10);
-      let m = parseInt(digits.slice(2, 4), 10);
-      if (m > 59) m = 59;
-      if (h > 24) h = 24;
-      if (h === 0 || h === 24) { hours = 12; ampm = 'AM'; }
-      else if (h === 12) { hours = 12; ampm = 'PM'; }
-      else if (h > 12) { hours = h - 12; ampm = 'PM'; }
-      else { hours = h; }
-      minutes = m;
+      const splitAt = digits.length === 3 ? 1 : 2;
+      h = parseInt(digits.slice(0, splitAt), 10);
+      m = Math.min(parseInt(digits.slice(splitAt, splitAt + 2), 10), 59);
     }
 
-    return { time: `${hours}:${minutes.toString().padStart(2, '0')}`, ampm };
+    h = Math.min(h, 24);
+    let ampm = currentAmPm;
+
+    if (h === 0 || h === 24) {
+      h = 12;
+      ampm = 'AM';
+    } else if (h >= 12) {
+      ampm = 'PM';
+      if (h > 12) h -= 12;
+    }
+
+    return { time: `${h}:${m.toString().padStart(2, '0')}`, ampm };
   };
 
   const handleTimeBlur = (day, type, value) => {
