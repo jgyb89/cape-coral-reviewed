@@ -6,7 +6,8 @@ export const metadata = {
   title: 'My Reviews | Dashboard',
 };
 
-export default async function ReviewsPage() {
+export default async function ReviewsPage({ params }) {
+  const { locale } = await params;
   const viewer = await getViewer();
 
   // Redundancy check if middleware/layout is bypassed
@@ -31,7 +32,7 @@ export default async function ReviewsPage() {
       </header>
 
       <div className="reviews-page__content">
-        <MyReviews reviews={reviews} />
+        <MyReviews reviews={reviews} locale={locale} />
       </div>
     </div>
   );

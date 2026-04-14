@@ -110,13 +110,101 @@ export async function getListingBySlug(slug) {
 }
 
 export async function getListings(categorySlug = null) {
-  const where = categorySlug
-    ? `, where: { ccrListingCategory: "${categorySlug}" }`
-    : "";
+  const nodesBlock = `
+    nodes {
+      id
+      databaseId
+      title
+      date
+      slug
+      content
+      
+      featuredImage {
+        node {
+          sourceUrl
+          altText
+        }
+      }
 
+      listingdata {
+        addressStreet
+        addressCity
+        phoneNumber
+        priceRange
+      }
+      directoryTypes {
+        nodes {
+          name
+          slug
+        }
+      }
+      reviews {
+        nodes {
+          reviewFields {
+            starRating
+          }
+        }
+      }
+    }
+  `;
+
+  const query = categorySlug
+    ? `query GetListingsWithCategory($categorySlug: [String]) {
+        ccrlistings(first: 100, where: { 
+          taxQuery: {
+            taxArray: [
+              { taxonomy: CCRLISTINGCATEGORY, field: SLUG, terms: $categorySlug }
+            ]
+          }
+        }) {
+          ${nodesBlock}
+        }
+      }`
+    : `query GetListingsAll {
+        ccrlistings(first: 100) {
+          ${nodesBlock}
+        }
+      }`;
+
+  try {
+    const res = await fetch(process.env.NEXT_PUBLIC_WORDPRESS_API_URL, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        query,
+        variables: categorySlug ? { categorySlug: [categorySlug] } : {},
+      }),
+      next: { revalidate: 60 },
+    });
+
+    const json = await res.json();
+
+    if (json.errors) {
+      console.error("GraphQL API Errors (getListings):", json.errors);
+      return [];
+    }
+
+    return json.data.ccrlistings?.nodes || [];
+  } catch (error) {
+    console.error("Fetch Error:", error);
+    return [];
+  }
+}
+
+export async function getListingsByCategory(categorySlug, directoryType = null) {
   const query = `
-    query GetListings {
-      ccrlistings(first: 100${where}) {
+    query GetListingsByCategory($categorySlug: [String], $directoryType: [String]) {
+      ccrlistings(first: 100, where: { 
+        taxQuery: {
+          relation: AND,
+          taxArray: [
+            { taxonomy: DIRECTORYTYPE, field: SLUG, terms: $directoryType },
+            { taxonomy: CCRLISTINGCATEGORY, field: SLUG, terms: $categorySlug }
+          ]
+        }
+      }) {
         nodes {
           id
           databaseId
@@ -162,14 +250,96 @@ export async function getListings(categorySlug = null) {
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ query }),
+      body: JSON.stringify({
+        query,
+        variables: { 
+          categorySlug: categorySlug ? [categorySlug] : null, 
+          directoryType: directoryType ? [directoryType] : null 
+        },
+      }),
       next: { revalidate: 60 },
     });
 
     const json = await res.json();
 
     if (json.errors) {
-      console.error("GraphQL API Errors (getListings):", json.errors);
+      console.error("GraphQL API Errors (getListingsByCategory):", json.errors);
+      return [];
+    }
+
+    return json.data.ccrlistings?.nodes || [];
+  } catch (error) {
+    console.error("Fetch Error:", error);
+    return [];
+  }
+}
+
+export async function getListingsByDirectoryType(directoryTypeSlug) {
+  const query = `
+    query GetListingsByDirectoryType($directoryType: [String]) {
+      ccrlistings(first: 100, where: { 
+        taxQuery: {
+          taxArray: [
+            { taxonomy: DIRECTORYTYPE, field: SLUG, terms: $directoryType }
+          ]
+        }
+      }) {
+        nodes {
+          id
+          databaseId
+          title
+          date
+          slug
+          content
+          
+          featuredImage {
+            node {
+              sourceUrl
+              altText
+            }
+          }
+
+          listingdata {
+            addressStreet
+            addressCity
+            phoneNumber
+            priceRange
+          }
+          directoryTypes {
+            nodes {
+              name
+              slug
+            }
+          }
+          reviews {
+            nodes {
+              reviewFields {
+                starRating
+              }
+            }
+          }
+        }
+      }
+    }
+  `;
+
+  try {
+    const res = await fetch(process.env.NEXT_PUBLIC_WORDPRESS_API_URL, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        query,
+        variables: { directoryType: directoryTypeSlug ? [directoryTypeSlug] : null },
+      }),
+      next: { revalidate: 60 },
+    });
+
+    const json = await res.json();
+
+    if (json.errors) {
+      console.error("GraphQL API Errors (getListingsByDirectoryType):", json.errors);
       return [];
     }
 

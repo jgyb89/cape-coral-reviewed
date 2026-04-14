@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import './ListingWizard.css';
+import styles from './ListingWizard.module.css';
 import Step1General from './Step1General';
 import Step2Contact from './Step2Contact';
 import Step3Hours from './Step3Hours';
@@ -55,21 +55,21 @@ const ListingWizard = () => {
   };
 
   return (
-    <div className="wizard">
-      <div className="wizard__header">
-        <ul className="wizard__stepper">
+    <div className={styles['wizard']}>
+      <div className={styles['wizard__header']}>
+        <ul className={styles['wizard__stepper']}>
           {[1, 2, 3, 4, 5].map((step) => (
             <li
               key={step}
-              className={`wizard__step-indicator ${currentStep === step ? 'wizard__step-indicator--active' : ''} ${currentStep > step ? 'wizard__step-indicator--completed' : ''}`}
+              className={`${styles['wizard__step-indicator']} ${currentStep === step ? styles['wizard__step-indicator--active'] : ''} ${currentStep > step ? styles['wizard__step-indicator--completed'] : ''}`}
             >
-              <span className="wizard__step-number">{step}</span>
-              <span className="wizard__step-label">Step {step}</span>
+              <span className={styles['wizard__step-number']}>{step}</span>
+              <span className={styles['wizard__step-label']}>Step {step}</span>
             </li>
           ))}
         </ul>
       </div>
-      <div className="wizard__content">
+      <div className={styles['wizard__content']}>
         {renderStep()}
       </div>
     </div>

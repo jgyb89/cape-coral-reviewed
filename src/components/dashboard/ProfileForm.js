@@ -4,7 +4,7 @@
 import { useState } from "react";
 import PropTypes from "prop-types";
 import { updateUserProfile } from "@/lib/actions";
-import "./ProfileForm.css";
+import styles from "./ProfileForm.module.css";
 
 export default function ProfileForm({ viewer }) {
   const [isEditing, setIsEditing] = useState(false);
@@ -78,7 +78,7 @@ export default function ProfileForm({ viewer }) {
         
         {feedback && (
           <p
-            className={`profile-form__feedback profile-form__feedback--${feedback.type}`}
+            className={`${styles['profile-form__feedback']} ${styles[`profile-form__feedback--${feedback.type}`]}`}
           >
             {feedback.message}
           </p>
@@ -96,70 +96,70 @@ export default function ProfileForm({ viewer }) {
   }
 
   return (
-    <form className="profile-form" onSubmit={handleSubmit}>
-      <div className="profile-form__group">
-        <label className="profile-form__label" htmlFor="firstName">
+    <form className={styles['profile-form']} onSubmit={handleSubmit}>
+      <div className={styles['profile-form__group']}>
+        <label className={styles['profile-form__label']} htmlFor="firstName">
           First Name
         </label>
         <input
           id="firstName"
           name="firstName"
           type="text"
-          className="profile-form__input"
+          className={styles['profile-form__input']}
           value={formData.firstName}
           onChange={handleChange}
           required
         />
       </div>
-      <div className="profile-form__group">
-        <label className="profile-form__label" htmlFor="lastName">
+      <div className={styles['profile-form__group']}>
+        <label className={styles['profile-form__label']} htmlFor="lastName">
           Last Name
         </label>
         <input
           id="lastName"
           name="lastName"
           type="text"
-          className="profile-form__input"
+          className={styles['profile-form__input']}
           value={formData.lastName}
           onChange={handleChange}
           required
         />
       </div>
 
-      <div className="profile-form__group">
-        <label className="profile-form__label" htmlFor="phoneNumber">
+      <div className={styles['profile-form__group']}>
+        <label className={styles['profile-form__label']} htmlFor="phoneNumber">
           Phone Number
         </label>
         <input
           id="phoneNumber"
           name="phoneNumber"
           type="tel"
-          className="profile-form__input"
+          className={styles['profile-form__input']}
           value={formData.phoneNumber}
           onChange={handleChange}
           placeholder="(XXX) XXX-XXXX"
         />
       </div>
 
-      <div className="profile-form__group">
-        <label className="profile-form__label" htmlFor="websiteUrl">
+      <div className={styles['profile-form__group']}>
+        <label className={styles['profile-form__label']} htmlFor="websiteUrl">
           Website URL
         </label>
         <input
           id="websiteUrl"
           name="websiteUrl"
           type="url"
-          className="profile-form__input"
+          className={styles['profile-form__input']}
           value={formData.websiteUrl}
           onChange={handleChange}
           placeholder="https://example.com"
         />
       </div>
 
-      <div className="profile-form__group">
-        <span className="profile-form__label">Email Visibility</span>
-        <div className="profile-form__radio-group">
-          <label className="profile-form__radio-label">
+      <div className={styles['profile-form__group']}>
+        <span className={styles['profile-form__label']}>Email Visibility</span>
+        <div className={styles['profile-form__radio-group']}>
+          <label className={styles['profile-form__radio-label']}>
             <input
               type="radio"
               name="emailVisibility"
@@ -169,7 +169,7 @@ export default function ProfileForm({ viewer }) {
             />
             <span>Everyone</span>
           </label>
-          <label className="profile-form__radio-label">
+          <label className={styles['profile-form__radio-label']}>
             <input
               type="radio"
               name="emailVisibility"
@@ -179,7 +179,7 @@ export default function ProfileForm({ viewer }) {
             />
             <span>Logged In Users</span>
           </label>
-          <label className="profile-form__radio-label">
+          <label className={styles['profile-form__radio-label']}>
             <input
               type="radio"
               name="emailVisibility"
@@ -194,7 +194,7 @@ export default function ProfileForm({ viewer }) {
 
       {feedback && (
         <p
-          className={`profile-form__feedback profile-form__feedback--${feedback.type}`}
+          className={`${styles['profile-form__feedback']} ${styles[`profile-form__feedback--${feedback.type}`]}`}
         >
           {feedback.message}
         </p>
@@ -203,7 +203,7 @@ export default function ProfileForm({ viewer }) {
       <div style={{ display: 'flex', gap: '1rem' }}>
         <button
           type="submit"
-          className="profile-form__submit"
+          className={styles['profile-form__submit']}
           disabled={isSaving}
           style={{ flex: 1 }}
         >
@@ -212,7 +212,7 @@ export default function ProfileForm({ viewer }) {
         <button
           type="button"
           onClick={() => setIsEditing(false)}
-          className="profile-form__submit"
+          className={styles['profile-form__submit']}
           style={{ flex: 1, backgroundColor: '#bdbdbd' }}
           disabled={isSaving}
         >

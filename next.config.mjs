@@ -10,6 +10,12 @@ const nextConfig = {
         port: "",
         pathname: "/wp-content/uploads/**",
       },
+      {
+        protocol: "https",
+        hostname: "capecoralreviewed.com",
+        port: "",
+        pathname: "/wp-content/uploads/**",
+      },
     ],
   },
   experimental: {

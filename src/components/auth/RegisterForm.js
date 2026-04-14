@@ -3,7 +3,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import '../RegisterBusinessForm.css';
+import styles from '../RegisterBusinessForm.module.css';
 
 export default function RegisterForm({ dict = {}, locale = "en" }) {
   const t = dict?.register || {};
@@ -161,50 +161,50 @@ export default function RegisterForm({ dict = {}, locale = "en" }) {
   };
 
   return (
-    <form className="register-form" onSubmit={handleSubmit}>
-      <div className="register-form__group">
-        <label className="register-form__label" htmlFor="username">{t.username || "Username"}</label>
+    <form className={styles['register-form']} onSubmit={handleSubmit}>
+      <div className={styles['register-form__group']}>
+        <label className={styles['register-form__label']} htmlFor="username">{t.username || "Username"}</label>
         <input
           id="username"
           name="username"
           type="text"
-          className={`register-form__input ${fieldErrors.username ? "register-form__input--invalid" : ""}`}
+          className={`${styles['register-form__input']} ${fieldErrors.username ? styles['register-form__input--invalid'] : ""}`}
           value={formData.username}
           onChange={handleChange}
           required
         />
-        {fieldErrors.username && <span className="register-form__error-text">{fieldErrors.username}</span>}
+        {fieldErrors.username && <span className={styles['register-form__error-text']}>{fieldErrors.username}</span>}
       </div>
 
-      <div className="register-form__group">
-        <label className="register-form__label" htmlFor="email">{t.email || "Email"}</label>
+      <div className={styles['register-form__group']}>
+        <label className={styles['register-form__label']} htmlFor="email">{t.email || "Email"}</label>
         <input
           id="email"
           name="email"
           type="email"
-          className={`register-form__input ${fieldErrors.email ? "register-form__input--invalid" : ""}`}
+          className={`${styles['register-form__input']} ${fieldErrors.email ? styles['register-form__input--invalid'] : ""}`}
           value={formData.email}
           onChange={handleChange}
           required
         />
-        {fieldErrors.email && <span className="register-form__error-text">{fieldErrors.email}</span>}
+        {fieldErrors.email && <span className={styles['register-form__error-text']}>{fieldErrors.email}</span>}
       </div>
 
-      <div className="register-form__group">
-        <label className="register-form__label" htmlFor="password">{t.password || "Password"}</label>
-        <div className="register-form__password-wrapper">
+      <div className={styles['register-form__group']}>
+        <label className={styles['register-form__label']} htmlFor="password">{t.password || "Password"}</label>
+        <div className={styles['register-form__password-wrapper']}>
           <input
             id="password"
             name="password"
             type={showPassword ? "text" : "password"}
-            className={`register-form__input ${fieldErrors.password ? "register-form__input--invalid" : ""}`}
+            className={`${styles['register-form__input']} ${fieldErrors.password ? styles['register-form__input--invalid'] : ""}`}
             value={formData.password}
             onChange={handleChange}
             required
           />
           <button 
             type="button" 
-            className="register-form__toggle-icon" 
+            className={styles['register-form__toggle-icon']} 
             onClick={() => setShowPassword(!showPassword)}
             aria-label={showPassword ? "Hide password" : "Show password"}
             style={{ background: 'none', border: 'none', padding: 0 }}
@@ -216,78 +216,78 @@ export default function RegisterForm({ dict = {}, locale = "en" }) {
         </div>
         {passwordStrength && (
           <>
-            <div className="register-form__strength-meter" data-strength={passwordStrength}>
-              <div className="register-form__strength-bar"></div>
-              <div className="register-form__strength-bar"></div>
-              <div className="register-form__strength-bar"></div>
+            <div className={styles['register-form__strength-meter']} data-strength={passwordStrength}>
+              <div className={styles['register-form__strength-bar']}></div>
+              <div className={styles['register-form__strength-bar']}></div>
+              <div className={styles['register-form__strength-bar']}></div>
             </div>
-            <span className="register-form__strength-text">
+            <span className={styles['register-form__strength-text']}>
               Strength: {passwordStrength.charAt(0).toUpperCase() + passwordStrength.slice(1)}
             </span>
           </>
         )}
-        {fieldErrors.password && <span className="register-form__error-text">{fieldErrors.password}</span>}
+        {fieldErrors.password && <span className={styles['register-form__error-text']}>{fieldErrors.password}</span>}
       </div>
 
-      <div className="register-form__row">
-        <div className="register-form__group">
-          <label className="register-form__label" htmlFor="firstName">{t.firstName || "First Name"}</label>
+      <div className={styles['register-form__row']}>
+        <div className={styles['register-form__group']}>
+          <label className={styles['register-form__label']} htmlFor="firstName">{t.firstName || "First Name"}</label>
           <input
             id="firstName"
             name="firstName"
             type="text"
-            className="register-form__input"
+            className={styles['register-form__input']}
             value={formData.firstName}
             onChange={handleChange}
           />
         </div>
-        <div className="register-form__group">
-          <label className="register-form__label" htmlFor="lastName">{t.lastName || "Last Name"}</label>
+        <div className={styles['register-form__group']}>
+          <label className={styles['register-form__label']} htmlFor="lastName">{t.lastName || "Last Name"}</label>
           <input
             id="lastName"
             name="lastName"
             type="text"
-            className="register-form__input"
+            className={styles['register-form__input']}
             value={formData.lastName}
             onChange={handleChange}
           />
         </div>
       </div>
 
-      <div className="register-form__group">
-        <label className="register-form__label" htmlFor="phoneNumber">{t.phone || "Phone Number"}</label>
+      <div className={styles['register-form__group']}>
+        <label className={styles['register-form__label']} htmlFor="phoneNumber">{t.phone || "Phone Number"}</label>
         <input
           id="phoneNumber"
           name="phoneNumber"
           type="tel"
-          className="register-form__input"
+          className={styles['register-form__input']}
           value={formData.phoneNumber}
           onChange={handleChange}
           placeholder="(XXX) XXX-XXXX"
         />
       </div>
 
-      <div className="register-form__checkbox-group">
+      <div className={styles['register-form__checkbox-group']}>
         <input
           id="consent"
           name="consent"
           type="checkbox"
-          className="register-form__checkbox"
+          className={styles['register-form__checkbox']}
           checked={formData.consent}
           onChange={handleChange}
           required
         />
-        <label htmlFor="consent" className="register-form__checkbox-label">
+        <label htmlFor="consent" className={styles['register-form__checkbox-label']}>
           {t.terms || "I agree to the Terms and Conditions and Privacy Policy."}
         </label>
       </div>
-      {fieldErrors.consent && <span className="register-form__error-text" style={{ marginBottom: '1.5rem', display: 'block' }}>{fieldErrors.consent}</span>}
+      {fieldErrors.consent && <span className={styles['register-form__error-text']} style={{ marginBottom: '1.5rem', display: 'block' }}>{fieldErrors.consent}</span>}
 
-      {generalError && <p className="register-form__error">{generalError}</p>}
+      {generalError && <p className={styles['register-form__error']}>{generalError}</p>}
 
       <button
         type="submit"
-        className="register-form__submit"
+        className={styles['register-form__submit']}
         disabled={isLoading || !isFormValid()}
       >
         {isLoading ? "..." : (t.button || "Create Account")}

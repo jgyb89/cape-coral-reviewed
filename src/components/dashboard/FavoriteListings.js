@@ -6,8 +6,9 @@ import Link from 'next/link';
 import Image from 'next/image';
 import PropTypes from 'prop-types';
 import { removeFavoriteListing } from '@/lib/actions';
+import { formatImageUrl } from "@/lib/formatImageUrl";
 
-export default function FavoriteListings({ favorites: initialFavorites = [] }) {
+export default function FavoriteListings({ favorites: initialFavorites = [], locale = 'en' }) {
   const [favorites, setFavorites] = useState(initialFavorites);
   const [isRemoving, setIsRemoving] = useState(null);
   const [listingToDelete, setListingToDelete] = useState(null);
@@ -39,9 +40,8 @@ export default function FavoriteListings({ favorites: initialFavorites = [] }) {
     <div className="favorite-listings">
       <div className="favorite-listings__grid">
         {favorites.map((listing) => {
-          const categorySlug = listing.directoryTypes?.nodes[0]?.slug || 'uncategorized';
-          const imageUrl = listing.featuredImage?.node?.sourceUrl || '/placeholder-listing.jpg';
-          const listingUrl = `/directory/${categorySlug}/${listing.slug}`;
+          const imageUrl = formatImageUrl(listing.featuredImage?.node?.sourceUrl);
+          const listingUrl = `/${locale}/listing/${listing.slug}`;
 
           return (
             <article key={listing.databaseId} style={{ backgroundColor: '#fff', borderRadius: '8px', padding: '1.5rem', display: 'flex', flexDirection: 'column', border: '1px solid #eaeaea', marginBottom: '1rem' }}>

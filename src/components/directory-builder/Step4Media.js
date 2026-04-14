@@ -1,27 +1,64 @@
 'use client';
 
-import React from 'react';
-import './StepForm.css';
+import React, { useState } from 'react';
+import styles from './StepForm.module.css';
+import wizardStyles from './ListingWizard.module.css';
 
 const Step4Media = ({ formData, updateFormData, nextStep, prevStep }) => {
+  const [errors, setErrors] = useState({});
+
+  const isValidUrl = (string) => {
+    try {
+      const url = new URL(string);
+      return url.protocol === "http:" || url.protocol === "https:";
+    } catch (_) {
+      return false;
+    }
+  };
+
   const handleFileChange = (e, field) => {
-    const files = e.target.files;
+    const files = Array.from(e.target.files);
+    const maxSize = 5 * 1024 * 1024; // 5MB
+
+    const validFiles = files.filter(file => {
+      if (file.size > maxSize) {
+        alert(`File ${file.name} is too large. Max size is 5MB.`);
+        return false;
+      }
+      return true;
+    });
+
     if (field === 'featuredImage') {
-      updateFormData({ featuredImage: files[0] });
+      if (validFiles.length > 0) {
+        updateFormData({ featuredImage: validFiles[0] });
+      }
     } else if (field === 'gallery') {
-      updateFormData({ gallery: Array.from(files) });
+      updateFormData({ gallery: validFiles });
+    }
+  };
+
+  const handleNext = () => {
+    const newErrors = {};
+    if (formData.videoUrl && !isValidUrl(formData.videoUrl)) {
+      newErrors.videoUrl = 'Must start with http:// or https://';
+    }
+
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
+    } else {
+      nextStep();
     }
   };
 
   return (
-    <div className="step-form">
-      <header className="step-form__header">
+    <div className={styles['step-form']}>
+      <header className={styles['step-form__header']}>
         <span className="material-symbols-outlined">perm_media</span>
         <h2>Media & Gallery</h2>
       </header>
 
-      <div className="step-form__group">
-        <label className="step-form__label">Featured Image</label>
+      <div className={styles['step-form__group']}>
+        <label className={styles['step-form__label']}>Featured Image</label>
         <div style={{ border: '2px dashed #ddd', padding: '2rem', borderRadius: '8px', textAlign: 'center' }}>
           <input
             type="file"
@@ -36,8 +73,8 @@ const Step4Media = ({ formData, updateFormData, nextStep, prevStep }) => {
         </div>
       </div>
 
-      <div className="step-form__group">
-        <label className="step-form__label">Gallery Images</label>
+      <div className={styles['step-form__group']}>
+        <label className={styles['step-form__label']}>Gallery Images</label>
         <div style={{ border: '2px dashed #ddd', padding: '2rem', borderRadius: '8px', textAlign: 'center' }}>
           <input
             type="file"
@@ -55,22 +92,23 @@ const Step4Media = ({ formData, updateFormData, nextStep, prevStep }) => {
         </div>
       </div>
 
-      <div className="step-form__group">
-        <label className="step-form__label">Video URL (YouTube/Vimeo)</label>
+      <div className={styles['step-form__group']}>
+        <label className={styles['step-form__label']}>Video URL (YouTube/Vimeo)</label>
         <input
           type="url"
-          className="step-form__input"
+          className={`${styles['step-form__input']} ${errors.videoUrl ? styles['step-form__input--error'] : ''}`}
           placeholder="https://www.youtube.com/watch?v=..."
           value={formData.videoUrl}
           onChange={(e) => updateFormData({ videoUrl: e.target.value })}
         />
+        {errors.videoUrl && <span className={styles['step-form__error-message']}>{errors.videoUrl}</span>}
       </div>
 
-      <div className="wizard__actions">
-        <button className="wizard__button wizard__button--secondary" onClick={prevStep}>
+      <div className={wizardStyles['wizard__actions']}>
+        <button className={`${wizardStyles['wizard__button']} ${wizardStyles['wizard__button--secondary']}`} onClick={prevStep}>
           Back
         </button>
-        <button className="wizard__button wizard__button--primary" onClick={nextStep}>
+        <button className={`${wizardStyles['wizard__button']} ${wizardStyles['wizard__button--primary']}`} onClick={handleNext}>
           Next
         </button>
       </div>

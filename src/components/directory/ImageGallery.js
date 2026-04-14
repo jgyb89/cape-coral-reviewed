@@ -1,6 +1,7 @@
 // components/directory/ImageGallery.js
 import Image from 'next/image';
 import PropTypes from 'prop-types';
+import { formatImageUrl } from '@/lib/formatImageUrl';
 
 export default function ImageGallery({ images, videoUrl }) {
   if (!images || images.length === 0) {
@@ -15,7 +16,7 @@ export default function ImageGallery({ images, videoUrl }) {
       {/* Main Feature Image */}
       <figure className="image-gallery__main">
         <Image
-          src={mainImage.sourceUrl}
+          src={formatImageUrl(mainImage.sourceUrl)}
           alt={mainImage.altText || 'Featured business image'}
           width={mainImage.mediaDetails?.width || 800}
           height={mainImage.mediaDetails?.height || 600}
@@ -31,7 +32,7 @@ export default function ImageGallery({ images, videoUrl }) {
           {thumbnails.map((img) => (
             <figure key={img.id || img.sourceUrl} className="image-gallery__thumb">
               <Image
-                src={img.sourceUrl}
+                src={formatImageUrl(img.sourceUrl)}
                 alt={img.altText || 'Gallery image'}
                 width={img.mediaDetails?.width || 400}
                 height={img.mediaDetails?.height || 300}

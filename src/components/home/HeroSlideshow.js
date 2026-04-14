@@ -6,8 +6,9 @@ import Autoplay from "embla-carousel-autoplay";
 import Image from "next/image";
 import Link from "next/link";
 import { ChevronLeft, ChevronRight, Play, Pause } from "lucide-react";
+import { formatImageUrl } from "@/lib/formatImageUrl";
 
-export default function HeroSlideshow({ featuredListings = [] }) {
+export default function HeroSlideshow({ featuredListings = [], locale = "en" }) {
   const [isPlaying, setIsPlaying] = useState(true);
   const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true }, [
     Autoplay({ delay: 5000, stopOnInteraction: false }),
@@ -75,14 +76,11 @@ export default function HeroSlideshow({ featuredListings = [] }) {
       <div ref={emblaRef} style={{ height: "100%" }}>
         <div style={{ display: "flex", height: "100%" }}>
           {featuredListings.map((listing, index) => {
-            const imageUrl =
-              listing.featuredImage?.node?.sourceUrl || "/placeholder-hero.jpg";
+            const imageUrl = formatImageUrl(listing.featuredImage?.node?.sourceUrl);
             const category =
               listing.directoryTypes?.nodes?.[0]?.name || "Local Business";
-            const categorySlug =
-              listing.directoryTypes?.nodes?.[0]?.slug || "uncategorized";
             const slug = listing.slug;
-            const listingUrl = `/directory/${categorySlug}/${slug}`;
+            const listingUrl = `/${locale}/listing/${slug}`;
 
             return (
               <div

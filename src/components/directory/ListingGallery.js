@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Image from "next/image";
-import "./ListingGallery.css";
+import styles from "./ListingGallery.module.css";
 
 export default function ListingGallery({ featuredImage, galleryImages = [] }) {
   const images = [featuredImage, ...galleryImages].filter(Boolean);
@@ -12,8 +12,8 @@ export default function ListingGallery({ featuredImage, galleryImages = [] }) {
   const [activeImage, setActiveImage] = useState(displayImages[0]);
 
   return (
-    <div className="listing-gallery">
-      <div className="listing-gallery__main">
+    <div className={styles['listing-gallery']}>
+      <div className={styles['listing-gallery__main']}>
         <Image
           src={activeImage}
           alt="Listing gallery image"
@@ -24,12 +24,12 @@ export default function ListingGallery({ featuredImage, galleryImages = [] }) {
       </div>
 
       {displayImages.length > 1 && (
-        <div className="listing-gallery__thumbnails">
+        <div className={styles['listing-gallery__thumbnails']}>
           {displayImages.map((img, index) => (
             <button
               key={index}
-              className={`listing-gallery__thumbnail ${
-                activeImage === img ? "listing-gallery__thumbnail--active" : ""
+              className={`${styles['listing-gallery__thumbnail']} ${
+                activeImage === img ? styles['listing-gallery__thumbnail--active'] : ""
               }`}
               onClick={() => setActiveImage(img)}
               type="button"

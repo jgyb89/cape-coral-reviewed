@@ -5,11 +5,12 @@ import { useState } from "react";
 import PropTypes from "prop-types";
 import Image from "next/image";
 import Link from "next/link";
-import "./CcrCard.css";
+import styles from "./CcrCard.module.css";
 import { toggleFavoriteListing } from '@/lib/actions';
 import LoginModal from '@/components/auth/LoginModal';
+import { formatImageUrl } from "@/lib/formatImageUrl";
 
-export default function CcrCard({ listing, currentUser }) {
+export default function CcrCard({ listing, currentUser, locale = 'en' }) {
   // Initialize state based on whether the listing ID exists in currentUser's favorites
   const initialFavoriteState = currentUser?.userData?.favoriteListings?.nodes?.some(
     node => node.databaseId === listing.databaseId
@@ -25,13 +26,10 @@ export default function CcrCard({ listing, currentUser }) {
   const { title, slug, featuredImage } = listing;
   const listingdata = listing.listingdata || {};
 
-  // Extract category slug or fallback using the updated ACF taxonomy name
-  const categorySlug =
-    listing?.directoryTypes?.nodes?.[0]?.slug || "uncategorized";
-  const listingUrl = `/directory/${categorySlug}/${slug}`;
+  const listingUrl = `/${locale}/listing/${slug}`;
 
   // Image handling
-  const imageUrl = featuredImage?.node?.sourceUrl || "/placeholder-image.jpg";
+  const imageUrl = formatImageUrl(featuredImage?.node?.sourceUrl);
   const imageAlt = featuredImage?.node?.altText || title;
 
   // Rating calculation from the new ACF structure
@@ -43,9 +41,9 @@ export default function CcrCard({ listing, currentUser }) {
 
   return (
     <>
-      <div className="ccr-card" style={{ position: 'relative', zIndex: toastMessage ? 50 : 1 }}>
-        <div className="ccr-card__image-container">
-          <div className="ccr-card__badge">Featured</div>
+      <div className={styles['ccr-card']} style={{ position: 'relative', zIndex: toastMessage ? 50 : 1 }}>
+        <div className={styles['ccr-card__image-container']}>
+          <div className={styles['ccr-card__badge']}>Featured</div>
           <Image
             src={imageUrl}
             alt={imageAlt}
@@ -56,8 +54,8 @@ export default function CcrCard({ listing, currentUser }) {
           />
         </div>
 
-        <div className="ccr-card__content">
-          <div className="ccr-card__avatar">
+        <div className={styles['ccr-card__content']}>
+          <div className={styles['ccr-card__avatar']}>
             <span
               className="material-symbols-outlined"
               style={{ fontSize: "44px", color: "#ccc" }}
@@ -65,11 +63,11 @@ export default function CcrCard({ listing, currentUser }) {
               storefront
             </span>
           </div>
-          <Link href={listingUrl} className="ccr-card__header-link">
-            <h3 className="ccr-card__title">{title}</h3>
+          <Link href={listingUrl} className={styles['ccr-card__header-link']}>
+            <h3 className={styles['ccr-card__title']}>{title}</h3>
           </Link>
 
-          <div className="ccr-card__rating">
+          <div className={styles['ccr-card__rating']}>
             <span
               className="material-symbols-outlined"
               style={{ fontSize: "18px", color: "var(--color-secondary)" }}
@@ -82,8 +80,8 @@ export default function CcrCard({ listing, currentUser }) {
             </span>
           </div>
 
-          <div className="ccr-card__footer">
-            <div className="ccr-card__footer-item">
+          <div className={styles['ccr-card__footer']}>
+            <div className={styles['ccr-card__footer-item']}>
               <span
                 className="material-symbols-outlined"
                 style={{ fontSize: "16px" }}
@@ -95,7 +93,7 @@ export default function CcrCard({ listing, currentUser }) {
 
             <div style={{ position: 'relative', display: 'inline-block' }}>
               <button
-                className="ccr-card__favorite"
+                className={styles['ccr-card__favorite']}
                 aria-label={isFavorite ? "Remove from favorites" : "Add to favorites"}
                 disabled={isUpdating}
                 style={{ opacity: isUpdating ? 0.6 : 1, position: 'relative', zIndex: 10 }}

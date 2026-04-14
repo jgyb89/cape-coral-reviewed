@@ -5,9 +5,9 @@ import Link from 'next/link';
 import PropTypes from 'prop-types';
 import { deleteUserReview } from '@/lib/actions';
 import ReviewModal from '../directory/ReviewModal';
-import './MyReviews.css';
+import styles from './MyReviews.module.css';
 
-export default function MyReviews({ reviews: initialReviews }) {
+export default function MyReviews({ reviews: initialReviews, locale = 'en' }) {
   const [reviews, setReviews] = useState(initialReviews || []);
   const [editingReview, setEditingReview] = useState(null);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
@@ -63,10 +63,10 @@ export default function MyReviews({ reviews: initialReviews }) {
 
   if (reviews.length === 0) {
     return (
-      <div className="my-reviews">
-        <div className="my-reviews__empty">
-          <p className="my-reviews__text">You haven&apos;t left any reviews yet.</p>
-          <Link href="/directory" className="my-reviews__link">
+      <div className={styles['my-reviews']}>
+        <div className={styles['my-reviews__empty']}>
+          <p className={styles['my-reviews__text']}>You haven&apos;t left any reviews yet.</p>
+          <Link href="/directory" className={styles['my-reviews__link']}>
             Explore the Directory
           </Link>
         </div>
@@ -75,12 +75,11 @@ export default function MyReviews({ reviews: initialReviews }) {
   }
 
   return (
-    <div className="my-reviews">
-      <ul className="my-reviews__list">
+    <div className={styles['my-reviews']}>
+      <ul className={styles['my-reviews__list']}>
         {reviews.map((review) => {
           const listing = review.reviewFields?.relatedListing?.nodes?.[0];
-          const categorySlug = listing?.ccrDirectoryTypes?.nodes[0]?.slug || 'uncategorized';
-          const listingUrl = listing ? `/directory/${categorySlug}/${listing.slug}` : '#';
+          const listingUrl = listing ? `/${locale}/listing/${listing.slug}` : '#';
           const formattedDate = review.date ? new Date(review.date).toLocaleDateString('en-US', {
             year: 'numeric',
             month: 'long',
@@ -90,21 +89,21 @@ export default function MyReviews({ reviews: initialReviews }) {
           const starRating = Number.parseInt(review.reviewFields?.starRating, 10) || 0;
 
           return (
-            <li key={review.id} className="user-review">
-              <div className="user-review__header">
-                <div className="user-review__info">
+            <li key={review.id} className={styles['user-review']}>
+              <div className={styles['user-review__header']}>
+                <div className={styles['user-review__info']}>
                   {listing && (
-                    <p className="user-review__listing">
-                      Review for: <Link href={listingUrl} className="user-review__listing-link">{listing.title}</Link>
+                    <p className={styles['user-review__listing']}>
+                      Review for: <Link href={listingUrl} className={styles['user-review__listing-link']}>{listing.title}</Link>
                     </p>
                   )}
-                  {formattedDate && <span className="user-review__date">{formattedDate}</span>}
+                  {formattedDate && <span className={styles['user-review__date']}>{formattedDate}</span>}
                 </div>
-                <div className="user-review__stars" aria-label={`${starRating} out of 5 stars`}>
+                <div className={styles['user-review__stars']} aria-label={`${starRating} out of 5 stars`}>
                   {[1, 2, 3, 4, 5].map((val) => (
                     <span
                       key={val}
-                      className="material-symbols-outlined user-review__star"
+                      className={`material-symbols-outlined ${styles['user-review__star']}`}
                       style={{ 
                         fontVariationSettings: starRating >= val ? "'FILL' 1" : "'FILL' 0",
                         color: starRating >= val ? "var(--color-secondary)" : "#ccc"
@@ -117,14 +116,14 @@ export default function MyReviews({ reviews: initialReviews }) {
               </div>
 
               <div 
-                className="user-review__content" 
+                className={styles['user-review__content']} 
                 dangerouslySetInnerHTML={{ __html: review.content }} 
               />
 
-              <div className="user-review__actions">
+              <div className={styles['user-review__actions']}>
                 <button
                   onClick={() => handleEdit(review)}
-                  className="user-review__edit-btn"
+                  className={styles['user-review__edit-btn']}
                   disabled={isDeleting}
                   type="button"
                 >
@@ -133,7 +132,7 @@ export default function MyReviews({ reviews: initialReviews }) {
                 </button>
                 <button
                   onClick={() => handleDeleteClick(review)}
-                  className="user-review__delete-btn"
+                  className={styles['user-review__delete-btn']}
                   disabled={isDeleting}
                   type="button"
                 >
@@ -155,29 +154,29 @@ export default function MyReviews({ reviews: initialReviews }) {
 
       {/* Custom Delete Confirmation Modal */}
       {isDeleteModalOpen && (
-        <div className="my-reviews__modal-overlay">
+        <div className={styles['my-reviews__modal-overlay']}>
           <button 
-            className="my-reviews__modal-overlay-btn"
+            className={styles['my-reviews__modal-overlay-btn']}
             onClick={handleCancelDelete}
             aria-label="Close modal"
             type="button"
           />
           <dialog 
-            className="my-reviews__modal" 
+            className={styles['my-reviews__modal']} 
             open
             aria-modal="true"
             aria-labelledby="delete-review-modal-title"
           >
-            <div className="my-reviews__modal-icon">
+            <div className={styles['my-reviews__modal-icon']}>
               <span className="material-symbols-outlined">warning</span>
             </div>
-            <h3 id="delete-review-modal-title" className="my-reviews__modal-title">Delete Review?</h3>
-            <p className="my-reviews__modal-text">
+            <h3 id="delete-review-modal-title" className={styles['my-reviews__modal-title']}>Delete Review?</h3>
+            <p className={styles['my-reviews__modal-text']}>
               Are you sure you want to delete this review? This action cannot be undone.
             </p>
-            <div className="my-reviews__modal-actions">
+            <div className={styles['my-reviews__modal-actions']}>
               <button 
-                className="my-reviews__modal-btn my-reviews__modal-btn--cancel" 
+                className={`${styles['my-reviews__modal-btn']} ${styles['my-reviews__modal-btn--cancel']}`} 
                 onClick={handleCancelDelete}
                 disabled={isDeleting}
                 type="button"
@@ -185,7 +184,7 @@ export default function MyReviews({ reviews: initialReviews }) {
                 Cancel
               </button>
               <button 
-                className="my-reviews__modal-btn my-reviews__modal-btn--delete" 
+                className={`${styles['my-reviews__modal-btn']} ${styles['my-reviews__modal-btn--delete']}`} 
                 onClick={handleConfirmDelete}
                 disabled={isDeleting}
                 type="button"

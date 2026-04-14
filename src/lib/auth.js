@@ -102,20 +102,20 @@ export async function getViewer() {
                     slug
                   }
                 }
-              }
-            }
-          }
-        }
-        ccrreviews {
-          nodes {
-            id
-            databaseId
-            title
-            content
-            date
-            reviewFields {
-              starRating
-              relatedListing {
+                }
+                }
+                }
+                }
+                ccrreviews {
+                nodes {
+                id
+                databaseId
+                title
+                content
+                date
+                reviewFields {
+                starRating
+                relatedListing {
                 nodes {
                   ... on Ccrlisting {
                     databaseId
@@ -128,10 +128,11 @@ export async function getViewer() {
                     }
                   }
                 }
-              }
-            }
-          }
-        }
+                }
+                }
+                }
+                }
+
       }
     }
   `;

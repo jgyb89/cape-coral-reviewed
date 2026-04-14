@@ -1,6 +1,5 @@
 import DOMPurify from "isomorphic-dompurify";
 import Script from "next/script";
-import PropTypes from "prop-types";
 import { getListingBySlug } from "@/lib/api";
 import { getViewer } from "@/lib/auth";
 import { getDictionary } from "@/lib/dictionaries";
@@ -11,6 +10,7 @@ import ReviewList from "@/components/directory/ReviewList";
 import ReviewActionManager from "@/components/directory/ReviewActionManager";
 import FavoriteButton from "@/components/directory/FavoriteButton";
 import StarRating from "@/components/ui/StarRating";
+import { formatImageUrl } from "@/lib/formatImageUrl";
 import "./ListingPage.css";
 
 export async function generateMetadata({ params }) {
@@ -28,7 +28,7 @@ export async function generateMetadata({ params }) {
   const seoDesc =
     listing.seo?.metaDesc ||
     `Find details, reviews, and contact info for ${listing.title} in Cape Coral, FL.`;
-  const ogImage = listing.seo?.opengraphImage?.sourceUrl;
+  const ogImage = formatImageUrl(listing.seo?.opengraphImage?.sourceUrl);
 
   return {
     title: seoTitle,
@@ -42,7 +42,7 @@ export async function generateMetadata({ params }) {
 }
 
 export default async function DirectoryListingPage({ params }) {
-  const { slug, category, locale } = await params;
+  const { slug, locale } = await params;
   const dict = await getDictionary(locale);
   const listing = await getListingBySlug(slug);
   const currentUser = await getViewer();
@@ -76,9 +76,9 @@ export default async function DirectoryListingPage({ params }) {
       (n) => n.databaseId === listing.databaseId,
     ) || false;
 
-  const featuredImage = listing.featuredImage?.node?.sourceUrl || "";
+  const featuredImage = formatImageUrl(listing.featuredImage?.node?.sourceUrl);
   const galleryImages =
-    listing.attachedMedia?.nodes?.map((node) => node.sourceUrl) || [];
+    listing.attachedMedia?.nodes?.map((node) => formatImageUrl(node.sourceUrl)) || [];
 
   const cleanContent = DOMPurify.sanitize(listing.content || "", {
     ALLOWED_TAGS: [
@@ -114,7 +114,7 @@ export default async function DirectoryListingPage({ params }) {
     telephone: listingdata.phoneNumber || "",
     url:
       listingdata.websiteUrl ||
-      `https://capecoralreviewed.com/${locale}/directory/${category}/${slug}`,
+      `https://capecoralreviewed.com/${locale}/listing/${slug}`,
     priceRange: listingdata.priceRange
       ? "$".repeat(listingdata.priceRange)
       : undefined,
@@ -298,7 +298,3 @@ export default async function DirectoryListingPage({ params }) {
     </div>
   );
 }
-
-DirectoryListingPage.propTypes = {
-  params: PropTypes.object.isRequired,
-};

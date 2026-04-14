@@ -14,21 +14,16 @@ export default async function RegisterPage({ params }) {
 
   return (
     <main style={{ 
-      backgroundColor: "#fdfdfd", 
       minHeight: "100vh", 
       display: "flex", 
+      flexDirection: "column",
       alignItems: "center", 
       justifyContent: "center", 
-      padding: "2rem" 
+      padding: "2rem 1rem" 
     }}>
       <div style={{ 
-        background: "#fff", 
         maxWidth: "600px", 
-        width: "100%", 
-        padding: "3rem", 
-        borderRadius: "12px", 
-        boxShadow: "0 10px 25px rgba(0,0,0,0.05)", 
-        border: "1px solid #eaeaea" 
+        width: "100%" 
       }}>
         <h1 style={{ fontSize: "2.5rem", fontWeight: "800", marginBottom: "1rem", textAlign: "center" }}>
           {t.title || "Create an Account"}

@@ -4,6 +4,7 @@ import React from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { Star } from "lucide-react";
+import { formatImageUrl } from "@/lib/formatImageUrl";
 
 export default function HomeSidebar({ featuredBusinesses = [], popularNearYou = [], dict = {}, locale = "en" }) {
   const renderList = (title, items) => (
@@ -18,9 +19,8 @@ export default function HomeSidebar({ featuredBusinesses = [], popularNearYou = 
       </h3>
       <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
         {items.map((item) => {
-          const categorySlug = item.directoryTypes?.nodes?.[0]?.slug || "uncategorized";
-          const listingUrl = `/${locale}/directory/${categorySlug}/${item.slug}`;
-          const imageUrl = item.featuredImage?.node?.sourceUrl || "/placeholder-mini.jpg";
+          const listingUrl = `/${locale}/listing/${item.slug}`;
+          const imageUrl = formatImageUrl(item.featuredImage?.node?.sourceUrl);
           
           const reviewNodes = item.reviews?.nodes || [];
           const reviewCount = reviewNodes.length;

@@ -3,7 +3,7 @@
 import { useState, useMemo } from "react";
 import PropTypes from "prop-types";
 import CcrCardGrid from "./CcrCardGrid";
-import "./DirectoryFilterManager.css";
+import styles from "./DirectoryFilterManager.module.css";
 
 const getListingRating = (listing) => {
   const reviews = listing.reviews?.nodes || [];
@@ -77,9 +77,9 @@ export default function DirectoryFilterManager({ listings, currentUser, dict = {
   };
 
   return (
-    <div className="directory-filter-manager">
-      <div className="directory-controls">
-        <div className="control-group">
+    <div className={styles['directory-filter-manager']}>
+      <div className={styles['directory-controls']}>
+        <div className={styles['control-group']}>
           <label htmlFor="category-filter">{t.filterCategory || "CATEGORY"}</label>
           <select
             id="category-filter"
@@ -94,7 +94,7 @@ export default function DirectoryFilterManager({ listings, currentUser, dict = {
           </select>
         </div>
 
-        <div className="control-group">
+        <div className={styles['control-group']}>
           <label htmlFor="price-filter">{t.filterPrice || "PRICE"}</label>
           <select
             id="price-filter"
@@ -109,7 +109,7 @@ export default function DirectoryFilterManager({ listings, currentUser, dict = {
           </select>
         </div>
 
-        <div className="control-group">
+        <div className={styles['control-group']}>
           <label htmlFor="sort-by">{t.filterSort || "SORT BY"}</label>
           <select
             id="sort-by"
@@ -124,13 +124,13 @@ export default function DirectoryFilterManager({ listings, currentUser, dict = {
         </div>
 
         {(activeCategory !== "All" || activePrice !== "All" || sortBy !== "A-Z") && (
-          <button className="clear-filters-btn" onClick={handleClearFilters}>
+          <button className={styles['clear-filters-btn']} onClick={handleClearFilters}>
             Clear Filters
           </button>
         )}
       </div>
 
-      <div className="results-count">
+      <div className={styles['results-count']}>
         {filteredAndSortedListings.length}{" "}
         {t.listingsFound || "listings found"}
       </div>

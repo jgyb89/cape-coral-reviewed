@@ -6,7 +6,8 @@ export const metadata = {
   title: 'Favorite Listings | Dashboard',
 };
 
-export default async function FavoritesPage() {
+export default async function FavoritesPage({ params }) {
+  const { locale } = await params;
   const viewer = await getViewer();
 
   // Handle case where viewer is null (though middleware/layout should prevent this)
@@ -31,7 +32,7 @@ export default async function FavoritesPage() {
       </header>
 
       <div className="favorites-page__content">
-        <FavoriteListings favorites={favorites} />
+        <FavoriteListings favorites={favorites} locale={locale} />
       </div>
     </div>
   );
