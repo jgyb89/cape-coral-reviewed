@@ -34,7 +34,7 @@ const Step2Contact = ({ formData, updateFormData, nextStep, prevStep }) => {
       newErrors.phone = 'Valid 10-digit Phone Number is required';
     }
     
-    if (formData.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
+    if (formData.email && !/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/.test(formData.email)) {
       newErrors.email = 'Please enter a valid email address';
     }
 

@@ -60,9 +60,18 @@ export default function RegisterBusinessForm() {
       businessName: (v) => (!v ? "Business name is required" : ""),
       email: (v) => {
         if (!v) return "Email is required";
-        // Flattened email regex to avoid ReDoS hotspots from nested optional groups
-        const emailRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
+        // Safe email regex: avoiding nested quantifiers that cause ReDoS
+        const emailRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;
         return !emailRegex.test(v) ? "Please enter a valid email address" : "";
+      },
+      website: (v) => {
+        if (!v) return "";
+        try {
+          const url = new URL(v.startsWith('http') ? v : `https://${v}`);
+          return (url.protocol === "http:" || url.protocol === "https:") ? "" : "Please enter a valid URL";
+        } catch (_) {
+          return "Please enter a valid URL";
+        }
       },
       password: (v) => {
         if (!v) return "Password is required";
