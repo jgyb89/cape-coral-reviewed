@@ -44,8 +44,8 @@ export default function LoginModal({ isOpen, onClose, dict = {}, locale = "en" }
         aria-label="Close modal"
         type="button"
       />
-      <dialog
-        className={styles['login-modal']}
+      <dialog 
+        className={styles['login-modal']} 
         open
         aria-modal="true"
         aria-labelledby="login-modal-title"

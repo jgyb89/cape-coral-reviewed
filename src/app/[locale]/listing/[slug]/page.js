@@ -260,20 +260,22 @@ export default async function DirectoryListingPage({ params }) {
         </section>
 
         <section className="listing-card">
-          <h2 className="listing-card__title">
-            <span className="material-symbols-outlined">reviews</span>
-            {t.recommendedReviews || "Recommended Reviews"}
-          </h2>
-          <div style={{ marginBottom: "2rem" }}>
-            <ReviewActionManager
-              currentUser={currentUser}
-              listingId={listing.databaseId}
-              listingSlug={slug}
-              dict={dict}
-              locale={locale}
-            />
-          </div>
-          <ReviewList reviews={listing.reviews} noReviewsYet={t.noReviewsYet} />
+          <header style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem', paddingBottom: '1rem', borderBottom: '1px solid #e2e8f0', flexWrap: 'wrap', gap: '1rem' }}>
+            <h2 style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', margin: 0, fontSize: '1.25rem', fontWeight: '700', color: 'var(--color-text)' }}>
+              <span className="material-symbols-outlined">reviews</span>
+              {t.recommendedReviews || "Recommended Reviews"}
+            </h2>
+            <div>
+              <ReviewActionManager
+                currentUser={currentUser}
+                listingId={listing.databaseId}
+                listingSlug={slug}
+                dict={dict}
+                locale={locale}
+              />
+            </div>
+          </header>
+          <ReviewList reviews={listing.reviews} noReviewsYet={t.noReviewsYet} currentUser={currentUser} />
         </section>
       </main>
 
