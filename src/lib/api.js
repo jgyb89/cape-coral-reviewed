@@ -65,11 +65,14 @@ export async function getListingBySlug(slug) {
 
         reviews {
           nodes {
+            id
+            databaseId
             title
             content
             date
             author {
               node {
+                databaseId
                 name
               }
             }

@@ -140,6 +140,9 @@
   text-align: center;
   box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
   z-index: 1;
+  border: none;
+  margin: 0;
+  position: relative;
 }
 
 .my-reviews__modal-icon {

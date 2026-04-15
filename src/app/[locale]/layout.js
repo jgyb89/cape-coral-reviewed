@@ -21,6 +21,7 @@ const openSans = Open_Sans({
 });
 
 export const metadata = {
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://capecoralreviewed.com'),
   title: "Cape Coral Reviewed",
   description: "The premier local directory for Cape Coral, Florida.",
 };

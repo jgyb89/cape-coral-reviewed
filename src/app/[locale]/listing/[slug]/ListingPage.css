@@ -130,3 +130,52 @@
 .listing-card__link:hover {
   text-decoration: underline;
 }
+
+.review-owner-actions {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+/* The parent review wrapper must have a class like .review-list__item for this to work */
+.review-list__item:hover .review-owner-actions {
+  opacity: 1;
+}
+
+.review-edit-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  padding: 0.4rem 0.75rem;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #4a5568;
+  cursor: pointer;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+  transition: all 0.2s ease;
+}
+
+.review-edit-btn:hover {
+  background: #f8fafc;
+  color: #e04c4c;
+  border-color: #e04c4c;
+}
+
+/* Review Updating Spinner */
+@keyframes review-spin {
+  to { transform: rotate(360deg); }
+}
+
+.review-spinner {
+  width: 24px;
+  height: 24px;
+  border: 3px solid #f1f5f9;
+  border-top-color: #e04c4c;
+  border-radius: 50%;
+  animation: review-spin 0.8s linear infinite;
+}
