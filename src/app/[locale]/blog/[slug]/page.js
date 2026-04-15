@@ -25,7 +25,7 @@ export async function generateMetadata({ params }) {
 }
 
 export default async function BlogPostPage({ params }) {
-  const { slug } = await params;
+  const { slug, locale } = await params;
   const post = await getBlogPostBySlug(slug);
 
   if (!post) {
@@ -64,7 +64,7 @@ export default async function BlogPostPage({ params }) {
         </header>
 
         {post.featuredImage?.node?.sourceUrl && (
-          <div className="blog-post__featured-image">
+          <div className="blog-post__featured-image" style={{ position: 'relative', width: '100%', aspectRatio: '16/9', overflow: 'hidden', borderRadius: '12px', marginBottom: '2rem' }}>
             <Image
               src={formatImageUrl(post.featuredImage.node.sourceUrl)}
               alt={post.featuredImage.node.altText || post.title}
@@ -81,7 +81,7 @@ export default async function BlogPostPage({ params }) {
         />
       </article>
 
-      <BlogSidebar />
+      <BlogSidebar locale={locale} />
     </div>
   );
 }

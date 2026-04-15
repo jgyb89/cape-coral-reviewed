@@ -886,6 +886,18 @@ export async function getSidebarListings() {
               sourceUrl
             }
           }
+          directoryTypes {
+            nodes {
+              name
+            }
+          }
+          reviews {
+            nodes {
+              reviewFields {
+                starRating
+              }
+            }
+          }
         }
       }
     }
