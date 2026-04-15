@@ -1,9 +1,9 @@
 // src/lib/actions.js
-'use server';
+"use server";
 
-import { cookies } from 'next/headers';
-import { revalidatePath } from 'next/cache';
-import { loginUser, getViewer } from './auth';
+import { cookies } from "next/headers";
+import { revalidatePath } from "next/cache";
+import { loginUser, getViewer } from "./auth";
 
 const GRAPHQL_URL = process.env.NEXT_PUBLIC_WORDPRESS_API_URL;
 
@@ -25,10 +25,10 @@ export async function handleLogin(username, password) {
  */
 export async function updateUserProfile(formData) {
   const cookieStore = await cookies();
-  const authToken = cookieStore.get('authToken')?.value;
+  const authToken = cookieStore.get("authToken")?.value;
 
   if (!authToken) {
-    return { success: false, error: 'Not authenticated' };
+    return { success: false, error: "Not authenticated" };
   }
 
   const mutation = `
@@ -50,9 +50,9 @@ export async function updateUserProfile(formData) {
 
   try {
     const res = await fetch(GRAPHQL_URL, {
-      method: 'POST',
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
         Authorization: `Bearer ${authToken}`,
       },
       body: JSON.stringify({
@@ -76,11 +76,11 @@ export async function updateUserProfile(formData) {
       throw new Error(json.errors[0].message);
     }
 
-    revalidatePath('/dashboard', 'layout');
+    revalidatePath("/dashboard", "layout");
 
     return { success: true, user: json.data.updateUser.user };
   } catch (error) {
-    console.error('Update Profile Error:', error);
+    console.error("Update Profile Error:", error);
     return { success: false, error: error.message };
   }
 }
@@ -90,10 +90,10 @@ export async function updateUserProfile(formData) {
  */
 export async function deleteUserReview(reviewId) {
   const cookieStore = await cookies();
-  const authToken = cookieStore.get('authToken')?.value;
+  const authToken = cookieStore.get("authToken")?.value;
 
   if (!authToken) {
-    return { success: false, error: 'Not authenticated' };
+    return { success: false, error: "Not authenticated" };
   }
 
   const mutation = `
@@ -106,9 +106,9 @@ export async function deleteUserReview(reviewId) {
 
   try {
     const res = await fetch(GRAPHQL_URL, {
-      method: 'POST',
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
         Authorization: `Bearer ${authToken}`,
       },
       body: JSON.stringify({
@@ -124,11 +124,11 @@ export async function deleteUserReview(reviewId) {
     }
 
     // Purge the entire Next.js cache globally to update star averages everywhere
-    revalidatePath('/', 'layout'); 
+    revalidatePath("/", "layout");
 
     return { success: true };
   } catch (error) {
-    console.error('Delete Review Error:', error);
+    console.error("Delete Review Error:", error);
     return { success: false, error: error.message };
   }
 }
@@ -138,22 +138,25 @@ export async function deleteUserReview(reviewId) {
  */
 export async function removeFavoriteListing(listingId) {
   const cookieStore = await cookies();
-  const authToken = cookieStore.get('authToken')?.value;
+  const authToken = cookieStore.get("authToken")?.value;
 
   if (!authToken) {
-    return { success: false, error: 'Not authenticated' };
+    return { success: false, error: "Not authenticated" };
   }
 
   try {
     // 1. Fetch current favorites
     const viewer = await getViewer();
-    if (!viewer) throw new Error('Could not fetch viewer data');
+    if (!viewer) throw new Error("Could not fetch viewer data");
 
     // Field name from WPGraphQL is now inside userData.favoriteListings
-    const currentFavorites = viewer.userData?.favoriteListings?.nodes.map(n => n.databaseId) || [];
-    
+    const currentFavorites =
+      viewer.userData?.favoriteListings?.nodes.map((n) => n.databaseId) || [];
+
     // 2. Filter out the listingId to remove
-    const updatedFavorites = currentFavorites.filter(id => id.toString() !== listingId.toString());
+    const updatedFavorites = currentFavorites.filter(
+      (id) => id.toString() !== listingId.toString(),
+    );
 
     // 3. Update the user's favoriteListings field (CamelCase for input)
     const mutation = `
@@ -167,9 +170,9 @@ export async function removeFavoriteListing(listingId) {
     `;
 
     const res = await fetch(GRAPHQL_URL, {
-      method: 'POST',
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
         Authorization: `Bearer ${authToken}`,
       },
       body: JSON.stringify({
@@ -189,19 +192,18 @@ export async function removeFavoriteListing(listingId) {
 
     return { success: true };
   } catch (error) {
-    console.error('Remove Favorite Error:', error);
+    console.error("Remove Favorite Error:", error);
     return { success: false, error: error.message };
   }
 }
 
 export async function toggleFavoriteListing(userId, newFavoritesArray) {
   const cookieStore = await cookies();
-  const token = cookieStore.get('authToken')?.value;
+  const token = cookieStore.get("authToken")?.value;
 
   if (!token) {
-    return { success: false, message: 'Unauthorized. Please log in.' };
+    return { success: false, message: "Unauthorized. Please log in." };
   }
-
 
   // Use 'favoriteListings' (CamelCase) for the input mapping
   const mutation = `
@@ -216,32 +218,32 @@ export async function toggleFavoriteListing(userId, newFavoritesArray) {
 
   try {
     const res = await fetch(process.env.NEXT_PUBLIC_WORDPRESS_API_URL, {
-      method: 'POST',
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
       },
-      body: JSON.stringify({ 
-        query: mutation, 
-        variables: { userId: userId, favorites: newFavoritesArray } 
+      body: JSON.stringify({
+        query: mutation,
+        variables: { userId: userId, favorites: newFavoritesArray },
       }),
     });
 
     const json = await res.json();
-    
+
     if (json.errors) {
-      console.error('GraphQL Errors:', json.errors);
-      return { success: false, message: 'Failed to update favorites.' };
+      console.error("GraphQL Errors:", json.errors);
+      return { success: false, message: "Failed to update favorites." };
     }
 
     // Purge the server cache to ensure fresh data on refresh
-    revalidatePath('/directory');
-    revalidatePath('/dashboard/favorites');
+    revalidatePath("/directory");
+    revalidatePath("/dashboard/favorites");
 
     return { success: true };
   } catch (error) {
-    console.error('Action Error:', error);
-    return { success: false, message: 'Network error occurred.' };
+    console.error("Action Error:", error);
+    return { success: false, message: "Network error occurred." };
   }
 }
 
@@ -250,12 +252,14 @@ export async function toggleFavoriteListing(userId, newFavoritesArray) {
  */
 export async function submitUserReview(formData) {
   const cookieStore = await cookies();
-  const token = cookieStore.get('authToken')?.value;
+  const token = cookieStore.get("authToken")?.value;
 
   if (!token) {
-    return { success: false, message: 'Unauthorized. Please log in to leave a review.' };
+    return {
+      success: false,
+      message: "Unauthorized. Please log in to leave a review.",
+    };
   }
-
 
   const mutation = `
     mutation CreateReview($input: CreateCcrreviewInput!) {
@@ -274,38 +278,45 @@ export async function submitUserReview(formData) {
 
   try {
     const res = await fetch(GRAPHQL_URL, {
-      method: 'POST',
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
       },
       body: JSON.stringify({
         query: mutation,
         variables: {
           input: {
-            title: formData.title || `Review for Listing #${formData.listingId}`,
+            title:
+              formData.title || `Review for Listing #${formData.listingId}`,
             content: formData.content,
             starRating: String(formData.rating),
             relatedListing: [Number.parseInt(formData.listingId, 10)], // Linking to listing
-            status: 'PUBLISH'
-          }
-        }
+            status: "PUBLISH",
+          },
+        },
       }),
     });
 
     const json = await res.json();
 
     if (json.errors) {
-      console.error('GraphQL Review Errors:', json.errors);
-      return { success: false, message: json.errors[0].message || 'Failed to submit review.' };
+      console.error("GraphQL Review Errors:", json.errors);
+      return {
+        success: false,
+        message: json.errors[0].message || "Failed to submit review.",
+      };
     }
 
     // Purge the entire Next.js cache globally to update star averages everywhere
-    revalidatePath('/', 'layout'); 
+    revalidatePath("/", "layout");
     return { success: true };
   } catch (error) {
-    console.error('Submit Review Action Error:', error);
-    return { success: false, message: 'Network error occurred while submitting review.' };
+    console.error("Submit Review Action Error:", error);
+    return {
+      success: false,
+      message: "Network error occurred while submitting review.",
+    };
   }
 }
 
@@ -314,8 +325,8 @@ export async function submitUserReview(formData) {
  */
 export async function getListingForEdit(databaseId) {
   const cookieStore = await cookies();
-  const authToken = cookieStore.get('authToken')?.value;
-  if (!authToken) throw new Error('Unauthorized');
+  const authToken = cookieStore.get("authToken")?.value;
+  if (!authToken) throw new Error("Unauthorized");
 
   const query = `
     query GetListingForEdit($id: ID!) {
@@ -352,9 +363,9 @@ export async function getListingForEdit(databaseId) {
 
   try {
     const res = await fetch(GRAPHQL_URL, {
-      method: 'POST',
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
         Authorization: `Bearer ${authToken}`,
       },
       body: JSON.stringify({ query, variables: { id: databaseId } }),
@@ -366,7 +377,7 @@ export async function getListingForEdit(databaseId) {
     }
     return json.data?.ccrlisting || null;
   } catch (error) {
-    console.error('Get Listing For Edit Error:', error);
+    console.error("Get Listing For Edit Error:", error);
     return null;
   }
 }
@@ -376,12 +387,12 @@ export async function getListingForEdit(databaseId) {
  */
 export async function updateUserListing(databaseId, payload) {
   const viewer = await getViewer();
-  if (!viewer) throw new Error('Unauthorized');
+  if (!viewer) throw new Error("Unauthorized");
 
   // IDOR CHECK: Verify ownership before update
   const listing = await getListingForEdit(databaseId);
   if (!listing || listing.author?.node?.databaseId !== viewer.databaseId) {
-    throw new Error('You do not have permission to edit this listing.');
+    throw new Error("You do not have permission to edit this listing.");
   }
 
   const query = `
@@ -394,26 +405,34 @@ export async function updateUserListing(databaseId, payload) {
     }
   `;
 
-  const authToken = (await cookies()).get('authToken')?.value;
+  const authToken = (await cookies()).get("authToken")?.value;
 
   // Map frontend data directly to ACF snake_case keys
   const acfData = {
-    address_street: payload.addressStreet || payload.listingdata?.addressStreet || '',
-    address_city: payload.addressCity || payload.listingdata?.addressCity || '',
-    address_state: payload.addressState || payload.listingdata?.addressState || '',
-    address_zip_code: payload.addressZipCode || payload.listingdata?.addressZipCode || '',
-    phone_number: payload.phoneNumber || payload.listingdata?.phoneNumber || '',
-    business_email: payload.businessEmail || payload.listingdata?.businessEmail || '',
-    website_url: payload.websiteUrl || payload.listingdata?.websiteUrl || '',
-    video_url: payload.videoUrl || payload.listingdata?.videoUrl || '',
-    social_url: payload.listingdata?.socialUrl || payload.socialUrl || '',
-    hours_monday: payload.listingdata?.hoursMonday || payload.hoursMonday || '',
-    hours_tuesday: payload.listingdata?.hoursTuesday || payload.hoursTuesday || '',
-    hours_wednesday: payload.listingdata?.hoursWednesday || payload.hoursWednesday || '',
-    hours_thursday: payload.listingdata?.hoursThursday || payload.hoursThursday || '',
-    hours_friday: payload.listingdata?.hoursFriday || payload.hoursFriday || '',
-    hours_saturday: payload.listingdata?.hoursSaturday || payload.hoursSaturday || '',
-    hours_sunday: payload.listingdata?.hoursSunday || payload.hoursSunday || '',
+    address_street:
+      payload.addressStreet || payload.listingdata?.addressStreet || "",
+    address_city: payload.addressCity || payload.listingdata?.addressCity || "",
+    address_state:
+      payload.addressState || payload.listingdata?.addressState || "",
+    address_zip_code:
+      payload.addressZipCode || payload.listingdata?.addressZipCode || "",
+    phone_number: payload.phoneNumber || payload.listingdata?.phoneNumber || "",
+    business_email:
+      payload.businessEmail || payload.listingdata?.businessEmail || "",
+    website_url: payload.websiteUrl || payload.listingdata?.websiteUrl || "",
+    video_url: payload.videoUrl || payload.listingdata?.videoUrl || "",
+    social_url: payload.listingdata?.socialUrl || payload.socialUrl || "",
+    hours_monday: payload.listingdata?.hoursMonday || payload.hoursMonday || "",
+    hours_tuesday:
+      payload.listingdata?.hoursTuesday || payload.hoursTuesday || "",
+    hours_wednesday:
+      payload.listingdata?.hoursWednesday || payload.hoursWednesday || "",
+    hours_thursday:
+      payload.listingdata?.hoursThursday || payload.hoursThursday || "",
+    hours_friday: payload.listingdata?.hoursFriday || payload.hoursFriday || "",
+    hours_saturday:
+      payload.listingdata?.hoursSaturday || payload.hoursSaturday || "",
+    hours_sunday: payload.listingdata?.hoursSunday || payload.hoursSunday || "",
   };
 
   const variables = {
@@ -421,24 +440,24 @@ export async function updateUserListing(databaseId, payload) {
       id: databaseId,
       title: payload.title,
       content: payload.content,
-      listingDataJson: JSON.stringify(acfData) // Send as a single JSON string
-    }
+      listingDataJson: JSON.stringify(acfData), // Send as a single JSON string
+    },
   };
 
   const res = await fetch(process.env.NEXT_PUBLIC_WORDPRESS_API_URL, {
-    method: 'POST',
+    method: "POST",
     headers: {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${authToken}`
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${authToken}`,
     },
-    body: JSON.stringify({ query, variables })
+    body: JSON.stringify({ query, variables }),
   });
 
   const json = await res.json();
   if (json.errors) throw new Error(json.errors[0].message);
 
-  revalidatePath('/dashboard/listings');
-  revalidatePath('/directory', 'layout');
+  revalidatePath("/dashboard/listings");
+  revalidatePath("/directory", "layout");
 
   return { success: true };
 }
@@ -448,12 +467,12 @@ export async function updateUserListing(databaseId, payload) {
  */
 export async function deleteUserListing(listingId) {
   const viewer = await getViewer();
-  if (!viewer) throw new Error('Unauthorized');
+  if (!viewer) throw new Error("Unauthorized");
 
   // IDOR CHECK: Verify ownership before deletion
   const listing = await getListingForEdit(listingId);
   if (!listing || listing.author?.node?.databaseId !== viewer.databaseId) {
-    throw new Error('You do not have permission to delete this listing.');
+    throw new Error("You do not have permission to delete this listing.");
   }
 
   const mutation = `
@@ -464,13 +483,13 @@ export async function deleteUserListing(listingId) {
     }
   `;
 
-  const authToken = (await cookies()).get('authToken')?.value;
+  const authToken = (await cookies()).get("authToken")?.value;
 
   try {
     const res = await fetch(GRAPHQL_URL, {
-      method: 'POST',
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
         Authorization: `Bearer ${authToken}`,
       },
       body: JSON.stringify({
@@ -485,12 +504,12 @@ export async function deleteUserListing(listingId) {
       throw new Error(json.errors[0].message);
     }
 
-    revalidatePath('/dashboard/listings');
-    revalidatePath('/directory', 'layout');
+    revalidatePath("/dashboard/listings");
+    revalidatePath("/directory", "layout");
 
     return { success: true };
   } catch (error) {
-    console.error('Delete Listing Error:', error);
+    console.error("Delete Listing Error:", error);
     return { success: false, error: error.message };
   }
 }
@@ -500,10 +519,10 @@ export async function deleteUserListing(listingId) {
  */
 export async function updateUserReview(reviewId, formData) {
   const cookieStore = await cookies();
-  const authToken = cookieStore.get('authToken')?.value;
+  const authToken = cookieStore.get("authToken")?.value;
 
   if (!authToken) {
-    return { success: false, error: 'Not authenticated' };
+    return { success: false, error: "Not authenticated" };
   }
 
   const mutation = `
@@ -522,9 +541,9 @@ export async function updateUserReview(reviewId, formData) {
 
   try {
     const res = await fetch(GRAPHQL_URL, {
-      method: 'POST',
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
         Authorization: `Bearer ${authToken}`,
       },
       body: JSON.stringify({
@@ -546,11 +565,11 @@ export async function updateUserReview(reviewId, formData) {
     }
 
     // Purge the entire Next.js cache globally to update star averages everywhere
-    revalidatePath('/', 'layout'); 
+    revalidatePath("/", "layout");
 
     return { success: true };
   } catch (error) {
-    console.error('Update Review Error:', error);
+    console.error("Update Review Error:", error);
     return { success: false, error: error.message };
   }
 }
@@ -574,9 +593,9 @@ export async function submitBugReport(formData) {
 
   try {
     const res = await fetch(GRAPHQL_URL, {
-      method: 'POST',
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
       body: JSON.stringify({
         query: mutation,
@@ -595,14 +614,20 @@ export async function submitBugReport(formData) {
 
     const json = await res.json();
 
-    if (json.errors || (json.data?.submitGfForm?.errors && json.data.submitGfForm.errors.length > 0)) {
-      const errorMsg = json.errors ? json.errors[0].message : json.data.submitGfForm.errors[0].message;
+    if (
+      json.errors ||
+      (json.data?.submitGfForm?.errors &&
+        json.data.submitGfForm.errors.length > 0)
+    ) {
+      const errorMsg = json.errors
+        ? json.errors[0].message
+        : json.data.submitGfForm.errors[0].message;
       throw new Error(errorMsg);
     }
 
     return { success: true };
   } catch (error) {
-    console.error('Bug Report Submission Error:', error);
+    console.error("Bug Report Submission Error:", error);
     return { success: false, message: error.message };
   }
 }
@@ -612,7 +637,7 @@ export async function submitBugReport(formData) {
  */
 export async function submitListing(formData) {
   const cookieStore = await cookies();
-  const authToken = cookieStore.get('authToken')?.value;
+  const authToken = cookieStore.get("authToken")?.value;
 
   const mutation = `
     mutation SubmitListing($input: SubmitGfFormInput!) {
@@ -629,15 +654,15 @@ export async function submitListing(formData) {
 
   try {
     const headers = {
-      'Content-Type': 'application/json',
+      "Content-Type": "application/json",
     };
 
     if (authToken) {
-      headers['Authorization'] = `Bearer ${authToken}`;
+      headers["Authorization"] = `Bearer ${authToken}`;
     }
 
     const res = await fetch(GRAPHQL_URL, {
-      method: 'POST',
+      method: "POST",
       headers: headers,
       body: JSON.stringify({
         query: mutation,
@@ -649,7 +674,7 @@ export async function submitListing(formData) {
               { id: 3, value: formData.city },
               { id: 4, value: formData.state },
               { id: 5, value: formData.zipCode },
-              { id: 7, value: formData.priceRange || '' },
+              { id: 7, value: formData.priceRange || "" },
               { id: 8, value: formData.phoneNumber },
               { id: 9, value: formData.businessEmail },
               { id: 10, value: formData.websiteUrl },
@@ -666,8 +691,12 @@ export async function submitListing(formData) {
               { id: 21, value: formData.streetAddress },
               { id: 22, value: formData.directoryType },
               { id: 23, value: formData.businessTypeCategories },
-              ...(formData.featuredImage ? [{ id: 27, value: formData.featuredImage }] : []),
-              ...(formData.galleryImages ? [{ id: 28, value: formData.galleryImages }] : []),
+              ...(formData.featuredImage
+                ? [{ id: 27, value: formData.featuredImage }]
+                : []),
+              ...(formData.galleryImages
+                ? [{ id: 28, value: formData.galleryImages }]
+                : []),
             ],
           },
         },
@@ -676,16 +705,22 @@ export async function submitListing(formData) {
 
     const json = await res.json();
 
-    if (json.errors || (json.data?.submitGfForm?.errors && json.data.submitGfForm.errors.length > 0)) {
-      const errorMsg = json.errors ? json.errors[0].message : json.data.submitGfForm.errors[0].message;
+    if (
+      json.errors ||
+      (json.data?.submitGfForm?.errors &&
+        json.data.submitGfForm.errors.length > 0)
+    ) {
+      const errorMsg = json.errors
+        ? json.errors[0].message
+        : json.data.submitGfForm.errors[0].message;
       throw new Error(errorMsg);
     }
 
-    revalidatePath('/directory', 'layout');
+    revalidatePath("/directory", "layout");
 
     return { success: true };
   } catch (error) {
-    console.error('Submit Listing Error:', error);
+    console.error("Submit Listing Error:", error);
     return { success: false, message: error.message };
   }
 }
@@ -710,9 +745,9 @@ export async function registerBusiness(fieldValues) {
 
   try {
     const res = await fetch(GRAPHQL_URL, {
-      method: 'POST',
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
       body: JSON.stringify({
         query: mutation,
@@ -727,7 +762,11 @@ export async function registerBusiness(fieldValues) {
 
     const json = await res.json();
 
-    if (json.errors || (json.data?.submitGfForm?.errors && json.data.submitGfForm.errors.length > 0)) {
+    if (
+      json.errors ||
+      (json.data?.submitGfForm?.errors &&
+        json.data.submitGfForm.errors.length > 0)
+    ) {
       if (json.data?.submitGfForm?.errors?.length > 0) {
         const gfError = json.data.submitGfForm.errors[0];
         throw new Error(`Field ID ${gfError.id} failed: ${gfError.message}`);
@@ -738,7 +777,7 @@ export async function registerBusiness(fieldValues) {
 
     return { success: true };
   } catch (error) {
-    console.error('Register Business Error:', error);
+    console.error("Register Business Error:", error);
     return { success: false, message: error.message };
   }
 }
@@ -747,31 +786,34 @@ export async function registerBusiness(fieldValues) {
  * Server Action to upload raw image files directly to the WordPress REST API.
  */
 export async function uploadWPImage(formData) {
-  const file = formData.get('file');
+  const file = formData.get("file");
   if (!file) return null;
 
   const cookieStore = await cookies();
-  const authToken = cookieStore.get('authToken')?.value;
-  if (!authToken) throw new Error('Unauthorized');
+  const authToken = cookieStore.get("authToken")?.value;
+  if (!authToken) throw new Error("Unauthorized");
 
   const wpFormData = new FormData();
-  wpFormData.append('file', file, file.name);
+  wpFormData.append("file", file, file.name);
 
   // Derive the base URL from the existing GraphQL endpoint, or fallback to the staging domain
-  const graphqlUrl = process.env.NEXT_PUBLIC_WORDPRESS_API_URL || process.env.NEXT_PUBLIC_GRAPHQL_ENDPOINT || 'https://staging.capecoralreviewed.com/graphql';
-  const baseUrl = graphqlUrl.replace('/graphql', '');
+  const graphqlUrl =
+    process.env.NEXT_PUBLIC_WORDPRESS_API_URL ||
+    process.env.NEXT_PUBLIC_GRAPHQL_ENDPOINT ||
+    "https://staging.capecoralreviewed.com/graphql";
+  const baseUrl = graphqlUrl.replace("/graphql", "");
 
   const res = await fetch(`${baseUrl}/wp-json/wp/v2/media`, {
-    method: 'POST',
+    method: "POST",
     headers: {
-      'Authorization': `Bearer ${authToken}`
+      Authorization: `Bearer ${authToken}`,
       // Let fetch automatically set the multipart boundary Content-Type
     },
-    body: wpFormData
+    body: wpFormData,
   });
 
   const data = await res.json();
-  if (!res.ok) throw new Error(data.message || 'Image upload failed');
+  if (!res.ok) throw new Error(data.message || "Image upload failed");
   return data.id; // Return the ID for the Headless ID Strategy
 }
 
@@ -804,9 +846,9 @@ export async function getBlogPosts() {
 
   try {
     const res = await fetch(GRAPHQL_URL, {
-      method: 'POST',
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
       body: JSON.stringify({ query }),
       next: { revalidate: 60 },
@@ -815,7 +857,7 @@ export async function getBlogPosts() {
     const json = await res.json();
     return json.data?.posts?.nodes || [];
   } catch (error) {
-    console.error('Error fetching blog posts:', error);
+    console.error("Error fetching blog posts:", error);
     return [];
   }
 }
@@ -851,9 +893,9 @@ export async function getBlogPostBySlug(slug) {
 
   try {
     const res = await fetch(GRAPHQL_URL, {
-      method: 'POST',
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
       body: JSON.stringify({
         query,
@@ -865,7 +907,7 @@ export async function getBlogPostBySlug(slug) {
     const json = await res.json();
     return json.data?.post || null;
   } catch (error) {
-    console.error('Error fetching blog post by slug:', error);
+    console.error("Error fetching blog post by slug:", error);
     return null;
   }
 }
@@ -905,9 +947,9 @@ export async function getSidebarListings() {
 
   try {
     const res = await fetch(GRAPHQL_URL, {
-      method: 'POST',
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
       body: JSON.stringify({ query }),
       next: { revalidate: 60 },
@@ -916,8 +958,71 @@ export async function getSidebarListings() {
     const json = await res.json();
     return json.data?.ccrlistings?.nodes || [];
   } catch (error) {
-    console.error('Error fetching sidebar listings:', error);
+    console.error("Error fetching sidebar listings:", error);
     return [];
   }
 }
 
+/**
+ * Submits the "Claim Listing" form to Gravity Forms via GraphQL.
+ */
+export async function submitClaimForm(formData) {
+  // Connected to Claim Business Form (ID: 12)
+  const formId = 12;
+
+  const mutation = `
+    mutation SubmitClaimForm($input: SubmitGfFormInput!) {
+      submitGfForm(input: $input) {
+        errors { message }
+        confirmation { message }
+      }
+    }
+  `;
+
+  const variables = {
+    input: {
+      id: formId,
+      fieldValues: [
+        { id: 1, value: formData.fullName || '' },
+        { id: 6, value: formData.phone || '' },
+        { id: 7, emailValues: { value: formData.email || '' } }, // GF requires emailValues wrapper
+        { id: 3, value: formData.details || '' },
+        // Added fallbacks to prevent "Field requires the use of value" schema crashes
+        { id: 8, value: formData.listingTitle || 'Unknown Title' },
+        { id: 9, value: formData.listingSlug || 'unknown-slug' },
+      ],
+    },
+  };
+
+
+  try {
+    const res = await fetch(GRAPHQL_URL, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        query: mutation,
+        variables,
+      }),
+    });
+
+    const json = await res.json();
+
+    if (json.errors) {
+      return { success: false, message: json.errors[0].message };
+    }
+
+    if (json.data?.submitGfForm?.errors?.length > 0) {
+      return {
+        success: false,
+        message: json.data.submitGfForm.errors[0].message,
+      };
+    }
+
+    return { success: true };
+  } catch (error) {
+    console.error("Claim Form Error:", error);
+    return { success: false, message: "A network error occurred." };
+  }
+}

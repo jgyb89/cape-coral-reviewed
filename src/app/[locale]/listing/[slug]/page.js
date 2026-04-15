@@ -10,6 +10,7 @@ import ReviewList from "@/components/directory/ReviewList";
 import ReviewActionManager from "@/components/directory/ReviewActionManager";
 import FavoriteButton from "@/components/directory/FavoriteButton";
 import StarRating from "@/components/ui/StarRating";
+import ClaimListing from "@/components/directory/ClaimListing";
 import { formatImageUrl } from "@/lib/formatImageUrl";
 import "./ListingPage.css";
 
@@ -281,19 +282,7 @@ export default async function DirectoryListingPage({ params }) {
 
       <aside className="listing-sidebar">
         <div style={{ position: "sticky", top: "2rem" }}>
-          <div className="listing-card">
-            <h3
-              className="listing-card__title"
-              style={{ border: "none", marginBottom: 0 }}
-            >
-              Add to Favorites
-            </h3>
-            <FavoriteButton
-              listingId={listing.databaseId}
-              currentUser={currentUser}
-              label={t.favorite || "Favorite"}
-            />
-          </div>
+          <ClaimListing listingTitle={listing.title} listingSlug={listing.slug} />
           <BlogSidebar />
         </div>
       </aside>

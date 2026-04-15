@@ -1,6 +1,6 @@
 import { Poppins, Open_Sans } from "next/font/google";
 import PropTypes from "prop-types";
-import "./globals.css";
+import "../globals.css";
 import "material-symbols/outlined.css";
 import Navbar from "@/components/layout/Navbar";
 import BugReporter from "@/components/BugReporter";
