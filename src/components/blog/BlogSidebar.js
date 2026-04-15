@@ -1,6 +1,5 @@
 import Image from "next/image";
 import Link from "next/link";
-import { Star } from "lucide-react";
 import { getSidebarListings } from "@/lib/actions";
 import { formatImageUrl } from "@/lib/formatImageUrl";
 
@@ -10,42 +9,57 @@ export default async function BlogSidebar({ locale = "en" }) {
   return (
     <aside className="blog-sidebar">
       <div className="sidebar-widget">
-        <h3 className="sidebar-widget__title">Featured Listings</h3>
-        <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
-          {listings.map((item) => {
-            const imageUrl = formatImageUrl(item.featuredImage?.node?.sourceUrl);
-            const listingUrl = `/${locale}/listing/${item.slug}`;
+        <h3 className="sidebar-widget__title" style={{ marginBottom: '1.5rem', fontSize: '1.2rem', fontWeight: '700', color: '#1e293b' }}>
+          Featured Listings
+        </h3>
+        <div style={{ display: "flex", flexDirection: "column" }}>
+          {listings.map((listing) => {
+            const imageUrl = formatImageUrl(listing.featuredImage?.node?.sourceUrl);
+            const categoryName = listing.directoryTypes?.nodes?.[0]?.name || '';
             
-            const reviewNodes = item.reviews?.nodes || [];
-            const reviewCount = reviewNodes.length;
-            const averageRating = reviewCount > 0 
-              ? (reviewNodes.reduce((acc, curr) => acc + (Number.parseFloat(curr.reviewFields?.starRating) || 0), 0) / reviewCount).toFixed(1)
+            // Calculate Average Rating safely
+            const reviews = listing.reviews?.nodes || [];
+            const reviewCount = reviews.length;
+            const avgRating = reviewCount > 0 
+              ? (reviews.reduce((sum, r) => sum + (Number.parseFloat(r.reviewFields?.starRating) || 0), 0) / reviewCount).toFixed(1) 
               : "0.0";
 
             return (
               <Link 
-                key={item.databaseId} 
-                href={listingUrl}
-                className="sidebar-listing"
+                href={`/${locale || 'en'}/listing/${listing.slug}`} 
+                key={listing.databaseId || listing.slug} 
+                style={{ display: 'flex', gap: '1rem', textDecoration: 'none', color: 'inherit', marginBottom: '1.5rem', alignItems: 'center' }}
               >
-                <div className="sidebar-listing__image" style={{ width: '80px', height: '80px' }}>
-                  <Image
-                    src={imageUrl}
-                    alt={item.title}
-                    fill
-                    style={{ objectFit: "cover" }}
+                {/* Constrained Thumbnail Image Wrapper (Fixes the fill bug) */}
+                <div style={{ position: 'relative', width: '80px', height: '80px', flexShrink: 0, borderRadius: '8px', overflow: 'hidden', backgroundColor: '#f1f5f9' }}>
+                  <Image 
+                    src={imageUrl} 
+                    fill 
+                    style={{ objectFit: 'cover' }} 
+                    alt={listing.title} 
+                    sizes="80px"
                   />
                 </div>
-                <div className="sidebar-listing__info">
-                  <h4 className="sidebar-listing__title">{item.title}</h4>
-                  <div style={{ display: "flex", alignItems: "center", gap: "4px" }}>
-                    <Star size={14} fill="#d32323" color="#d32323" />
-                    <span style={{ fontSize: "0.85rem", fontWeight: "600" }}>{averageRating}</span>
-                    <span style={{ fontSize: "0.8rem", color: "#666" }}>({reviewCount})</span>
+                
+                {/* Info Column */}
+                <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', gap: '0.3rem' }}>
+                  <h4 style={{ margin: 0, fontSize: '1.05rem', fontWeight: '700', color: '#1e293b', lineHeight: '1.2' }}>
+                    {listing.title}
+                  </h4>
+                  
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.3rem', fontSize: '0.9rem', color: '#64748b' }}>
+                    <span className="material-symbols-outlined" style={{ fontSize: '1.1rem', color: '#e04c4c', fontVariationSettings: "'FILL' 1" }}>
+                      star
+                    </span>
+                    <span style={{ fontWeight: '700', color: '#1e293b' }}>{avgRating}</span>
+                    <span>({reviewCount})</span>
                   </div>
-                  <div style={{ fontSize: "0.8rem", color: "#888", marginTop: "2px" }}>
-                    {item.directoryTypes?.nodes?.[0]?.name}
-                  </div>
+                  
+                  {categoryName && (
+                    <span style={{ fontSize: '0.85rem', color: '#94a3b8' }}>
+                      {categoryName}
+                    </span>
+                  )}
                 </div>
               </Link>
             );

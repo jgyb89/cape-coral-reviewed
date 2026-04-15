@@ -114,8 +114,8 @@
   background: #fff;
   border: 1px solid #eaeaea;
   border-radius: 0 0 12px 12px;
-  width: 100%;
-  max-width: 1000px;
+  width: 1600px;
+  max-width: 95dvw;
   box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
   padding: 32px;
   z-index: 1000;
@@ -127,12 +127,23 @@
 .mega-menu-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 40px;
 }
 
 .mega-menu-column {
   display: flex;
   flex-direction: column;
+  gap: 1rem;
+  padding: 0 1.5rem;
+  border-right: 1px solid #f1f5f9;
+}
+
+.mega-menu-column:first-child {
+  padding-left: 0;
+}
+
+.mega-menu-column:last-child {
+  padding-right: 0;
+  border-right: none;
 }
 
 .mega-menu-title {
