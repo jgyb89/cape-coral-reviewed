@@ -85,9 +85,14 @@ export default function RegisterBusinessForm() {
       },
       website: (v) => {
         if (!v) return "";
-        // Safe regex: removed the nested quantifier ([\/\w \.-]*)* to prevent catastrophic backtracking (ReDoS)
-        const urlRegex = /^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)\/?$/i;
-        return !urlRegex.test(v) ? "Please enter a valid URL" : "";
+        try {
+          // If the value doesn't start with http/https, prepend it for validation
+          const urlToTest = v.startsWith("http") ? v : `https://${v}`;
+          new URL(urlToTest);
+          return "";
+        } catch (_) {
+          return "Please enter a valid URL";
+        }
       },
       consent: (v) => (!v ? "You must agree to the Terms of Services and Privacy Policy" : ""),
     };
