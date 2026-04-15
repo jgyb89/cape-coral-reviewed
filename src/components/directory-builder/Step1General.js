@@ -31,11 +31,12 @@ const Step1General = ({ formData, updateFormData, nextStep }) => {
       </header>
 
       <div className={styles['step-form__group']}>
-        <label className={styles['step-form__label']}>
+        <label htmlFor="title" className={styles['step-form__label']}>
           Business Name <span className={styles['step-form__required']}>*</span>
         </label>
         <input
           type="text"
+          id="title"
           className={`${styles['step-form__input']} ${errors.title ? styles['step-form__input--error'] : ''}`}
           placeholder="e.g. Cape Coral Plumbing"
           value={formData.title}
@@ -46,10 +47,11 @@ const Step1General = ({ formData, updateFormData, nextStep }) => {
       </div>
 
       <div className={styles['step-form__group']}>
-        <label className={styles['step-form__label']}>
+        <label htmlFor="category" className={styles['step-form__label']}>
           Directory Type <span className={styles['step-form__required']}>*</span>
         </label>
         <select
+          id="category"
           className={`${styles['step-form__select']} ${errors.category ? styles['step-form__select--error'] : ''}`}
           value={formData.category}
           onChange={(e) => updateFormData({ category: e.target.value })}
@@ -64,10 +66,11 @@ const Step1General = ({ formData, updateFormData, nextStep }) => {
       </div>
 
       <div className={styles['step-form__group']}>
-        <label className={styles['step-form__label']}>
+        <label htmlFor="description" className={styles['step-form__label']}>
           Description <span className={styles['step-form__required']}>*</span>
         </label>
         <textarea
+          id="description"
           className={`${styles['step-form__textarea']} ${errors.description ? styles['step-form__textarea--error'] : ''}`}
           placeholder="Tell us about your business..."
           rows={5}

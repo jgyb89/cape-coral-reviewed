@@ -199,6 +199,9 @@ export default function Navbar({ currentUser, dict, locale }) {
             className={`${styles['nav-link']} ${styles['nav-link--all-listings']}`}
             onMouseEnter={() => setIsListingsOpen(true)}
             onMouseLeave={() => setIsListingsOpen(false)}
+            tabIndex={0}
+            onFocus={() => setIsListingsOpen(true)}
+            onBlur={() => setIsListingsOpen(false)}
           >
             <div className={styles['nav-link__trigger']}>
               {t.allListings || "All Listings"}{" "}
@@ -263,6 +266,9 @@ export default function Navbar({ currentUser, dict, locale }) {
                 className={styles['nav-link']}
                 onMouseEnter={() => setIsAccountOpen(true)}
                 onMouseLeave={() => setIsAccountOpen(false)}
+                tabIndex={0}
+                onFocus={() => setIsAccountOpen(true)}
+                onBlur={() => setIsAccountOpen(false)}
               >
                 <div className={styles['nav-link__trigger']}>
                   {t.myAccount || "My Account"}{" "}

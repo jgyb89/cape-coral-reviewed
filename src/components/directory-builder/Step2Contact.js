@@ -64,11 +64,12 @@ const Step2Contact = ({ formData, updateFormData, nextStep, prevStep }) => {
       </header>
 
       <div className={styles['step-form__group']}>
-        <label className={styles['step-form__label']}>
+        <label htmlFor="address" className={styles['step-form__label']}>
           Address Street <span className={styles['step-form__required']}>*</span>
         </label>
         <input
           type="text"
+          id="address"
           className={`${styles['step-form__input']} ${errors.address ? styles['step-form__input--error'] : ''}`}
           placeholder="123 Main St"
           value={formData.address}
@@ -79,9 +80,10 @@ const Step2Contact = ({ formData, updateFormData, nextStep, prevStep }) => {
 
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
         <div className={styles['step-form__group']}>
-          <label className={styles['step-form__label']}>City</label>
+          <label htmlFor="city" className={styles['step-form__label']}>City</label>
           <input
             type="text"
+            id="city"
             className={styles['step-form__input']}
             placeholder="Cape Coral"
             value={formData.city || ''}
@@ -89,9 +91,10 @@ const Step2Contact = ({ formData, updateFormData, nextStep, prevStep }) => {
           />
         </div>
         <div className={styles['step-form__group']}>
-          <label className={styles['step-form__label']}>State</label>
+          <label htmlFor="state" className={styles['step-form__label']}>State</label>
           <input
             type="text"
+            id="state"
             className={styles['step-form__input']}
             placeholder="FL"
             value={formData.state || ''}
@@ -101,9 +104,10 @@ const Step2Contact = ({ formData, updateFormData, nextStep, prevStep }) => {
       </div>
 
       <div className={styles['step-form__group']}>
-        <label className={styles['step-form__label']}>Zip Code</label>
+        <label htmlFor="zipCode" className={styles['step-form__label']}>Zip Code</label>
         <input
           type="text"
+          id="zipCode"
           className={styles['step-form__input']}
           placeholder="33904"
           value={formData.zipCode || ''}
@@ -112,11 +116,12 @@ const Step2Contact = ({ formData, updateFormData, nextStep, prevStep }) => {
       </div>
 
       <div className={styles['step-form__group']}>
-        <label className={styles['step-form__label']}>
+        <label htmlFor="phone" className={styles['step-form__label']}>
           Phone Number <span className={styles['step-form__required']}>*</span>
         </label>
         <input
           type="tel"
+          id="phone"
           className={`${styles['step-form__input']} ${errors.phone ? styles['step-form__input--error'] : ''}`}
           placeholder="(239) 000-0000"
           value={formData.phone}
@@ -126,9 +131,10 @@ const Step2Contact = ({ formData, updateFormData, nextStep, prevStep }) => {
       </div>
 
       <div className={styles['step-form__group']}>
-        <label className={styles['step-form__label']}>Email Address</label>
+        <label htmlFor="email" className={styles['step-form__label']}>Email Address</label>
         <input
           type="email"
+          id="email"
           className={`${styles['step-form__input']} ${errors.email ? styles['step-form__input--error'] : ''}`}
           placeholder="info@business.com"
           value={formData.email}
@@ -138,9 +144,10 @@ const Step2Contact = ({ formData, updateFormData, nextStep, prevStep }) => {
       </div>
 
       <div className={styles['step-form__group']}>
-        <label className={styles['step-form__label']}>Website URL</label>
+        <label htmlFor="website" className={styles['step-form__label']}>Website URL</label>
         <input
           type="url"
+          id="website"
           className={`${styles['step-form__input']} ${errors.website ? styles['step-form__input--error'] : ''}`}
           placeholder="https://www.business.com"
           value={formData.website}
@@ -150,9 +157,10 @@ const Step2Contact = ({ formData, updateFormData, nextStep, prevStep }) => {
       </div>
 
       <div className={styles['step-form__group']}>
-        <label className={styles['step-form__label']}>Social Media URL</label>
+        <label htmlFor="socialUrl" className={styles['step-form__label']}>Social Media URL</label>
         <input
           type="url"
+          id="socialUrl"
           className={`${styles['step-form__input']} ${errors.socialUrls ? styles['step-form__input--error'] : ''}`}
           placeholder="https://facebook.com/business"
           value={formData.socialUrls?.[0] || ''}
