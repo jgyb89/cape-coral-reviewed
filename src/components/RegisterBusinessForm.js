@@ -83,17 +83,6 @@ export default function RegisterBusinessForm() {
         if (!v) return "Phone number is required";
         return v.length < 14 ? "Please enter a valid phone number" : "";
       },
-      website: (v) => {
-        if (!v) return "";
-        try {
-          // If the value doesn't start with http/https, prepend it for validation
-          const urlToTest = v.startsWith("http") ? v : `https://${v}`;
-          new URL(urlToTest);
-          return "";
-        } catch (_) {
-          return "Please enter a valid URL";
-        }
-      },
       consent: (v) => (!v ? "You must agree to the Terms of Services and Privacy Policy" : ""),
     };
 
