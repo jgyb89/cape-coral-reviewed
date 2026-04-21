@@ -1,87 +1,10 @@
-/* src/components/directory/DirectoryFilterManager.css */
 .directory-filter-manager {
-  margin-top: 2rem;
-}
-
-.directory-controls {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 1.5rem;
-  background: #f9f9f9;
-  padding: 1.5rem;
-  border-radius: 12px;
-  border: 1px solid #eee;
-  margin-bottom: 2rem;
-  align-items: flex-end;
-}
-
-.control-group {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-  flex: 1;
-  min-width: 150px;
-}
-
-.control-group label {
-  font-size: 0.85rem;
-  font-weight: 600;
-  color: #555;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-}
-
-.control-group select {
-  padding: 0.75rem;
-  border-radius: 8px;
-  border: 1px solid #ccc;
-  font-size: 1rem;
-  background-color: white;
-  cursor: pointer;
-  transition: border-color 0.2s;
-  appearance: none;
-  background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2224%22%20height%3D%2224%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22currentColor%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpolyline%20points%3D%226%209%2012%2015%2018%209%22%3E%3C%2Fpolyline%3E%3C%2Fsvg%3E");
-  background-repeat: no-repeat;
-  background-position: right 0.75rem center;
-  background-size: 1em;
-}
-
-.control-group select:focus {
-  outline: none;
-  border-color: #0070f3;
-}
-
-.clear-filters-btn {
-  padding: 0.75rem 1.25rem;
-  background-color: #eee;
-  border: none;
-  border-radius: 8px;
-  font-size: 0.9rem;
-  font-weight: 600;
-  color: #333;
-  cursor: pointer;
-  transition: background-color 0.2s;
-  height: fit-content;
-}
-
-.clear-filters-btn:hover {
-  background-color: #e0e0e0;
+  margin-top: 1rem;
 }
 
 .results-count {
-  margin-bottom: 1rem;
+  margin-bottom: 1.5rem;
   font-size: 0.95rem;
-  color: #666;
-  font-style: italic;
-}
-
-@media (max-width: 600px) {
-  .directory-controls {
-    flex-direction: column;
-    align-items: stretch;
-  }
-  
-  .control-group {
-    width: 100%;
-  }
+  color: #64748b;
+  font-weight: 500;
 }
