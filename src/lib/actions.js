@@ -33,7 +33,7 @@ export async function updateUserProfile(formData) {
 
   // FORCE the use of the authenticated viewer's ID to prevent IDOR.
   const viewer = await getViewer();
-  if (!viewer || !viewer.id) {
+  if (!viewer?.id) {
     return { success: false, error: "Could not securely identify user" };
   }
   

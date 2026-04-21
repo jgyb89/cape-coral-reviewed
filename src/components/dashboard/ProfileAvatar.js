@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useRef } from 'react';
+import PropTypes from 'prop-types';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { uploadWPImage, updateUserProfile } from '@/lib/actions';
@@ -41,16 +42,18 @@ export default function ProfileAvatar({ user }) {
   };
 
   const handleFileSelect = (e) => {
-    if (e.target.files && e.target.files[0]) {
-      validateAndProcessFile(e.target.files[0]);
+    const file = e.target.files?.[0];
+    if (file) {
+      validateAndProcessFile(file);
     }
   };
 
   const handleDrop = (e) => {
     e.preventDefault();
     setIsDragging(false);
-    if (e.dataTransfer.files && e.dataTransfer.files[0]) {
-      validateAndProcessFile(e.dataTransfer.files[0]);
+    const file = e.dataTransfer.files?.[0];
+    if (file) {
+      validateAndProcessFile(file);
     }
   };
 
@@ -94,7 +97,8 @@ export default function ProfileAvatar({ user }) {
     <>
       {/* Dashboard Avatar Display */}
       <div className={styles['avatar-wrapper']}>
-        <div 
+        <button 
+          type="button"
           className={`${styles['avatar-container']} ${isVerified ? styles['avatar-container--verified'] : ''}`}
           onClick={() => setIsModalOpen(true)}
         >
@@ -118,7 +122,7 @@ export default function ProfileAvatar({ user }) {
               <span className="material-symbols-outlined" style={{ fontSize: '1rem', fontWeight: 'bold' }}>check</span>
             </div>
           )}
-        </div>
+        </button>
         <h3 className={styles['avatar-name']}>{userName}</h3>
       </div>
 
@@ -135,7 +139,8 @@ export default function ProfileAvatar({ user }) {
 
             <div className={styles['modal-body']}>
               {/* Left Side: Drag & Drop Zone */}
-              <div 
+              <button 
+                type="button"
                 className={`${styles['modal-dropzone']} ${isDragging ? styles['modal-dropzone--active'] : ''}`}
                 onDragOver={(e) => { e.preventDefault(); setIsDragging(true); }}
                 onDragLeave={() => setIsDragging(false)}
@@ -155,20 +160,20 @@ export default function ProfileAvatar({ user }) {
                   </div>
                 ) : (
                   <>
-                    <span className="material-symbols-outlined" style={{ fontSize: '3rem', color: '#94a3b8', marginBottom: '0.5rem' }}>cloud_upload</span>
+                    <span className="material-symbols-outlined" style={{ fontSize: '3rem', color: '#64748b', marginBottom: '0.5rem' }}>cloud_upload</span>
                     <p style={{ margin: 0, color: '#475569', fontWeight: 500 }}>Drag & Drop</p>
-                    <span style={{ fontSize: '0.85rem', color: '#94a3b8' }}>or click to browse</span>
+                    <span style={{ fontSize: '0.85rem', color: '#64748b' }}>or click to browse</span>
                   </>
                 )}
-              </div>
+              </button>
 
               {/* Right Side: Actions & Errors */}
               <div className={styles['modal-actions']}>
                 <div>
-                  <p style={{ margin: '0 0 1rem 0', color: '#64748b', fontSize: '0.95rem', lineHeight: '1.5' }}>
+                  <p style={{ margin: '0 0 1rem 0', color: '#475569', fontSize: '0.95rem', lineHeight: '1.5' }}>
                     Upload a professional photo or logo to help customers recognize your business.
                   </p>
-                  <ul style={{ margin: '0 0 1.5rem 0', paddingLeft: '1.2rem', color: '#94a3b8', fontSize: '0.85rem', display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
+                  <ul style={{ margin: '0 0 1.5rem 0', paddingLeft: '1.2rem', color: '#64748b', fontSize: '0.85rem', display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
                     <li>JPEG, PNG, or WEBP</li>
                     <li>Max file size: 2MB</li>
                     <li>1:1 Square aspect ratio best</li>
@@ -195,3 +200,21 @@ export default function ProfileAvatar({ user }) {
     </>
   );
 }
+
+ProfileAvatar.propTypes = {
+  user: PropTypes.shape({
+    name: PropTypes.string,
+    isVerified: PropTypes.bool,
+    avatarUrl: PropTypes.string,
+    avatar: PropTypes.shape({
+      url: PropTypes.string
+    }),
+    customAvatar: PropTypes.shape({
+      customAvatar: PropTypes.shape({
+        node: PropTypes.shape({
+          sourceUrl: PropTypes.string
+        })
+      })
+    })
+  })
+};
