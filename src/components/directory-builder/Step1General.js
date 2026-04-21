@@ -167,6 +167,8 @@ const Step1General = ({ formData, updateFormData, nextStep }) => {
                   }}
                   onMouseOver={(e) => e.currentTarget.style.backgroundColor = '#f1f5f9'}
                   onMouseOut={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
+                  onFocus={(e) => e.currentTarget.style.backgroundColor = '#f1f5f9'}
+                  onBlur={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
                 >
                   {/* Highlight matching text */}
                   <span style={{ fontWeight: 600 }}>{suggestion.slice(0, catInput.length)}</span>
