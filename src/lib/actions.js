@@ -31,6 +31,14 @@ export async function updateUserProfile(formData) {
     return { success: false, error: "Not authenticated" };
   }
 
+  // FORCE the use of the authenticated viewer's ID to prevent IDOR.
+  const viewer = await getViewer();
+  if (!viewer || !viewer.id) {
+    return { success: false, error: "Could not securely identify user" };
+  }
+  
+  const userId = viewer.id;
+
   const mutation = `
     mutation UpdateUserProfile($input: UpdateUserInput!) {
       updateUser(input: $input) {
@@ -38,6 +46,13 @@ export async function updateUserProfile(formData) {
           id
           firstName
           lastName
+          customAvatar {
+            customAvatar {
+              node {
+                sourceUrl
+              }
+            }
+          }
           userData {
             phoneNumber
             websiteUrl
@@ -59,12 +74,13 @@ export async function updateUserProfile(formData) {
         query: mutation,
         variables: {
           input: {
-            id: formData.id,
+            id: userId,
             firstName: formData.firstName,
             lastName: formData.lastName,
             phoneNumber: formData.phoneNumber,
             websiteUrl: formData.websiteUrl,
             emailVisibility: formData.emailVisibility,
+            ...(formData.avatarId && { customAvatar: Number.parseInt(formData.avatarId) }),
           },
         },
       }),
@@ -786,12 +802,26 @@ export async function registerBusiness(fieldValues) {
  * Server Action to upload raw image files directly to the WordPress REST API.
  */
 export async function uploadWPImage(formData) {
-  const file = formData.get("file");
-  if (!file) return null;
-
+  // 1. Enforce Authentication
   const cookieStore = await cookies();
   const authToken = cookieStore.get("authToken")?.value;
-  if (!authToken) throw new Error("Unauthorized");
+  if (!authToken) {
+    throw new Error("Unauthorized: Must be logged in to upload files.");
+  }
+
+  const file = formData.get("file");
+  if (!file) throw new Error("No file provided");
+
+  // 2. Server-Side Validation (Never trust the client)
+  const maxSize = 2 * 1024 * 1024; // 2MB
+  const allowedTypes = ['image/jpeg', 'image/png', 'image/webp'];
+
+  if (file.size > maxSize) {
+    throw new Error("File too large. Maximum size is 2MB.");
+  }
+  if (!allowedTypes.includes(file.type)) {
+    throw new Error("Invalid file type. Only JPG, PNG, and WEBP are allowed.");
+  }
 
   const wpFormData = new FormData();
   wpFormData.append("file", file, file.name);

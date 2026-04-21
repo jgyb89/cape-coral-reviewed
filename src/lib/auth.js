@@ -78,6 +78,16 @@ export async function getViewer() {
         email
         firstName
         lastName
+        avatar {
+          url
+        }
+        customAvatar {
+          customAvatar {
+            node {
+              sourceUrl
+            }
+          }
+        }
         roles {
           nodes {
             name
