@@ -14,14 +14,11 @@ import {
   Coffee,
   Pizza,
   Beer,
-  Wine,
-  IceCream,
   ChefHat,
   Stethoscope,
   Dumbbell,
   Flower,
   Smile,
-  Pill,
   Hammer,
   Wrench,
   Brush,
@@ -35,24 +32,16 @@ const categories = [
     slug: "food-drink",
     icon: <Utensils size={20} />,
     subs: [
-      { name: "Restaurants", slug: "restaurants", icon: <ChefHat size={16} /> },
-      { name: "Coffee & Tea", slug: "coffee-tea", icon: <Coffee size={16} /> },
-      {
-        name: "Bars & Nightlife",
-        slug: "bars-nightlife",
-        icon: <Beer size={16} />,
-      },
-      { name: "Pizza", slug: "pizza", icon: <Pizza size={16} /> },
-      { name: "Bakeries", slug: "bakeries", icon: <IceCream size={16} /> },
-      { name: "Wine Bars", slug: "wine-bars", icon: <Wine size={16} /> },
-      { name: "Breweries", slug: "breweries", icon: <Beer size={16} /> },
-      { name: "Juice Bars", slug: "juice-bars", icon: <Leaf size={16} /> },
-      {
-        name: "Breakfast & Brunch",
-        slug: "breakfast-brunch",
-        icon: <Coffee size={16} />,
-      },
-      { name: "Seafood", slug: "seafood", icon: <ChefHat size={16} /> },
+      { name: "Restaurants", slug: "restaurants-en", icon: <ChefHat size={16} /> },
+      { name: "Bars & Nightlife", slug: "bars-nightlife-en", icon: <Beer size={16} /> },
+      { name: "Cafes & Bakeries", slug: "cafes-bakeries-en", icon: <Coffee size={16} /> },
+      { name: "Pizza", slug: "pizza-en", icon: <Pizza size={16} /> },
+      { name: "Seafood", slug: "seafood-en", icon: <Utensils size={16} /> },
+      { name: "Breakfast & Brunch", slug: "breakfast-brunch-en", icon: <Coffee size={16} /> },
+      { name: "Mexican & Latin", slug: "mexican-latin-en", icon: <Utensils size={16} /> },
+      { name: "Breweries", slug: "breweries-en", icon: <Beer size={16} /> },
+      { name: "Coffee & Tea", slug: "coffee-tea-en", icon: <Coffee size={16} /> },
+      { name: "Steakhouse", slug: "steakhouse-en", icon: <Utensils size={16} /> },
     ],
   },
   {
@@ -60,24 +49,16 @@ const categories = [
     slug: "health-wellness",
     icon: <HeartPulse size={20} />,
     subs: [
-      { name: "Doctors", slug: "doctors", icon: <Stethoscope size={16} /> },
-      { name: "Gyms", slug: "gyms", icon: <Dumbbell size={16} /> },
-      { name: "Spas", slug: "spas", icon: <Flower size={16} /> },
-      { name: "Dentists", slug: "dentists", icon: <Smile size={16} /> },
-      { name: "Pharmacies", slug: "pharmacies", icon: <Pill size={16} /> },
-      { name: "Yoga", slug: "yoga", icon: <Dumbbell size={16} /> },
-      { name: "Massage", slug: "massage", icon: <Flower size={16} /> },
-      {
-        name: "Physical Therapy",
-        slug: "physical-therapy",
-        icon: <HeartPulse size={16} />,
-      },
-      {
-        name: "Acupuncture",
-        slug: "acupuncture",
-        icon: <HeartPulse size={16} />,
-      },
-      { name: "Eye Care", slug: "eye-care", icon: <Smile size={16} /> },
+      { name: "Medical & Dental", slug: "medical-dental-en", icon: <Stethoscope size={16} /> },
+      { name: "Beauty & Spas", slug: "beauty-spas-en", icon: <Flower size={16} /> },
+      { name: "Fitness & Sports", slug: "fitness-sports-en", icon: <Dumbbell size={16} /> },
+      { name: "Primary Care", slug: "primary-care-doctors-en", icon: <Stethoscope size={16} /> },
+      { name: "Dentists", slug: "dentists-orthodontics-en", icon: <Smile size={16} /> },
+      { name: "Hair Salons", slug: "hair-salons-en", icon: <Flower size={16} /> },
+      { name: "Gyms & Clubs", slug: "gyms-health-clubs-en", icon: <Dumbbell size={16} /> },
+      { name: "Massage Therapy", slug: "massage-therapy-en", icon: <HeartPulse size={16} /> },
+      { name: "Chiropractors", slug: "chiropractors-en", icon: <HeartPulse size={16} /> },
+      { name: "Yoga", slug: "yoga-en", icon: <HeartPulse size={16} /> },
     ],
   },
   {
@@ -85,16 +66,16 @@ const categories = [
     slug: "home-local-services",
     icon: <Home size={20} />,
     subs: [
-      { name: "Contractors", slug: "contractors", icon: <Hammer size={16} /> },
-      { name: "Plumbers", slug: "plumbers", icon: <Wrench size={16} /> },
-      { name: "Electricians", slug: "electricians", icon: <Zap size={16} /> },
-      { name: "Landscaping", slug: "landscaping", icon: <Leaf size={16} /> },
-      { name: "Cleaning", slug: "cleaning", icon: <Brush size={16} /> },
-      { name: "HVAC", slug: "hvac", icon: <Zap size={16} /> },
-      { name: "Roofing", slug: "roofing", icon: <Hammer size={16} /> },
-      { name: "Painters", slug: "painters", icon: <Brush size={16} /> },
-      { name: "Locksmiths", slug: "locksmiths", icon: <Wrench size={16} /> },
-      { name: "Pest Control", slug: "pest-control", icon: <Zap size={16} /> },
+      { name: "Contractors & Repair", slug: "contractors-repair-en", icon: <Hammer size={16} /> },
+      { name: "Real Estate", slug: "real-estate-en", icon: <Home size={16} /> },
+      { name: "Auto & Transport", slug: "auto-transport-en", icon: <Wrench size={16} /> },
+      { name: "Plumbers", slug: "plumbers-en", icon: <Wrench size={16} /> },
+      { name: "Electricians", slug: "electricians-en", icon: <Zap size={16} /> },
+      { name: "Roofing", slug: "roofing-contractors-en", icon: <Hammer size={16} /> },
+      { name: "Cleaning & Wash", slug: "cleaning-pressure-washing-en", icon: <Brush size={16} /> },
+      { name: "Landscaping", slug: "landscaping-lawn-care-en", icon: <Leaf size={16} /> },
+      { name: "Pet Services", slug: "pet-services-en", icon: <Smile size={16} /> },
+      { name: "HVAC & AC", slug: "hvac-ac-repair-en", icon: <Zap size={16} /> },
     ],
   },
 ];
@@ -557,6 +538,19 @@ export default function Navbar({ currentUser, dict, locale }) {
                 <>
                   <h3 className={styles['flyout-panel-title']}>{activeCategory.title}</h3>
                   <ul className={styles['flyout-list']}>
+                    {/* NEW: View All Category Link */}
+                    <li className={styles['flyout-item']}>
+                      <Link
+                        href={`/${locale}/directory/${activeCategory.slug}`}
+                        className={styles['flyout-link']}
+                        onClick={closeMobileMenu}
+                      >
+                        <span className={styles['flyout-category-btn']} style={{ fontWeight: 700, color: '#e04c4c' }}>
+                          View All {activeCategory.title}
+                        </span>
+                      </Link>
+                    </li>
+                    
                     {activeCategory.subs.map((sub) => (
                       <li key={sub.slug} className={styles['flyout-item']}>
                         <Link

@@ -1,8 +1,10 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useMemo } from "react";
+import { useSearchParams } from "next/navigation";
 import PropTypes from "prop-types";
 import CcrCardGrid from "./CcrCardGrid";
+import DirectoryFilters from "./DirectoryFilters";
 import styles from "./DirectoryFilterManager.module.css";
 
 const getListingRating = (listing) => {
@@ -15,52 +17,58 @@ const getListingRating = (listing) => {
   return sum / reviews.length;
 };
 
+const isCurrentlyOpen = (listing) => {
+  // Simple check for existence of hours - in a real app this would check current day/time
+  const hours = listing.listingdata || {};
+  return !!(
+    hours.hoursMonday ||
+    hours.hoursTuesday ||
+    hours.hoursWednesday ||
+    hours.hoursThursday ||
+    hours.hoursFriday ||
+    hours.hoursSaturday ||
+    hours.hoursSunday
+  );
+};
+
 export default function DirectoryFilterManager({ listings, currentUser, dict = {}, locale = "en" }) {
+  const searchParams = useSearchParams();
   const t = dict?.directory || {};
-  
-  const [activeCategory, setActiveCategory] = useState("All");
-  const [activePrice, setActivePrice] = useState("All");
-  const [sortBy, setSortBy] = useState("A-Z");
 
-  // Extract unique categories from listings
-  const categories = useMemo(() => {
-    const allCats = listings.flatMap((listing) =>
-      listing.directoryTypes?.nodes?.map((node) => node.name) || []
-    );
-    return ["All", ...new Set(allCats)].sort((a, b) => a.localeCompare(b));
-  }, [listings]);
-
-  const priceRanges = ["All", "$", "$$", "$$$", "$$$$"];
+  // Current Filters from URL
+  const categoryFilter = searchParams.get('category') || '';
+  const ratingFilter = Number.parseInt(searchParams.get('rating')) || 0;
+  const openNowFilter = searchParams.get('open') === 'true';
+  const sortByFilter = searchParams.get('sort') || 'newest';
 
   const filteredAndSortedListings = useMemo(() => {
     let result = [...listings];
 
-    // Filter by category
-    if (activeCategory !== "All") {
-      result = result.filter((listing) =>
-        listing.directoryTypes?.nodes?.some(
-          (node) => node.name === activeCategory
-        )
+    // Filter by In-Page Category
+    if (categoryFilter) {
+      result = result.filter((listing) => 
+        listing.directoryTypes?.nodes?.some(node => node.name.toLowerCase().includes(categoryFilter.toLowerCase()))
       );
     }
 
-    // Filter by price
-    if (activePrice !== "All") {
-      result = result.filter(
-        (listing) => listing.listingdata?.priceRange === activePrice
-      );
+    // Filter by Rating
+    if (ratingFilter > 0) {
+      result = result.filter((listing) => getListingRating(listing) >= ratingFilter);
+    }
+
+    // Filter by Open Now
+    if (openNowFilter) {
+      result = result.filter((listing) => isCurrentlyOpen(listing));
     }
 
     // Sort
     result.sort((a, b) => {
-      switch (sortBy) {
-        case "A-Z":
+      switch (sortByFilter) {
+        case "az":
           return a.title.localeCompare(b.title);
-        case "Z-A":
-          return b.title.localeCompare(a.title);
-        case "Highest Rated":
+        case "highest_rated":
           return getListingRating(b) - getListingRating(a);
-        case "Newest":
+        case "newest":
           return new Date(b.date) - new Date(a.date);
         default:
           return 0;
@@ -68,67 +76,12 @@ export default function DirectoryFilterManager({ listings, currentUser, dict = {
     });
 
     return result;
-  }, [listings, activeCategory, activePrice, sortBy]);
-
-  const handleClearFilters = () => {
-    setActiveCategory("All");
-    setActivePrice("All");
-    setSortBy("A-Z");
-  };
+  }, [listings, categoryFilter, ratingFilter, openNowFilter, sortByFilter]);
 
   return (
     <div className={styles['directory-filter-manager']}>
-      <div className={styles['directory-controls']}>
-        <div className={styles['control-group']}>
-          <label htmlFor="category-filter">{t.filterCategory || "CATEGORY"}</label>
-          <select
-            id="category-filter"
-            value={activeCategory}
-            onChange={(e) => setActiveCategory(e.target.value)}
-          >
-            {categories.map((cat) => (
-              <option key={cat} value={cat}>
-                {cat === "All" ? (t.all || "All") : cat}
-              </option>
-            ))}
-          </select>
-        </div>
-
-        <div className={styles['control-group']}>
-          <label htmlFor="price-filter">{t.filterPrice || "PRICE"}</label>
-          <select
-            id="price-filter"
-            value={activePrice}
-            onChange={(e) => setActivePrice(e.target.value)}
-          >
-            {priceRanges.map((price) => (
-              <option key={price} value={price}>
-                {price === "All" ? (t.all || "All") : price}
-              </option>
-            ))}
-          </select>
-        </div>
-
-        <div className={styles['control-group']}>
-          <label htmlFor="sort-by">{t.filterSort || "SORT BY"}</label>
-          <select
-            id="sort-by"
-            value={sortBy}
-            onChange={(e) => setSortBy(e.target.value)}
-          >
-            <option value="A-Z">{t.sortAZ || "A-Z"}</option>
-            <option value="Z-A">Z-A</option>
-            <option value="Highest Rated">Highest Rated</option>
-            <option value="Newest">Newest</option>
-          </select>
-        </div>
-
-        {(activeCategory !== "All" || activePrice !== "All" || sortBy !== "A-Z") && (
-          <button className={styles['clear-filters-btn']} onClick={handleClearFilters}>
-            Clear Filters
-          </button>
-        )}
-      </div>
+      {/* The Revamped Filter Bar */}
+      <DirectoryFilters />
 
       <div className={styles['results-count']}>
         {filteredAndSortedListings.length}{" "}
@@ -139,6 +92,13 @@ export default function DirectoryFilterManager({ listings, currentUser, dict = {
     </div>
   );
 }
+
+DirectoryFilterManager.propTypes = {
+  listings: PropTypes.array.isRequired,
+  currentUser: PropTypes.object,
+  dict: PropTypes.object,
+  locale: PropTypes.string,
+};
 
 DirectoryFilterManager.propTypes = {
   listings: PropTypes.array.isRequired,

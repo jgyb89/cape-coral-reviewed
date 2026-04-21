@@ -12,7 +12,8 @@ const ListingWizard = () => {
   const [currentStep, setCurrentStep] = useState(1);
   const [formData, setFormData] = useState({
     title: '',
-    category: '',
+    category: '', // Represents the top-level Directory Type
+    categories: [], // NEW: Holds the specific sub-categories
     description: '',
     address: '',
     phone: '',

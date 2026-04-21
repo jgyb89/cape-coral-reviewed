@@ -70,7 +70,7 @@ const Step5Finish = ({ formData, prevStep }) => {
         businessDescription: formData.description,
         streetAddress: formData.address,
         directoryType: formData.category,
-        businessTypeCategories: formData.category,
+        businessTypeCategories: formData.categories?.join(', ') || '',
         featuredImage: featuredImageId ? featuredImageId.toString() : '',
         galleryImages: galleryIds.length > 0 ? galleryIds.join(',') : ''
       };
@@ -104,8 +104,11 @@ const Step5Finish = ({ formData, prevStep }) => {
           <span style={{ fontWeight: 600 }}>Title:</span>
           <span>{formData.title}</span>
           
-          <span style={{ fontWeight: 600 }}>Category:</span>
+          <span style={{ fontWeight: 600 }}>Directory Type:</span>
           <span>{formData.category}</span>
+
+          <span style={{ fontWeight: 600 }}>Categories:</span>
+          <span>{(formData.categories || []).join(', ') || 'None assigned'}</span>
           
           <span style={{ fontWeight: 600 }}>Address:</span>
           <span>{formData.address}, {formData.city} {formData.state} {formData.zipCode}</span>
