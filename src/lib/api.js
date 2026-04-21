@@ -148,6 +148,21 @@ export async function getListings(categorySlug = null) {
           }
         }
       }
+      author {
+        node {
+          name
+          customAvatar {
+            customAvatar {
+              node {
+                sourceUrl
+              }
+            }
+          }
+          avatar {
+            url
+          }
+        }
+      }
     }
   `;
 
@@ -242,6 +257,21 @@ export async function getListingsByCategory(categorySlug, directoryType = null) 
               }
             }
           }
+          author {
+            node {
+              name
+              customAvatar {
+                customAvatar {
+                  node {
+                    sourceUrl
+                  }
+                }
+              }
+              avatar {
+                url
+              }
+            }
+          }
         }
       }
     }
@@ -318,6 +348,21 @@ export async function getListingsByDirectoryType(directoryTypeSlug) {
             nodes {
               reviewFields {
                 starRating
+              }
+            }
+          }
+          author {
+            node {
+              name
+              customAvatar {
+                customAvatar {
+                  node {
+                    sourceUrl
+                  }
+                }
+              }
+              avatar {
+                url
               }
             }
           }

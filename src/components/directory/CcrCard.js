@@ -32,6 +32,13 @@ export default function CcrCard({ listing, currentUser, locale = 'en' }) {
   const imageUrl = formatImageUrl(featuredImage?.node?.sourceUrl);
   const imageAlt = featuredImage?.node?.altText || title;
 
+  // Author data
+  const authorNode = listing?.author?.node;
+  const authorName = authorNode?.name || 'Business Owner';
+  const authorImage = authorNode?.customAvatar?.customAvatar?.node?.sourceUrl || authorNode?.avatar?.url || '/placeholder-avatar.jpg';
+  // Update this logic if you have a specific ACF field for "isVerified"
+  const isVerified = true; 
+
   // Rating calculation from the new ACF structure
   const reviewNodes = listing.reviews?.nodes || [];
   const reviewCount = reviewNodes.length;
@@ -48,21 +55,30 @@ export default function CcrCard({ listing, currentUser, locale = 'en' }) {
             src={imageUrl}
             alt={imageAlt}
             fill
-            style={{ objectFit: "cover" }}
+            style={{ objectFit: "cover", borderRadius: '12px 12px 0 0' }}
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
             priority={false}
           />
+          {/* Author Avatar Overlay */}
+          <div className={`${styles['ccr-card__author-wrapper']} ${isVerified ? styles['ccr-card__author-wrapper--verified'] : ''}`}>
+            <div className={styles['ccr-card__author-img-container']}>
+              <Image 
+                src={authorImage} 
+                alt={authorName} 
+                fill 
+                style={{ objectFit: 'cover' }} 
+                sizes="54px"
+              />
+            </div>
+            {isVerified && (
+              <div className={styles['ccr-card__author-badge']} title="Verified Owner">
+                <span className="material-symbols-outlined" style={{ fontSize: '11px', fontWeight: 'bold' }}>check</span>
+              </div>
+            )}
+          </div>
         </div>
 
         <div className={styles['ccr-card__content']}>
-          <div className={styles['ccr-card__avatar']}>
-            <span
-              className="material-symbols-outlined"
-              style={{ fontSize: "44px", color: "#ccc" }}
-            >
-              storefront
-            </span>
-          </div>
           <Link href={listingUrl} className={styles['ccr-card__header-link']}>
             <h3 className={styles['ccr-card__title']}>{title}</h3>
           </Link>
@@ -193,6 +209,15 @@ CcrCard.propTypes = {
           }),
         })
       ),
+    }),
+    author: PropTypes.shape({
+      node: PropTypes.shape({
+        name: PropTypes.string,
+        customAvatar: PropTypes.object,
+        avatar: PropTypes.shape({
+          url: PropTypes.string,
+        }),
+      }),
     }),
   }).isRequired,
   currentUser: PropTypes.shape({

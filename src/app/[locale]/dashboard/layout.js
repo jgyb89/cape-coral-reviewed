@@ -19,7 +19,7 @@ export default async function DashboardLayout({ children, params }) {
 
   return (
     <div className="dashboard-layout">
-      <Sidebar userRoles={userRoles} locale={locale} />
+      <Sidebar user={viewer} userRoles={userRoles} locale={locale} />
 
       <main className="dashboard-content">
         {children}

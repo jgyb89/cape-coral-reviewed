@@ -1,11 +1,13 @@
 import Link from 'next/link';
 import PropTypes from 'prop-types';
+import ProfileAvatar from './ProfileAvatar';
 
-export default function Sidebar({ userRoles, locale }) {
+export default function Sidebar({ user, userRoles, locale }) {
   const isAdminOrBusiness = userRoles.includes('business') || userRoles.includes('administrator');
 
   return (
     <aside className="dashboard-nav">
+      <ProfileAvatar user={user} />
       <ul className="dashboard-nav__list">
         <li className="dashboard-nav__item">
           <Link href={`/${locale}/dashboard`} className="dashboard-nav__link">
@@ -47,6 +49,7 @@ export default function Sidebar({ userRoles, locale }) {
 }
 
 Sidebar.propTypes = {
+  user: PropTypes.object.isRequired,
   userRoles: PropTypes.arrayOf(PropTypes.string).isRequired,
   locale: PropTypes.string.isRequired,
 };
