@@ -92,5 +92,11 @@
     "all": "Todos",
     "sortAZ": "A-Z",
     "listingsFound": "negocios encontrados"
+  },
+  "checkEmail": {
+    "title": "¡Revisa tu bandeja de entrada!",
+    "message": "Hemos enviado un enlace de verificación a tu dirección de correo electrónico. Por favor, haz clic en el enlace para activar tu cuenta y acceder a tu panel de control.",
+    "loginButton": "Ir a Iniciar sesión",
+    "returnHome": "Volver a la página de inicio"
   }
 }

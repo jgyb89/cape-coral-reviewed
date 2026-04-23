@@ -92,5 +92,11 @@
     "all": "All",
     "sortAZ": "A-Z",
     "listingsFound": "listings found"
+  },
+  "checkEmail": {
+    "title": "Check Your Inbox!",
+    "message": "We've sent a verification link to your email address. Please click the link to activate your account and access your dashboard.",
+    "loginButton": "Go to Login",
+    "returnHome": "Return to Homepage"
   }
 }

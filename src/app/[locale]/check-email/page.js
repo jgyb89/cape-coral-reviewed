@@ -1,27 +1,50 @@
-import Link from 'next/link';
+"use client";
 
-export const metadata = {
-  title: 'Check Your Inbox! | Cape Coral Directory',
-  description: 'We\'ve sent a verification link to your email address.',
-};
+import { useState, useEffect } from "react";
+import Link from "next/link";
+import { useParams } from "next/navigation";
+import LoginModal from "@/components/auth/LoginModal";
+import { getDictionary } from "@/lib/dictionaries";
 
 export default function CheckEmailPage() {
+  const params = useParams();
+  const locale = params.locale || "en";
+  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
+  const [dict, setDict] = useState(null);
+
+  useEffect(() => {
+    getDictionary(locale).then(setDict);
+  }, [locale]);
+
+  const t = dict?.checkEmail || {};
+
   return (
     <div className="check-email">
       <div className="check-email__container">
-        <h1 className="check-email__title">Check Your Inbox!</h1>
+        <h1 className="check-email__title">{t.title || "Check Your Inbox!"}</h1>
         <p className="check-email__message">
-          We&apos;ve sent a verification link to your email address. Please click the link to activate your account and access your dashboard.
+          {t.message || "We've sent a verification link to your email address. Please click the link to activate your account and access your dashboard."}
         </p>
         <div className="check-email__actions">
-          <Link href="/login" className="check-email__button">
-            Go to Login
-          </Link>
-          <Link href="/" className="check-email__link">
-            Return to Homepage
+          <button
+            onClick={() => setIsLoginModalOpen(true)}
+            className="check-email__button"
+            style={{ border: "none", cursor: "pointer" }}
+          >
+            {t.loginButton || "Go to Login"}
+          </button>
+          <Link href={`/${locale}`} className="check-email__link">
+            {t.returnHome || "Return to Homepage"}
           </Link>
         </div>
       </div>
+
+      <LoginModal
+        isOpen={isLoginModalOpen}
+        onClose={() => setIsLoginModalOpen(false)}
+        dict={dict}
+        locale={locale}
+      />
     </div>
   );
 }
