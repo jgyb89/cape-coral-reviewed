@@ -136,6 +136,16 @@ function useEditListingForm(initialData) {
     setSocialErrors(newErrors);
   };
 
+  const handleAddSocialUrl = () => {
+    setFormData(prev => ({ ...prev, socialUrls: [...prev.socialUrls, ''] }));
+    setSocialErrors(prev => [...prev, '']);
+  };
+
+  const handleRemoveSocialUrl = (index) => {
+    setFormData(prev => ({ ...prev, socialUrls: prev.socialUrls.filter((_, i) => i !== index) }));
+    setSocialErrors(prev => prev.filter((_, i) => i !== index));
+  };
+
   const handleTimeChange = (day, field, value) => {
     const rawValue = field === 'closed' ? value : (field.includes('AmPm') ? value : value.replaceAll(/[^\d:]/g, '').slice(0, 5));
     setFormData(prev => ({
@@ -169,6 +179,23 @@ function useEditListingForm(initialData) {
     } else {
       setNewGalleryImages(prev => [...prev, ...validFiles].slice(0, 10 - existingGallery.length));
     }
+  };
+
+  const handleRemoveFeatured = () => {
+    if (existingFeaturedImage) {
+      setMediaToDelete(prev => [...prev, existingFeaturedImage.databaseId]);
+    }
+    setExistingFeaturedImage(null);
+    setNewFeaturedImage(null);
+  };
+
+  const handleRemoveExistingGallery = (databaseId) => {
+    setMediaToDelete(prev => [...prev, databaseId]);
+    setExistingGallery(prev => prev.filter(img => img.databaseId !== databaseId));
+  };
+
+  const handleRemoveNewGallery = (index) => {
+    setNewGalleryImages(prev => prev.filter((_, i) => i !== index));
   };
 
   const handleSubmit = async (e) => {
@@ -219,12 +246,15 @@ function useEditListingForm(initialData) {
 
   return {
     uploadStep, showSuccessModal, setShowSuccessModal, 
-    existingFeaturedImage, setExistingFeaturedImage, existingGallery, setExistingGallery,
-    newFeaturedImage, setNewFeaturedImage, newGalleryImages, setNewGalleryImages,
-    mediaToDelete, setMediaToDelete, fileErrors, setFileErrors, dragState, setDragState,
-    formData, setFormData, socialErrors, titleError, descriptionError,
+    existingFeaturedImage, existingGallery,
+    newFeaturedImage, newGalleryImages,
+    fileErrors, setFileErrors,
+    formData, socialErrors, titleError, descriptionError,
     isSubmitting, hasErrors, router,
-    handleChange, handleSocialUrlChange, handleTimeChange, handleTimeBlur, handleFileChange, handleSubmit
+    handleChange, handleSocialUrlChange, handleAddSocialUrl, handleRemoveSocialUrl,
+    handleTimeChange, handleTimeBlur, handleFileChange, 
+    handleRemoveFeatured, handleRemoveExistingGallery, handleRemoveNewGallery,
+    handleSubmit
   };
 }
 
@@ -277,25 +307,36 @@ const BasicInfoSection = ({ formData, handleChange, titleError, descriptionError
 );
 
 const MediaGallerySection = ({ 
-  existingFeatured, setExistingFeatured, newFeatured, setNewFeatured,
-  existingGallery, setExistingGallery, newGallery, setNewGallery,
-  setMediaToDelete, handleFileChange, disabled 
+  existingFeatured, newFeatured,
+  existingGallery, newGallery,
+  handleFileChange, handleRemoveFeatured, handleRemoveExistingGallery, handleRemoveNewGallery,
+  disabled 
 }) => {
   const [dragState, setDragState] = useState({ featured: false, gallery: false });
-  const handleDrag = (e, field, state) => { e.preventDefault(); setDragState(p => ({ ...p, [field]: state })); };
-  const onDrop = (e, field) => { e.preventDefault(); setDragState(p => ({ ...p, [field]: false })); handleFileChange(e.dataTransfer.files, field); };
+  
+  const handleDragOver = (e, field) => { e.preventDefault(); setDragState(p => ({ ...p, [field]: true })); };
+  const handleDragLeave = (e, field) => { e.preventDefault(); setDragState(p => ({ ...p, [field]: false })); };
+  const handleDrop = (e, field) => { 
+    e.preventDefault(); 
+    setDragState(p => ({ ...p, [field]: false })); 
+    handleFileChange(e.dataTransfer.files, field); 
+  };
 
   return (
     <SectionWrapper title="Media & Gallery">
       <div style={{ display: "grid", gap: "0.5rem" }}>
         <label style={{ fontWeight: "600" }}>Featured Image</label>
-        <div onDragOver={e => handleDrag(e, 'featured', true)} onDragLeave={e => handleDrag(e, 'featured', false)} onDrop={e => onDrop(e, 'featured')}
+        <div onDragOver={e => handleDragOver(e, 'featured')} onDragLeave={e => handleDragLeave(e, 'featured')} onDrop={e => handleDrop(e, 'featured')}
           style={{ border: `2px dashed ${dragState.featured ? "#e04c4c" : "#cbd5e1"}`, backgroundColor: dragState.featured ? "#fef2f2" : "#f8fafc", padding: "2rem", borderRadius: "12px", textAlign: "center" }}>
           {(existingFeatured || newFeatured) ? (
             <div style={{ position: "relative", width: "200px", height: "140px", margin: "0 auto", borderRadius: "8px", overflow: "hidden", border: "1px solid #e2e8f0" }}>
               <Image src={newFeatured ? URL.createObjectURL(newFeatured) : existingFeatured.sourceUrl} alt="Featured" fill unoptimized={!!newFeatured} style={{ objectFit: "cover" }} />
-              {!disabled && <button type="button" onClick={() => { if (existingFeatured) setMediaToDelete(p => [...p, existingFeatured.databaseId]); setExistingFeatured(null); setNewFeatured(null); }} 
-                style={{ position: "absolute", top: "0.5rem", right: "0.5rem", background: "#ef4444", color: "white", border: "none", borderRadius: "50%", width: "28px", height: "28px", cursor: "pointer" }}><span className="material-symbols-outlined" style={{ fontSize: "1rem" }}>close</span></button>}
+              {!disabled && (
+                <button type="button" onClick={handleRemoveFeatured} 
+                  style={{ position: "absolute", top: "0.5rem", right: "0.5rem", background: "#ef4444", color: "white", border: "none", borderRadius: "50%", width: "28px", height: "28px", cursor: "pointer" }}>
+                  <span className="material-symbols-outlined" style={{ fontSize: "1rem" }}>close</span>
+                </button>
+              )}
             </div>
           ) : (
             <>
@@ -309,21 +350,29 @@ const MediaGallerySection = ({
       </div>
       <div style={{ display: "grid", gap: "0.5rem" }}>
         <label style={{ fontWeight: "600" }}>Gallery Images (Max 10)</label>
-        <div onDragOver={e => handleDrag(e, 'gallery', true)} onDragLeave={e => handleDrag(e, 'gallery', false)} onDrop={e => onDrop(e, 'gallery')}
+        <div onDragOver={e => handleDragOver(e, 'gallery')} onDragLeave={e => handleDragLeave(e, 'gallery')} onDrop={e => handleDrop(e, 'gallery')}
           style={{ border: `2px dashed ${dragState.gallery ? "#e04c4c" : "#cbd5e1"}`, backgroundColor: dragState.gallery ? "#fef2f2" : "#f8fafc", padding: "2rem", borderRadius: "12px", minHeight: "150px" }}>
           <div style={{ display: "flex", flexWrap: "wrap", gap: "1rem" }}>
             {existingGallery.map(img => (
               <div key={img.databaseId} style={{ position: "relative", width: "100px", height: "100px", borderRadius: "8px", overflow: "hidden", border: "1px solid #e2e8f0" }}>
                 <Image src={img.sourceUrl} alt="Gallery" fill style={{ objectFit: "cover" }} />
-                {!disabled && <button type="button" onClick={() => { setMediaToDelete(p => [...p, img.databaseId]); setExistingGallery(prev => prev.filter(i => i.databaseId !== img.databaseId)); }}
-                  style={{ position: "absolute", top: "0.25rem", right: "0.25rem", background: "#ef4444", color: "white", border: "none", borderRadius: "50%", width: "22px", height: "22px", cursor: "pointer" }}><span className="material-symbols-outlined" style={{ fontSize: "0.9rem" }}>close</span></button>}
+                {!disabled && (
+                  <button type="button" onClick={() => handleRemoveExistingGallery(img.databaseId)}
+                    style={{ position: "absolute", top: "0.25rem", right: "0.25rem", background: "#ef4444", color: "white", border: "none", borderRadius: "50%", width: "22px", height: "22px", cursor: "pointer" }}>
+                    <span className="material-symbols-outlined" style={{ fontSize: "0.9rem" }}>close</span>
+                  </button>
+                )}
               </div>
             ))}
             {newGallery.map((file, idx) => (
               <div key={idx} style={{ position: "relative", width: "100px", height: "100px", borderRadius: "8px", overflow: "hidden", border: "1px solid #e2e8f0" }}>
                 <Image src={URL.createObjectURL(file)} alt="New" fill unoptimized style={{ objectFit: "cover" }} />
-                {!disabled && <button type="button" onClick={() => setNewGallery(prev => prev.filter((_, i) => i !== idx))}
-                  style={{ position: "absolute", top: "0.25rem", right: "0.25rem", background: "#ef4444", color: "white", border: "none", borderRadius: "50%", width: "22px", height: "22px", cursor: "pointer" }}><span className="material-symbols-outlined" style={{ fontSize: "0.9rem" }}>close</span></button>}
+                {!disabled && (
+                  <button type="button" onClick={() => handleRemoveNewGallery(idx)}
+                    style={{ position: "absolute", top: "0.25rem", right: "0.25rem", background: "#ef4444", color: "white", border: "none", borderRadius: "50%", width: "22px", height: "22px", cursor: "pointer" }}>
+                    <span className="material-symbols-outlined" style={{ fontSize: "0.9rem" }}>close</span>
+                  </button>
+                )}
               </div>
             ))}
             {!disabled && (existingGallery.length + newGallery.length) < 10 && (
@@ -341,7 +390,11 @@ const MediaGallerySection = ({
   );
 };
 
-const LocationSection = ({ formData, handleChange, handleSocialUrlChange, socialErrors, setFormData, setSocialErrors, disabled }) => (
+const LocationSection = ({ 
+  formData, handleChange, 
+  handleSocialUrlChange, handleAddSocialUrl, handleRemoveSocialUrl,
+  socialErrors, disabled 
+}) => (
   <SectionWrapper title="Contact & Location">
     <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1.5rem" }}>
       <div style={{ gridColumn: "span 2", display: "grid", gap: "0.5rem" }}>
@@ -360,12 +413,20 @@ const LocationSection = ({ formData, handleChange, handleSocialUrlChange, social
           <div key={idx} style={{ marginBottom: '0.5rem' }}>
             <div style={{ display: 'flex', gap: '0.5rem' }}>
               <input type="url" value={url} onChange={e => handleSocialUrlChange(idx, e.target.value)} disabled={disabled} style={{ flex: 1, padding: "0.75rem", borderRadius: "8px", border: `1px solid ${socialErrors[idx] ? '#e04c4c' : '#e2e8f0'}` }} />
-              {!disabled && formData.socialUrls.length > 1 && <button type="button" onClick={() => { setFormData(p => ({ ...p, socialUrls: p.socialUrls.filter((_, i) => i !== idx) })); setSocialErrors(p => p.filter((_, i) => i !== idx)); }} style={{ color: '#e04c4c', cursor: 'pointer', border: 'none', background: 'none' }}><span className="material-symbols-outlined">delete</span></button>}
+              {!disabled && formData.socialUrls.length > 1 && (
+                <button type="button" onClick={() => handleRemoveSocialUrl(idx)} style={{ color: '#e04c4c', cursor: 'pointer', border: 'none', background: 'none' }}>
+                  <span className="material-symbols-outlined">delete</span>
+                </button>
+              )}
             </div>
             {socialErrors[idx] && <span style={{ color: '#e04c4c', fontSize: '0.8rem' }}>{socialErrors[idx]}</span>}
           </div>
         ))}
-        {!disabled && <button type="button" onClick={() => { setFormData(p => ({ ...p, socialUrls: [...p.socialUrls, ''] })); setSocialErrors(p => [...p, '']); }} style={{ color: '#4a5568', cursor: 'pointer', border: 'none', background: 'none', display: 'flex', alignItems: 'center', gap: '0.25rem' }}><span className="material-symbols-outlined">add_circle</span>Add Link</button>}
+        {!disabled && (
+          <button type="button" onClick={handleAddSocialUrl} style={{ color: '#4a5568', cursor: 'pointer', border: 'none', background: 'none', display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
+            <span className="material-symbols-outlined">add_circle</span>Add Link
+          </button>
+        )}
       </div>
     </div>
   </SectionWrapper>
@@ -414,10 +475,39 @@ export default function EditListingForm({ initialData }) {
     <div className="edit-listing-form-container">
       <ProgressOverlay step={hook.uploadStep} />
       <form onSubmit={hook.handleSubmit} style={{ display: "grid", gap: "2.5rem", maxWidth: "800px" }}>
-        <BasicInfoSection formData={hook.formData} handleChange={hook.handleChange} titleError={hook.titleError} descriptionError={hook.descriptionError} disabled={hook.isSubmitting} />
-        <MediaGallerySection existingFeatured={hook.existingFeaturedImage} setExistingFeatured={hook.setExistingFeaturedImage} newFeatured={hook.newFeaturedImage} setNewFeatured={hook.setNewFeaturedImage} existingGallery={hook.existingGallery} setExistingGallery={hook.setExistingGallery} newGallery={hook.newGalleryImages} setNewGallery={hook.setNewGalleryImages} setMediaToDelete={hook.setMediaToDelete} handleFileChange={hook.handleFileChange} disabled={hook.isSubmitting} />
-        <LocationSection formData={hook.formData} handleChange={hook.handleChange} handleSocialUrlChange={hook.handleSocialUrlChange} socialErrors={hook.socialErrors} setFormData={hook.setFormData} setSocialErrors={hook.setSocialErrors} disabled={hook.isSubmitting} />
-        <HoursSection hoursParams={hook.formData.hoursParams} handleTimeChange={hook.handleTimeChange} handleTimeBlur={hook.handleTimeBlur} disabled={hook.isSubmitting} />
+        <BasicInfoSection 
+          formData={hook.formData} 
+          handleChange={hook.handleChange} 
+          titleError={hook.titleError} 
+          descriptionError={hook.descriptionError} 
+          disabled={hook.isSubmitting} 
+        />
+        <MediaGallerySection 
+          existingFeatured={hook.existingFeaturedImage} 
+          newFeatured={hook.newFeaturedImage} 
+          existingGallery={hook.existingGallery} 
+          newGallery={hook.newGalleryImages} 
+          handleFileChange={hook.handleFileChange}
+          handleRemoveFeatured={hook.handleRemoveFeatured}
+          handleRemoveExistingGallery={hook.handleRemoveExistingGallery}
+          handleRemoveNewGallery={hook.handleRemoveNewGallery}
+          disabled={hook.isSubmitting} 
+        />
+        <LocationSection 
+          formData={hook.formData} 
+          handleChange={hook.handleChange} 
+          handleSocialUrlChange={hook.handleSocialUrlChange} 
+          handleAddSocialUrl={hook.handleAddSocialUrl}
+          handleRemoveSocialUrl={hook.handleRemoveSocialUrl}
+          socialErrors={hook.socialErrors} 
+          disabled={hook.isSubmitting} 
+        />
+        <HoursSection 
+          hoursParams={hook.formData.hoursParams} 
+          handleTimeChange={hook.handleTimeChange} 
+          handleTimeBlur={hook.handleTimeBlur} 
+          disabled={hook.isSubmitting} 
+        />
         <div style={{ display: "flex", justifyContent: "flex-end", gap: "1rem", marginTop: '2rem' }}>
           <button type="button" onClick={() => hook.router.back()} disabled={hook.isSubmitting} style={{ padding: "0.75rem 2rem", borderRadius: "8px", border: "1px solid #e2e8f0", background: "#fff", fontWeight: "600" }}>Cancel</button>
           <button type="submit" disabled={hook.isSubmitting || hook.hasErrors} className="listing-primary-btn" style={{ padding: "0.75rem 2rem", border: "none", opacity: (hook.isSubmitting || hook.hasErrors) ? 0.6 : 1 }}>{hook.isSubmitting ? "Processing..." : "Save Changes"}</button>
