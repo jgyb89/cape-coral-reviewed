@@ -8,6 +8,8 @@ import { getViewer } from "@/lib/auth";
 import { getDictionary } from "@/lib/dictionaries";
 import Link from "next/link";
 
+import { SpeedInsights } from "@vercel/speed-insights/next";
+
 const poppins = Poppins({
   subsets: ["latin"],
   weight: ["500"],
@@ -41,6 +43,7 @@ export default async function RootLayout({ children, params }) {
         <Navbar currentUser={viewer} dict={dict} locale={locale} />
         {children}
         <BugReporter />
+        <SpeedInsights />
       </body>
     </html>
   );
