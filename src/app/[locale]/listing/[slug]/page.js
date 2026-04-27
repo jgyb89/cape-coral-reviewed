@@ -9,10 +9,47 @@ import BackButton from "@/components/blog/BackButton";
 import ReviewList from "@/components/directory/ReviewList";
 import ReviewActionManager from "@/components/directory/ReviewActionManager";
 import FavoriteButton from "@/components/directory/FavoriteButton";
+import ShareButton from "@/components/directory/ShareButton";
 import StarRating from "@/components/ui/StarRating";
 import ClaimListing from "@/components/directory/ClaimListing";
 import { formatImageUrl } from "@/lib/formatImageUrl";
 import "./ListingPage.css";
+
+/**
+ * Converts standard YouTube/Vimeo URLs into embeddable ones.
+ */
+const getEmbedUrl = (url) => {
+  if (!url) return null;
+
+  // YouTube match (handles watch?v=, youtu.be, and embed/)
+  const ytMatch = url.match(
+    /(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([a-zA-Z0-9_-]{11})/,
+  );
+  if (ytMatch) return `https://www.youtube.com/embed/${ytMatch[1]}`;
+
+  // Vimeo match (handles vimeo.com and player.vimeo.com)
+  const vimeoMatch = url.match(
+    /(?:https?:\/\/)?(?:www\.)?(?:vimeo\.com\/|player\.vimeo\.com\/video\/)(\d+)/,
+  );
+  if (vimeoMatch) return `https://player.vimeo.com/video/${vimeoMatch[1]}`;
+
+  return null;
+};
+
+/**
+ * Detects the social platform from a URL.
+ */
+const getSocialPlatform = (url) => {
+  const lowercaseUrl = url.toLowerCase();
+  if (lowercaseUrl.includes("facebook.com")) return "Facebook";
+  if (lowercaseUrl.includes("instagram.com")) return "Instagram";
+  if (lowercaseUrl.includes("twitter.com") || lowercaseUrl.includes("x.com"))
+    return "X / Twitter";
+  if (lowercaseUrl.includes("linkedin.com")) return "LinkedIn";
+  if (lowercaseUrl.includes("youtube.com")) return "YouTube";
+  if (lowercaseUrl.includes("tiktok.com")) return "TikTok";
+  return "Social Link";
+};
 
 export async function generateMetadata({ params }) {
   const { slug } = await params;
@@ -79,7 +116,8 @@ export default async function DirectoryListingPage({ params }) {
 
   const featuredImage = formatImageUrl(listing.featuredImage?.node?.sourceUrl);
   const galleryImages =
-    listing.attachedMedia?.nodes?.map((node) => formatImageUrl(node.sourceUrl)) || [];
+    listing.attachedMedia?.nodes?.map((node) => formatImageUrl(node.sourceUrl)) ||
+    [];
 
   const cleanContent = DOMPurify.sanitize(listing.content || "", {
     ALLOWED_TAGS: [
@@ -133,12 +171,24 @@ export default async function DirectoryListingPage({ params }) {
   const hours = [
     { day: dayLabels.monday || "Monday", time: listingdata.hoursMonday },
     { day: dayLabels.tuesday || "Tuesday", time: listingdata.hoursTuesday },
-    { day: dayLabels.wednesday || "Wednesday", time: listingdata.hoursWednesday },
+    {
+      day: dayLabels.wednesday || "Wednesday",
+      time: listingdata.hoursWednesday,
+    },
     { day: dayLabels.thursday || "Thursday", time: listingdata.hoursThursday },
     { day: dayLabels.friday || "Friday", time: listingdata.hoursFriday },
     { day: dayLabels.saturday || "Saturday", time: listingdata.hoursSaturday },
     { day: dayLabels.sunday || "Sunday", time: listingdata.hoursSunday },
   ];
+
+  // Process Video and Social Links
+  const videoEmbedUrl = getEmbedUrl(listingdata.videoUrl);
+  const socialLinks = listingdata.socialUrl
+    ? listingdata.socialUrl
+        .split(",")
+        .map((s) => s.trim())
+        .filter((s) => s !== "")
+    : [];
 
   return (
     <div className="listing-layout">
@@ -158,13 +208,15 @@ export default async function DirectoryListingPage({ params }) {
               currentUser={currentUser}
               label={t.favorite || "Favorite"}
             />
-            <button className="listing-action-btn">
-              <span className="material-symbols-outlined">share</span>
-              <span className="listing-action-btn__text">{t.share || "Share"}</span>
-            </button>
+            <ShareButton
+              title={listing.title}
+              text={`Check out ${listing.title} on Cape Coral Reviewed!`}
+            />
             <button className="listing-action-btn">
               <span className="material-symbols-outlined">flag</span>
-              <span className="listing-action-btn__text">{t.report || "Report"}</span>
+              <span className="listing-action-btn__text">
+                {t.report || "Report"}
+              </span>
             </button>
           </div>
         </div>
@@ -211,9 +263,7 @@ export default async function DirectoryListingPage({ params }) {
             <span className="material-symbols-outlined listing-card__icon">
               call
             </span>
-            <span className="listing-card__text">
-              {listingdata.phoneNumber}
-            </span>
+            <span className="listing-card__text">{listingdata.phoneNumber}</span>
           </div>
           {listingdata.websiteUrl && (
             <div className="listing-card__item">
@@ -228,6 +278,61 @@ export default async function DirectoryListingPage({ params }) {
               >
                 Visit Website
               </a>
+            </div>
+          )}
+
+          {/* Integrated Social Links */}
+          {socialLinks.length > 0 && (
+            <div
+              className="listing-card__social"
+              style={{
+                marginTop: "1.5rem",
+                paddingTop: "1.5rem",
+                borderTop: "1px solid #e2e8f0",
+              }}
+            >
+              <h3
+                style={{
+                  fontSize: "1rem",
+                  fontWeight: "600",
+                  marginBottom: "1rem",
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "0.5rem",
+                }}
+              >
+                <span
+                  className="material-symbols-outlined"
+                  style={{ fontSize: "1.25rem" }}
+                >
+                  share_reviews
+                </span>
+                Connect with us
+              </h3>
+              <div style={{ display: "flex", flexWrap: "wrap", gap: "1rem" }}>
+                {socialLinks.map((url, idx) => (
+                  <a
+                    key={idx}
+                    href={url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="listing-card__link"
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "0.25rem",
+                    }}
+                  >
+                    <span
+                      className="material-symbols-outlined"
+                      style={{ fontSize: "1.1rem" }}
+                    >
+                      link
+                    </span>
+                    {getSocialPlatform(url)}
+                  </a>
+                ))}
+              </div>
             </div>
           )}
         </section>
@@ -260,9 +365,59 @@ export default async function DirectoryListingPage({ params }) {
           />
         </section>
 
+        {/* Video Section */}
+        {videoEmbedUrl && (
+          <section className="listing-card">
+            <h2 className="listing-card__title">
+              <span className="material-symbols-outlined">play_circle</span>
+              Featured Video
+            </h2>
+            <div
+              style={{
+                width: "100%",
+                aspectRatio: "16/9",
+                borderRadius: "8px",
+                overflow: "hidden",
+                background: "#000",
+              }}
+            >
+              <iframe
+                width="100%"
+                height="100%"
+                src={videoEmbedUrl}
+                title="Business Video"
+                frameBorder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                allowFullScreen
+              ></iframe>
+            </div>
+          </section>
+        )}
+
         <section className="listing-card">
-          <header style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem', paddingBottom: '1rem', borderBottom: '1px solid #e2e8f0', flexWrap: 'wrap', gap: '1rem' }}>
-            <h2 style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', margin: 0, fontSize: '1.25rem', fontWeight: '700', color: 'var(--color-text)' }}>
+          <header
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+              marginBottom: "1.5rem",
+              paddingBottom: "1rem",
+              borderBottom: "1px solid #e2e8f0",
+              flexWrap: "wrap",
+              gap: "1rem",
+            }}
+          >
+            <h2
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: "0.5rem",
+                margin: 0,
+                fontSize: "1.25rem",
+                fontWeight: "700",
+                color: "var(--color-text)",
+              }}
+            >
               <span className="material-symbols-outlined">reviews</span>
               {t.recommendedReviews || "Recommended Reviews"}
             </h2>
@@ -276,13 +431,20 @@ export default async function DirectoryListingPage({ params }) {
               />
             </div>
           </header>
-          <ReviewList reviews={listing.reviews} noReviewsYet={t.noReviewsYet} currentUser={currentUser} />
+          <ReviewList
+            reviews={listing.reviews}
+            noReviewsYet={t.noReviewsYet}
+            currentUser={currentUser}
+          />
         </section>
       </main>
 
       <aside className="listing-sidebar">
         <div style={{ position: "sticky", top: "2rem" }}>
-          <ClaimListing listingTitle={listing.title} listingSlug={listing.slug} />
+          <ClaimListing
+            listingTitle={listing.title}
+            listingSlug={listing.slug}
+          />
           <BlogSidebar />
         </div>
       </aside>

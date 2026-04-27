@@ -3,58 +3,86 @@
 import React, { useState } from 'react';
 import { useRouter, useParams } from 'next/navigation';
 import { submitListing, uploadWPImage } from '@/lib/actions';
+import imageCompression from 'browser-image-compression';
 import styles from './StepForm.module.css';
 import wizardStyles from './ListingWizard.module.css';
+
+const compressImage = async (file) => {
+  const options = {
+    maxSizeMB: 0.5,
+    maxWidthOrHeight: 1920,
+    useWebWorker: true,
+    fileType: file.type // Force the library to maintain the original MIME type
+  };
+  
+  try {
+    const compressedBlob = await imageCompression(file, options);
+    
+    // CRITICAL FIX: The compression library can return a Blob that loses filename metadata 
+    // when passed through a Next.js Server Action. WordPress rejects files without extensions.
+    // We must re-wrap the output in a strict File object using the original file's name and type.
+    return new File([compressedBlob], file.name, {
+      type: file.type,
+      lastModified: Date.now(),
+    });
+    
+  } catch (error) {
+    console.error("Compression error:", error);
+    return file; // Fallback to original file if compression fails
+  }
+};
 
 const Step5Finish = ({ formData, prevStep }) => {
   const router = useRouter();
   const params = useParams();
   const locale = params?.locale || 'en';
-  const [isSubmitting, setIsSubmitting] = useState(false);
-
-  const slugify = (text) => {
-    if (!text) return "";
-    return text
-      .toString()
-      .toLowerCase()
-      .trim()
-      .replaceAll(/&/g, '-and-')         // Replace & with 'and'
-      // Use a more standard non-alphanumeric replacement
-      .replaceAll(/[^a-z0-9]+/g, '-')     
-      .replace(/^-/, '')                  // Safely trim single leading hyphen
-      .replace(/-$/, '');                 // Safely trim single trailing hyphen
-  };
+  const [uploadStep, setUploadStep] = useState('idle'); // idle, compressing, uploading_featured, uploading_gallery, saving_data, complete
 
   const handleSubmit = async () => {
-    setIsSubmitting(true);
+    setUploadStep('compressing');
 
     try {
-      // 1. Upload Featured Image
-      let featuredImageId = '';
+      // 1. Compression
+      let compressedFeatured = null;
       if (formData.featuredImage) {
+        compressedFeatured = await compressImage(formData.featuredImage);
+      }
+      
+      const compressedGallery = await Promise.all(
+        (formData.gallery || []).map(file => compressImage(file))
+      );
+
+      // 2. Upload Featured Image
+      setUploadStep('uploading_featured');
+      let featuredImageId = '';
+      if (compressedFeatured) {
         const fileData = new FormData();
-        fileData.append('file', formData.featuredImage);
+        fileData.append('file', compressedFeatured);
         featuredImageId = await uploadWPImage(fileData);
       }
 
-      // 2. Upload Gallery Images
+      // 3. Parallel Upload Gallery Images
+      setUploadStep('uploading_gallery');
       const galleryIds = [];
-      if (formData.gallery && formData.gallery.length > 0) {
-        for (const file of formData.gallery) {
-          const fileData = new FormData();
-          fileData.append('file', file);
-          const id = await uploadWPImage(fileData);
-          if (id) galleryIds.push(id);
-        }
+      if (compressedGallery.length > 0) {
+        const uploadedIds = await Promise.all(
+          compressedGallery.map(async (file) => {
+            const fileData = new FormData();
+            fileData.append('file', file);
+            return await uploadWPImage(fileData);
+          })
+        );
+        galleryIds.push(...uploadedIds.filter(id => !!id));
       }
 
-      // 3. Map wizard formData to Server Action expected keys
+      // 4. Submit Listing Data
+      setUploadStep('saving_data');
       const submissionData = {
         businessName: formData.title,
         city: formData.city || '',
         state: formData.state || '',
         zipCode: formData.zipCode || '',
-        priceRange: '', // Optional/Not in wizard yet
+        priceRange: '', 
         phoneNumber: formData.phone,
         businessEmail: formData.email || '',
         websiteUrl: formData.website || '',
@@ -78,20 +106,73 @@ const Step5Finish = ({ formData, prevStep }) => {
       const result = await submitListing(submissionData);
 
       if (result.success) {
+        setUploadStep('complete');
         router.push(`/${locale}/submission-success`);
       } else {
         alert(`Error: ${result.message}`);
-        setIsSubmitting(false);
+        setUploadStep('idle');
       }
     } catch (error) {
       console.error('Submission error:', error);
       alert('An unexpected error occurred. Please try again.');
-      setIsSubmitting(false);
+      setUploadStep('idle');
     }
   };
 
+  const stepsInfo = {
+    idle: { label: '', icon: '' },
+    compressing: { label: '1. Compressing Images...', icon: 'compress' },
+    uploading_featured: { label: '2. Uploading Featured Image...', icon: 'upload' },
+    uploading_gallery: { label: '3. Uploading Gallery Images...', icon: 'cloud_upload' },
+    saving_data: { label: '4. Finalizing Listing Details...', icon: 'save' },
+    complete: { label: '5. Complete!', icon: 'check_circle' }
+  };
+
+  const isSubmitting = uploadStep !== 'idle';
+
   return (
     <div className={styles['step-form']}>
+      {/* Progress Overlay Modal */}
+      {uploadStep !== 'idle' && uploadStep !== 'complete' && (
+        <div style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          backgroundColor: 'rgba(0, 0, 0, 0.7)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          zIndex: 2000,
+          backdropFilter: 'blur(4px)'
+        }}>
+          <div style={{
+            backgroundColor: '#fff',
+            padding: '3rem',
+            borderRadius: '16px',
+            textAlign: 'center',
+            maxWidth: '400px',
+            width: '90%',
+            boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)'
+          }}>
+            <div className="material-symbols-outlined" style={{ fontSize: '4rem', color: '#e04c4c', marginBottom: '1.5rem', animation: 'pulse 2s infinite' }}>
+              {stepsInfo[uploadStep].icon}
+            </div>
+            <h3 style={{ fontSize: '1.25rem', fontWeight: 700, marginBottom: '0.5rem', color: '#1e293b' }}>{stepsInfo[uploadStep].label}</h3>
+            <p style={{ color: '#64748b', marginBottom: '2rem' }}>Please wait while we process your request.</p>
+            <div style={{ width: '100%', background: '#f1f5f9', height: '8px', borderRadius: '4px', overflow: 'hidden' }}>
+              <div style={{ 
+                width: uploadStep === 'compressing' ? '25%' : uploadStep === 'uploading_featured' ? '50%' : uploadStep === 'uploading_gallery' ? '75%' : '90%',
+                background: '#e04c4c',
+                height: '100%',
+                transition: 'width 0.5s ease'
+              }} />
+            </div>
+          </div>
+        </div>
+      )}
+
       <header className={styles['step-form__header']}>
         <span className="material-symbols-outlined">task_alt</span>
         <h2>Review & Submit</h2>
@@ -142,11 +223,10 @@ const Step5Finish = ({ formData, prevStep }) => {
           disabled={isSubmitting}
           style={{ backgroundColor: isSubmitting ? '#ccc' : '#e04c4c' }}
         >
-          {isSubmitting ? 'Submitting...' : 'Submit Listing'}
+          {isSubmitting ? 'Processing...' : 'Submit Listing'}
         </button>
       </div>
     </div>
   );
 };
 export default Step5Finish;
-

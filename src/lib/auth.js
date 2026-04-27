@@ -33,7 +33,9 @@ export async function loginUser(username, password) {
       }),
     });
 
-    const json = await res.json();
+    const rawText = await res.text();
+    console.log("RAW LOGIN RESPONSE:", rawText);
+    const json = JSON.parse(rawText);
 
     if (json.errors) {
       throw new Error(json.errors[0].message);
@@ -161,7 +163,9 @@ export async function getViewer() {
       cache: "no-store",
     });
 
-    const json = await res.json();
+    const rawText = await res.text();
+    console.log("RAW VIEWER RESPONSE:", rawText);
+    const json = JSON.parse(rawText);
 
     if (json.errors) {
       // Detect if the WPGraphQL token has expired

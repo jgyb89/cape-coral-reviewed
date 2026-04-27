@@ -350,6 +350,18 @@ export async function getListingForEdit(databaseId) {
         databaseId
         title
         content
+        featuredImage {
+          node {
+            databaseId
+            sourceUrl
+          }
+        }
+        attachedMedia {
+          nodes {
+            databaseId
+            sourceUrl
+          }
+        }
         author {
           node {
             databaseId
@@ -456,6 +468,7 @@ export async function updateUserListing(databaseId, payload) {
       id: databaseId,
       title: payload.title,
       content: payload.content,
+      featuredImageId: payload.featuredImageId,
       listingDataJson: JSON.stringify(acfData), // Send as a single JSON string
     },
   };
@@ -801,7 +814,7 @@ export async function registerBusiness(fieldValues) {
 /**
  * Server Action to upload raw image files directly to the WordPress REST API.
  */
-export async function uploadWPImage(formData) {
+export async function uploadWPImage(formData, postId = null) {
   // 1. Enforce Authentication
   const cookieStore = await cookies();
   const authToken = cookieStore.get("authToken")?.value;
@@ -812,7 +825,41 @@ export async function uploadWPImage(formData) {
   const file = formData.get("file");
   if (!file) throw new Error("No file provided");
 
-  // 2. Server-Side Validation (Never trust the client)
+  // 2. AI-Powered Image Moderation (Sightengine)
+  const sightengineUser = process.env.SIGHTENGINE_API_USER;
+  const sightengineSecret = process.env.SIGHTENGINE_API_SECRET;
+
+  if (sightengineUser && sightengineSecret) {
+    const moderationFormData = new FormData();
+    moderationFormData.append("media", file);
+    moderationFormData.append("models", "nudity-2.0,gore");
+    moderationFormData.append("api_user", sightengineUser);
+    moderationFormData.append("api_secret", sightengineSecret);
+
+    try {
+      const modRes = await fetch("https://api.sightengine.com/1.0/check.json", {
+        method: "POST",
+        body: moderationFormData,
+      });
+
+      const modJson = await modRes.json();
+
+      if (modJson.status === "success") {
+        const nudity = modJson.nudity?.explicit ?? 0;
+        const gore = modJson.gore?.prob ?? 0;
+
+        if (nudity > 0.5 || gore > 0.5) {
+          throw new Error("Upload rejected: Image violates our safety guidelines.");
+        }
+      }
+    } catch (error) {
+      // Re-throw if it's our rejection error, otherwise log and proceed (fallback)
+      if (error.message.includes("safety guidelines")) throw error;
+      console.error("Moderation API error:", error);
+    }
+  }
+
+  // 3. Server-Side Validation (Never trust the client)
   const maxSize = 2 * 1024 * 1024; // 2MB
   const allowedTypes = ['image/jpeg', 'image/png', 'image/webp'];
 
@@ -825,6 +872,9 @@ export async function uploadWPImage(formData) {
 
   const wpFormData = new FormData();
   wpFormData.append("file", file, file.name);
+  if (postId) {
+    wpFormData.append("post", postId);
+  }
 
   // Derive the base URL from the existing GraphQL endpoint, or fallback to the staging domain
   const graphqlUrl =
@@ -845,6 +895,34 @@ export async function uploadWPImage(formData) {
   const data = await res.json();
   if (!res.ok) throw new Error(data.message || "Image upload failed");
   return data.id; // Return the ID for the Headless ID Strategy
+}
+
+/**
+ * Server Action to delete an attachment from WordPress REST API.
+ */
+export async function deleteWPMedia(attachmentId) {
+  const cookieStore = await cookies();
+  const authToken = cookieStore.get("authToken")?.value;
+  if (!authToken) {
+    throw new Error("Unauthorized: Must be logged in to delete files.");
+  }
+
+  const graphqlUrl =
+    process.env.NEXT_PUBLIC_WORDPRESS_API_URL ||
+    process.env.NEXT_PUBLIC_GRAPHQL_ENDPOINT ||
+    "https://staging.capecoralreviewed.com/graphql";
+  const baseUrl = graphqlUrl.replace("/graphql", "");
+
+  const res = await fetch(`${baseUrl}/wp-json/wp/v2/media/${attachmentId}?force=true`, {
+    method: "DELETE",
+    headers: {
+      Authorization: `Bearer ${authToken}`,
+    },
+  });
+
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.message || "Image deletion failed");
+  return { success: true };
 }
 
 /**
