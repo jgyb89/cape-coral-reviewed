@@ -74,6 +74,9 @@ export async function getListingBySlug(slug) {
               node {
                 databaseId
                 name
+                userData {
+                  isFeaturedUser
+                }
               }
             }
             reviewFields {
@@ -151,6 +154,9 @@ export async function getListings(categorySlug = null) {
       author {
         node {
           name
+          userData {
+            isFeaturedUser
+          }
           customAvatar {
             customAvatar {
               node {
@@ -260,6 +266,9 @@ export async function getListingsByCategory(categorySlug, directoryType = null) 
           author {
             node {
               name
+              userData {
+                isFeaturedUser
+              }
               customAvatar {
                 customAvatar {
                   node {
@@ -354,6 +363,9 @@ export async function getListingsByDirectoryType(directoryTypeSlug) {
           author {
             node {
               name
+              userData {
+                isFeaturedUser
+              }
               customAvatar {
                 customAvatar {
                   node {

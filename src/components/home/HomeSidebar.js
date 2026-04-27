@@ -7,13 +7,17 @@ import { Star } from "lucide-react";
 import { formatImageUrl } from "@/lib/formatImageUrl";
 
 export default function HomeSidebar({ featuredBusinesses = [], popularNearYou = [], dict = {}, locale = "en" }) {
-  const renderList = (title, items) => (
+  const renderList = (title, items, isFirst = false) => (
     <div style={{ marginBottom: "40px" }}>
       <h3 style={{ 
         fontSize: "1.2rem", 
         fontWeight: "700", 
-        marginBottom: "20px",
-        color: "#333" 
+        marginBottom: "1rem",
+        marginTop: 0,
+        color: "#333",
+        display: "flex",
+        alignItems: "center",
+        minHeight: isFirst ? "48px" : "auto"
       }}>
         {title}
       </h3>
@@ -88,7 +92,7 @@ export default function HomeSidebar({ featuredBusinesses = [], popularNearYou = 
 
   return (
     <aside style={{ width: "100%" }}>
-      {renderList(dict.featuredBusinesses || "Featured Businesses", featuredBusinesses.slice(0, 5))}
+      {renderList(dict.featuredBusinesses || "Featured Businesses", featuredBusinesses.slice(0, 5), true)}
       {renderList(dict.popularNearYou || "Popular Near You", popularNearYou.slice(0, 5))}
     </aside>
   );

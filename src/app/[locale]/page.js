@@ -11,9 +11,12 @@ export default async function HomePage({ params }) {
   const listings = await getListings();
   const currentUser = await getViewer();
 
-  // For the prototype, we split the listings for different sections
-  const featuredListings = listings.slice(0, 5);
-  const popularNearYou = listings.slice(5, 10);
+  // Strict filter: only listings where the author is featured
+  const featuredListings = listings.filter(
+    (listing) => listing.author?.node?.userData?.isFeaturedUser === true
+  );
+  
+  const popularNearYou = listings.slice(0, 5);
   const feedListings = listings;
 
   return (

@@ -17,8 +17,9 @@ export default function ProfileAvatar({ user }) {
   const [isDragging, setIsDragging] = useState(false);
   const fileInputRef = useRef(null);
 
-  // Mock user states for now - replace with actual user prop data
-  const isVerified = user?.isVerified || true; 
+  // Transition: Use user-level featured status
+  // Note: if my ACF user field group is named something other than userData in GraphQL, please swap out that key
+  const isFeatured = !!user?.userData?.isFeaturedUser;
   const userName = user?.name || 'Business Owner';
   // Fallback chain: customAvatar (ACF) -> avatar (WP Default) -> placeholder
   const currentImage = user?.customAvatar?.customAvatar?.node?.sourceUrl || user?.avatar?.url || user?.avatarUrl || '/placeholder-avatar.jpg'; 
@@ -99,7 +100,7 @@ export default function ProfileAvatar({ user }) {
       <div className={styles['avatar-wrapper']}>
         <button 
           type="button"
-          className={`${styles['avatar-container']} ${isVerified ? styles['avatar-container--verified'] : ''}`}
+          className={`${styles['avatar-container']} ${isFeatured ? styles['avatar-container--verified'] : ''}`}
           onClick={() => setIsModalOpen(true)}
         >
           {/* The Image Wrapper safely constraints the Next.js fill property */}
@@ -117,7 +118,7 @@ export default function ProfileAvatar({ user }) {
           </div>
           
           {/* Gradient Verified Badge */}
-          {isVerified && (
+          {isFeatured && (
             <div className={styles['avatar-badge']} title="Verified Business">
               <span className="material-symbols-outlined" style={{ fontSize: '1rem', fontWeight: 'bold' }}>check</span>
             </div>
@@ -204,7 +205,9 @@ export default function ProfileAvatar({ user }) {
 ProfileAvatar.propTypes = {
   user: PropTypes.shape({
     name: PropTypes.string,
-    isVerified: PropTypes.bool,
+    userData: PropTypes.shape({
+      isFeaturedUser: PropTypes.bool
+    }),
     avatarUrl: PropTypes.string,
     avatar: PropTypes.shape({
       url: PropTypes.string
