@@ -1,4 +1,3 @@
-// src/components/directory/CcrCard.js
 "use client";
 
 import { useState } from "react";
@@ -36,8 +35,11 @@ export default function CcrCard({ listing, currentUser, locale = 'en' }) {
   const authorNode = listing?.author?.node;
   const authorName = authorNode?.name || 'Business Owner';
   const authorImage = authorNode?.customAvatar?.customAvatar?.node?.sourceUrl || authorNode?.avatar?.url || '/placeholder-avatar.jpg';
-  // Update this logic if you have a specific ACF field for "isVerified"
-  const isVerified = true; 
+  
+  // Transition: Use user-level featured status
+  // Note: if my ACF user field group is named something other than userData in GraphQL, please swap out that key
+  const isFeatured = !!authorNode?.userData?.isFeaturedUser;
+  const isVerified = isFeatured; 
 
   // Rating calculation from the new ACF structure
   const reviewNodes = listing.reviews?.nodes || [];
@@ -48,9 +50,12 @@ export default function CcrCard({ listing, currentUser, locale = 'en' }) {
 
   return (
     <>
-      <div className={styles['ccr-card']} style={{ position: 'relative', zIndex: toastMessage ? 50 : 1 }}>
+      <div 
+        className={styles['ccr-card']} 
+        style={{ position: 'relative', zIndex: toastMessage ? 50 : 1 }}
+      >
         <div className={styles['ccr-card__image-container']}>
-          <div className={styles['ccr-card__badge']}>Featured</div>
+          {isFeatured && <div className={styles['ccr-card__badge']}>Featured</div>}
           <Image
             src={imageUrl}
             alt={imageAlt}
@@ -80,7 +85,9 @@ export default function CcrCard({ listing, currentUser, locale = 'en' }) {
 
         <div className={styles['ccr-card__content']}>
           <Link href={listingUrl} className={styles['ccr-card__header-link']}>
-            <h3 className={styles['ccr-card__title']}>{title}</h3>
+            <h3 className={styles['ccr-card__title']} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.25rem' }}>
+              {title}
+            </h3>
           </Link>
 
           <div className={styles['ccr-card__rating']}>
@@ -213,6 +220,7 @@ CcrCard.propTypes = {
     author: PropTypes.shape({
       node: PropTypes.shape({
         name: PropTypes.string,
+        userData: PropTypes.object,
         customAvatar: PropTypes.object,
         avatar: PropTypes.shape({
           url: PropTypes.string,

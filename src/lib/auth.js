@@ -99,6 +99,7 @@ export async function getViewer() {
           phoneNumber
           websiteUrl
           emailVisibility
+          isFeaturedUser
           favoriteListings {
             nodes {
               ... on Ccrlisting {

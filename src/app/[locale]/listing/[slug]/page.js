@@ -190,6 +190,8 @@ export default async function DirectoryListingPage({ params }) {
         .filter((s) => s !== "")
     : [];
 
+  const isFeatured = !!listing.author?.node?.userData?.isFeaturedUser;
+
   return (
     <div className="listing-layout">
       <Script
@@ -227,7 +229,9 @@ export default async function DirectoryListingPage({ params }) {
         />
 
         <header className="listing-header">
-          <h1 className="listing-title">{listing.title}</h1>
+          <h1 className="listing-title" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+            {listing.title}
+          </h1>
           <div className="listing-header__meta">
             <div className="listing-header__rating">
               <StarRating rating={averageRating} />

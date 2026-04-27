@@ -8,11 +8,35 @@
   transition:
     transform 0.2s,
     box-shadow 0.2s;
+  border: 1px solid #e2e8f0;
 }
 
 .ccr-card:hover {
   transform: translateY(-4px);
   box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+}
+
+.featured-card-border {
+  position: relative;
+  border: none;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
+  z-index: 1;
+}
+
+.featured-card-border::before {
+  content: "";
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  right: -2px;
+  bottom: -2px;
+  background: linear-gradient(135deg, #3b82f6 0%, #2dd4bf 50%, #3b82f6 100%);
+  z-index: -1;
+  border-radius: 14px;
+}
+
+.featured-card-border:hover {
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
 }
 
 .ccr-card__image-container {
@@ -80,7 +104,9 @@
   position: absolute;
   top: 15px;
   left: 15px;
-  background-color: var(--color-primary);
+  background: 
+    radial-gradient(ellipse 70% 25% at 75% 75%, rgba(255, 255, 255, 0.5) 0%, rgba(255, 255, 255, 0) 70%),
+    linear-gradient(135deg, #e04c4c 0%, #ea580c 45%, #f59e0b 65%, #fbbf24 85%, #d97706 100%);
   color: white;
   padding: 4px 10px;
   border-radius: 4px;
@@ -88,6 +114,8 @@
   font-weight: 600;
   text-transform: uppercase;
   z-index: 2;
+  border: none;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
 .ccr-card__content {
