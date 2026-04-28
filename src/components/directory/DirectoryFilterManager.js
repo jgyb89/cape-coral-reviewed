@@ -6,6 +6,7 @@ import PropTypes from "prop-types";
 import CcrCardGrid from "./CcrCardGrid";
 import DirectoryFilters from "./DirectoryFilters";
 import styles from "./DirectoryFilterManager.module.css";
+import { checkIfOpenNow } from '@/lib/timeUtils';
 
 const getListingRating = (listing) => {
   const reviews = listing.reviews?.nodes || [];
@@ -15,20 +16,6 @@ const getListingRating = (listing) => {
     0
   );
   return sum / reviews.length;
-};
-
-const isCurrentlyOpen = (listing) => {
-  // Simple check for existence of hours - in a real app this would check current day/time
-  const hours = listing.listingdata || {};
-  return !!(
-    hours.hoursMonday ||
-    hours.hoursTuesday ||
-    hours.hoursWednesday ||
-    hours.hoursThursday ||
-    hours.hoursFriday ||
-    hours.hoursSaturday ||
-    hours.hoursSunday
-  );
 };
 
 export default function DirectoryFilterManager({ listings, currentUser, dict = {}, locale = "en" }) {
@@ -58,7 +45,7 @@ export default function DirectoryFilterManager({ listings, currentUser, dict = {
 
     // Filter by Open Now
     if (openNowFilter) {
-      result = result.filter((listing) => isCurrentlyOpen(listing));
+      result = result.filter((listing) => checkIfOpenNow(listing.listingdata));
     }
 
     // Sort
