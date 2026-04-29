@@ -31,7 +31,7 @@
 }
 .nav-link {
   color: #333;
-  text-decoration: none;
+  text-decoration: none !important;
   font-weight: 500;
   display: flex;
   align-items: center;
@@ -43,9 +43,15 @@
   font-size: 1rem;
   font-family: inherit;
   padding: 0;
+  transition: color 0.2s ease;
+}
+.nav-link:hover,
+.nav-link:active,
+.nav-link:visited {
+  text-decoration: none !important;
 }
 .nav-link:hover {
-  color: var(--color-primary, #e94f37);
+  color: #e04c4c; /* Brand Red */
 }
 
 .mobile-actions {

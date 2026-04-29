@@ -106,6 +106,22 @@ export default function SearchModal({ isOpen, onClose, dict = {}, locale = "en" 
     }
   }, []);
 
+  // Hybrid Search Redirect
+  const handleSearch = (e) => {
+    e.preventDefault();
+    if (!searchTerm.trim()) return;
+    
+    // Force redirect to root directory with search param
+    import('next/navigation').then(({ useRouter }) => {
+      // Note: Since this is a client component inside a hook-less or potentially complex structure, 
+      // we'll assume the useRouter is available via the component scope if we refactor slightly, 
+      // but for now, we'll use window.location if necessary or pass router down.
+      // Re-reading: SearchModal is a functional component, we can use useRouter hook.
+    });
+    
+    // Actually, let's use the router from the component scope.
+  };
+
   // Debounced API Call (300ms)
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -146,7 +162,15 @@ export default function SearchModal({ isOpen, onClose, dict = {}, locale = "en" 
 
         <div className={styles['search-modal__body']}>
           {/* 1. Search Bar */}
-          <div className={styles['search-modal__input-wrapper']}>
+          <form 
+            onSubmit={(e) => {
+              e.preventDefault();
+              if (!searchTerm.trim()) return;
+              window.location.href = `/${locale}/directory?search=${encodeURIComponent(searchTerm.trim())}`;
+              onClose();
+            }}
+            className={styles['search-modal__input-wrapper']}
+          >
             <span className={`material-symbols-outlined ${styles['search-modal__search-icon']}`}>search</span>
             <input
               type="text"
@@ -156,7 +180,7 @@ export default function SearchModal({ isOpen, onClose, dict = {}, locale = "en" 
               onChange={(e) => setSearchTerm(e.target.value)}
               autoFocus
             />
-          </div>
+          </form>
 
           {/* 2. Top Category Pills */}
           <div className={styles['search-modal__pills-wrapper']}>

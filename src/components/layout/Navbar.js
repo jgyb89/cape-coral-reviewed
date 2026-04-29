@@ -184,12 +184,12 @@ export default function Navbar({ currentUser, dict, locale }) {
             onFocus={() => setIsListingsOpen(true)}
             onBlur={() => setIsListingsOpen(false)}
           >
-            <div className={styles['nav-link__trigger']}>
+            <Link href={`/${locale}/directory`} className={`${styles['nav-link']} ${styles['nav-link__trigger']}`}>
               {t.allListings || "All Listings"}{" "}
               <span className={`material-symbols-outlined ${styles['nav-link__icon']}`}>
                 expand_more
               </span>
-            </div>
+            </Link>
             
             {isListingsOpen && (
               <div className={styles['mega-menu']}>
@@ -231,7 +231,7 @@ export default function Navbar({ currentUser, dict, locale }) {
             {t.news || "News & Reviews"}
           </Link>
 
-          <div className={styles['locale-toggle-container']}>
+          <div className={styles['locale-toggle-container']} style={{ display: 'none' }}>
             <button 
               className={`${styles['locale-btn']} ${locale === 'en' ? styles['active'] : ''}`}
               onClick={toggleLocale}

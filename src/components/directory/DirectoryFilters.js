@@ -2,73 +2,9 @@
 
 import React, { useState, useRef, useEffect } from 'react';
 import { useRouter, useSearchParams, usePathname } from 'next/navigation';
+import { ALL_CATEGORIES } from '@/lib/constants';
 import styles from './DirectoryFilters.module.css';
 import 'material-symbols/outlined.css';
-
-// Comprehensive list for powerful predictive search
-const ALL_CATEGORIES = [
-  // User Requested Categories (from CSV data)
-  { name: 'Alternative & Therapy', slug: 'alternative-therapy-en' },
-  { name: 'Chiropractors', slug: 'chiropractors-en' },
-  { name: 'Mental Health Services', slug: 'mental-health-services-en' },
-  { name: 'Physical Therapy', slug: 'physical-therapy-en' },
-  { name: 'Auto Repair & Mechanics', slug: 'auto-repair-mechanics-en' },
-  { name: 'Car Wash & Detailing', slug: 'car-wash-detailing-en' },
-  { name: 'Bars & Nightlife', slug: 'bars-nightlife-en' },
-  { name: 'Breweries', slug: 'breweries-en' },
-  { name: 'Pubs & Grills', slug: 'pubs-grills-en' },
-  { name: 'Beauty & Spas', slug: 'beauty-spas-en' },
-  { name: 'Hair Salons', slug: 'hair-salons-en' },
-  { name: 'Massage Therapy', slug: 'massage-therapy-en' },
-  { name: 'Cafes & Bakeries', slug: 'cafes-bakeries-en' },
-  { name: 'Contractors & Repair', slug: 'contractors-repair-en' },
-  { name: 'HVAC & AC Repair', slug: 'hvac-ac-repair-en' },
-  { name: 'Plumbers', slug: 'plumbers-en' },
-  { name: 'Landscaping & Lawn Care', slug: 'landscaping-lawn-care-en' },
-  { name: 'Pool Services', slug: 'pool-services-en' },
-  { name: 'Dentists & Orthodontics', slug: 'dentists-orthodontics-en' },
-  { name: 'Primary Care & Doctors', slug: 'primary-care-doctors-en' },
-  { name: 'Pet Grooming', slug: 'pet-grooming-en' },
-  { name: 'Veterinarians', slug: 'veterinarians-en' },
-  { name: 'Real Estate', slug: 'real-estate-en' },
-
-  // Remaining categories from existing list
-  { name: 'Restaurants', slug: 'restaurants-en' },
-  { name: 'Pizza', slug: 'pizza-en' },
-  { name: 'Seafood', slug: 'seafood-en' },
-  { name: 'American Food', slug: 'american-food-en' },
-  { name: 'Mexican & Latin', slug: 'mexican-latin-en' },
-  { name: 'Cuban', slug: 'cuban-food-en' },
-  { name: 'Asian & Chinese', slug: 'asian-chinese-en' },
-  { name: 'Breakfast & Brunch', slug: 'breakfast-brunch-en' },
-  { name: 'Sandwiches & Subs', slug: 'sandwiches-subs-en' },
-  { name: 'Steakhouse', slug: 'steakhouse-en' },
-  { name: 'Sports Bars', slug: 'sports-bars-en' },
-  { name: 'Wine & Cocktail Bars', slug: 'wine-cocktail-bars-en' },
-  { name: 'Coffee & Tea', slug: 'coffee-tea-en' },
-  { name: 'Boba & Juice', slug: 'boba-juice-en' },
-  { name: 'Bakeries & Desserts', slug: 'bakeries-desserts-en' },
-  { name: 'Medical & Dental', slug: 'medical-dental-en' },
-  { name: 'Urgent Care', slug: 'urgent-care-en' },
-  { name: 'Optometrists', slug: 'optometrists-en' },
-  { name: 'Nail Salons', slug: 'nail-salons-en' },
-  { name: 'Med Spas & Weight Loss', slug: 'med-spas-weight-loss-en' },
-  { name: 'Fitness & Sports', slug: 'fitness-sports-en' },
-  { name: 'Gyms & Health Clubs', slug: 'gyms-health-clubs-en' },
-  { name: 'Yoga & Pilates', slug: 'yoga-pilates-en' },
-  { name: 'Swim Schools', slug: 'swim-schools-recreation-en' },
-  { name: 'Electricians', slug: 'electricians-en' },
-  { name: 'Roofing Contractors', slug: 'roofing-contractors-en' },
-  { name: 'Handyman Services', slug: 'handyman-services-en' },
-  { name: 'Home & Property', slug: 'home-property-en' },
-  { name: 'Cleaning & Pressure Washing', slug: 'cleaning-pressure-washing-en' },
-  { name: 'Hurricane Shutters & Windows', slug: 'shutters-windows-en' },
-  { name: 'Marine & Boat Services', slug: 'marine-boat-services-en' },
-  { name: 'Realtors & Agencies', slug: 'realtors-agencies-en' },
-  { name: 'Apartments & Property Mgmt', slug: 'apartments-property-mgmt-en' },
-  { name: 'Pet Services', slug: 'pet-services-en' },
-  { name: 'Pet Grooming & Boarding', slug: 'pet-grooming-boarding-en' }
-];
 
 const QUICK_PILLS = [
   { label: 'Restaurants', slug: 'restaurants-en' },
@@ -78,8 +14,28 @@ const QUICK_PILLS = [
   { label: 'Contractors & Repair', slug: 'contractors-repair-en' },
   { label: 'Beauty & Spas', slug: 'beauty-spas-en' },
   { label: 'Real Estate', slug: 'real-estate-en' },
-  { label: 'Auto & Transport', slug: 'auto-repair-mechanics-en' }
+  { label: 'Auto & Transport', slug: 'auto-transport-en' }
 ];
+
+const getCategoryRoute = (slug) => {
+  const category = ALL_CATEGORIES.find(c => c.slug === slug);
+  if (!category) return '/directory';
+
+  // If it has a direct directoryType, use it
+  if (category.directoryType) {
+    return `/directory/${category.directoryType}/${category.slug}`;
+  }
+
+  // If it's a child, find the parent's directoryType
+  if (category.parentSlug) {
+    const parent = ALL_CATEGORIES.find(p => p.slug === category.parentSlug);
+    if (parent && parent.directoryType) {
+      return `/directory/${parent.directoryType}/${category.slug}`;
+    }
+  }
+
+  return `/directory`; // Fallback
+};
 
 export default function DirectoryFilters() {
   const router = useRouter();
@@ -94,7 +50,6 @@ export default function DirectoryFilters() {
 
   const pillContainerRef = useRef(null);
 
-  const currentCategorySlug = searchParams.get('category') || '';
   const currentRating = searchParams.get('rating') || '';
   const currentOpenNow = searchParams.get('open') === 'true';
   const currentSort = searchParams.get('sort') || 'newest';
@@ -143,7 +98,9 @@ export default function DirectoryFilters() {
   };
 
   const handleCategorySelect = (slug) => {
-    updateFilter('category', slug);
+    const route = getCategoryRoute(slug);
+    const locale = pathname.split('/')[1] || 'en';
+    router.push(`/${locale}${route}`);
     setIsCatFocused(false);
     setCatInput('');
     setIsMobileModalOpen(false);
@@ -154,20 +111,31 @@ export default function DirectoryFilters() {
     cat.name.toLowerCase().includes(catInput.toLowerCase())
   );
 
+  const handleCategoryClick = (slug) => {
+    const locale = pathname.split('/')[1] || 'en';
+    if (!slug || pathname.includes(slug)) {
+      router.push(`/${locale}/directory`);
+    } else {
+      const route = getCategoryRoute(slug);
+      router.push(`/${locale}${route}`);
+    }
+    setIsMobileModalOpen(false);
+  };
+
   const renderPills = (isMobile = false) => {
     const pillsContent = (
       <>
         <button 
-          className={`${styles['category-pill']} ${!currentCategorySlug ? styles['category-pill--active'] : ''}`}
-          onClick={() => updateFilter('category', '')}
+          className={`${styles['category-pill']} ${pathname.endsWith('/directory') ? styles['category-pill--active'] : ''}`}
+          onClick={() => handleCategoryClick('')}
         >
           All
         </button>
         {QUICK_PILLS.map(pill => (
           <button 
             key={pill.slug}
-            className={`${styles['category-pill']} ${currentCategorySlug === pill.slug ? styles['category-pill--active'] : ''}`}
-            onClick={() => updateFilter('category', currentCategorySlug === pill.slug ? '' : pill.slug)}
+            className={`${styles['category-pill']} ${pathname.includes(pill.slug) ? styles['category-pill--active'] : ''}`}
+            onClick={() => handleCategoryClick(pill.slug)}
           >
             {pill.label}
           </button>
@@ -266,7 +234,7 @@ export default function DirectoryFilters() {
         </select>
       </div>
 
-      <div className={styles['filter-group']}>
+      <div className={styles['filter-group']} style={{ display: 'none' }}>
         <label className={styles['filter-label']}>Open Now</label>
         <label className={styles['toggle-switch']}>
           <input 
