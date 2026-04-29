@@ -38,13 +38,7 @@ export default async function CategoryPage({ params }) {
         </p>
       </header>
 
-      {listings.length === 0 ? (
-        <div style={{ textAlign: "center", padding: "4rem", border: "1px dashed #ccc", borderRadius: "12px" }}>
-          <p>{t.noListingsFound || "No listings found in this category yet."}</p>
-        </div>
-      ) : (
-        <DirectoryFilterManager listings={listings} currentUser={currentUser} dict={dict} locale={locale} />
-      )}
+      <DirectoryFilterManager listings={listings} currentUser={currentUser} dict={dict} locale={locale} />
     </main>
   );
 }

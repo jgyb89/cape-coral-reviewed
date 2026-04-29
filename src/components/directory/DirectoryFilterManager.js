@@ -24,6 +24,7 @@ export default function DirectoryFilterManager({ listings, currentUser, dict = {
 
   // Current Filters from URL
   const categoryFilter = searchParams.get('category') || '';
+  const textSearchFilter = searchParams.get('search') || '';
   const ratingFilter = Number.parseInt(searchParams.get('rating')) || 0;
   const openNowFilter = searchParams.get('open') === 'true';
   const sortByFilter = searchParams.get('sort') || 'newest';
@@ -42,6 +43,21 @@ export default function DirectoryFilterManager({ listings, currentUser, dict = {
         const matchesCategory = listing.ccrlistingcategories?.nodes?.some(node => node.slug === filterTarget);
         
         return matchesDirType || matchesCategory;
+      });
+    }
+
+    // Filter by Free-Text Search
+    if (textSearchFilter) {
+      const target = textSearchFilter.toLowerCase();
+      result = result.filter((listing) => {
+        // Search Title
+        if (listing.title?.toLowerCase().includes(target)) return true;
+        // Search Description/Content
+        if (listing.content?.toLowerCase().includes(target)) return true;
+        // Search Sub-Categories
+        if (listing.ccrlistingcategories?.nodes?.some(node => node.name.toLowerCase().includes(target))) return true;
+
+        return false;
       });
     }
 
@@ -70,7 +86,7 @@ export default function DirectoryFilterManager({ listings, currentUser, dict = {
     });
 
     return result;
-  }, [listings, categoryFilter, ratingFilter, openNowFilter, sortByFilter]);
+  }, [listings, categoryFilter, textSearchFilter, ratingFilter, openNowFilter, sortByFilter]);
 
   return (
     <div className={styles['directory-filter-manager']}>
@@ -82,7 +98,15 @@ export default function DirectoryFilterManager({ listings, currentUser, dict = {
         {t.listingsFound || "listings found"}
       </div>
 
-      <CcrCardGrid listings={filteredAndSortedListings} currentUser={currentUser} locale={locale} />
+      {filteredAndSortedListings.length === 0 ? (
+        <div style={{ textAlign: "center", padding: "4rem", border: "1px dashed #ccc", borderRadius: "12px", marginTop: "2rem" }}>
+          <p style={{ fontSize: "1.1rem", color: "#64748b" }}>
+            {t.noListingsFound || "No listings found matching your criteria. Try adjusting your filters or selecting a different category."}
+          </p>
+        </div>
+      ) : (
+        <CcrCardGrid listings={filteredAndSortedListings} currentUser={currentUser} locale={locale} />
+      )}
     </div>
   );
 }
