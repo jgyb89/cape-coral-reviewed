@@ -40,6 +40,12 @@ export async function getListingBySlug(slug) {
             slug
           }
         }
+        ccrlistingcategories {
+          nodes {
+            name
+            slug
+          }
+        }
         
         listingdata {
           addressStreet
@@ -139,6 +145,12 @@ export async function getListings(categorySlug = null) {
         priceRange
       }
       directoryTypes {
+        nodes {
+          name
+          slug
+        }
+      }
+      ccrlistingcategories {
         nodes {
           name
           slug
@@ -256,6 +268,12 @@ export async function getListingsByCategory(categorySlug, directoryType = null) 
               slug
             }
           }
+          ccrlistingcategories {
+            nodes {
+              name
+              slug
+            }
+          }
           reviews {
             nodes {
               reviewFields {
@@ -348,6 +366,12 @@ export async function getListingsByDirectoryType(directoryTypeSlug) {
             priceRange
           }
           directoryTypes {
+            nodes {
+              name
+              slug
+            }
+          }
+          ccrlistingcategories {
             nodes {
               name
               slug

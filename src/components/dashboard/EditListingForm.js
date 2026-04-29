@@ -1,10 +1,11 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import Image from "next/image";
 import { updateUserListing, uploadWPImage, deleteWPMedia } from "@/lib/actions";
 import { useRouter } from "next/navigation";
 import imageCompression from 'browser-image-compression';
+import { ALL_CATEGORIES, DIRECTORY_TYPES } from '@/lib/constants';
 
 // --- Constants & Helpers ---
 const daysList = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
@@ -97,9 +98,16 @@ function useEditListingForm(initialData) {
   const [fileErrors, setFileErrors] = useState({ featured: "", gallery: "" });
   const [dragState, setDragState] = useState({ featured: false, gallery: false });
 
+  // Hierarchical Category States
+  const initialDirectoryType = initialData.directoryTypes?.nodes?.[0]?.slug || "";
+  const initialCategories = initialData.ccrlistingcategories?.nodes?.map(n => n.slug) || [];
+  const [selectedParentCategory, setSelectedParentCategory] = useState(null);
+
   const [formData, setFormData] = useState({
     title: initialData.title || "",
     content: formatContentForTextarea(initialData.content),
+    category: initialDirectoryType,
+    categories: initialCategories,
     addressStreet: initialData.listingdata?.addressStreet || "",
     addressCity: initialData.listingdata?.addressCity || "",
     addressState: initialData.listingdata?.addressState || "",
@@ -115,17 +123,66 @@ function useEditListingForm(initialData) {
     }, {})
   });
 
+  // Initialize selectedParentCategory
+  useEffect(() => {
+    if (formData.categories?.length > 0) {
+      const firstCatSlug = formData.categories[0];
+      const childCat = ALL_CATEGORIES.find(c => c.slug === firstCatSlug);
+      if (childCat?.parentSlug) {
+        const parent = ALL_CATEGORIES.find(c => c.slug === childCat.parentSlug);
+        setSelectedParentCategory(parent);
+      }
+    }
+  }, []);
+
   const [socialErrors, setSocialErrors] = useState(formData.socialUrls.map(() => ''));
 
   const titleError = !formData.title?.trim() ? "Business Name is required." : "";
   const descriptionError = formData.content?.trim().length < 100 ? "Description must be at least 100 characters." : "";
   const isSubmitting = uploadStep !== 'idle';
-  const hasErrors = socialErrors.some(err => err !== '') || !!titleError || !!descriptionError;
+  const hasErrors = socialErrors.some(err => err !== '') || !!titleError || !!descriptionError || !formData.category || !selectedParentCategory || (formData.categories || []).length === 0;
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
+
+  const handleDirectoryTypeChange = (typeSlug) => {
+    setFormData(prev => ({ 
+      ...prev, 
+      category: typeSlug,
+      categories: [] 
+    }));
+    setSelectedParentCategory(null);
+  };
+
+  const handleParentCategoryChange = (parent) => {
+    setSelectedParentCategory(parent);
+    setFormData(prev => ({ ...prev, categories: [] }));
+  };
+
+  const handleCategoryToggle = (slug) => {
+    const current = formData.categories || [];
+    if (current.includes(slug)) {
+      setFormData(prev => ({ ...prev, categories: current.filter(c => c !== slug) }));
+    } else {
+      setFormData(prev => ({ ...prev, categories: [...current, slug] }));
+    }
+  };
+
+  const availableParentCategories = useMemo(() => {
+    if (!formData.category) return [];
+    return ALL_CATEGORIES.filter(cat => 
+      cat.directoryType === formData.category && cat.isParent
+    );
+  }, [formData.category]);
+
+  const availableChildCategories = useMemo(() => {
+    if (!selectedParentCategory) return [];
+    return ALL_CATEGORIES.filter(cat => 
+      cat.parentSlug === selectedParentCategory.slug
+    );
+  }, [selectedParentCategory]);
 
   const handleSocialUrlChange = (index, value) => {
     const newUrls = [...formData.socialUrls];
@@ -221,6 +278,8 @@ function useEditListingForm(initialData) {
 
       const payload = {
         title: formData.title, content: formData.content, featuredImageId,
+        category: formData.category,
+        categories: formData.categories,
         listingdata: { 
           ...formData, 
           socialUrl: formData.socialUrls.filter(u => u.trim()).join(','),
@@ -243,6 +302,8 @@ function useEditListingForm(initialData) {
     mediaToDelete, setMediaToDelete, fileErrors, setFileErrors, dragState, setDragState,
     formData, setFormData, socialErrors, titleError, descriptionError, setSocialErrors,
     isSubmitting, hasErrors, router,
+    selectedParentCategory, availableParentCategories, availableChildCategories,
+    handleDirectoryTypeChange, handleParentCategoryChange, handleCategoryToggle,
     handleChange, handleSocialUrlChange, handleTimeChange, handleTimeBlur, handleFileChange, handleSubmit,
     handleRemoveExistingGallery, handleRemoveNewGallery, handleRemoveSocialUrl, handleAddSocialUrl
   };
@@ -413,6 +474,146 @@ const HoursSection = ({ hoursParams, handleTimeChange, handleTimeBlur, disabled 
   </SectionWrapper>
 );
 
+const CategorySection = ({ formData, selectedParentCategory, availableParentCategories, availableChildCategories, handleDirectoryTypeChange, handleParentCategoryChange, handleCategoryToggle, disabled }) => {
+  const [catInput, setCatInput] = useState('');
+  const [isFocused, setIsFocused] = useState(false);
+
+  const searchResults = useMemo(() => {
+    if (!catInput.trim()) return [];
+    return ALL_CATEGORIES.filter(cat => 
+      !cat.isParent &&
+      cat.name.toLowerCase().includes(catInput.toLowerCase()) && 
+      !(formData.categories || []).includes(cat.slug)
+    );
+  }, [catInput, formData.categories]);
+
+  const pillStyle = {
+    padding: '0.6rem 1.25rem',
+    backgroundColor: '#fff',
+    color: '#475569',
+    border: '1px solid #cbd5e1',
+    borderRadius: '24px',
+    fontSize: '0.9rem',
+    fontWeight: 600,
+    cursor: 'pointer',
+    transition: 'all 0.2s ease',
+    whiteSpace: 'nowrap'
+  };
+
+  const activePillStyle = {
+    ...pillStyle,
+    backgroundColor: '#e04c4c',
+    color: '#ffffff',
+    borderColor: '#e04c4c'
+  };
+
+  const sectionWrapperStyle = {
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '1rem',
+    padding: '1.5rem',
+    backgroundColor: '#f8fafc',
+    borderRadius: '12px',
+    border: '1px solid #e2e8f0',
+    marginTop: '1rem'
+  };
+
+  return (
+    <SectionWrapper title="Categories">
+      <div style={{ display: 'grid', gap: '0.5rem' }}>
+        <label style={{ fontWeight: '600' }}>Directory Type</label>
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.75rem' }}>
+          {DIRECTORY_TYPES.map(type => (
+            <button
+              key={type.slug}
+              type="button"
+              disabled={disabled}
+              style={formData.category === type.slug ? activePillStyle : pillStyle}
+              onClick={() => handleDirectoryTypeChange(type.slug)}
+            >
+              {type.name}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {formData.category && (
+        <div style={sectionWrapperStyle}>
+          <label style={{ fontWeight: 700, fontSize: '1rem', color: '#1e293b', textTransform: 'uppercase' }}>Main Category</label>
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.75rem' }}>
+            {availableParentCategories.map(parent => (
+              <button
+                key={parent.slug}
+                type="button"
+                disabled={disabled}
+                style={selectedParentCategory?.slug === parent.slug ? activePillStyle : pillStyle}
+                onClick={() => handleParentCategoryChange(parent)}
+              >
+                {parent.name}
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {selectedParentCategory && (
+        <div style={sectionWrapperStyle}>
+          <label style={{ fontWeight: 700, fontSize: '1rem', color: '#1e293b', textTransform: 'uppercase' }}>Select Category</label>
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.75rem' }}>
+            {availableChildCategories.map(child => (
+              <button
+                key={child.slug}
+                type="button"
+                disabled={disabled}
+                style={(formData.categories || []).includes(child.slug) ? activePillStyle : pillStyle}
+                onClick={() => handleCategoryToggle(child.slug)}
+              >
+                {child.name}
+              </button>
+            ))}
+          </div>
+
+          <div style={{ position: 'relative', marginTop: '1rem' }}>
+            <input
+              type="text"
+              placeholder="Search more subcategories..."
+              value={catInput}
+              disabled={disabled}
+              onChange={(e) => { setCatInput(e.target.value); setIsFocused(true); }}
+              onFocus={() => setIsFocused(true)}
+              onBlur={() => setTimeout(() => setIsFocused(false), 200)}
+              style={{ padding: "0.75rem", borderRadius: "8px", border: "1px solid #e2e8f0", width: '100%' }}
+            />
+            {isFocused && catInput.trim() && searchResults.length > 0 && (
+              <ul style={{
+                position: 'absolute', top: '100%', left: 0, right: 0,
+                background: '#ffffff', border: '1px solid #cbd5e1', borderRadius: '8px',
+                boxShadow: '0 10px 25px rgba(0,0,0,0.1)', listStyle: 'none',
+                padding: '0.5rem 0', margin: '0.25rem 0 0 0', zIndex: 50,
+                maxHeight: '220px', overflowY: 'auto'
+              }}>
+                {searchResults.map(suggestion => (
+                  <li
+                    key={suggestion.slug}
+                    onMouseDown={(e) => {
+                      e.preventDefault();
+                      handleCategoryToggle(suggestion.slug);
+                      setCatInput('');
+                    }}
+                    style={{ padding: '0.6rem 1rem', cursor: 'pointer', fontSize: '0.95rem' }}
+                  >
+                    {suggestion.name}
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
+        </div>
+      )}
+    </SectionWrapper>
+  );
+};
+
 const SuccessModal = ({ onConfirm }) => (
   <div className="dashboard-modal-overlay">
     <div className="dashboard-modal-dialog">
@@ -435,6 +636,16 @@ export default function EditListingForm({ initialData }) {
       <ProgressOverlay step={hook.uploadStep} />
       <form onSubmit={hook.handleSubmit} style={{ display: "grid", gap: "2.5rem", maxWidth: "800px" }}>
         <BasicInfoSection formData={hook.formData} handleChange={hook.handleChange} titleError={hook.titleError} descriptionError={hook.descriptionError} disabled={hook.isSubmitting} />
+        <CategorySection 
+          formData={hook.formData} 
+          selectedParentCategory={hook.selectedParentCategory}
+          availableParentCategories={hook.availableParentCategories}
+          availableChildCategories={hook.availableChildCategories}
+          handleDirectoryTypeChange={hook.handleDirectoryTypeChange}
+          handleParentCategoryChange={hook.handleParentCategoryChange}
+          handleCategoryToggle={hook.handleCategoryToggle}
+          disabled={hook.isSubmitting}
+        />
         <MediaGallerySection existingFeatured={hook.existingFeaturedImage} setExistingFeatured={hook.setExistingFeaturedImage} newFeatured={hook.newFeaturedImage} setNewFeatured={hook.setNewFeaturedImage} existingGallery={hook.existingGallery} newGallery={hook.newGalleryImages} setMediaToDelete={hook.setMediaToDelete} handleFileChange={hook.handleFileChange} handleRemoveExistingGallery={hook.handleRemoveExistingGallery} handleRemoveNewGallery={hook.handleRemoveNewGallery} disabled={hook.isSubmitting} />
         <LocationSection formData={hook.formData} handleChange={hook.handleChange} handleSocialUrlChange={hook.handleSocialUrlChange} handleAddSocialUrl={hook.handleAddSocialUrl} handleRemoveSocialUrl={hook.handleRemoveSocialUrl} socialErrors={hook.socialErrors} disabled={hook.isSubmitting} />
         <HoursSection hoursParams={hook.formData.hoursParams} handleTimeChange={hook.handleTimeChange} handleTimeBlur={hook.handleTimeBlur} disabled={hook.isSubmitting} />

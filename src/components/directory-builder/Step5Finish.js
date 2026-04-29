@@ -98,7 +98,7 @@ const Step5Finish = ({ formData, prevStep }) => {
         businessDescription: formData.description,
         streetAddress: formData.address,
         directoryType: formData.category,
-        businessTypeCategories: formData.categories?.join(', ') || '',
+        categories: formData.categories,
         featuredImage: featuredImageId ? featuredImageId.toString() : '',
         galleryImages: galleryIds.length > 0 ? galleryIds.join(',') : ''
       };

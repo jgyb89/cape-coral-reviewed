@@ -2,12 +2,24 @@ import React from 'react';
 import ListingWizard from '@/components/directory-builder/ListingWizard';
 import { getViewer } from '@/lib/auth';
 import { redirect } from 'next/navigation';
+import { cookies } from 'next/headers';
 
-export default async function SubmitListingPage() {
+export default async function SubmitListingPage({ params }) {
+  const { locale } = await params;
+  
+  // 1. Explicitly check for the auth cookie
+  const cookieStore = await cookies();
+  const token = cookieStore.get('authToken')?.value;
+
+  if (!token) {
+    redirect(`/${locale}/login`);
+  }
+
+  // 2. Fetch the viewer data
   const viewer = await getViewer();
 
   if (!viewer) {
-    redirect('/register-business');
+    redirect(`/${locale}/login`);
   }
 
   const userRoles = viewer.roles?.nodes?.map((role) => role.name.toLowerCase()) || [];

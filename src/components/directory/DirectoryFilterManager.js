@@ -31,11 +31,18 @@ export default function DirectoryFilterManager({ listings, currentUser, dict = {
   const filteredAndSortedListings = useMemo(() => {
     let result = [...listings];
 
-    // Filter by In-Page Category
+    // Filter by In-Page Category or Directory Type
     if (categoryFilter) {
-      result = result.filter((listing) => 
-        listing.directoryTypes?.nodes?.some(node => node.name.toLowerCase().includes(categoryFilter.toLowerCase()))
-      );
+      const filterTarget = categoryFilter.toLowerCase();
+      result = result.filter((listing) => {
+        // Check if it matches a directoryType slug
+        const matchesDirType = listing.directoryTypes?.nodes?.some(node => node.slug === filterTarget);
+        
+        // Check if it matches a specific category slug
+        const matchesCategory = listing.ccrlistingcategories?.nodes?.some(node => node.slug === filterTarget);
+        
+        return matchesDirType || matchesCategory;
+      });
     }
 
     // Filter by Rating
