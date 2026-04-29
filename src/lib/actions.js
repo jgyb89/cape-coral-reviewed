@@ -20,6 +20,29 @@ export async function handleLogin(username, password) {
 }
 
 /**
+ * Helper to handle GraphQL errors and detect token expiration.
+ */
+async function handleGraphQLError(json) {
+  if (json.errors) {
+    const isTokenError = json.errors.some(
+      (e) =>
+        e.extensions?.debugMessage === "Expired token" ||
+        e.message?.includes("Expired token") ||
+        e.message?.includes("jwt_auth_invalid_token") ||
+        e.message?.includes("invalid_token")
+    );
+
+    if (isTokenError) {
+      const cookieStore = await cookies();
+      cookieStore.set("authToken", "", { maxAge: 0 });
+      redirect("/en/login");
+    }
+    
+    throw new Error(json.errors[0].message);
+  }
+}
+
+/**
  * Server Action to update the user's profile.
  */
 export async function updateUserProfile(formData) {
@@ -27,12 +50,12 @@ export async function updateUserProfile(formData) {
   const authToken = cookieStore.get("authToken")?.value;
 
   if (!authToken) {
-    return { success: false, error: "Not authenticated" };
+    redirect("/en/login");
   }
 
   const viewer = await getViewer();
   if (!viewer?.id) {
-    return { success: false, error: "Could not securely identify user" };
+    redirect("/en/login");
   }
   
   const userId = viewer.id;
@@ -85,7 +108,7 @@ export async function updateUserProfile(formData) {
     });
 
     const json = await res.json();
-    if (json.errors) throw new Error(json.errors[0].message);
+    await handleGraphQLError(json);
 
     revalidatePath("/dashboard", "layout");
     return { success: true, user: json.data.updateUser.user };
@@ -121,7 +144,7 @@ export async function deleteUserReview(reviewId) {
     });
 
     const json = await res.json();
-    if (json.errors) throw new Error(json.errors[0].message);
+    await handleGraphQLError(json);
 
     revalidatePath("/", "layout");
     return { success: true };
@@ -166,7 +189,7 @@ export async function removeFavoriteListing(listingId) {
     });
 
     const json = await res.json();
-    if (json.errors) throw new Error(json.errors[0].message);
+    await handleGraphQLError(json);
 
     return { success: true };
   } catch (error) {
@@ -301,7 +324,7 @@ export async function getListingForEdit(databaseId) {
     });
 
     const json = await res.json();
-    if (json.errors) throw new Error(json.errors[0].message);
+    await handleGraphQLError(json);
     return json.data?.ccrlisting || null;
   } catch (error) {
     console.error("Get Listing For Edit Error:", error);
@@ -362,6 +385,12 @@ export async function updateUserListing(databaseId, payload) {
       content: payload.content,
       featuredImageId: payload.featuredImageId,
       listingDataJson: JSON.stringify(acfData),
+      directoryTypes: {
+        set: [payload.category]
+      },
+      ccrlistingcategories: {
+        set: payload.categories
+      }
     },
   };
 
@@ -413,7 +442,7 @@ export async function deleteUserListing(listingId) {
     });
 
     const json = await res.json();
-    if (json.errors) throw new Error(json.errors[0].message);
+    await handleGraphQLError(json);
 
     revalidatePath("/dashboard/listings");
     revalidatePath("/directory", "layout");
@@ -459,7 +488,7 @@ export async function updateUserReview(reviewId, formData) {
     });
 
     const json = await res.json();
-    if (json.errors) throw new Error(json.errors[0].message);
+    await handleGraphQLError(json);
 
     revalidatePath("/", "layout");
     return { success: true };
@@ -561,7 +590,10 @@ export async function submitListing(formData) {
               { id: 20, value: formData.businessDescription },
               { id: 21, value: formData.streetAddress },
               { id: 22, value: formData.directoryType },
-              { id: 23, value: formData.businessTypeCategories },
+              { 
+                id: 29, 
+                value: Array.isArray(formData.categories) ? formData.categories.join(', ') : formData.categories 
+              },
               ...(formData.featuredImage ? [{ id: 27, value: formData.featuredImage }] : []),
               ...(formData.galleryImages ? [{ id: 28, value: formData.galleryImages }] : []),
             ],

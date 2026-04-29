@@ -91,13 +91,13 @@ export function middleware(request) {
   // --- 3. ROUTE PROTECTION LOGIC ---
   if (matchesPath('/dashboard')) {
     if (!authToken) {
-      return NextResponse.redirect(new URL(`/${currentLocale}`, request.url));
+      return NextResponse.redirect(new URL(`/${currentLocale}/login`, request.url));
     }
   }
 
   if (matchesPath('/submit-listing')) {
     if (!authToken) {
-      return NextResponse.redirect(new URL(`/${currentLocale}/register-business`, request.url));
+      return NextResponse.redirect(new URL(`/${currentLocale}/login`, request.url));
     }
   }
 

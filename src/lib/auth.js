@@ -192,7 +192,12 @@ export async function getViewer() {
   // CRITICAL: Next.js redirects throw an error.
   // This MUST sit outside the try/catch block to work properly.
   if (isTokenExpired) {
-    redirect("/logout");
+    // Clear the dead cookie
+    const cookieStore = await cookies();
+    cookieStore.set("authToken", "", { maxAge: 0 });
+    
+    // Redirect to branded login page
+    redirect("/en/login");
   }
 
   return null;

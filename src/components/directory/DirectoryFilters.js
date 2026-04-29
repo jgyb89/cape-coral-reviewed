@@ -1,76 +1,85 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { useRouter, useSearchParams, usePathname } from 'next/navigation';
 import styles from './DirectoryFilters.module.css';
 import 'material-symbols/outlined.css';
 
 // Comprehensive list for powerful predictive search
 const ALL_CATEGORIES = [
-  // Food & Drink
-  { name: 'Restaurants', slug: 'restaurants-en', parentSlug: 'food-drink' },
-  { name: 'Pizza', slug: 'pizza-en', parentSlug: 'food-drink' },
-  { name: 'Seafood', slug: 'seafood-en', parentSlug: 'food-drink' },
-  { name: 'American (New & Traditional)', slug: 'american-food-en', parentSlug: 'food-drink' },
-  { name: 'Mexican & Latin', slug: 'mexican-latin-en', parentSlug: 'food-drink' },
-  { name: 'Cuban', slug: 'cuban-food-en', parentSlug: 'food-drink' },
-  { name: 'Asian & Chinese', slug: 'asian-chinese-en', parentSlug: 'food-drink' },
-  { name: 'Breakfast & Brunch', slug: 'breakfast-brunch-en', parentSlug: 'food-drink' },
-  { name: 'Sandwiches & Subs', slug: 'sandwiches-subs-en', parentSlug: 'food-drink' },
-  { name: 'Steakhouse', slug: 'steakhouse-en', parentSlug: 'food-drink' },
-  { name: 'Bars & Nightlife', slug: 'bars-nightlife-en', parentSlug: 'food-drink' },
-  { name: 'Breweries', slug: 'breweries-en', parentSlug: 'food-drink' },
-  { name: 'Sports Bars', slug: 'sports-bars-en', parentSlug: 'food-drink' },
-  { name: 'Pubs & Grills', slug: 'pubs-grills-en', parentSlug: 'food-drink' },
-  { name: 'Wine & Cocktail Bars', slug: 'wine-cocktail-bars-en', parentSlug: 'food-drink' },
-  { name: 'Cafes & Bakeries', slug: 'cafes-bakeries-en', parentSlug: 'food-drink' },
-  { name: 'Coffee & Tea', slug: 'coffee-tea-en', parentSlug: 'food-drink' },
-  { name: 'Boba & Juice', slug: 'boba-juice-en', parentSlug: 'food-drink' },
-  { name: 'Bakeries & Desserts', slug: 'bakeries-desserts-en', parentSlug: 'food-drink' },
+  // User Requested Categories (from CSV data)
+  { name: 'Alternative & Therapy', slug: 'alternative-therapy-en' },
+  { name: 'Chiropractors', slug: 'chiropractors-en' },
+  { name: 'Mental Health Services', slug: 'mental-health-services-en' },
+  { name: 'Physical Therapy', slug: 'physical-therapy-en' },
+  { name: 'Auto Repair & Mechanics', slug: 'auto-repair-mechanics-en' },
+  { name: 'Car Wash & Detailing', slug: 'car-wash-detailing-en' },
+  { name: 'Bars & Nightlife', slug: 'bars-nightlife-en' },
+  { name: 'Breweries', slug: 'breweries-en' },
+  { name: 'Pubs & Grills', slug: 'pubs-grills-en' },
+  { name: 'Beauty & Spas', slug: 'beauty-spas-en' },
+  { name: 'Hair Salons', slug: 'hair-salons-en' },
+  { name: 'Massage Therapy', slug: 'massage-therapy-en' },
+  { name: 'Cafes & Bakeries', slug: 'cafes-bakeries-en' },
+  { name: 'Contractors & Repair', slug: 'contractors-repair-en' },
+  { name: 'HVAC & AC Repair', slug: 'hvac-ac-repair-en' },
+  { name: 'Plumbers', slug: 'plumbers-en' },
+  { name: 'Landscaping & Lawn Care', slug: 'landscaping-lawn-care-en' },
+  { name: 'Pool Services', slug: 'pool-services-en' },
+  { name: 'Dentists & Orthodontics', slug: 'dentists-orthodontics-en' },
+  { name: 'Primary Care & Doctors', slug: 'primary-care-doctors-en' },
+  { name: 'Pet Grooming', slug: 'pet-grooming-en' },
+  { name: 'Veterinarians', slug: 'veterinarians-en' },
+  { name: 'Real Estate', slug: 'real-estate-en' },
 
-  // Health & Wellness
-  { name: 'Medical & Dental', slug: 'medical-dental-en', parentSlug: 'health-wellness' },
-  { name: 'Dentists & Orthodontics', slug: 'dentists-orthodontics-en', parentSlug: 'health-wellness' },
-  { name: 'Primary Care & Doctors', slug: 'primary-care-doctors-en', parentSlug: 'health-wellness' },
-  { name: 'Urgent Care', slug: 'urgent-care-en', parentSlug: 'health-wellness' },
-  { name: 'Optometrists', slug: 'optometrists-en', parentSlug: 'health-wellness' },
-  { name: 'Beauty & Spas', slug: 'beauty-spas-en', parentSlug: 'health-wellness' },
-  { name: 'Hair Salons', slug: 'hair-salons-en', parentSlug: 'health-wellness' },
-  { name: 'Nail Salons', slug: 'nail-salons-en', parentSlug: 'health-wellness' },
-  { name: 'Massage Therapy', slug: 'massage-therapy-en', parentSlug: 'health-wellness' },
-  { name: 'Med Spas & Weight Loss', slug: 'med-spas-weight-loss-en', parentSlug: 'health-wellness' },
-  { name: 'Fitness & Sports', slug: 'fitness-sports-en', parentSlug: 'health-wellness' },
-  { name: 'Gyms & Health Clubs', slug: 'gyms-health-clubs-en', parentSlug: 'health-wellness' },
-  { name: 'Yoga & Pilates', slug: 'yoga-pilates-en', parentSlug: 'health-wellness' },
-  { name: 'Swim Schools', slug: 'swim-schools-recreation-en', parentSlug: 'health-wellness' },
-  { name: 'Chiropractors', slug: 'chiropractors-en', parentSlug: 'health-wellness' },
-  { name: 'Physical Therapy', slug: 'physical-therapy-en', parentSlug: 'health-wellness' },
-  { name: 'Mental Health Services', slug: 'mental-health-services-en', parentSlug: 'health-wellness' },
-
-  // Home & Local Services
-  { name: 'Contractors & Repair', slug: 'contractors-repair-en', parentSlug: 'home-local-services' },
-  { name: 'Plumbers', slug: 'plumbers-en', parentSlug: 'home-local-services' },
-  { name: 'Electricians', slug: 'electricians-en', parentSlug: 'home-local-services' },
-  { name: 'HVAC & AC Repair', slug: 'hvac-ac-repair-en', parentSlug: 'home-local-services' },
-  { name: 'Roofing Contractors', slug: 'roofing-contractors-en', parentSlug: 'home-local-services' },
-  { name: 'Handyman Services', slug: 'handyman-services-en', parentSlug: 'home-local-services' },
-  { name: 'Home & Property', slug: 'home-property-en', parentSlug: 'home-local-services' },
-  { name: 'Cleaning & Pressure Washing', slug: 'cleaning-pressure-washing-en', parentSlug: 'home-local-services' },
-  { name: 'Pool Services', slug: 'pool-services-en', parentSlug: 'home-local-services' },
-  { name: 'Landscaping & Lawn Care', slug: 'landscaping-lawn-care-en', parentSlug: 'home-local-services' },
-  { name: 'Hurricane Shutters & Windows', slug: 'shutters-windows-en', parentSlug: 'home-local-services' },
-  { name: 'Marine & Boat Services', slug: 'marine-boat-services-en', parentSlug: 'home-local-services' },
-  { name: 'Real Estate', slug: 'real-estate-en', parentSlug: 'home-local-services' },
-  { name: 'Realtors & Agencies', slug: 'realtors-agencies-en', parentSlug: 'home-local-services' },
-  { name: 'Apartments & Property Mgmt', slug: 'apartments-property-mgmt-en', parentSlug: 'home-local-services' },
-  { name: 'Auto Repair & Mechanics', slug: 'auto-repair-mechanics-en', parentSlug: 'home-local-services' },
-  { name: 'Car Wash & Detailing', slug: 'car-wash-detailing-en', parentSlug: 'home-local-services' },
-  { name: 'Pet Services', slug: 'pet-services-en', parentSlug: 'home-local-services' },
-  { name: 'Veterinarians', slug: 'veterinarians-en', parentSlug: 'home-local-services' },
-  { name: 'Pet Grooming & Boarding', slug: 'pet-grooming-boarding-en', parentSlug: 'home-local-services' }
+  // Remaining categories from existing list
+  { name: 'Restaurants', slug: 'restaurants-en' },
+  { name: 'Pizza', slug: 'pizza-en' },
+  { name: 'Seafood', slug: 'seafood-en' },
+  { name: 'American Food', slug: 'american-food-en' },
+  { name: 'Mexican & Latin', slug: 'mexican-latin-en' },
+  { name: 'Cuban', slug: 'cuban-food-en' },
+  { name: 'Asian & Chinese', slug: 'asian-chinese-en' },
+  { name: 'Breakfast & Brunch', slug: 'breakfast-brunch-en' },
+  { name: 'Sandwiches & Subs', slug: 'sandwiches-subs-en' },
+  { name: 'Steakhouse', slug: 'steakhouse-en' },
+  { name: 'Sports Bars', slug: 'sports-bars-en' },
+  { name: 'Wine & Cocktail Bars', slug: 'wine-cocktail-bars-en' },
+  { name: 'Coffee & Tea', slug: 'coffee-tea-en' },
+  { name: 'Boba & Juice', slug: 'boba-juice-en' },
+  { name: 'Bakeries & Desserts', slug: 'bakeries-desserts-en' },
+  { name: 'Medical & Dental', slug: 'medical-dental-en' },
+  { name: 'Urgent Care', slug: 'urgent-care-en' },
+  { name: 'Optometrists', slug: 'optometrists-en' },
+  { name: 'Nail Salons', slug: 'nail-salons-en' },
+  { name: 'Med Spas & Weight Loss', slug: 'med-spas-weight-loss-en' },
+  { name: 'Fitness & Sports', slug: 'fitness-sports-en' },
+  { name: 'Gyms & Health Clubs', slug: 'gyms-health-clubs-en' },
+  { name: 'Yoga & Pilates', slug: 'yoga-pilates-en' },
+  { name: 'Swim Schools', slug: 'swim-schools-recreation-en' },
+  { name: 'Electricians', slug: 'electricians-en' },
+  { name: 'Roofing Contractors', slug: 'roofing-contractors-en' },
+  { name: 'Handyman Services', slug: 'handyman-services-en' },
+  { name: 'Home & Property', slug: 'home-property-en' },
+  { name: 'Cleaning & Pressure Washing', slug: 'cleaning-pressure-washing-en' },
+  { name: 'Hurricane Shutters & Windows', slug: 'shutters-windows-en' },
+  { name: 'Marine & Boat Services', slug: 'marine-boat-services-en' },
+  { name: 'Realtors & Agencies', slug: 'realtors-agencies-en' },
+  { name: 'Apartments & Property Mgmt', slug: 'apartments-property-mgmt-en' },
+  { name: 'Pet Services', slug: 'pet-services-en' },
+  { name: 'Pet Grooming & Boarding', slug: 'pet-grooming-boarding-en' }
 ];
 
-const QUICK_PILLS = ['Restaurants', 'Bars & Nightlife', 'Cafes & Bakeries', 'Medical & Dental', 'Contractors & Repair', 'Beauty & Spas', 'Real Estate', 'Auto & Transport'];
+const QUICK_PILLS = [
+  { label: 'Restaurants', slug: 'restaurants-en' },
+  { label: 'Bars & Nightlife', slug: 'bars-nightlife-en' },
+  { label: 'Cafes & Bakeries', slug: 'cafes-bakeries-en' },
+  { label: 'Medical & Dental', slug: 'medical-dental-en' },
+  { label: 'Contractors & Repair', slug: 'contractors-repair-en' },
+  { label: 'Beauty & Spas', slug: 'beauty-spas-en' },
+  { label: 'Real Estate', slug: 'real-estate-en' },
+  { label: 'Auto & Transport', slug: 'auto-repair-mechanics-en' }
+];
 
 export default function DirectoryFilters() {
   const router = useRouter();
@@ -80,11 +89,42 @@ export default function DirectoryFilters() {
   const [isMobileModalOpen, setIsMobileModalOpen] = useState(false);
   const [catInput, setCatInput] = useState('');
   const [isCatFocused, setIsCatFocused] = useState(false);
+  const [canScrollLeft, setCanScrollLeft] = useState(false);
+  const [canScrollRight, setCanScrollRight] = useState(true);
 
-  const currentCategory = searchParams.get('category') || '';
+  const pillContainerRef = useRef(null);
+
+  const currentCategorySlug = searchParams.get('category') || '';
   const currentRating = searchParams.get('rating') || '';
   const currentOpenNow = searchParams.get('open') === 'true';
   const currentSort = searchParams.get('sort') || 'newest';
+
+  const handleScroll = () => {
+    if (pillContainerRef.current) {
+      const { scrollLeft, scrollWidth, clientWidth } = pillContainerRef.current;
+      setCanScrollLeft(scrollLeft > 0);
+      setCanScrollRight(scrollLeft < (scrollWidth - clientWidth - 1));
+    }
+  };
+
+  useEffect(() => {
+    // Initial check
+    handleScroll();
+    
+    // Check on resize
+    window.addEventListener('resize', handleScroll);
+    return () => window.removeEventListener('resize', handleScroll);
+  }, []);
+
+  const scrollPills = (direction) => {
+    if (pillContainerRef.current) {
+      const scrollAmount = 300; // The distance to scroll in pixels
+      pillContainerRef.current.scrollBy({
+        left: direction === 'left' ? -scrollAmount : scrollAmount,
+        behavior: 'smooth'
+      });
+    }
+  };
 
   const updateFilter = (key, value) => {
     const params = new URLSearchParams(searchParams);
@@ -102,8 +142,8 @@ export default function DirectoryFilters() {
     setIsMobileModalOpen(false);
   };
 
-  const handleCategorySelect = (catName) => {
-    updateFilter('category', catName);
+  const handleCategorySelect = (slug) => {
+    updateFilter('category', slug);
     setIsCatFocused(false);
     setCatInput('');
     setIsMobileModalOpen(false);
@@ -114,25 +154,70 @@ export default function DirectoryFilters() {
     cat.name.toLowerCase().includes(catInput.toLowerCase())
   );
 
-  const renderPills = (isMobile = false) => (
-    <div className={isMobile ? styles['category-pills-mobile'] : styles['category-pills-desktop']}>
-      <button 
-        className={`${styles['category-pill']} ${!currentCategory ? styles['category-pill--active'] : ''}`}
-        onClick={() => updateFilter('category', '')}
-      >
-        All
-      </button>
-      {QUICK_PILLS.map(pill => (
+  const renderPills = (isMobile = false) => {
+    const pillsContent = (
+      <>
         <button 
-          key={pill}
-          className={`${styles['category-pill']} ${currentCategory === pill ? styles['category-pill--active'] : ''}`}
-          onClick={() => updateFilter('category', currentCategory === pill ? '' : pill)}
+          className={`${styles['category-pill']} ${!currentCategorySlug ? styles['category-pill--active'] : ''}`}
+          onClick={() => updateFilter('category', '')}
         >
-          {pill}
+          All
         </button>
-      ))}
-    </div>
-  );
+        {QUICK_PILLS.map(pill => (
+          <button 
+            key={pill.slug}
+            className={`${styles['category-pill']} ${currentCategorySlug === pill.slug ? styles['category-pill--active'] : ''}`}
+            onClick={() => updateFilter('category', currentCategorySlug === pill.slug ? '' : pill.slug)}
+          >
+            {pill.label}
+          </button>
+        ))}
+      </>
+    );
+
+    if (isMobile) {
+      return (
+        <div className={styles['category-pills-mobile']}>
+          {pillsContent}
+        </div>
+      );
+    }
+
+    return (
+      <div style={{ position: 'relative', display: 'flex', alignItems: 'center', width: 'calc(100% - 32px)', margin: '0 auto 1.5rem' }}>
+        {/* Left Arrow */}
+        {canScrollLeft && (
+          <button
+            onClick={() => scrollPills('left')}
+            aria-label="Scroll left"
+            className={`${styles['scroll-arrow']} ${styles['scroll-arrow-left']}`}
+          >
+            <span className="material-symbols-outlined" style={{ fontSize: '20px' }}>chevron_left</span>
+          </button>
+        )}
+
+        <div 
+          ref={pillContainerRef}
+          onScroll={handleScroll}
+          className={styles['category-pills-desktop']}
+          style={{ scrollBehavior: 'smooth', marginBottom: 0 }}
+        >
+          {pillsContent}
+        </div>
+
+        {/* Right Arrow */}
+        {canScrollRight && (
+          <button
+            onClick={() => scrollPills('right')}
+            aria-label="Scroll right"
+            className={`${styles['scroll-arrow']} ${styles['scroll-arrow-right']}`}
+          >
+            <span className="material-symbols-outlined" style={{ fontSize: '20px' }}>chevron_right</span>
+          </button>
+        )}
+      </div>
+    );
+  };
 
   const renderFilters = (isMobile = false) => (
     <>
@@ -156,7 +241,7 @@ export default function DirectoryFilters() {
               <li 
                 key={cat.slug} 
                 className={styles['autocomplete-item']}
-                onMouseDown={(e) => { e.preventDefault(); handleCategorySelect(cat.name); }}
+                onMouseDown={(e) => { e.preventDefault(); handleCategorySelect(cat.slug); }}
               >
                 {/* Bold the matching part for visual feedback */}
                 <span style={{ fontWeight: 600 }}>{cat.name.slice(0, catInput.length)}</span>
