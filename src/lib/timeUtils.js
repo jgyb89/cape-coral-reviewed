@@ -31,8 +31,9 @@ export function checkIfOpenNow(listingData) {
   if (hoursStr.toLowerCase() === '24 hours') return true;
 
   // 4. Parse "09:00 AM - 05:00 PM"
-  // Regex to capture start time, start period, end time, end period
-  const match = hoursStr.match(/^(\d{1,2}:\d{2})\s*(AM|PM)\s*-\s*(\d{1,2}:\d{2})\s*(AM|PM)$/i);
+  // Remove ^ and $ anchors, trim string, and allow various dashes
+  const safeHoursStr = hoursStr.trim();
+  const match = safeHoursStr.match(/(\d{1,2}:\d{2})\s*(AM|PM)\s*[-–—to]+\s*(\d{1,2}:\d{2})\s*(AM|PM)/i);
   if (!match) return false;
 
   const [_, startTime, startPeriod, endTime, endPeriod] = match;

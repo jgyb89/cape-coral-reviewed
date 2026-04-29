@@ -137,6 +137,13 @@ export async function getListings(categorySlug = null) {
         addressCity
         phoneNumber
         priceRange
+        hoursMonday
+        hoursTuesday
+        hoursWednesday
+        hoursThursday
+        hoursFriday
+        hoursSaturday
+        hoursSunday
       }
       directoryTypes {
         nodes {
@@ -249,6 +256,13 @@ export async function getListingsByCategory(categorySlug, directoryType = null) 
             addressCity
             phoneNumber
             priceRange
+            hoursMonday
+            hoursTuesday
+            hoursWednesday
+            hoursThursday
+            hoursFriday
+            hoursSaturday
+            hoursSunday
           }
           directoryTypes {
             nodes {
@@ -346,6 +360,13 @@ export async function getListingsByDirectoryType(directoryTypeSlug) {
             addressCity
             phoneNumber
             priceRange
+            hoursMonday
+            hoursTuesday
+            hoursWednesday
+            hoursThursday
+            hoursFriday
+            hoursSaturday
+            hoursSunday
           }
           directoryTypes {
             nodes {
