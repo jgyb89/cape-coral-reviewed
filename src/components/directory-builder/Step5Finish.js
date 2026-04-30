@@ -29,8 +29,6 @@ const compressImage = async (file) => {
     return file;
   }
 };
-  }
-};
 
 const Step5Finish = ({ formData, prevStep }) => {
   const router = useRouter();
