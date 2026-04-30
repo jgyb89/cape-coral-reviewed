@@ -54,6 +54,9 @@ export default async function MyListingsPage({ params }) {
 
   return (
     <div className="my-listings-page">
+      <Link href={`/${locale}/dashboard`} className="dashboard-back-btn">
+        <span className="material-symbols-outlined">arrow_back</span> Back to Dashboard
+      </Link>
       <header style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2.5rem', paddingBottom: '1rem', borderBottom: '1px solid #f1f5f9' }}>
         <div>
           <h1 style={{ margin: '0 0 0.5rem 0' }}>My Listings</h1>

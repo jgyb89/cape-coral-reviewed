@@ -173,3 +173,21 @@ h1, h2, h3, h4, h5, h6 {
   color: #065f46;
   border: 1px solid #10b981;
 }
+
+/* Mobile Overhaul: Global Typography & Buttons */
+@media (max-width: 768px) {
+  h1 { font-size: 1.75em !important; }
+  h2 { font-size: 1.5em !important; }
+  h3 { font-size: 1.25em !important; }
+  
+  .listing-action-btn, 
+  .listing-primary-btn {
+    padding: 0.5rem 0.75rem !important;
+    font-size: 0.85rem !important;
+  }
+  
+  .listing-action-btn .material-symbols-outlined,
+  .listing-primary-btn .material-symbols-outlined {
+    font-size: 1.1rem !important;
+  }
+}

@@ -250,9 +250,6 @@ export default function DirectoryFilters() {
 
   return (
     <>
-      {/* DESKTOP PILLS (Hidden on Mobile) */}
-      {renderPills(false)}
-
       <div className={styles['filter-bar']}>
         {/* DESKTOP LEFT: Filters */}
         <div className={styles['desktop-filters']}>
@@ -283,6 +280,9 @@ export default function DirectoryFilters() {
         </div>
       </div>
 
+      {/* DESKTOP PILLS (Hidden on Mobile) */}
+      {renderPills(false)}
+
       {/* MOBILE MODAL */}
       {isMobileModalOpen && (
         <div className={styles['modal-overlay']}>
@@ -294,13 +294,13 @@ export default function DirectoryFilters() {
               </button>
             </div>
             
+            {renderFilters(true)}
+
             {/* MOBILE PILLS (Wrapped naturally) */}
-            <div>
+            <div style={{ marginTop: '0.5rem' }}>
               <label className={styles['filter-label']} style={{ display: 'block', marginBottom: '0.5rem' }}>Quick Categories</label>
               {renderPills(true)}
             </div>
-
-            {renderFilters(true)}
             
             <div style={{ marginTop: 'auto', display: 'flex', gap: '1rem', flexDirection: 'column' }}>
               <button 

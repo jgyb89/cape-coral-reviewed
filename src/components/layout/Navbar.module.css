@@ -98,16 +98,15 @@
   position: absolute;
   top: 100%;
   left: 0;
-  background: #fff;
-  border: 1px solid #eaeaea;
+  background-color: var(--color-bg, #ffffff); /* Solid white background */
+  border: 1px solid #e2e8f0;
   border-radius: 8px;
   padding: 0.5rem 0;
-  width: 100%;
   min-width: 250px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15); /* Adds depth */
   display: flex;
   flex-direction: column;
-  z-index: 9999;
+  z-index: 9999 !important; /* Forces it above all other page content */
 }
 
 /* Mega Menu Styles */
@@ -117,14 +116,14 @@
   left: 0;
   right: 0;
   margin: 0 auto;
-  background: #fff;
-  border: 1px solid #eaeaea;
+  background-color: var(--color-bg, #ffffff); /* Solid white background */
+  border: 1px solid #e2e8f0;
   border-radius: 0 0 12px 12px;
   width: 1600px;
   max-width: 95dvw;
   box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
   padding: 32px;
-  z-index: 1000;
+  z-index: 1000 !important;
   display: flex;
   flex-direction: column;
   gap: 24px;

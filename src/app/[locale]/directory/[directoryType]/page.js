@@ -26,15 +26,21 @@ export default async function DirectoryTypePage({ params }) {
   const typeName = listings[0]?.directoryTypes?.nodes.find(n => n.slug === directoryType)?.name || directoryType.replace(/-/g, ' ');
 
   return (
-    <main style={{ padding: "3rem", maxWidth: "1200px", margin: "0 auto", fontFamily: "sans-serif" }}>
-      <header style={{ marginBottom: "3rem" }}>
+    <main style={{ padding: "clamp(1.5rem, 4vw, 3rem) 1rem 0", maxWidth: "1200px", margin: "0 auto", fontFamily: "sans-serif" }}>
+      <header style={{ marginBottom: "1rem" }}>
         <Link href={`/${locale}/directory`} style={{ color: "#0070f3", textDecoration: "none", fontSize: "0.9rem" }}>← Back to Directory</Link>
-        <h1 style={{ fontSize: "2.5rem", marginTop: "1rem", textTransform: "capitalize" }}>
+        <h1 style={{ 
+          fontFamily: 'var(--font-heading)', 
+          fontSize: 'clamp(1.75rem, 6vw, 3.5rem)', 
+          fontWeight: '800', 
+          lineHeight: '1.1',
+          marginTop: '1rem',
+          marginBottom: '0.5rem',
+          color: 'var(--color-text)',
+          textTransform: 'capitalize'
+        }}>
           Best {typeName} in Cape Coral
         </h1>
-        <p style={{ color: "#666" }}>
-          {listings.length} {t.listingsFound || "listings found"}
-        </p>
       </header>
 
       <DirectoryFilterManager listings={listings} currentUser={currentUser} dict={dict} locale={locale} />

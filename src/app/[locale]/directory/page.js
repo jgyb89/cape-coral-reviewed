@@ -19,17 +19,30 @@ export default async function DirectoryIndexPage({ params }) {
   return (
     <main
       style={{
-        padding: "3rem",
+        padding: "clamp(1.5rem, 4vw, 3rem) 1rem 0",
         fontFamily: "sans-serif",
         maxWidth: "1200px",
         margin: "0 auto",
       }}
     >
-      <header style={{ marginBottom: "3rem", textAlign: "center" }}>
-        <h1 style={{ fontSize: "3rem", fontWeight: "800", marginBottom: "1rem" }}>
+      <header style={{ marginBottom: "1rem", textAlign: "center" }}>
+        <h1 style={{ 
+          fontFamily: 'var(--font-heading)', 
+          fontSize: 'clamp(1.75rem, 6vw, 3.5rem)', 
+          fontWeight: '800', 
+          lineHeight: '1.1',
+          marginBottom: '0.5rem',
+          color: 'var(--color-text)' 
+        }}>
           {t.title || "Business Directory"}
         </h1>
-        <p style={{ fontSize: "1.2rem", color: "#666" }}>
+        <p style={{ 
+          fontSize: 'clamp(1rem, 3vw, 1.25rem)', 
+          color: '#4a5568', 
+          maxWidth: '800px',
+          margin: '0 auto 1rem',
+          lineHeight: '1.4'
+        }}>
           {t.subtitle || "Explore the best local services, restaurants, and shops in Cape Coral."}
         </p>
       </header>
