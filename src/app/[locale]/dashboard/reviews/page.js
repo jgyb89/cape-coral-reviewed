@@ -1,6 +1,7 @@
 // src/app/dashboard/reviews/page.js
 import { getViewer } from '@/lib/auth';
 import MyReviews from '@/components/dashboard/MyReviews';
+import Link from 'next/link';
 
 export const metadata = {
   title: 'My Reviews | Dashboard',
@@ -24,6 +25,9 @@ export default async function ReviewsPage({ params }) {
 
   return (
     <div className="reviews-page">
+      <Link href={`/${locale}/dashboard`} className="dashboard-back-btn">
+        <span className="material-symbols-outlined">arrow_back</span> Back to Dashboard
+      </Link>
       <header style={{ marginBottom: '2.5rem', paddingBottom: '1rem', borderBottom: '1px solid #f1f5f9' }}>
         <h1 style={{ margin: '0 0 0.5rem 0' }}>My Reviews</h1>
         <p style={{ margin: 0 }}>

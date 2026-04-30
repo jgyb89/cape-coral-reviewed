@@ -29,21 +29,23 @@ export default async function BlogPage({ params }) {
 
   return (
     <main className="blog-page">
-      <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '4rem 1rem 0' }}>
+      <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '2rem 1rem 0' }}>
         <h1 style={{ 
           fontFamily: 'var(--font-heading)', 
-          fontSize: '3rem', 
+          fontSize: 'clamp(2rem, 6vw, 3rem)', 
           fontWeight: '800', 
-          marginBottom: '1rem',
-          color: 'var(--color-text)' 
+          marginBottom: '0.5rem',
+          color: 'var(--color-text)',
+          lineHeight: '1.1'
         }}>
           {t.title || "Cape Coral News & Reviews"}
         </h1>
         <p style={{ 
-          fontSize: '1.25rem', 
+          fontSize: 'clamp(1rem, 3vw, 1.25rem)', 
           color: '#4a5568', 
           maxWidth: '800px', 
-          marginBottom: '3rem' 
+          marginBottom: '1.5rem',
+          lineHeight: '1.4' 
         }}>
           {t.subtitle || "Stay up to date with the latest happenings, business spotlights, and local guides in the Cape Coral community."}
         </p>

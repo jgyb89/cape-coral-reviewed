@@ -25,18 +25,49 @@
 
 .dashboard-nav__link {
   display: flex;
+  justify-content: space-between; /* Pushes left content and right arrow apart */
   align-items: center;
-  padding: 0.75rem 1rem;
+  padding: 1rem 1.25rem;
   color: var(--color-text);
   text-decoration: none;
   font-family: var(--font-heading);
   font-weight: 500;
-  border-radius: 8px;
-  transition: background 0.2s;
+  border-radius: 12px;
+  transition: all 0.2s ease;
+  background-color: #ffffff;
+  border: 1px solid #f1f5f9;
+  margin-bottom: 0.75rem;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.02);
 }
 
-.dashboard-nav__link:hover {
-  background-color: var(--color-accent);
+.dashboard-nav__link:hover,
+.dashboard-nav__link.active {
+  background-color: var(--color-accent, #f8fafc);
+  border-color: #e2e8f0;
+}
+
+/* Left wrapper for Icon + Text */
+.dashboard-nav__link-left {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.dashboard-nav__link-left .material-symbols-outlined {
+  color: #64748b; /* Soft gray for the icon */
+  font-size: 1.25rem;
+}
+
+/* Right Chevron Arrow */
+.dashboard-nav__link-arrow {
+  color: #cbd5e1; /* Very soft gray for the arrow */
+  font-size: 1.5rem;
+  transition: transform 0.2s ease;
+}
+
+.dashboard-nav__link:hover .dashboard-nav__link-arrow {
+  color: #94a3b8;
+  transform: translateX(4px); /* Subtle nudge effect on hover */
 }
 
 .dashboard-nav__link--signout {
@@ -148,3 +179,155 @@
   color: #ffffff;
 }
 .dashboard-modal-btn--primary:hover { background-color: #c94343; }
+
+/* Mobile App-Like Layout */
+@media (max-width: 768px) {
+  .dashboard-layout {
+    flex-direction: column; /* Stack elements */
+  }
+
+  /* When on a sub-page (has a back button), hide the navigation menu */
+  .dashboard-layout:has(.dashboard-back-btn) .dashboard-nav {
+    display: none;
+  }
+
+  /* When on the root dashboard page (NO back button), hide the content area so only the menu shows */
+  .dashboard-layout:not(:has(.dashboard-back-btn)) .dashboard-content {
+    display: none;
+  }
+
+  .dashboard-nav {
+    width: 100%;
+    padding: 1.5rem 1rem;
+    box-shadow: none;
+    border-bottom: 1px solid #e2e8f0;
+  }
+
+  /* Make nav links look like clickable cards/buttons on mobile */
+  .dashboard-nav__link {
+    padding: 1rem;
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    margin-bottom: 0.5rem;
+    border-radius: 12px;
+    justify-content: space-between;
+  }
+
+  .dashboard-content {
+    padding: 1rem;
+    width: 100%;
+  }
+}
+
+/* Universal Dashboard Back Button */
+.dashboard-back-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+  color: #64748b;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 0.95rem;
+  transition: color 0.2s ease;
+}
+
+.dashboard-back-btn:hover {
+  color: var(--color-primary, #e04c4c);
+}
+
+.dashboard-back-btn .material-symbols-outlined {
+  font-size: 1.25rem;
+}
+
+/* Bento Box Dashboard Grid */
+.dashboard-desktop-only {
+  display: block;
+}
+
+.bento-grid {
+  display: grid;
+  grid-template-columns: 1fr 2fr; /* 1/3 and 2/3 split */
+  gap: 1.5rem;
+  width: 100%;
+}
+
+.bento-col-small {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.bento-card {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+  padding: 1.5rem;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+  min-height: 160px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.bento-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0,0,0,0.06);
+}
+
+.bento-card--large {
+  min-height: 100%;
+}
+
+.bento-card--highlight {
+  background: linear-gradient(135deg, #fff5f5 0%, #ffffff 100%);
+  border-color: #ffe4e6;
+}
+
+.bento-card__header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 0.5rem;
+  color: #1e293b;
+}
+
+.bento-card__header h3 {
+  margin: 0;
+  font-size: 1.25rem;
+}
+
+.bento-card__header .material-symbols-outlined {
+  color: var(--color-primary, #e04c4c);
+}
+
+.bento-card p {
+  color: #64748b;
+  font-size: 0.95rem;
+  margin-bottom: 1.5rem;
+  line-height: 1.5;
+  flex-grow: 1;
+}
+
+.bento-link {
+  color: var(--color-primary, #e04c4c);
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 0.95rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.bento-link:hover {
+  text-decoration: underline;
+}
+
+/* Hide Bento grid on mobile so the App Menu functions properly */
+@media (max-width: 768px) {
+  .dashboard-desktop-only {
+    display: none !important;
+  }
+}

@@ -148,3 +148,18 @@
 .blog-card__read-more:hover {
   gap: 0.75rem;
 }
+
+/* Mobile Overhaul: Blog Navigation Tabs */
+@media (max-width: 768px) {
+  .blog-tabs {
+    gap: 0.75rem; /* Tighter spacing between tabs */
+    margin-bottom: 1.5rem; /* Pull the content closer to the nav */
+    padding-bottom: 0.5rem;
+    -webkit-overflow-scrolling: touch; /* Smooth momentum scrolling on iOS */
+  }
+
+  .blog-tabs__item {
+    font-size: 0.9rem; /* Slightly smaller text */
+    padding: 0.5rem 0.25rem;
+  }
+}
