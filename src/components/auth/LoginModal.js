@@ -2,14 +2,12 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 import PropTypes from "prop-types";
 import { handleLogin } from "@/lib/actions";
 import Link from "next/link";
 import styles from "./LoginModal.module.css";
 
 export default function LoginModal({ isOpen, onClose, dict = {}, locale = "en" }) {
-  const router = useRouter();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [isUpdating, setIsUpdating] = useState(false);
@@ -27,7 +25,7 @@ export default function LoginModal({ isOpen, onClose, dict = {}, locale = "en" }
     const result = await handleLogin(username, password);
 
     if (result.success) {
-      router.refresh(); // Refresh to update server-side auth state
+      globalThis.location.reload(); 
       onClose();
     } else {
       setError(result.error || "Invalid username or password.");
