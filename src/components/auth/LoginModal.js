@@ -27,8 +27,7 @@ export default function LoginModal({ isOpen, onClose, dict = {}, locale = "en" }
     const result = await handleLogin(username, password);
 
     if (result.success) {
-      router.refresh(); // Refresh to update server-side auth state
-      onClose();
+      window.location.reload(); // Refresh to update server-side auth state
     } else {
       setError(result.error || "Invalid username or password.");
     }
