@@ -141,24 +141,13 @@ export default function CcrCard({ listing, currentUser, locale = 'en' }) {
                   setToastMessage(newFavoriteState ? "Added to favorite" : "Removed from favorite");
                   setTimeout(() => setToastMessage(""), 3000);
 
-                  // Calculate new array
-                  const currentFavIds = currentUser.userData?.favoriteListings?.nodes?.map(node => node.databaseId).filter(Boolean) || [];
-                  const listingId = listing.databaseId;
-                  
-                  let updatedArray;
-                  if (newFavoriteState) {
-                    updatedArray = [...currentFavIds, listingId];
-                  } else {
-                    updatedArray = currentFavIds.filter(id => id !== listingId);
-                  }
-
                   // Fire Server Action
-                  const result = await toggleFavoriteListing(currentUser.id, updatedArray);
+                  const result = await toggleFavoriteListing(listing.databaseId);
                   
                   // Revert UI if server fails
                   if (!result.success) {
                     setIsFavorite(!newFavoriteState);
-                    console.error(result.message);
+                    console.error(result.error || result.message);
                   }
                   
                   setIsUpdating(false);

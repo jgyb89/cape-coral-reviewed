@@ -198,19 +198,32 @@ export async function removeFavoriteListing(listingId) {
   }
 }
 
-export async function toggleFavoriteListing(userId, newFavoritesArray) {
+export async function toggleFavoriteListing(listingId) {
   const token = (await cookies()).get("authToken")?.value;
-  if (!token) return { success: false, message: "Unauthorized. Please log in." };
-
-  const mutation = `
-    mutation UpdateUserFavorites($userId: ID!, $favorites: [Int]) {
-      updateUser(input: { id: $userId, favoriteListings: $favorites }) {
-        user { databaseId }
-      }
-    }
-  `;
+  if (!token) return { success: false, error: "Unauthorized. Please log in." };
 
   try {
+    const viewer = await getViewer();
+    if (!viewer) throw new Error("Could not fetch viewer data");
+
+    const currentFavorites = viewer.userData?.favoriteListings?.nodes?.map((n) => n.databaseId) || [];
+    const listingDbId = parseInt(listingId);
+    
+    let updatedFavorites;
+    if (currentFavorites.includes(listingDbId)) {
+      updatedFavorites = currentFavorites.filter((id) => id !== listingDbId);
+    } else {
+      updatedFavorites = [...currentFavorites, listingDbId];
+    }
+
+    const mutation = `
+      mutation UpdateUserFavorites($userId: ID!, $favorites: [Int]) {
+        updateUser(input: { id: $userId, favoriteListings: $favorites }) {
+          user { databaseId }
+        }
+      }
+    `;
+
     const res = await fetch(GRAPHQL_URL, {
       method: "POST",
       headers: {
@@ -219,19 +232,19 @@ export async function toggleFavoriteListing(userId, newFavoritesArray) {
       },
       body: JSON.stringify({
         query: mutation,
-        variables: { userId: userId, favorites: newFavoritesArray },
+        variables: { userId: viewer.id, favorites: updatedFavorites },
       }),
     });
 
     const json = await res.json();
-    if (json.errors) return { success: false, message: "Failed to update favorites." };
+    await handleGraphQLError(json);
 
     revalidatePath("/directory");
     revalidatePath("/dashboard/favorites");
     return { success: true };
   } catch (error) {
-    console.error("Action Error:", error);
-    return { success: false, message: "Network error occurred." };
+    console.error("Toggle Favorite Error:", error);
+    return { success: false, error: error.message || "Network error occurred." };
   }
 }
 
@@ -386,10 +399,12 @@ export async function updateUserListing(databaseId, payload) {
       featuredImageId: payload.featuredImageId,
       listingDataJson: JSON.stringify(acfData),
       directoryTypes: {
-        set: [payload.category]
+        append: false,
+        nodes: payload.category ? [{ id: payload.category }] : []
       },
       ccrlistingcategories: {
-        set: payload.categories
+        append: false,
+        nodes: payload.categories?.map(slug => ({ id: slug })) || []
       }
     },
   };
@@ -889,5 +904,44 @@ export async function submitClaimForm(formData) {
   } catch (error) {
     console.error("Claim Form Error:", error);
     return { success: false, message: "A network error occurred." };
+  }
+}
+
+/**
+ * Server Action to request a password reset email from WordPress.
+ */
+export async function requestPasswordReset(usernameOrEmail) {
+  const query = `
+    mutation SendPasswordReset($username: String!) {
+      sendPasswordResetEmail(input: {username: $username}) {
+        user {
+          databaseId
+          email
+        }
+      }
+    }
+  `;
+
+  try {
+    const res = await fetch(process.env.NEXT_PUBLIC_WORDPRESS_API_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        query,
+        variables: { username: usernameOrEmail },
+      }),
+      cache: 'no-store',
+    });
+
+    const json = await res.json();
+    
+    if (json.errors) {
+      return { success: false, error: json.errors[0].message };
+    }
+
+    return { success: true };
+  } catch (error) {
+    console.error("Password reset request error:", error);
+    return { success: false, error: "An unexpected error occurred." };
   }
 }

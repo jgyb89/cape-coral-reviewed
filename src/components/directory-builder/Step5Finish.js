@@ -6,29 +6,29 @@ import { submitListing, uploadWPImage } from '@/lib/actions';
 import imageCompression from 'browser-image-compression';
 import styles from './StepForm.module.css';
 import wizardStyles from './ListingWizard.module.css';
-
 const compressImage = async (file) => {
   const options = {
     maxSizeMB: 0.5,
     maxWidthOrHeight: 1920,
-    useWebWorker: true,
+    useWebWorker: false,
     fileType: file.type // Force the library to maintain the original MIME type
   };
-  
+
   try {
     const compressedBlob = await imageCompression(file, options);
-    
-    // CRITICAL FIX: The compression library can return a Blob that loses filename metadata 
+
+    // CRITICAL FIX: The compression library can return a Blob that loses filename metadata
     // when passed through a Next.js Server Action. WordPress rejects files without extensions.
     // We must re-wrap the output in a strict File object using the original file's name and type.
     return new File([compressedBlob], file.name, {
       type: file.type,
-      lastModified: Date.now(),
+      lastModified: Date.now()
     });
-    
   } catch (error) {
-    console.error("Compression error:", error);
-    return file; // Fallback to original file if compression fails
+    console.error('Compression error:', error);
+    return file;
+  }
+};
   }
 };
 
