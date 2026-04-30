@@ -2,12 +2,11 @@
 'use client';
 
 import { useState } from 'react';
-import { useRouter, useParams } from 'next/navigation';
+import { useParams } from 'next/navigation';
 import { handleLogin } from '@/lib/actions';
 import styles from './Auth.module.css';
 
 export default function LoginForm() {
-  const router = useRouter();
   const params = useParams();
   const locale = params?.locale || 'en';
   const [formData, setFormData] = useState({
@@ -30,7 +29,7 @@ export default function LoginForm() {
     const result = await handleLogin(formData.username, formData.password);
 
     if (result.success) {
-      window.location.href = `/${locale}/dashboard`;
+      globalThis.location.href = `/${locale}/dashboard`;
     } else {
       setError(result.error || 'Invalid username or password.');
       setIsLoading(false);
