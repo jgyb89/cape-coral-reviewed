@@ -9,19 +9,19 @@ export default function BlogView({ posts, dict = {}, locale = "en" }) {
   const t = dict?.blog?.tabs || {};
   
   const TABS = [
-    { id: 'All Posts', label: t.all || 'All Posts' },
-    { id: 'Featured Businesses', label: t.featured || 'Featured Businesses' },
-    { id: 'News & Reviews', label: t.news || 'News & Reviews' },
-    { id: 'Food & Drink', label: t.food || 'Food & Drink' },
-    { id: 'Home & Local Services', label: t.home || 'Home & Local Services' },
-    { id: 'Health & Wellness', label: t.health || 'Health & Wellness' }
+    { id: 'all', label: t.all || 'All Posts' },
+    { id: 'featured-business', label: t.featured || 'Featured Business' },
+    { id: 'news-reviews', label: t.news || 'News & Reviews' },
+    { id: 'food-drink', label: t.food || 'Food & Drink' },
+    { id: 'home-local-services', label: t.home || 'Home & Local Services' },
+    { id: 'health-wellness', label: t.health || 'Health & Wellness' }
   ];
 
-  const [activeTab, setActiveTab] = useState('All Posts');
+  const [activeTab, setActiveTab] = useState('all');
 
   const filteredPosts = posts.filter(post => {
-    if (activeTab === 'All Posts') return true;
-    return post.categories.includes(activeTab);
+    if (activeTab === 'all') return true;
+    return post.categorySlugs?.includes(activeTab);
   });
 
   return (

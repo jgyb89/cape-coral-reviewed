@@ -759,7 +759,7 @@ export async function getBlogPosts() {
         nodes {
           databaseId title slug excerpt
           featuredImage { node { sourceUrl } }
-          categories { nodes { name } }
+          categories { nodes { name slug } }
         }
       }
     }

@@ -22,6 +22,7 @@ export default async function BlogPage({ params }) {
     title: node.title,
     slug: node.slug,
     categories: node.categories.nodes.map(cat => cat.name),
+    categorySlugs: node.categories.nodes.map(cat => cat.slug),
     imageUrl: formatImageUrl(node.featuredImage?.node?.sourceUrl),
     excerpt: node.excerpt ? DOMPurify.sanitize(node.excerpt, { ALLOWED_TAGS: [] }) : ""
   }));
