@@ -22,10 +22,14 @@ export default function FavoriteButton({ listingId, initialIsFavorite = false, c
     setTimeout(() => setToastMessage(null), 3000);
 
     try {
-      // In a real scenario, you'd calculate the new favorites array here
+      const result = await toggleFavoriteListing(listingId);
+      
+      if (!result.success) {
+        throw new Error(result.error || "Failed to sync with server.");
+      }
     } catch (error) {
-      setIsFavorite(!newState); // Revert if the server fails
-      setToastMessage("Error saving favorite.");
+      setIsFavorite(!newState); // Revert the UI if the server fails
+      setToastMessage(error.message || "Error saving favorite.");
       setTimeout(() => setToastMessage(null), 3000);
     }
   };

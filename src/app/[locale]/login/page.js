@@ -1,10 +1,19 @@
-import React from 'react';
 import { getDictionary } from '@/lib/dictionaries';
-import LoginModal from '@/components/auth/LoginModal';
+import LoginForm from '@/components/auth/LoginForm';
+import RecoverPasswordForm from '@/components/auth/RecoverPasswordForm';
+import Link from 'next/link';
 
-export default async function LoginPage({ params }) {
+export const metadata = {
+  title: 'Sign In | Cape Coral Reviewed',
+};
+
+export default async function LoginPage({ params, searchParams }) {
   const { locale } = await params;
   const dict = await getDictionary(locale);
+  
+  // Safely await searchParams in Next.js 15+
+  const resolvedSearchParams = await searchParams;
+  const isRecover = resolvedSearchParams?.recover === 'true';
 
   return (
     <main style={{ 
@@ -14,60 +23,41 @@ export default async function LoginPage({ params }) {
       alignItems: 'center', 
       justifyContent: 'center',
       padding: '20px',
-      textAlign: 'center'
+      backgroundColor: '#f8fafc'
     }}>
-      <div style={{ 
-        maxWidth: '500px', 
-        padding: '40px', 
-        backgroundColor: '#fff', 
-        borderRadius: '12px', 
-        boxShadow: '0 10px 25px rgba(0,0,0,0.05)',
-        border: '1px solid #f1f5f9'
-      }}>
-        <div className="material-symbols-outlined" style={{ fontSize: '4rem', color: '#e04c4c', marginBottom: '1.5rem' }}>
-          lock_clock
-        </div>
-        <h1 style={{ fontSize: '2rem', fontWeight: '700', color: '#1e293b', marginBottom: '1rem' }}>
-          Session Expired
-        </h1>
-        <p style={{ color: '#64748b', fontSize: '1.1rem', marginBottom: '2.5rem', lineHeight: '1.6' }}>
-          Your session has expired or you are not logged in. Please sign in again to access your dashboard and manage your listings.
-        </p>
-        
-        {/* We use a Client Component trigger here or just link to our standard login flow */}
-        {/* For this prototype, we'll suggest using the Login button in the Navbar or provide a direct trigger if LoginModal can be standalone */}
-        <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center' }}>
-          <a 
-            href={`/${locale}`}
-            style={{ 
-              padding: '0.75rem 2rem', 
-              borderRadius: '8px', 
-              border: '1px solid #e2e8f0', 
-              textDecoration: 'none',
-              color: '#475569',
-              fontWeight: '600'
-            }}
-          >
-            Go Home
-          </a>
-          <button 
-            className="listing-primary-btn"
-            style={{ 
-              padding: '0.75rem 2rem',
-              border: 'none'
-            }}
-            onClick={() => {/* Trigger Login Logic */}}
-          >
-            Log In
-          </button>
-        </div>
-      </div>
-      
-      {/* Since we can't easily trigger the Navbar's modal from here without more complex state, 
-          we can render a dedicated Login page variant or a standalone LoginModal trigger */}
-      <p style={{ marginTop: '2rem', color: '#94a3b8', fontSize: '0.9rem' }}>
-        Cape Coral Reviewed &copy; {new Date().getFullYear()}
-      </p>
+      {isRecover ? (
+        <>
+          <RecoverPasswordForm />
+          <div style={{ marginTop: '1.5rem', textAlign: 'center' }}>
+            <Link href={`/${locale}/login`} style={{ color: '#64748b', textDecoration: 'none', fontWeight: '500' }}>
+              &larr; Back to Sign In
+            </Link>
+          </div>
+        </>
+      ) : (
+        <>
+          <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
+            <h1 style={{ fontSize: '2rem', fontWeight: '700', color: '#1e293b', marginBottom: '0.5rem' }}>
+              Welcome Back
+            </h1>
+            <p style={{ color: '#64748b' }}>Sign in to manage your directory listings and reviews.</p>
+          </div>
+
+          <LoginForm />
+
+          <div style={{ marginTop: '1.5rem', textAlign: 'center', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+            <Link href={`/${locale}/login?recover=true`} style={{ color: '#e04c4c', textDecoration: 'none', fontWeight: '500' }}>
+              Forgot your password?
+            </Link>
+            <p style={{ color: '#64748b', margin: 0 }}>
+              Don't have an account?{' '}
+              <Link href={`/${locale}/register`} style={{ color: '#e04c4c', fontWeight: '600', textDecoration: 'none' }}>
+                Sign Up
+              </Link>
+            </p>
+          </div>
+        </>
+      )}
     </main>
   );
 }

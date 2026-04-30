@@ -111,7 +111,7 @@ const compressImage = async (file) => {
   const options = {
     maxSizeMB: 0.5,
     maxWidthOrHeight: 1920,
-    useWebWorker: true,
+    useWebWorker: false,
     fileType: file.type,
   };
   try {
@@ -620,7 +620,9 @@ const CategorySection = ({
     padding: "0.6rem 1.25rem",
     backgroundColor: "#fff",
     color: "#475569",
-    border: "1px solid #cbd5e1",
+    borderWidth: "1px",
+    borderStyle: "solid",
+    borderColor: "#cbd5e1",
     borderRadius: "24px",
     fontSize: "0.9rem",
     fontWeight: 600,
