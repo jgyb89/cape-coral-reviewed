@@ -945,3 +945,38 @@ export async function requestPasswordReset(usernameOrEmail) {
     return { success: false, error: "An unexpected error occurred." };
   }
 }
+
+/**
+ * Server Action to handle Google Login via the custom WordPress REST endpoint.
+ */
+export async function handleGoogleLogin(credential) {
+  try {
+    // Convert your GraphQL URL to the new custom REST route
+    const backendUrl = process.env.NEXT_PUBLIC_WORDPRESS_API_URL.replace('/graphql', '/wp-json/ccr/v1/google-login');
+
+    const res = await fetch(backendUrl, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ token: credential }),
+    });
+
+    const data = await res.json();
+
+    if (data.success && data.authToken) {
+      const cookieStore = await cookies();
+      cookieStore.set('authToken', data.authToken, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'lax',
+        maxAge: 7 * 24 * 60 * 60, // 7 days
+        path: '/',
+      });
+      return { success: true };
+    } else {
+      return { success: false, error: data.message || 'Google login failed on the server.' };
+    }
+  } catch (error) {
+    console.error("Google Auth Error:", error);
+    return { success: false, error: 'Network error during Google login.' };
+  }
+}
