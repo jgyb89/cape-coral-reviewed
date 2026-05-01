@@ -6,9 +6,9 @@
 }
 
 .dashboard-nav {
-  width: 250px;
+  width: 300px;
   background-color: var(--color-bg);
-  box-shadow: 2px 0 10px rgba(0,0,0,0.05);
+  box-shadow: 2px 0 10px rgba(0, 0, 0, 0.05);
   display: flex;
   flex-direction: column;
   padding: 2rem 1rem;
@@ -37,7 +37,7 @@
   background-color: #ffffff;
   border: 1px solid #f1f5f9;
   margin-bottom: 0.75rem;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.02);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
 }
 
 .dashboard-nav__link:hover,
@@ -100,7 +100,10 @@
 /* Custom Dashboard Modals */
 .dashboard-modal-overlay {
   position: fixed;
-  top: 0; left: 0; right: 0; bottom: 0;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
   background-color: rgba(15, 23, 42, 0.6);
   backdrop-filter: blur(4px);
   display: flex;
@@ -114,7 +117,9 @@
   background-color: #ffffff;
   padding: 2.5rem 2rem;
   border-radius: 16px;
-  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  box-shadow:
+    0 20px 25px -5px rgba(0, 0, 0, 0.1),
+    0 10px 10px -5px rgba(0, 0, 0, 0.04);
   max-width: 400px;
   width: 100%;
   text-align: center;
@@ -122,16 +127,26 @@
 }
 
 @keyframes modalFadeIn {
-  from { opacity: 0; transform: scale(0.95); }
-  to { opacity: 1; transform: scale(1); }
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
 }
 
 .dashboard-modal-icon {
   font-size: 3.5rem;
   margin-bottom: 1rem;
 }
-.dashboard-modal-icon--warning { color: #ef4444; }
-.dashboard-modal-icon--success { color: #10b981; }
+.dashboard-modal-icon--warning {
+  color: #ef4444;
+}
+.dashboard-modal-icon--success {
+  color: #10b981;
+}
 
 .dashboard-modal-title {
   font-size: 1.25rem;
@@ -148,7 +163,8 @@
 }
 
 .dashboard-modal-actions {
-  display: flex; gap: 1rem;
+  display: flex;
+  gap: 1rem;
   justify-content: center;
 }
 
@@ -166,19 +182,25 @@
   background-color: #f1f5f9;
   color: #475569;
 }
-.dashboard-modal-btn--cancel:hover { background-color: #e2e8f0; }
+.dashboard-modal-btn--cancel:hover {
+  background-color: #e2e8f0;
+}
 
 .dashboard-modal-btn--danger {
   background-color: #ef4444;
   color: #ffffff;
 }
-.dashboard-modal-btn--danger:hover { background-color: #dc2626; }
+.dashboard-modal-btn--danger:hover {
+  background-color: #dc2626;
+}
 
 .dashboard-modal-btn--primary {
   background-color: #e04c4c;
   color: #ffffff;
 }
-.dashboard-modal-btn--primary:hover { background-color: #c94343; }
+.dashboard-modal-btn--primary:hover {
+  background-color: #c94343;
+}
 
 /* Mobile App-Like Layout */
 @media (max-width: 768px) {
@@ -263,18 +285,20 @@
   border: 1px solid #e2e8f0;
   border-radius: 16px;
   padding: 1.5rem;
-  box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03);
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   height: 100%;
   min-height: 160px;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
 }
 
 .bento-card:hover {
   transform: translateY(-2px);
-  box-shadow: 0 8px 25px rgba(0,0,0,0.06);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.06);
 }
 
 .bento-card--large {
