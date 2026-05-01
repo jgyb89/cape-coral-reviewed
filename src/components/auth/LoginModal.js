@@ -3,7 +3,8 @@
 
 import { useState } from "react";
 import PropTypes from "prop-types";
-import { handleLogin } from "@/lib/actions";
+import { handleLogin, handleGoogleLogin } from "@/lib/actions";
+import { GoogleOAuthProvider, GoogleLogin } from '@react-oauth/google';
 import Link from "next/link";
 import styles from "./LoginModal.module.css";
 
@@ -32,6 +33,21 @@ export default function LoginModal({ isOpen, onClose, dict = {}, locale = "en" }
     }
 
     setIsUpdating(false);
+  };
+
+  const onGoogleSuccess = async (credentialResponse) => {
+    setIsUpdating(true);
+    setError(null);
+
+    const result = await handleGoogleLogin(credentialResponse.credential);
+
+    if (result.success) {
+      globalThis.location.reload(); 
+      // Note: the reload automatically closes the modal and updates the auth state
+    } else {
+      setError(result.error || "Google login failed.");
+      setIsUpdating(false);
+    }
   };
 
   return (
@@ -67,6 +83,25 @@ export default function LoginModal({ isOpen, onClose, dict = {}, locale = "en" }
         {error && <div className={styles['login-modal__error']}>{error}</div>}
 
         <form className={styles['login-modal__form']} onSubmit={handleSubmit}>
+          <div style={{ marginBottom: '1.5rem', display: 'flex', justifyContent: 'center' }}>
+            <GoogleOAuthProvider clientId={process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID}>
+              <GoogleLogin
+                onSuccess={onGoogleSuccess}
+                onError={() => setError('Google Login Failed')}
+                useOneTap
+                shape="rectangular"
+                size="large"
+                theme="outline"
+                width="100%"
+              />
+            </GoogleOAuthProvider>
+          </div>
+
+          <div style={{ textAlign: 'center', marginBottom: '1.5rem', color: '#94a3b8', fontSize: '0.9rem', position: 'relative' }}>
+            <span style={{ background: '#fff', padding: '0 10px', position: 'relative', zIndex: 1 }}>or sign in with email</span>
+            <hr style={{ position: 'absolute', top: '50%', left: 0, right: 0, border: 'none', borderTop: '1px solid #e2e8f0', margin: 0, zIndex: 0 }} />
+          </div>
+
           <div className={styles['login-modal__form-group']}>
             <label className={styles['login-modal__label']} htmlFor="modal-username">
               {t.usernameEmail || "Username or Email"}

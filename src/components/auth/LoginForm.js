@@ -3,7 +3,8 @@
 
 import { useState } from 'react';
 import { useParams } from 'next/navigation';
-import { handleLogin } from '@/lib/actions';
+import { handleLogin, handleGoogleLogin } from '@/lib/actions';
+import { GoogleOAuthProvider, GoogleLogin } from '@react-oauth/google';
 import styles from './Auth.module.css';
 
 export default function LoginForm() {
@@ -36,8 +37,38 @@ export default function LoginForm() {
     }
   };
 
+  const onGoogleSuccess = async (credentialResponse) => {
+    setIsLoading(true);
+    setError(null);
+    const result = await handleGoogleLogin(credentialResponse.credential);
+    if (result.success) {
+      globalThis.location.href = `/${locale}/dashboard`;
+    } else {
+      setError(result.error);
+      setIsLoading(false);
+    }
+  };
+
   return (
     <form className={styles['auth-form']} onSubmit={handleSubmit}>
+      <div style={{ marginBottom: '1.5rem', display: 'flex', justifyContent: 'center' }}>
+        <GoogleOAuthProvider clientId={process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID}>
+          <GoogleLogin
+            onSuccess={onGoogleSuccess}
+            onError={() => setError('Google Login Failed')}
+            useOneTap
+            shape="rectangular"
+            size="large"
+            theme="outline"
+            width="100%"
+          />
+        </GoogleOAuthProvider>
+      </div>
+      <div style={{ textAlign: 'center', marginBottom: '1.5rem', color: '#94a3b8', fontSize: '0.9rem', position: 'relative' }}>
+        <span style={{ background: '#fff', padding: '0 10px', position: 'relative', zIndex: 1 }}>or sign in with email</span>
+        <hr style={{ position: 'absolute', top: '50%', left: 0, right: 0, border: 'none', borderTop: '1px solid #e2e8f0', margin: 0, zIndex: 0 }} />
+      </div>
+
       <div className={styles['auth-form__group']}>
         <label className={styles['auth-form__label']} htmlFor="username">Username or Email</label>
         <input
