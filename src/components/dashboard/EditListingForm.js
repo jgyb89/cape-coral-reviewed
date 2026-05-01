@@ -48,6 +48,20 @@ const parseExistingHours = (hoursStr) => {
       close: "",
       closeAmPm: "PM",
       closed: true,
+      open24: false,
+    };
+  }
+  if (
+    hoursStr.toLowerCase() === "open 24 hours" ||
+    hoursStr.toLowerCase() === "24 hours"
+  ) {
+    return {
+      open: "",
+      openAmPm: "AM",
+      close: "",
+      closeAmPm: "PM",
+      closed: false,
+      open24: true,
     };
   }
   const match = hoursStr
@@ -62,6 +76,7 @@ const parseExistingHours = (hoursStr) => {
       close: match[3],
       closeAmPm: (match[4] || "PM").toUpperCase(),
       closed: false,
+      open24: false,
     };
   }
   return {
@@ -70,6 +85,7 @@ const parseExistingHours = (hoursStr) => {
     close: "",
     closeAmPm: "PM",
     closed: false,
+    open24: false,
   };
 };
 
@@ -275,18 +291,23 @@ function useEditListingForm(initialData) {
 
   const handleTimeChange = (day, field, value) => {
     const rawValue =
-      field === "closed"
+      field === "closed" || field === "open24"
         ? value
         : field.includes("AmPm")
           ? value
           : value.replaceAll(/[^\d:]/g, "").slice(0, 5);
-    setFormData((prev) => ({
-      ...prev,
-      hoursParams: {
-        ...prev.hoursParams,
-        [day]: { ...prev.hoursParams[day], [field]: rawValue },
-      },
-    }));
+
+    setFormData((prev) => {
+      const dayParams = { ...prev.hoursParams[day], [field]: rawValue };
+
+      if (field === "closed" && value === true) dayParams.open24 = false;
+      if (field === "open24" && value === true) dayParams.closed = false;
+
+      return {
+        ...prev,
+        hoursParams: { ...prev.hoursParams, [day]: dayParams },
+      };
+    });
   };
 
   const handleTimeBlur = (day, field, value) => {
@@ -376,9 +397,9 @@ function useEditListingForm(initialData) {
       setUploadStep("saving_data");
       const hours = daysList.reduce((acc, day) => {
         const p = formData.hoursParams[day];
-        acc[`hours${day}`] = p.closed
-          ? "Closed"
-          : `${p.open} ${p.openAmPm} - ${p.close} ${p.closeAmPm}`;
+        if (p.closed) acc[`hours${day}`] = "Closed";
+        else if (p.open24) acc[`hours${day}`] = "Open 24 Hours";
+        else acc[`hours${day}`] = `${p.open} ${p.openAmPm} - ${p.close} ${p.closeAmPm}`;
         return acc;
       }, {});
 
@@ -1227,7 +1248,7 @@ const HoursSection = ({
               alignItems: "center",
               gap: "0.25rem",
               fontSize: "0.9rem",
-              marginRight: "1rem",
+              marginRight: "0.5rem",
             }}
           >
             <input
@@ -1240,7 +1261,28 @@ const HoursSection = ({
             />{" "}
             Closed
           </label>
-          {!hoursParams[day].closed && (
+
+          <label
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: "0.25rem",
+              fontSize: "0.9rem",
+              marginRight: "1rem",
+            }}
+          >
+            <input
+              type="checkbox"
+              checked={hoursParams[day].open24}
+              onChange={(e) =>
+                handleTimeChange(day, "open24", e.target.checked)
+              }
+              disabled={disabled}
+            />{" "}
+            24 Hrs
+          </label>
+
+          {!hoursParams[day].closed && !hoursParams[day].open24 && (
             <>
               <input
                 type="text"

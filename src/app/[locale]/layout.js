@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 import "../globals.css";
 import "material-symbols/outlined.css";
 import Navbar from "@/components/layout/Navbar";
+import Footer from "@/components/layout/Footer";
 import BugReporter from "@/components/BugReporter";
 import { getViewer } from "@/lib/auth";
 import { getDictionary } from "@/lib/dictionaries";
@@ -41,7 +42,8 @@ export default async function RootLayout({ children, params }) {
     <html lang={locale}>
       <body className={`${poppins.variable} ${openSans.variable}`}>
         <Navbar currentUser={viewer} dict={dict} locale={locale} />
-        {children}
+        <main>{children}</main>
+        <Footer locale={locale} />
         <BugReporter />
         <SpeedInsights />
       </body>

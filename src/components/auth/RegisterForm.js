@@ -3,6 +3,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import styles from '../RegisterBusinessForm.module.css';
 
 export default function RegisterForm({ dict = {}, locale = "en" }) {
@@ -277,8 +278,27 @@ export default function RegisterForm({ dict = {}, locale = "en" }) {
           onChange={handleChange}
           required
         />
-        <label htmlFor="consent" className={styles['register-form__checkbox-label']}>
-          {t.terms || "I agree to the Terms and Conditions and Privacy Policy."}
+        <label htmlFor="consent" style={{ fontSize: '0.9rem', color: '#475569', lineHeight: '1.5' }}>
+          I agree to the{' '}
+          <a 
+            href={`/${locale}/terms-of-service`} 
+            target="_blank" 
+            rel="noopener noreferrer" 
+            style={{ color: '#e04c4c', textDecoration: 'underline', display: 'inline-flex', alignItems: 'center', gap: '2px', fontWeight: '500' }}
+          >
+            Terms of Service
+            <span className="material-symbols-outlined" style={{ fontSize: '14px' }}>open_in_new</span>
+          </a>
+          {' '}and{' '}
+          <a 
+            href={`/${locale}/privacy-policy`} 
+            target="_blank" 
+            rel="noopener noreferrer" 
+            style={{ color: '#e04c4c', textDecoration: 'underline', display: 'inline-flex', alignItems: 'center', gap: '2px', fontWeight: '500' }}
+          >
+            Privacy Policy
+            <span className="material-symbols-outlined" style={{ fontSize: '14px' }}>open_in_new</span>
+          </a>.
         </label>
       </div>
       {fieldErrors.consent && <span className={styles['register-form__error-text']} style={{ marginBottom: '1.5rem', display: 'block' }}>{fieldErrors.consent}</span>}
