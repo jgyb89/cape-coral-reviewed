@@ -4,7 +4,7 @@ import "../globals.css";
 import "material-symbols/outlined.css";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
-import BugReporter from "@/components/BugReporter";
+import BackToTop from "@/components/common/BackToTop";
 import { getViewer } from "@/lib/auth";
 import { getDictionary } from "@/lib/dictionaries";
 import Link from "next/link";
@@ -44,7 +44,7 @@ export default async function RootLayout({ children, params }) {
         <Navbar currentUser={viewer} dict={dict} locale={locale} />
         <main>{children}</main>
         <Footer locale={locale} />
-        <BugReporter />
+        <BackToTop />
         <SpeedInsights />
       </body>
     </html>
