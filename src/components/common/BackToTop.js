@@ -53,7 +53,15 @@ export default function BackToTop() {
         e.currentTarget.style.backgroundColor = '#e04c4c';
         e.currentTarget.style.transform = 'translateY(-3px)';
       }}
+      onFocus={(e) => {
+        e.currentTarget.style.backgroundColor = '#e04c4c';
+        e.currentTarget.style.transform = 'translateY(-3px)';
+      }}
       onMouseOut={(e) => {
+        e.currentTarget.style.backgroundColor = '#1e293b';
+        e.currentTarget.style.transform = 'translateY(0)';
+      }}
+      onBlur={(e) => {
         e.currentTarget.style.backgroundColor = '#1e293b';
         e.currentTarget.style.transform = 'translateY(0)';
       }}
