@@ -1,7 +1,8 @@
 // src/components/auth/LoginModal.js
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { createPortal } from "react-dom";
 import PropTypes from "prop-types";
 import { handleLogin, handleGoogleLogin } from "@/lib/actions";
 import { GoogleOAuthProvider, GoogleLogin } from '@react-oauth/google';
@@ -13,8 +14,13 @@ export default function LoginModal({ isOpen, onClose, dict = {}, locale = "en" }
   const [password, setPassword] = useState("");
   const [isUpdating, setIsUpdating] = useState(false);
   const [error, setError] = useState(null);
+  const [mounted, setMounted] = useState(false);
 
-  if (!isOpen) return null;
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!isOpen || !mounted) return null;
 
   const t = dict?.auth || {};
 
@@ -50,7 +56,7 @@ export default function LoginModal({ isOpen, onClose, dict = {}, locale = "en" }
     }
   };
 
-  return (
+  return createPortal(
     <div className={styles['login-modal-overlay']}>
       <button
         className={styles['login-modal-overlay__btn']}
@@ -161,7 +167,8 @@ export default function LoginModal({ isOpen, onClose, dict = {}, locale = "en" }
           </Link>
         </div>
       </dialog>
-    </div>
+    </div>,
+    document.body
   );
 }
 

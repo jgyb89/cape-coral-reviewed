@@ -1,0 +1,75 @@
+.heart-btn {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 0.5rem;
+  border-radius: 50%;
+  color: #94a3b8; /* Default inactive color */
+  transition: background-color 0.2s ease;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.heart-btn:hover {
+  background-color: rgba(224, 76, 76, 0.1);
+}
+
+/* The Material Symbol Icon */
+.heart-icon {
+  font-size: 1.5rem;
+  transition: color 0.2s ease;
+  font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 48;
+  position: relative;
+  z-index: 2;
+}
+
+/* Active State (Filled & Red) */
+.active .heart-icon {
+  color: #e04c4c;
+  font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 48;
+  animation: pop 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+}
+
+/* The Burst Lines Effect using a scaling dashed border */
+.heart-btn::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 100%;
+  height: 100%;
+  transform: translate(-50%, -50%) scale(0);
+  border-radius: 50%;
+  border: 3px dashed #e04c4c;
+  opacity: 0;
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Trigger burst ONLY when transitioning to active */
+.heart-btn.active::before {
+  animation: burst-lines 0.5s ease-out forwards;
+}
+
+/* Keyframes */
+@keyframes pop {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.35); }
+  100% { transform: scale(1); }
+}
+
+@keyframes burst-lines {
+  0% { 
+    transform: translate(-50%, -50%) scale(0.5); 
+    opacity: 1; 
+    border-width: 4px; 
+  }
+  100% { 
+    transform: translate(-50%, -50%) scale(1.8); 
+    opacity: 0; 
+    border-width: 0px; 
+  }
+}
