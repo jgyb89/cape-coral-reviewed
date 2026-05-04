@@ -5,6 +5,7 @@ import PropTypes from "prop-types";
 import Image from "next/image";
 import Link from "next/link";
 import styles from "./CcrCard.module.css";
+import heartStyles from '@/components/common/HeartButton.module.css';
 import { toggleFavoriteListing } from '@/lib/actions';
 import LoginModal from '@/components/auth/LoginModal';
 import { formatImageUrl } from "@/lib/formatImageUrl";
@@ -116,12 +117,13 @@ export default function CcrCard({ listing, currentUser, locale = 'en' }) {
 
             <div style={{ position: 'relative', display: 'inline-block' }}>
               <button
-                className={styles['ccr-card__favorite']}
+                className={`${heartStyles['heart-btn']} ${isFavorite ? heartStyles.active : ''}`}
                 aria-label={isFavorite ? "Remove from favorites" : "Add to favorites"}
                 disabled={isUpdating}
-                style={{ opacity: isUpdating ? 0.6 : 1, position: 'relative', zIndex: 10 }}
+                style={{ position: 'relative', zIndex: 10, opacity: isUpdating ? 0.6 : 1 }}
                 onClick={async (e) => {
                   e.preventDefault();
+                  e.stopPropagation();
                   
                   if (!listing.databaseId) {
                     alert("Listing data is incomplete.");
@@ -153,14 +155,8 @@ export default function CcrCard({ listing, currentUser, locale = 'en' }) {
                   setIsUpdating(false);
                 }}
               >
-                <span 
-                  className="material-symbols-outlined"
-                  style={{ 
-                    color: isFavorite ? 'var(--color-primary, red)' : 'inherit',
-                    fontVariationSettings: isFavorite ? "'FILL' 1" : "'FILL' 0"
-                  }}
-                >
-                  {isFavorite ? 'favorite' : 'favorite_border'}
+                <span className={`material-symbols-outlined ${heartStyles['heart-icon']}`}>
+                  favorite
                 </span>
               </button>
               {toastMessage && (

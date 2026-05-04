@@ -1,6 +1,7 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { submitClaimForm } from '@/lib/actions';
 import styles from './ClaimListing.module.css';
 
@@ -9,6 +10,7 @@ export default function ClaimListing({ listingTitle, listingSlug }) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
   const [error, setError] = useState('');
+  const [mounted, setMounted] = useState(false);
   const [formData, setFormData] = useState({
     fullName: '',
     email: '',
@@ -42,6 +44,10 @@ export default function ClaimListing({ listingTitle, listingSlug }) {
     setIsSubmitting(false);
   };
 
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
   return (
     <>
       {/* The Sidebar Trigger Card */}
@@ -64,7 +70,7 @@ export default function ClaimListing({ listingTitle, listingSlug }) {
       </div>
 
       {/* The Popup Modal */}
-      {isOpen && (
+      {isOpen && mounted && createPortal(
         <div className={styles['claim-modal']}>
           <div className={styles['claim-modal__dialog']}>
             <div className={styles['claim-modal__header']}>
@@ -116,7 +122,8 @@ export default function ClaimListing({ listingTitle, listingSlug }) {
               )}
             </div>
           </div>
-        </div>
+        </div>,
+        document.body
       )}
     </>
   );

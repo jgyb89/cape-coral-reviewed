@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { toggleFavoriteListing } from '@/lib/actions';
+import heartStyles from '@/components/common/HeartButton.module.css';
 
 export default function FavoriteButton({ listingId, initialIsFavorite = false, currentUser, label = "Favorite" }) {
   const [isFavorite, setIsFavorite] = useState(initialIsFavorite);
@@ -36,11 +37,16 @@ export default function FavoriteButton({ listingId, initialIsFavorite = false, c
 
   return (
     <div style={{ position: 'relative' }}>
-      <button className="listing-action-btn" onClick={handleToggle}>
-        <span 
-          className="material-symbols-outlined" 
-          style={{ fontVariationSettings: isFavorite ? "'FILL' 1" : "'FILL' 0" }}
-        >
+      <button 
+        className={`listing-action-btn ${isFavorite ? heartStyles.active : ''}`} 
+        onClick={(e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          handleToggle();
+        }}
+        style={{ display: 'inline-flex', alignItems: 'center', gap: '8px' }}
+      >
+        <span className={`material-symbols-outlined ${heartStyles['heart-icon']}`}>
           favorite
         </span>
         <span className="listing-action-btn__text">{label}</span>
