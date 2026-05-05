@@ -270,31 +270,44 @@ export default function DirectoryFilters() {
               {openDropdown === 'rating' && (
                 <ul className={styles['custom-select__menu']}>
                   {ratingOptions.map(option => (
-                    <li 
-                      key={option.value}
-                      className={`${styles['custom-select__option']} ${currentRating.toString() === option.value ? styles['custom-select__option--selected'] : ''}`}
-                      tabIndex={0}
-                      role="button"
-                      onClick={() => {
-                        updateFilter('rating', option.value === '0' ? '' : option.value);
-                        setOpenDropdown(null);
-                      }}
-                      onKeyDown={(e) => {
-                        if (e.key === 'Enter' || e.key === ' ') {
+                    <li key={option.value}>
+                      <button
+                        type="button"
+                        className={`${styles['custom-select__option']} ${currentRating.toString() === option.value ? styles['custom-select__option--selected'] : ''}`}
+                        onClick={() => {
                           updateFilter('rating', option.value === '0' ? '' : option.value);
                           setOpenDropdown(null);
-                        }
-                      }}
-                      style={{ flexDirection: 'column', alignItems: 'flex-start', gap: '2px' }}
-                    >
-                      <span>{option.label}</span>
-                      {option.stars > 0 && (
-                        <span style={{ display: 'flex' }}>
-                          {[...Array(option.stars)].map((_, i) => (
-                            <span key={i} className={`material-symbols-outlined ${styles['star-icon']}`} style={{ fontSize: '0.9rem' }}>star</span>
-                          ))}
-                        </span>
-                      )}
+                        }}
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter' || e.key === ' ') {
+                            updateFilter('rating', option.value === '0' ? '' : option.value);
+                            setOpenDropdown(null);
+                          }
+                        }}
+                        style={{
+                          width: '100%',
+                          textAlign: 'left',
+                          display: 'flex',
+                          flexDirection: 'column',
+                          alignItems: 'flex-start',
+                          gap: '2px',
+                          background: 'none',
+                          border: 'none',
+                          padding: '0.6rem 1rem',
+                          cursor: 'pointer',
+                          fontFamily: 'inherit',
+                          fontSize: 'inherit'
+                        }}
+                      >
+                        <span>{option.label}</span>
+                        {option.stars > 0 && (
+                          <span style={{ display: 'flex' }}>
+                            {[...Array(option.stars)].map((_, i) => (
+                              <span key={i} className={`material-symbols-outlined ${styles['star-icon']}`} style={{ fontSize: '0.9rem' }}>star</span>
+                            ))}
+                          </span>
+                        )}
+                      </button>
                     </li>
                   ))}
                 </ul>
@@ -359,23 +372,33 @@ export default function DirectoryFilters() {
               {openDropdown === 'sort' && (
                 <ul className={styles['custom-select__menu']}>
                   {sortOptions.map(option => (
-                    <li 
-                      key={option.value}
-                      className={`${styles['custom-select__option']} ${currentSort === option.value ? styles['custom-select__option--selected'] : ''}`}
-                      tabIndex={0}
-                      role="button"
-                      onClick={() => {
-                        updateFilter('sort', option.value);
-                        setOpenDropdown(null);
-                      }}
-                      onKeyDown={(e) => {
-                        if (e.key === 'Enter' || e.key === ' ') {
+                    <li key={option.value}>
+                      <button
+                        type="button"
+                        className={`${styles['custom-select__option']} ${currentSort === option.value ? styles['custom-select__option--selected'] : ''}`}
+                        onClick={() => {
                           updateFilter('sort', option.value);
                           setOpenDropdown(null);
-                        }
-                      }}
-                    >
-                      {option.label}
+                        }}
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter' || e.key === ' ') {
+                            updateFilter('sort', option.value);
+                            setOpenDropdown(null);
+                          }
+                        }}
+                        style={{
+                          width: '100%',
+                          textAlign: 'left',
+                          background: 'none',
+                          border: 'none',
+                          padding: '0.6rem 1rem',
+                          cursor: 'pointer',
+                          fontFamily: 'inherit',
+                          fontSize: 'inherit'
+                        }}
+                      >
+                        {option.label}
+                      </button>
                     </li>
                   ))}
                 </ul>
@@ -403,31 +426,44 @@ export default function DirectoryFilters() {
               {openDropdown === 'rating' && (
                 <ul className={styles['custom-select__menu']}>
                   {ratingOptions.map(option => (
-                    <li 
-                      key={option.value}
-                      className={`${styles['custom-select__option']} ${currentRating.toString() === option.value ? styles['custom-select__option--selected'] : ''}`}
-                      tabIndex={0}
-                      role="button"
-                      onClick={() => {
-                        updateFilter('rating', option.value === '0' ? '' : option.value);
-                        setOpenDropdown(null);
-                      }}
-                      onKeyDown={(e) => {
-                        if (e.key === 'Enter' || e.key === ' ') {
+                    <li key={option.value}>
+                      <button
+                        type="button"
+                        className={`${styles['custom-select__option']} ${currentRating.toString() === option.value ? styles['custom-select__option--selected'] : ''}`}
+                        onClick={() => {
                           updateFilter('rating', option.value === '0' ? '' : option.value);
                           setOpenDropdown(null);
-                        }
-                      }}
-                      style={{ flexDirection: 'column', alignItems: 'flex-start', gap: '2px' }}
-                    >
-                      <span>{option.label}</span>
-                      {option.stars > 0 && (
-                        <span style={{ display: 'flex' }}>
-                          {[...Array(option.stars)].map((_, i) => (
-                            <span key={i} className={`material-symbols-outlined ${styles['star-icon']}`} style={{ fontSize: '0.9rem' }}>star</span>
-                          ))}
-                        </span>
-                      )}
+                        }}
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter' || e.key === ' ') {
+                            updateFilter('rating', option.value === '0' ? '' : option.value);
+                            setOpenDropdown(null);
+                          }
+                        }}
+                        style={{
+                          width: '100%',
+                          textAlign: 'left',
+                          display: 'flex',
+                          flexDirection: 'column',
+                          alignItems: 'flex-start',
+                          gap: '2px',
+                          background: 'none',
+                          border: 'none',
+                          padding: '0.6rem 1rem',
+                          cursor: 'pointer',
+                          fontFamily: 'inherit',
+                          fontSize: 'inherit'
+                        }}
+                      >
+                        <span>{option.label}</span>
+                        {option.stars > 0 && (
+                          <span style={{ display: 'flex' }}>
+                            {[...Array(option.stars)].map((_, i) => (
+                              <span key={i} className={`material-symbols-outlined ${styles['star-icon']}`} style={{ fontSize: '0.9rem' }}>star</span>
+                            ))}
+                          </span>
+                        )}
+                      </button>
                     </li>
                   ))}
                 </ul>
