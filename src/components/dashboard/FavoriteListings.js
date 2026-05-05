@@ -1,19 +1,30 @@
 // src/components/dashboard/FavoriteListings.js
 'use client';
 
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import PropTypes from 'prop-types';
 import { removeFavoriteListing } from '@/lib/actions';
 import { formatImageUrl } from "@/lib/formatImageUrl";
+import DashboardSortDropdown from './DashboardSortDropdown';
 
 import styles from './FavoriteListings.module.css';
 
 export default function FavoriteListings({ favorites: initialFavorites = [], locale = 'en' }) {
   const [favorites, setFavorites] = useState(initialFavorites);
+  const [currentSort, setCurrentSort] = useState('newest');
   const [isRemoving, setIsRemoving] = useState(null);
   const [listingToDelete, setListingToDelete] = useState(null);
+
+  const sortedFavorites = useMemo(() => {
+    return [...favorites].sort((a, b) => {
+      if (currentSort === 'az') return a.title.localeCompare(b.title);
+      if (currentSort === 'za') return b.title.localeCompare(a.title);
+      if (currentSort === 'oldest') return new Date(a.date) - new Date(b.date);
+      return new Date(b.date) - new Date(a.date); // Default: newest
+    });
+  }, [favorites, currentSort]);
 
   if (!favorites || favorites.length === 0) {
     return (
@@ -40,8 +51,9 @@ export default function FavoriteListings({ favorites: initialFavorites = [], loc
 
   return (
     <div className={styles['favorite-listings']}>
+      <DashboardSortDropdown currentSortProp={sortBy} onSortChange={setSortBy} />
       <div className={styles['favorite-listings__grid']}>
-        {favorites.map((listing) => {
+        {sortedFavorites.map((listing) => {
           const imageUrl = formatImageUrl(listing.featuredImage?.node?.sourceUrl);
           const listingUrl = `/${locale}/listing/${listing.slug}`;
 
