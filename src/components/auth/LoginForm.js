@@ -7,6 +7,18 @@ import { handleLogin, handleGoogleLogin } from '@/lib/actions';
 import { GoogleOAuthProvider, GoogleLogin } from '@react-oauth/google';
 import styles from './Auth.module.css';
 
+const formatAuthError = (errorString) => {
+  if (!errorString) return "An error occurred during login. Please verify your credentials and try again.";
+  const err = errorString.toLowerCase();
+  if (err.includes("invalid_username") || err.includes("invalid_email")) {
+    return "We couldn't find an account with that username or email.";
+  }
+  if (err.includes("incorrect_password")) {
+    return "The password you entered is incorrect. Please try again.";
+  }
+  return "An error occurred during login. Please verify your credentials and try again.";
+};
+
 export default function LoginForm() {
   const params = useParams();
   const locale = params?.locale || 'en';
@@ -32,7 +44,7 @@ export default function LoginForm() {
     if (result.success) {
       globalThis.location.href = `/${locale}/dashboard`;
     } else {
-      setError(result.error || 'Invalid username or password.');
+      setError(formatAuthError(result.error));
       setIsLoading(false);
     }
   };
@@ -44,7 +56,7 @@ export default function LoginForm() {
     if (result.success) {
       globalThis.location.href = `/${locale}/dashboard`;
     } else {
-      setError(result.error);
+      setError(formatAuthError(result.error));
       setIsLoading(false);
     }
   };
@@ -55,7 +67,7 @@ export default function LoginForm() {
         <GoogleOAuthProvider clientId={process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID}>
           <GoogleLogin
             onSuccess={onGoogleSuccess}
-            onError={() => setError('Google Login Failed')}
+            onError={() => setError(formatAuthError('Google Login Failed'))}
             useOneTap
             shape="rectangular"
             size="large"
@@ -97,7 +109,12 @@ export default function LoginForm() {
         />
       </div>
 
-      {error && <div className={styles['auth-form__error']} dangerouslySetInnerHTML={{ __html: error }} />}
+      {error && (
+        <div className={styles['auth-form__error']}>
+          <span className="material-symbols-outlined" style={{ fontSize: '1.2rem' }}>warning</span>
+          <span>{error}</span>
+        </div>
+      )}
 
       <button
         type="submit"

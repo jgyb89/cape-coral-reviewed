@@ -10,6 +10,18 @@ import { GoogleOAuthProvider, GoogleLogin } from '@react-oauth/google';
 import Link from "next/link";
 import styles from "./LoginModal.module.css";
 
+const formatAuthError = (errorString) => {
+  if (!errorString) return "An error occurred during login. Please verify your credentials and try again.";
+  const err = errorString.toLowerCase();
+  if (err.includes("invalid_username") || err.includes("invalid_email")) {
+    return "We couldn't find an account with that username or email.";
+  }
+  if (err.includes("incorrect_password")) {
+    return "The password you entered is incorrect. Please try again.";
+  }
+  return "An error occurred during login. Please verify your credentials and try again.";
+};
+
 export default function LoginModal({ isOpen, onClose, dict = {}, locale = "en" }) {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -38,7 +50,7 @@ export default function LoginModal({ isOpen, onClose, dict = {}, locale = "en" }
       globalThis.location.reload(); 
       onClose();
     } else {
-      setError(result.error || "Invalid username or password.");
+      setError(formatAuthError(result.error));
     }
 
     setIsUpdating(false);
@@ -54,7 +66,7 @@ export default function LoginModal({ isOpen, onClose, dict = {}, locale = "en" }
       globalThis.location.reload(); 
       // Note: the reload automatically closes the modal and updates the auth state
     } else {
-      setError(result.error || "Google login failed.");
+      setError(formatAuthError(result.error));
       setIsUpdating(false);
     }
   };
@@ -89,7 +101,12 @@ export default function LoginModal({ isOpen, onClose, dict = {}, locale = "en" }
           {t.modalSubtitle || "Sign up for free in order to share, favorite, or leave reviews! This ensures we keep the site spam-free and a better experience for everyone!"}
         </p>
 
-        {error && <div className={styles['login-modal__error']}>{error}</div>}
+        {error && (
+          <div className={styles['login-modal__error']}>
+            <span className="material-symbols-outlined" style={{ fontSize: '1.2rem' }}>warning</span>
+            <span>{error}</span>
+          </div>
+        )}
 
         {activationStatus === 'success' && (
           <div style={{ 

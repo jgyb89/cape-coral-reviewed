@@ -1,11 +1,45 @@
 'use client';
 
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { uploadWPImage, updateUserProfile } from '@/lib/actions';
+import Cropper from 'react-easy-crop';
 import styles from './ProfileAvatar.module.css';
+
+async function getCroppedImg(imageSrc, pixelCrop) {
+  const image = await new Promise((resolve, reject) => {
+    const img = new globalThis.Image();
+    img.addEventListener("load", () => resolve(img));
+    img.addEventListener("error", (error) => reject(error));
+    img.src = imageSrc;
+  });
+
+  const canvas = document.createElement("canvas");
+  const ctx = canvas.getContext("2d");
+
+  canvas.width = pixelCrop.width;
+  canvas.height = pixelCrop.height;
+
+  ctx.drawImage(
+    image,
+    pixelCrop.x,
+    pixelCrop.y,
+    pixelCrop.width,
+    pixelCrop.height,
+    0,
+    0,
+    pixelCrop.width,
+    pixelCrop.height
+  );
+
+  return new Promise((resolve) => {
+    canvas.toBlob((blob) => {
+      resolve(new File([blob], "cropped-image.jpg", { type: "image/jpeg" }));
+    }, "image/jpeg");
+  });
+}
 
 export default function ProfileAvatar({ user }) {
   const router = useRouter();
@@ -16,6 +50,15 @@ export default function ProfileAvatar({ user }) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
   const fileInputRef = useRef(null);
+
+  // Crop States
+  const [crop, setCrop] = useState({ x: 0, y: 0 });
+  const [zoom, setZoom] = useState(1);
+  const [croppedAreaPixels, setCroppedAreaPixels] = useState(null);
+
+  const onCropComplete = useCallback((croppedArea, croppedAreaPixels) => {
+    setCroppedAreaPixels(croppedAreaPixels);
+  }, []);
 
   // Transition: Use user-level featured status
   // Note: if my ACF user field group is named something other than userData in GraphQL, please swap out that key
@@ -64,9 +107,15 @@ export default function ProfileAvatar({ user }) {
     setError('');
 
     try {
+      let fileToUpload = selectedFile;
+
+      if (previewUrl && croppedAreaPixels) {
+        fileToUpload = await getCroppedImg(previewUrl, croppedAreaPixels);
+      }
+
       // 1. Upload to WP Media Library
       const formData = new FormData();
-      formData.append('file', selectedFile);
+      formData.append('file', fileToUpload);
       const imageId = await uploadWPImage(formData);
 
       if (!imageId) throw new Error("Failed to upload image to server.");
@@ -77,6 +126,7 @@ export default function ProfileAvatar({ user }) {
       // 3. Clean up UI and force Next.js to pull the fresh data
       setIsModalOpen(false);
       setSelectedFile(null);
+      setPreviewUrl('');
       router.refresh(); 
       
     } catch (err) {
@@ -92,6 +142,8 @@ export default function ProfileAvatar({ user }) {
     setSelectedFile(null);
     setPreviewUrl('');
     setError('');
+    setZoom(1);
+    setCrop({ x: 0, y: 0 });
   };
 
   return (
@@ -106,7 +158,7 @@ export default function ProfileAvatar({ user }) {
           {/* The Image Wrapper safely constraints the Next.js fill property */}
           <div className={styles['avatar-image-wrap']}>
             <Image 
-              src={previewUrl || currentImage} 
+              src={currentImage} 
               alt={userName} 
               fill 
               style={{ objectFit: 'cover' }} 
@@ -139,15 +191,8 @@ export default function ProfileAvatar({ user }) {
             </div>
 
             <div className={styles['modal-body']}>
-              {/* Left Side: Drag & Drop Zone */}
-              <button 
-                type="button"
-                className={`${styles['modal-dropzone']} ${isDragging ? styles['modal-dropzone--active'] : ''}`}
-                onDragOver={(e) => { e.preventDefault(); setIsDragging(true); }}
-                onDragLeave={() => setIsDragging(false)}
-                onDrop={handleDrop}
-                onClick={() => fileInputRef.current?.click()}
-              >
+              {/* Left Side: Upload or Crop Interface */}
+              <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '1rem' }}>
                 <input 
                   type="file" 
                   ref={fileInputRef} 
@@ -155,18 +200,59 @@ export default function ProfileAvatar({ user }) {
                   accept="image/jpeg, image/png, image/webp" 
                   style={{ display: 'none' }} 
                 />
-                {previewUrl ? (
-                  <div style={{ position: 'relative', width: '120px', height: '120px', borderRadius: '50%', overflow: 'hidden', border: '3px solid white', boxShadow: '0 4px 10px rgba(0,0,0,0.1)' }}>
-                    <Image src={previewUrl} alt="Preview" fill style={{ objectFit: 'cover' }} />
-                  </div>
-                ) : (
-                  <>
+
+                {!previewUrl ? (
+                  <button 
+                    type="button"
+                    className={`${styles['modal-dropzone']} ${isDragging ? styles['modal-dropzone--active'] : ''}`}
+                    onDragOver={(e) => { e.preventDefault(); setIsDragging(true); }}
+                    onDragLeave={() => setIsDragging(false)}
+                    onDrop={handleDrop}
+                    onClick={() => fileInputRef.current?.click()}
+                  >
                     <span className="material-symbols-outlined" style={{ fontSize: '3rem', color: '#64748b', marginBottom: '0.5rem' }}>cloud_upload</span>
                     <p style={{ margin: 0, color: '#475569', fontWeight: 500 }}>Drag & Drop</p>
                     <span style={{ fontSize: '0.85rem', color: '#64748b' }}>or click to browse</span>
-                  </>
+                  </button>
+                ) : (
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                    <div style={{ position: 'relative', height: '250px', width: '100%', background: '#333', borderRadius: '8px', overflow: 'hidden' }}>
+                      <Cropper
+                        image={previewUrl}
+                        crop={crop}
+                        zoom={zoom}
+                        aspect={1}
+                        cropShape="round"
+                        onCropChange={setCrop}
+                        onCropComplete={onCropComplete}
+                        onZoomChange={setZoom}
+                      />
+                    </div>
+                    <div style={{ padding: '0 10px' }}>
+                      <label style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.85rem', color: '#64748b', fontWeight: 600 }}>Zoom</label>
+                      <input
+                        type="range"
+                        value={zoom}
+                        min={1}
+                        max={3}
+                        step={0.1}
+                        aria-labelledby="Zoom"
+                        onChange={(e) => setZoom(e.target.value)}
+                        style={{ width: '100%', cursor: 'pointer' }}
+                      />
+                    </div>
+                    <div style={{ textAlign: 'center', marginTop: '1rem' }}>
+                      <button 
+                        type="button" 
+                        onClick={() => fileInputRef.current.click()} 
+                        style={{ background: 'none', border: 'none', color: '#e04c4c', textDecoration: 'underline', cursor: 'pointer', fontSize: '0.9rem', padding: 0 }}
+                      >
+                        Select a different image
+                      </button>
+                    </div>
+                  </div>
                 )}
-              </button>
+              </div>
 
               {/* Right Side: Actions & Errors */}
               <div className={styles['modal-actions']}>
@@ -177,7 +263,7 @@ export default function ProfileAvatar({ user }) {
                   <ul style={{ margin: '0 0 1.5rem 0', paddingLeft: '1.2rem', color: '#64748b', fontSize: '0.85rem', display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
                     <li>JPEG, PNG, or WEBP</li>
                     <li>Max file size: 2MB</li>
-                    <li>1:1 Square aspect ratio best</li>
+                    <li>Square/Circle crop forced</li>
                   </ul>
                 </div>
                 
