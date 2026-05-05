@@ -3,11 +3,13 @@ import { redirect } from 'next/navigation';
 import Link from 'next/link';
 import DeleteListingButton from '@/components/dashboard/DeleteListingButton';
 import Pagination from '@/components/common/Pagination';
+import DashboardSortDropdown from '@/components/dashboard/DashboardSortDropdown';
 
 export default async function MyListingsPage({ params, searchParams }) {
   const { locale } = await params;
   const resolvedSearchParams = await searchParams;
   const page = parseInt(resolvedSearchParams?.page || '1', 10);
+  const sort = resolvedSearchParams?.sort || 'newest';
   const ITEMS_PER_PAGE = 10;
   
   const cookieStore = await cookies();
@@ -21,7 +23,7 @@ export default async function MyListingsPage({ params, searchParams }) {
     query GetMyListings {
       viewer {
         roles { nodes { name } }
-        ccrlistings {
+        ccrlistings(first: 1000) {
           nodes {
             databaseId
             title
@@ -56,7 +58,20 @@ export default async function MyListingsPage({ params, searchParams }) {
   }
 
   const listings = viewer.ccrlistings?.nodes || [];
-  const paginatedListings = listings.slice((page - 1) * ITEMS_PER_PAGE, page * ITEMS_PER_PAGE);
+
+  let sortedListings = [...listings];
+  if (sort === 'az') {
+    sortedListings.sort((a, b) => a.title.localeCompare(b.title));
+  } else if (sort === 'za') {
+    sortedListings.sort((a, b) => b.title.localeCompare(a.title));
+  } else if (sort === 'oldest') {
+    sortedListings.sort((a, b) => new Date(a.date) - new Date(b.date));
+  } else {
+    // Default: Newest
+    sortedListings.sort((a, b) => new Date(b.date) - new Date(a.date));
+  }
+
+  const paginatedListings = sortedListings.slice((page - 1) * ITEMS_PER_PAGE, page * ITEMS_PER_PAGE);
 
   return (
     <div className="my-listings-page">
@@ -80,30 +95,33 @@ export default async function MyListingsPage({ params, searchParams }) {
           <Link href={`/${locale}/submit-listing`} style={{ color: '#e04c4c', fontWeight: '600' }}>Create your first listing now</Link>
         </div>
       ) : (
-        <div className="listings-grid" style={{ display: 'grid', gap: '1.5rem' }}>
-          {paginatedListings.map((listing) => (
-            <div key={listing.databaseId} className="listing-item" style={{ backgroundColor: '#ffffff', padding: '1.5rem 2rem', borderRadius: '12px', boxShadow: '0 4px 20px rgba(0, 0, 0, 0.04)', border: '1px solid #f1f5f9', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <div>
-                <h3 style={{ margin: '0 0 0.5rem 0', fontSize: '1.2rem' }}>{listing.title}</h3>
-                <p style={{ margin: 0, color: '#666', fontSize: '0.9rem' }}>
-                  Published on {new Date(listing.date).toLocaleDateString()}
-                </p>
+        <>
+          <DashboardSortDropdown />
+          <div className="listings-grid" style={{ display: 'grid', gap: '1.5rem' }}>
+            {paginatedListings.map((listing) => (
+              <div key={listing.databaseId} className="listing-item" style={{ backgroundColor: '#ffffff', padding: '1.5rem 2rem', borderRadius: '12px', boxShadow: '0 4px 20px rgba(0, 0, 0, 0.04)', border: '1px solid #f1f5f9', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <div>
+                  <h3 style={{ margin: '0 0 0.5rem 0', fontSize: '1.2rem' }}>{listing.title}</h3>
+                  <p style={{ margin: 0, color: '#666', fontSize: '0.9rem' }}>
+                    Published on {new Date(listing.date).toLocaleDateString()}
+                  </p>
+                </div>
+                <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
+                  <Link href={`/${locale}/listing/${listing.slug}`} style={{ color: '#e04c4c', fontWeight: '600', textDecoration: 'none', fontSize: '0.95rem' }}>
+                    View
+                  </Link>
+                  <span style={{ color: '#e2e8f0' }}>|</span>
+                  <Link href={`/${locale}/dashboard/listings/edit/${listing.databaseId}`} style={{ color: '#4a5568', fontWeight: '600', textDecoration: 'none', fontSize: '0.95rem' }}>
+                    Edit
+                  </Link>
+                  <span style={{ color: '#e2e8f0' }}>|</span>
+                  <DeleteListingButton listingId={listing.databaseId} className="btn-delete" />
+                </div>
               </div>
-              <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
-                <Link href={`/${locale}/listing/${listing.slug}`} style={{ color: '#e04c4c', fontWeight: '600', textDecoration: 'none', fontSize: '0.95rem' }}>
-                  View
-                </Link>
-                <span style={{ color: '#e2e8f0' }}>|</span>
-                <Link href={`/${locale}/dashboard/listings/edit/${listing.databaseId}`} style={{ color: '#4a5568', fontWeight: '600', textDecoration: 'none', fontSize: '0.95rem' }}>
-                  Edit
-                </Link>
-                <span style={{ color: '#e2e8f0' }}>|</span>
-                <DeleteListingButton listingId={listing.databaseId} className="btn-delete" />
-              </div>
-            </div>
-          ))}
-          <Pagination totalItems={listings.length} itemsPerPage={ITEMS_PER_PAGE} />
-        </div>
+            ))}
+            <Pagination totalItems={listings.length} itemsPerPage={ITEMS_PER_PAGE} />
+          </div>
+        </>
       )}
     </div>
   );
