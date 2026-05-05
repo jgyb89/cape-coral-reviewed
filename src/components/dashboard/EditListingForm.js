@@ -1,11 +1,12 @@
 "use client";
 
-import { useState, useMemo, useEffect } from "react";
+import { useState, useMemo, useEffect, useCallback } from "react";
 import Image from "next/image";
 import { updateUserListing, uploadWPImage, deleteWPMedia } from "@/lib/actions";
 import { useRouter } from "next/navigation";
 import imageCompression from "browser-image-compression";
 import { ALL_CATEGORIES, DIRECTORY_TYPES } from "@/lib/constants";
+import Cropper from "react-easy-crop";
 
 // --- Constants & Helpers ---
 const daysList = [
@@ -19,6 +20,42 @@ const daysList = [
 ];
 const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
 const ALLOWED_TYPES = ["image/jpeg", "image/png", "image/webp", "image/jpg"];
+
+/**
+ * Utility to generate cropped image
+ */
+async function getCroppedImg(imageSrc, pixelCrop) {
+  const image = await new Promise((resolve, reject) => {
+    const img = new globalThis.Image();
+    img.addEventListener("load", () => resolve(img));
+    img.addEventListener("error", (error) => reject(error));
+    img.src = imageSrc;
+  });
+
+  const canvas = document.createElement("canvas");
+  const ctx = canvas.getContext("2d");
+
+  canvas.width = pixelCrop.width;
+  canvas.height = pixelCrop.height;
+
+  ctx.drawImage(
+    image,
+    pixelCrop.x,
+    pixelCrop.y,
+    pixelCrop.width,
+    pixelCrop.height,
+    0,
+    0,
+    pixelCrop.width,
+    pixelCrop.height
+  );
+
+  return new Promise((resolve) => {
+    canvas.toBlob((blob) => {
+      resolve(new File([blob], "cropped-image.jpg", { type: "image/jpeg" }));
+    }, "image/jpeg");
+  });
+}
 
 const formatContentForTextarea = (html) => {
   if (!html) return "";
@@ -158,6 +195,10 @@ function useEditListingForm(initialData) {
   const [newGalleryImages, setNewGalleryImages] = useState([]);
   const [mediaToDelete, setMediaToDelete] = useState([]);
   const [fileErrors, setFileErrors] = useState({ featured: "", gallery: "" });
+
+  // Crop States
+  const [isCropModalOpen, setIsCropModalOpen] = useState(false);
+  const [pendingCrop, setPendingCrop] = useState(null); // { file, fieldType }
 
   // Hierarchical Category States
   const initialDirectoryType =
@@ -335,14 +376,23 @@ function useEditListingForm(initialData) {
 
     if (field === "featured") {
       if (validFiles.length > 0) {
-        setNewFeaturedImage(validFiles[0]);
-        setExistingFeaturedImage(null);
+        setPendingCrop({ file: validFiles[0], fieldType: field });
+        setIsCropModalOpen(true);
       }
-    } else {
+    } else if (field === "gallery") {
       setNewGalleryImages((prev) =>
-        [...prev, ...validFiles].slice(0, 10 - existingGallery.length),
+        [...prev, ...validFiles].slice(0, 10 - existingGallery.length)
       );
     }
+  };
+
+  const handleCropSave = async (croppedFile) => {
+    if (pendingCrop && pendingCrop.fieldType === "featured") {
+      setNewFeaturedImage(croppedFile);
+      setExistingFeaturedImage(null);
+    }
+    setIsCropModalOpen(false);
+    setPendingCrop(null);
   };
 
   const handleRemoveFeatured = () => {
@@ -451,6 +501,11 @@ function useEditListingForm(initialData) {
     selectedParentCategory,
     availableParentCategories,
     availableChildCategories,
+    isCropModalOpen,
+    setIsCropModalOpen,
+    pendingCrop,
+    setPendingCrop,
+    handleCropSave,
     handleDirectoryTypeChange,
     handleParentCategoryChange,
     handleCategoryToggle,
@@ -469,6 +524,87 @@ function useEditListingForm(initialData) {
 }
 
 // --- Sub-Components ---
+
+const ImageCropModal = ({ file, onCancel, onSave }) => {
+  const [crop, setCrop] = useState({ x: 0, y: 0 });
+  const [zoom, setZoom] = useState(1);
+  const [croppedAreaPixels, setCroppedAreaPixels] = useState(null);
+  const imageSrc = useMemo(() => (file ? URL.createObjectURL(file) : null), [file]);
+
+  const onCropComplete = useCallback((_, pixels) => {
+    setCroppedAreaPixels(pixels);
+  }, []);
+
+  const handleSave = async () => {
+    const croppedFile = await getCroppedImg(imageSrc, croppedAreaPixels);
+    onSave(croppedFile);
+  };
+
+  if (!file) return null;
+
+  return (
+    <div className="dashboard-modal-overlay" style={{ zIndex: 1100 }}>
+      <div
+        className="dashboard-modal-dialog"
+        style={{
+          width: "90%",
+          maxWidth: "600px",
+          height: "600px",
+          display: "flex",
+          flexDirection: "column",
+          padding: "1.5rem",
+        }}
+      >
+        <h3 className="dashboard-modal-title" style={{ marginBottom: "1rem" }}>
+          Crop Image
+        </h3>
+        <div style={{ position: "relative", flex: 1, background: "#333", borderRadius: "8px", overflow: "hidden" }}>
+          <Cropper
+            image={imageSrc}
+            crop={crop}
+            zoom={zoom}
+            aspect={4 / 3}
+            onCropChange={setCrop}
+            onCropComplete={onCropComplete}
+            onZoomChange={setZoom}
+          />
+        </div>
+        <div style={{ padding: "1.5rem 0" }}>
+          <label style={{ display: "block", marginBottom: "0.5rem", fontSize: "0.9rem", fontWeight: 600 }}>
+            Zoom: {Math.round(zoom * 100)}%
+          </label>
+          <input
+            type="range"
+            value={zoom}
+            min={1}
+            max={3}
+            step={0.1}
+            aria-labelledby="Zoom"
+            onChange={(e) => setZoom(parseFloat(e.target.value))}
+            style={{ width: "100%", cursor: "pointer" }}
+          />
+        </div>
+        <div className="dashboard-modal-actions" style={{ marginTop: "auto" }}>
+          <button
+            type="button"
+            className="dashboard-modal-btn"
+            onClick={onCancel}
+            style={{ border: "1px solid #e2e8f0" }}
+          >
+            Cancel
+          </button>
+          <button
+            type="button"
+            className="dashboard-modal-btn dashboard-modal-btn--primary"
+            onClick={handleSave}
+          >
+            Save Crop
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};
 
 const ProgressOverlay = ({ step }) => {
   const stepsInfo = {
@@ -1380,6 +1516,18 @@ export default function EditListingForm({ initialData }) {
   return (
     <div className="edit-listing-form-container">
       <ProgressOverlay step={hook.uploadStep} />
+      
+      {hook.isCropModalOpen && (
+        <ImageCropModal
+          file={hook.pendingCrop?.file}
+          onCancel={() => {
+            hook.setIsCropModalOpen(false);
+            hook.setPendingCrop(null);
+          }}
+          onSave={hook.handleCropSave}
+        />
+      )}
+
       <form
         onSubmit={hook.handleSubmit}
         style={{ display: "grid", gap: "2.5rem", maxWidth: "800px" }}

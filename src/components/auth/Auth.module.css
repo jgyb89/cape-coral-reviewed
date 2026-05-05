@@ -58,12 +58,17 @@
 }
 
 .auth-form__error {
-  color: #b91c1c;
-  background-color: #fce8e6;
-  padding: 0.75rem;
-  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  background-color: #fef2f2;
+  color: #991b1b;
+  border: 1px solid #fee2e2;
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
   margin-bottom: 1.5rem;
   font-size: 0.9rem;
+  line-height: 1.4;
 }
 
 .auth-form__row {
