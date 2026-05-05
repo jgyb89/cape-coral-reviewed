@@ -64,7 +64,7 @@ export default async function BlogPostPage({ params }) {
         </header>
 
         {post.featuredImage?.node?.sourceUrl && (
-          <div className="blog-post__featured-image" style={{ position: 'relative', width: '100%', aspectRatio: '16/9', overflow: 'hidden', borderRadius: '12px', marginBottom: '2rem' }}>
+          <div className="blog-post__featured-image" style={{ position: 'relative', width: '100%', aspectRatio: '4/3', overflow: 'hidden', borderRadius: '12px', marginBottom: '2rem' }}>
             <Image
               src={formatImageUrl(post.featuredImage.node.sourceUrl)}
               alt={post.featuredImage.node.altText || post.title}

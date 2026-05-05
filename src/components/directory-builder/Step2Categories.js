@@ -174,22 +174,41 @@ const Step2Categories = ({ formData, updateFormData, nextStep, prevStep }) => {
                 maxHeight: '220px', overflowY: 'auto'
               }}>
                 {searchResults.map(suggestion => (
-                  <li
-                    key={suggestion.slug}
-                    onMouseDown={(e) => {
-                      e.preventDefault();
-                      handleCategoryToggle(suggestion.slug);
-                      setCatInput('');
-                    }}
-                    style={{
-                      padding: '0.6rem 1rem', cursor: 'pointer',
-                      fontSize: '0.95rem', color: '#1e293b', transition: 'background-color 0.2s'
-                    }}
-                    onMouseOver={(e) => e.currentTarget.style.backgroundColor = '#f1f5f9'}
-                    onMouseOut={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
-                  >
-                    <span style={{ fontWeight: 600 }}>{suggestion.name.slice(0, catInput.length)}</span>
-                    <span>{suggestion.name.slice(catInput.length)}</span>
+                  <li key={suggestion.slug}>
+                    <button
+                      type="button"
+                      onMouseDown={(e) => {
+                        e.preventDefault();
+                        handleCategoryToggle(suggestion.slug);
+                        setCatInput('');
+                      }}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter' || e.key === ' ') {
+                          e.preventDefault();
+                          handleCategoryToggle(suggestion.slug);
+                          setCatInput('');
+                        }
+                      }}
+                      style={{
+                        width: '100%',
+                        textAlign: 'left',
+                        padding: '0.6rem 1rem',
+                        cursor: 'pointer',
+                        fontSize: '0.95rem',
+                        color: '#1e293b',
+                        transition: 'background-color 0.2s',
+                        background: 'none',
+                        border: 'none',
+                        fontFamily: 'inherit'
+                      }}
+                      onMouseOver={(e) => e.currentTarget.style.backgroundColor = '#f1f5f9'}
+                      onMouseOut={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
+                      onFocus={(e) => e.currentTarget.style.backgroundColor = '#f1f5f9'}
+                      onBlur={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
+                    >
+                      <span style={{ fontWeight: 600 }}>{suggestion.name.slice(0, catInput.length)}</span>
+                      <span>{suggestion.name.slice(catInput.length)}</span>
+                    </button>
                   </li>
                 ))}
               </ul>
