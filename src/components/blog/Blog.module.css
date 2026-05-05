@@ -89,7 +89,7 @@
 
 .blog-card__image-wrapper {
   position: relative;
-  aspect-ratio: 16/9;
+  aspect-ratio: 4/3;
   width: 100%;
   background-color: #f7fafc;
 }
