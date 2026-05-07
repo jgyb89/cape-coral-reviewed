@@ -2,7 +2,7 @@
   position: fixed;
   inset: 0;
   background: rgba(0, 0, 0, 0.5);
-  z-index: 99998;
+  z-index: 9900;
   backdrop-filter: blur(4px);
 }
 
@@ -14,7 +14,7 @@
   background: #ffffff;
   padding: 1.5rem;
   border-radius: 12px;
-  box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
   z-index: 99999;
   font-family: inherit;
   border: 1px solid #f1f5f9;
@@ -32,7 +32,7 @@
   background: #ffffff;
   padding: 2rem;
   border-radius: 12px;
-  box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
   z-index: 99999;
 }
 
@@ -72,20 +72,26 @@
   background: #e04c4c;
   color: #ffffff;
 }
-.btnPrimary:hover { background: #c53030; }
+.btnPrimary:hover {
+  background: #c53030;
+}
 
 .btnSecondary {
   background: #f1f5f9;
   color: #334155;
 }
-.btnSecondary:hover { background: #e2e8f0; }
+.btnSecondary:hover {
+  background: #e2e8f0;
+}
 
 .btnText {
   background: transparent;
   color: #475569;
   text-decoration: underline;
 }
-.btnText:hover { color: #1e293b; }
+.btnText:hover {
+  color: #1e293b;
+}
 
 /* Accordion Styles */
 .accordionList {
@@ -142,9 +148,12 @@
 .slider {
   position: absolute;
   cursor: pointer;
-  top: 0; left: 0; right: 0; bottom: 0;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
   background-color: #cbd5e1;
-  transition: .4s;
+  transition: 0.4s;
   border-radius: 24px;
 }
 
@@ -156,7 +165,7 @@
   left: 3px;
   bottom: 3px;
   background-color: white;
-  transition: .4s;
+  transition: 0.4s;
   border-radius: 50%;
 }
 
