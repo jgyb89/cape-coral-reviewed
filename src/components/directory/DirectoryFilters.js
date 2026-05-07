@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useRef, useEffect } from 'react';
+import Link from 'next/link';
 import { useRouter, useSearchParams, usePathname } from 'next/navigation';
 import { ALL_CATEGORIES } from '@/lib/constants';
 import styles from './DirectoryFilters.module.css';
@@ -43,8 +44,14 @@ export default function DirectoryFilters() {
   const searchParams = useSearchParams();
 
   const [isMobileModalOpen, setIsMobileModalOpen] = useState(false);
-  const [catInput, setCatInput] = useState('');
-  const [isCatFocused, setIsCatFocused] = useState(false);
+  
+  // Unified Predictive Search State
+  const [searchTerm, setSearchTerm] = useState(searchParams.get('search') || '');
+  const [debouncedSearch, setDebouncedSearch] = useState(searchTerm);
+  const [searchResults, setSearchResults] = useState({ listings: [], categories: [] });
+  const [isLoading, setIsLoading] = useState(false);
+  const [isSearchFocused, setIsSearchFocused] = useState(false);
+
   const [canScrollLeft, setCanScrollLeft] = useState(false);
   const [canScrollRight, setCanScrollRight] = useState(true);
   const [openDropdown, setOpenDropdown] = useState(null); // 'sort' or 'rating' or null
@@ -63,6 +70,77 @@ export default function DirectoryFilters() {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
+  // 1. Debounce input and filter the current directory grid
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedSearch(searchTerm);
+      updateFilter('search', searchTerm);
+    }, 300);
+    return () => clearTimeout(timer);
+  }, [searchTerm]);
+
+  // 2. Fetch Global Predictive Results (Categories & Listings) - UNIVERSAL
+  useEffect(() => {
+    if (debouncedSearch.length < 2) {
+      setSearchResults({ listings: [], categories: [] });
+      return;
+    }
+
+    const fetchResults = async () => {
+      setIsLoading(true);
+      
+      const query = `
+        query SearchQuery($searchTerm: String!) {
+          ccrlistings(where: {search: $searchTerm}) {
+            nodes {
+              title
+              slug
+            }
+          }
+          ccrlistingcategories(where: {search: $searchTerm}) {
+            nodes {
+              name
+              slug
+              parent {
+                node {
+                  slug
+                }
+              }
+            }
+          }
+        }
+      `;
+
+      try {
+        const response = await fetch(process.env.NEXT_PUBLIC_WORDPRESS_API_URL, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            query,
+            variables: { searchTerm: debouncedSearch },
+          }),
+        });
+
+        const json = await response.json();
+
+        if (json.data) {
+          setSearchResults({
+            listings: json.data.ccrlistings?.nodes || [],
+            categories: json.data.ccrlistingcategories?.nodes || [],
+          });
+        }
+      } catch (error) {
+        console.error("Predictive search error:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchResults();
+  }, [debouncedSearch]);
+
   const currentRating = searchParams.get('rating') || '';
   const currentSort = searchParams.get('sort') || 'newest';
 
@@ -75,17 +153,14 @@ export default function DirectoryFilters() {
   };
 
   useEffect(() => {
-    // Initial check
     handleScroll();
-    
-    // Check on resize
     window.addEventListener('resize', handleScroll);
     return () => window.removeEventListener('resize', handleScroll);
   }, []);
 
   const scrollPills = (direction) => {
     if (pillContainerRef.current) {
-      const scrollAmount = 300; // The distance to scroll in pixels
+      const scrollAmount = 300;
       pillContainerRef.current.scrollBy({
         left: direction === 'left' ? -scrollAmount : scrollAmount,
         behavior: 'smooth'
@@ -105,23 +180,9 @@ export default function DirectoryFilters() {
 
   const clearFilters = () => {
     router.push(pathname);
-    setCatInput('');
+    setSearchTerm('');
     setIsMobileModalOpen(false);
   };
-
-  const handleCategorySelect = (slug) => {
-    const route = getCategoryRoute(slug);
-    const locale = pathname.split('/')[1] || 'en';
-    router.push(`/${locale}${route}`);
-    setIsCatFocused(false);
-    setCatInput('');
-    setIsMobileModalOpen(false);
-  };
-
-  // Predictive search across the massive array
-  const filteredCategories = ALL_CATEGORIES.filter(cat => 
-    cat.name.toLowerCase().includes(catInput.toLowerCase())
-  );
 
   const handleCategoryClick = (slug) => {
     const locale = pathname.split('/')[1] || 'en';
@@ -165,7 +226,6 @@ export default function DirectoryFilters() {
 
     return (
       <div style={{ position: 'relative', display: 'flex', alignItems: 'center', width: 'calc(100% - 32px)', margin: '0 auto 1.5rem' }}>
-        {/* Left Arrow */}
         {canScrollLeft && (
           <button
             onClick={() => scrollPills('left')}
@@ -185,7 +245,6 @@ export default function DirectoryFilters() {
           {pillsContent}
         </div>
 
-        {/* Right Arrow */}
         {canScrollRight && (
           <button
             onClick={() => scrollPills('right')}
@@ -194,6 +253,48 @@ export default function DirectoryFilters() {
           >
             <span className="material-symbols-outlined" style={{ fontSize: '20px' }}>chevron_right</span>
           </button>
+        )}
+      </div>
+    );
+  };
+
+  const renderPredictiveDropdown = () => {
+    if (!isSearchFocused || debouncedSearch.length < 2) return null;
+
+    const locale = pathname.split('/')[1] || 'en';
+    const hasCategories = searchResults.categories && searchResults.categories.length > 0;
+    const hasListings = searchResults.listings && searchResults.listings.length > 0;
+    const hasResults = hasCategories || hasListings;
+
+    return (
+      <div className={styles['predictive-dropdown']}>
+        {isLoading ? (
+          <div className={styles['predictive-message']}>Searching...</div>
+        ) : !hasResults ? (
+          <div className={styles['predictive-message']}>No results found</div>
+        ) : (
+          <ul className={styles['predictive-list']}>
+            {hasCategories && searchResults.categories.map(cat => {
+              const route = getCategoryRoute(cat.slug);
+              const categoryHref = `/${locale}${route}`;
+              return (
+                <li key={`cat-${cat.slug}`} className={styles['predictive-item']}>
+                  <Link href={categoryHref} className={styles['predictive-link']}>
+                    <span className={styles['predictive-title']}>{cat.name}</span>
+                    <span className={styles['predictive-type']}>Category</span>
+                  </Link>
+                </li>
+              );
+            })}
+            {hasListings && searchResults.listings.map(listing => (
+              <li key={`list-${listing.slug}`} className={styles['predictive-item']}>
+                <Link href={`/${locale}/listing/${listing.slug}`} className={styles['predictive-link']}>
+                  <span className={styles['predictive-title']}>{listing.title}</span>
+                  <span className={styles['predictive-type']}>Listing</span>
+                </Link>
+              </li>
+            ))}
+          </ul>
         )}
       </div>
     );
@@ -216,48 +317,29 @@ export default function DirectoryFilters() {
     const currentSortLabel = sortOptions.find(opt => opt.value === currentSort)?.label || 'Newest';
     const currentRatingLabel = ratingOptions.find(opt => opt.value === currentRating.toString())?.label || 'Any Rating';
 
-    // MOBILE RENDER
     if (isMobile) {
       return (
         <div className={styles['mobile-filter-list']}>
-          <div className={styles['autocomplete-wrapper']} style={{ width: '100%' }}>
-            <div className={styles['filter-group']}>
-              <span className="material-symbols-outlined" style={{ color: '#94a3b8' }}>search</span>
-              <input 
-                type="text" 
-                placeholder="Search categories..." 
-                className={styles['filter-input']}
-                value={catInput}
-                onChange={(e) => { setCatInput(e.target.value); setIsCatFocused(true); }}
-                onFocus={() => setIsCatFocused(true)}
-                onBlur={() => setTimeout(() => setIsCatFocused(false), 200)}
-                style={{ width: '100%' }}
-              />
-            </div>
-            {isCatFocused && catInput && filteredCategories.length > 0 && (
-              <ul className={styles['autocomplete-list']} style={{ width: '100%' }}>
-                {filteredCategories.map(cat => (
-                  <li 
-                    key={cat.slug} 
-                    className={styles['autocomplete-item']}
-                    onMouseDown={(e) => { e.preventDefault(); handleCategorySelect(cat.slug); }}
-                  >
-                    <span style={{ fontWeight: 600 }}>{cat.name.slice(0, catInput.length)}</span>
-                    <span>{cat.name.slice(catInput.length)}</span>
-                  </li>
-                ))}
-              </ul>
-            )}
+          <div className={styles['filter-group-search']} style={{ position: 'relative', width: '100%', marginBottom: '1rem' }}>
+            <input 
+              type="text" 
+              placeholder="Search businesses or categories..." 
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              onFocus={() => setIsSearchFocused(true)}
+              onBlur={() => setTimeout(() => setIsSearchFocused(false), 200)}
+              className={styles['filter-input']}
+              style={{ width: '100%' }}
+            />
+            {renderPredictiveDropdown()}
           </div>
 
-          {/* Custom Rating Dropdown (Mobile) */}
           <div className={styles['filter-group']}>
             <label className={styles['filter-label']}>Minimum Rating</label>
             <div className={styles['custom-select']}>
               <button 
                 type="button"
                 className={styles['custom-select__button']} 
-                aria-expanded={openDropdown === 'rating'}
                 onClick={() => setOpenDropdown(openDropdown === 'rating' ? null : 'rating')}
               >
                 <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
@@ -278,26 +360,7 @@ export default function DirectoryFilters() {
                           updateFilter('rating', option.value === '0' ? '' : option.value);
                           setOpenDropdown(null);
                         }}
-                        onKeyDown={(e) => {
-                          if (e.key === 'Enter' || e.key === ' ') {
-                            updateFilter('rating', option.value === '0' ? '' : option.value);
-                            setOpenDropdown(null);
-                          }
-                        }}
-                        style={{
-                          width: '100%',
-                          textAlign: 'left',
-                          display: 'flex',
-                          flexDirection: 'column',
-                          alignItems: 'flex-start',
-                          gap: '2px',
-                          background: 'none',
-                          border: 'none',
-                          padding: '0.6rem 1rem',
-                          cursor: 'pointer',
-                          fontFamily: 'inherit',
-                          fontSize: 'inherit'
-                        }}
+                        style={{ width: '100%', textAlign: 'left', display: 'flex', flexDirection: 'column', alignItems: 'flex-start', padding: '0.6rem 1rem', background: 'none', border: 'none' }}
                       >
                         <span>{option.label}</span>
                         {option.stars > 0 && (
@@ -318,57 +381,36 @@ export default function DirectoryFilters() {
       );
     }
 
-    // DESKTOP RENDER
     return (
       <div className={styles['desktop-filters']}>
-        {/* LEFT SIDE: Search & Open Now (Stretches) */}
         <div className={styles['left-controls']}>
-          <div className={styles['autocomplete-wrapper']} style={{ flex: 1 }}>
-            <div className={styles['filter-group-search']}>
-              <span className="material-symbols-outlined" style={{ color: '#94a3b8' }}>search</span>
-              <input 
-                type="text" 
-                placeholder="Search categories..." 
-                className={styles['filter-input']}
-                value={catInput}
-                onChange={(e) => { setCatInput(e.target.value); setIsCatFocused(true); }}
-                onFocus={() => setIsCatFocused(true)}
-                onBlur={() => setTimeout(() => setIsCatFocused(false), 200)}
-              />
-            </div>
-            {isCatFocused && catInput && filteredCategories.length > 0 && (
-              <ul className={styles['autocomplete-list']} style={{ width: '100%' }}>
-                {filteredCategories.map(cat => (
-                  <li 
-                    key={cat.slug} 
-                    className={styles['autocomplete-item']}
-                    onMouseDown={(e) => { e.preventDefault(); handleCategorySelect(cat.slug); }}
-                  >
-                    <span style={{ fontWeight: 600 }}>{cat.name.slice(0, catInput.length)}</span>
-                    <span>{cat.name.slice(catInput.length)}</span>
-                  </li>
-                ))}
-              </ul>
-            )}
+          <div className={styles['filter-group-search']} style={{ position: 'relative' }}>
+            <input 
+              type="text" 
+              placeholder="Search businesses or categories..." 
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              onFocus={() => setIsSearchFocused(true)}
+              onBlur={() => setTimeout(() => setIsSearchFocused(false), 200)}
+              className={styles['filter-input']}
+              style={{ width: '100%' }}
+            />
+            {renderPredictiveDropdown()}
           </div>
         </div>
 
-        {/* RIGHT SIDE: Sort, Rating, Clear (Compact) */}
         <div className={styles['right-controls']}>
-          {/* Custom Sort Dropdown */}
           <div className={styles['filter-group']}>
             <label className={styles['filter-label']}>Sort by:</label>
             <div className={styles['custom-select']}>
               <button 
                 type="button"
                 className={styles['custom-select__button']} 
-                aria-expanded={openDropdown === 'sort'}
                 onClick={() => setOpenDropdown(openDropdown === 'sort' ? null : 'sort')}
               >
                 {currentSortLabel}
                 <span className="material-symbols-outlined" style={{ fontSize: '1.2rem', color: '#94a3b8' }}>expand_more</span>
               </button>
-
               {openDropdown === 'sort' && (
                 <ul className={styles['custom-select__menu']}>
                   {sortOptions.map(option => (
@@ -380,22 +422,7 @@ export default function DirectoryFilters() {
                           updateFilter('sort', option.value);
                           setOpenDropdown(null);
                         }}
-                        onKeyDown={(e) => {
-                          if (e.key === 'Enter' || e.key === ' ') {
-                            updateFilter('sort', option.value);
-                            setOpenDropdown(null);
-                          }
-                        }}
-                        style={{
-                          width: '100%',
-                          textAlign: 'left',
-                          background: 'none',
-                          border: 'none',
-                          padding: '0.6rem 1rem',
-                          cursor: 'pointer',
-                          fontFamily: 'inherit',
-                          fontSize: 'inherit'
-                        }}
+                        style={{ width: '100%', textAlign: 'left', padding: '0.6rem 1rem', background: 'none', border: 'none' }}
                       >
                         {option.label}
                       </button>
@@ -406,14 +433,12 @@ export default function DirectoryFilters() {
             </div>
           </div>
 
-          {/* Custom Rating Dropdown */}
           <div className={styles['filter-group']}>
             <label className={styles['filter-label']}>Rating:</label>
             <div className={styles['custom-select']}>
               <button 
                 type="button"
                 className={styles['custom-select__button']} 
-                aria-expanded={openDropdown === 'rating'}
                 onClick={() => setOpenDropdown(openDropdown === 'rating' ? null : 'rating')}
               >
                 <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
@@ -422,7 +447,6 @@ export default function DirectoryFilters() {
                 </span>
                 <span className="material-symbols-outlined" style={{ fontSize: '1.2rem', color: '#94a3b8' }}>expand_more</span>
               </button>
-
               {openDropdown === 'rating' && (
                 <ul className={styles['custom-select__menu']}>
                   {ratingOptions.map(option => (
@@ -434,26 +458,7 @@ export default function DirectoryFilters() {
                           updateFilter('rating', option.value === '0' ? '' : option.value);
                           setOpenDropdown(null);
                         }}
-                        onKeyDown={(e) => {
-                          if (e.key === 'Enter' || e.key === ' ') {
-                            updateFilter('rating', option.value === '0' ? '' : option.value);
-                            setOpenDropdown(null);
-                          }
-                        }}
-                        style={{
-                          width: '100%',
-                          textAlign: 'left',
-                          display: 'flex',
-                          flexDirection: 'column',
-                          alignItems: 'flex-start',
-                          gap: '2px',
-                          background: 'none',
-                          border: 'none',
-                          padding: '0.6rem 1rem',
-                          cursor: 'pointer',
-                          fontFamily: 'inherit',
-                          fontSize: 'inherit'
-                        }}
+                        style={{ width: '100%', textAlign: 'left', display: 'flex', flexDirection: 'column', alignItems: 'flex-start', padding: '0.6rem 1rem', background: 'none', border: 'none' }}
                       >
                         <span>{option.label}</span>
                         {option.stars > 0 && (
@@ -471,12 +476,10 @@ export default function DirectoryFilters() {
             </div>
           </div>
 
-          {/* Clear Button */}
           <button 
             onClick={clearFilters} 
             className={styles['btn-clear']} 
-            title="Clear Filters"
-            style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#f1f5f9', color: '#64748b', border: 'none', padding: '0.6rem', borderRadius: '8px', cursor: 'pointer', transition: 'all 0.2s' }}
+            style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#f1f5f9', color: '#64748b', border: 'none', padding: '0.6rem', borderRadius: '8px', cursor: 'pointer' }}
           >
             <span className="material-symbols-outlined" style={{ fontSize: '1.25rem' }}>refresh</span>
           </button>
@@ -488,10 +491,7 @@ export default function DirectoryFilters() {
   return (
     <>
       <div className={styles['filter-bar']}>
-        {/* DESKTOP: Render unified filter component */}
         {renderFilters(false)}
-
-        {/* MOBILE LEFT: Filter Button (Hidden on Desktop) */}
         <div className={styles['mobile-controls']}>
           <button className={styles['btn-filter-mobile']} onClick={() => setIsMobileModalOpen(true)}>
             <span className="material-symbols-outlined">tune</span> Filters
@@ -502,10 +502,8 @@ export default function DirectoryFilters() {
         </div>
       </div>
 
-      {/* DESKTOP PILLS (Hidden on Mobile) */}
       {renderPills(false)}
 
-      {/* MOBILE MODAL */}
       {isMobileModalOpen && (
         <div className={styles['modal-overlay']}>
           <div className={styles['modal-content']}>
@@ -515,17 +513,13 @@ export default function DirectoryFilters() {
                 <span className="material-symbols-outlined">close</span>
               </button>
             </div>
-            
             <div ref={dropdownRef}>
               {renderFilters(true)}
             </div>
-
-            {/* MOBILE PILLS (Wrapped naturally) */}
             <div style={{ marginTop: '0.5rem' }}>
               <label className={styles['filter-label']} style={{ display: 'block', marginBottom: '0.5rem' }}>Quick Categories</label>
               {renderPills(true)}
             </div>
-            
             <div style={{ marginTop: 'auto', display: 'flex', gap: '1rem', flexDirection: 'column' }}>
               <button 
                 onClick={clearFilters} 
