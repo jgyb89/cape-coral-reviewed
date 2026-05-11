@@ -15,7 +15,7 @@
   flex-wrap: wrap; /* Allows wrapping on tablets */
   position: sticky;
   top: 5px;
-  z-index: 9999;
+  z-index: 98;
 }
 
 .toggle-filters-btn {
