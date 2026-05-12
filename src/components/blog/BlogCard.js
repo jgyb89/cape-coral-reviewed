@@ -3,6 +3,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import PropTypes from "prop-types";
 import { getLocalizedUrl } from "@/lib/constants";
 import styles from "./Blog.module.css";
 
@@ -31,3 +32,14 @@ export default function BlogCard({ post, locale = "en" }) {
     </article>
   );
 }
+
+BlogCard.propTypes = {
+  post: PropTypes.shape({
+    title: PropTypes.string.isRequired,
+    categories: PropTypes.arrayOf(PropTypes.string).isRequired,
+    excerpt: PropTypes.string.isRequired,
+    slug: PropTypes.string.isRequired,
+    imageUrl: PropTypes.string.isRequired,
+  }).isRequired,
+  locale: PropTypes.string,
+};
