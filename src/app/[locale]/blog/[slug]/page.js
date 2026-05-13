@@ -2,6 +2,7 @@ import PropTypes from "prop-types";
 import { notFound } from "next/navigation";
 import Image from "next/image";
 import DOMPurify from "isomorphic-dompurify";
+import parse from "html-react-parser";
 import { getBlogPostBySlug } from "@/lib/actions";
 import { formatImageUrl } from "@/lib/formatImageUrl";
 import BlogSidebar from "@/components/blog/BlogSidebar";
@@ -43,7 +44,49 @@ export default async function BlogPostPage({ params }) {
     ?.map((cat) => cat.name)
     .join(", ");
 
-  const sanitizedContent = DOMPurify.sanitize(post.content || "");
+  const rawContent = post.content || "";
+  // Extract valid video src URLs and swap the entire iframe for a safe div placeholder
+  const contentWithSafePlaceholders = rawContent.replace(
+    /<iframe[^>]*src="(https:\/\/(?:www\.)?(?:youtube\.com|youtu\.be|player\.vimeo\.com)[^"]*)"[^>]*>[\s\S]*?<\/iframe>/gi,
+    '<div class="secure-video-embed" data-src="$1"></div>'
+  );
+
+  const sanitizedContent = DOMPurify.sanitize(contentWithSafePlaceholders, {
+    ADD_TAGS: ["video", "source", "track"],
+    ADD_ATTR: [
+      "allow",
+      "allowfullscreen",
+      "frameborder",
+      "scrolling",
+      "src",
+      "type",
+      "controls",
+      "autoplay",
+      "muted",
+      "loop",
+      "playsinline",
+      "poster",
+    ],
+  });
+
+  const parseOptions = {
+    replace: (domNode) => {
+      if (domNode.name === 'div' && domNode.attribs?.class === 'secure-video-embed') {
+        return (
+          <div style={{ position: 'relative', paddingBottom: '56.25%', height: 0, overflow: 'hidden', borderRadius: '8px', marginBottom: '1.5rem' }}>
+            <iframe
+              src={domNode.attribs['data-src']}
+              style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%' }}
+              frameBorder="0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowFullScreen
+              title="Video Embed"
+            />
+          </div>
+        );
+      }
+    }
+  };
 
   const jsonLd = {
     "@context": "https://schema.org",
@@ -91,10 +134,9 @@ export default async function BlogPostPage({ params }) {
           </div>
         )}
 
-        <div
-          className="blog-post__content"
-          dangerouslySetInnerHTML={{ __html: sanitizedContent }}
-        />
+        <div className="blog-post__content">
+          {parse(sanitizedContent, parseOptions)}
+        </div>
       </article>
 
       <BlogSidebar locale={locale} />
