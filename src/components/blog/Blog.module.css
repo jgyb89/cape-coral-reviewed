@@ -23,13 +23,53 @@
   white-space: nowrap;
   scrollbar-width: none; /* Firefox */
   -ms-overflow-style: none; /* IE/Edge */
-  margin-bottom: 3rem;
   border-bottom: 1px solid #e2e8f0;
   gap: 1.5rem;
+  scroll-behavior: smooth; /* Smooth scrolling for arrows */
+  width: 100%;
 }
 
 .blog-tabs::-webkit-scrollbar {
   display: none; /* Safari/Chrome */
+}
+
+/* Scroll Arrows for Tabs */
+.scroll-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 10;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background-color: #000000;
+  color: #ffffff;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+  transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+.scroll-arrow:hover {
+  background-color: var(--color-primary, #e04c4c);
+  transform: translateY(-50%) scale(1.1);
+}
+
+.scroll-arrow-left {
+  left: -16px;
+}
+
+.scroll-arrow-right {
+  right: -16px;
+}
+
+/* Wrapper to contain the arrows and the scrollable list */
+.blog-tabs-wrapper {
+  position: relative;
+  margin-bottom: 3rem;
 }
 
 .blog-tabs__item {

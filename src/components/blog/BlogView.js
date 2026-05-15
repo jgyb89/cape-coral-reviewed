@@ -1,7 +1,7 @@
 /* src/components/blog/BlogView.js */
 "use client";
 
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import BlogCard from "./BlogCard";
 import styles from "./Blog.module.css";
 
@@ -10,14 +10,47 @@ export default function BlogView({ posts, dict = {}, locale = "en" }) {
   
   const TABS = [
     { id: 'all', label: t.all || 'All Posts' },
+    { id: 'business', label: t.business || 'Business' },
     { id: 'featured-business', label: t.featured || 'Featured Business' },
-    { id: 'news-reviews', label: t.news || 'News & Reviews' },
-    { id: 'food-drink', label: t.food || 'Food & Drink' },
+    { id: 'food-and-drink', label: t.food || 'Food & Drink' },
+    { id: 'health-wellness', label: t.health || 'Health & Wellness' },
     { id: 'home-local-services', label: t.home || 'Home & Local Services' },
-    { id: 'health-wellness', label: t.health || 'Health & Wellness' }
+    { id: 'lawn-care', label: t.lawnCare || 'Lawn Care' },
+    { id: 'news', label: t.news || 'News' },
+    { id: 'reviews', label: t.reviews || 'Reviews' }
   ];
 
   const [activeTab, setActiveTab] = useState('all');
+  const scrollContainerRef = useRef(null);
+  const [showLeftArrow, setShowLeftArrow] = useState(false);
+  const [showRightArrow, setShowRightArrow] = useState(true);
+
+  const handleScroll = () => {
+    if (scrollContainerRef.current) {
+      const { scrollLeft, scrollWidth, clientWidth } = scrollContainerRef.current;
+      setShowLeftArrow(scrollLeft > 0);
+      // Add a 2px buffer to avoid rounding precision issues
+      setShowRightArrow(scrollLeft < scrollWidth - clientWidth - 2); 
+    }
+  };
+
+  useEffect(() => {
+    handleScroll(); // Check initially
+    window.addEventListener('resize', handleScroll);
+    return () => window.removeEventListener('resize', handleScroll);
+  }, []);
+
+  const scrollLeft = () => {
+    if (scrollContainerRef.current) {
+      scrollContainerRef.current.scrollBy({ left: -200, behavior: 'smooth' });
+    }
+  };
+
+  const scrollRight = () => {
+    if (scrollContainerRef.current) {
+      scrollContainerRef.current.scrollBy({ left: 200, behavior: 'smooth' });
+    }
+  };
 
   const filteredPosts = posts.filter(post => {
     if (activeTab === 'all') return true;
@@ -26,24 +59,47 @@ export default function BlogView({ posts, dict = {}, locale = "en" }) {
 
   return (
     <div className={styles['blog-view']}>
-      <nav className={styles['blog-tabs']} aria-label="Blog categories">
-        {TABS.map((tab) => (
-          <button
-            key={tab.id}
-            className={`${styles['blog-tabs__item']} ${activeTab === tab.id ? styles['blog-tabs__item--active'] : ""}`}
-            onClick={() => setActiveTab(tab.id)}
-            type="button"
-          >
-            {tab.label}
+      <div className={styles['blog-tabs-wrapper']}>
+        {showLeftArrow && (
+          <button className={`${styles['scroll-arrow']} ${styles['scroll-arrow-left']}`} onClick={scrollLeft}>
+            <span className="material-symbols-outlined">chevron_left</span>
           </button>
-        ))}
-      </nav>
+        )}
 
-      <div className={styles['blog-grid']}>
-        {filteredPosts.map((post) => (
-          <BlogCard key={post.id} post={post} locale={locale} />
-        ))}
+        <nav 
+          className={styles['blog-tabs']} 
+          aria-label="Blog categories"
+          ref={scrollContainerRef}
+          onScroll={handleScroll}
+        >
+          {TABS.map((tab) => (
+            <button
+              key={tab.id}
+              className={`${styles['blog-tabs__item']} ${activeTab === tab.id ? styles['blog-tabs__item--active'] : ""}`}
+              onClick={() => setActiveTab(tab.id)}
+              type="button"
+            >
+              {tab.label}
+            </button>
+          ))}
+        </nav>
+
+        {showRightArrow && (
+          <button className={`${styles['scroll-arrow']} ${styles['scroll-arrow-right']}`} onClick={scrollRight}>
+            <span className="material-symbols-outlined">chevron_right</span>
+          </button>
+        )}
       </div>
+
+      {filteredPosts.length > 0 ? (
+        <div className={styles['blog-grid']}>
+          {filteredPosts.map((post) => (
+            <BlogCard key={post.id || post.slug} post={post} locale={locale} />
+          ))}
+        </div>
+      ) : (
+        <p>{t.noPosts || 'No posts found in this category.'}</p>
+      )}
     </div>
   );
 }
