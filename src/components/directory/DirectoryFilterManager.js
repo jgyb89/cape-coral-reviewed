@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState, useEffect, useRef } from "react";
+import { useMemo, useState, useEffect } from "react";
 import { useSearchParams, useRouter, usePathname } from "next/navigation";
 import PropTypes from "prop-types";
 import CcrCardGrid from "./CcrCardGrid";
@@ -8,6 +8,7 @@ import DirectoryFilters, { QUICK_PILLS, getCategoryRoute } from "./DirectoryFilt
 import Pagination from "../common/Pagination";
 import styles from "./DirectoryFilterManager.module.css";
 import { checkIfOpenNow } from '@/lib/timeUtils';
+import { useHorizontalScroll } from "@/hooks/useHorizontalScroll";
 
 const getListingRating = (listing) => {
   const reviews = listing.reviews?.nodes || [];
@@ -27,35 +28,14 @@ const DirectoryFilterManager = ({ listings, currentUser, dict = {}, locale = "en
 
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const scrollContainerRef = useRef(null);
-  const [showLeftArrow, setShowLeftArrow] = useState(false);
-  const [showRightArrow, setShowRightArrow] = useState(true);
-
-  const handleScroll = () => {
-    if (scrollContainerRef.current) {
-      const { scrollLeft, scrollWidth, clientWidth } = scrollContainerRef.current;
-      setShowLeftArrow(scrollLeft > 0);
-      setShowRightArrow(scrollLeft < scrollWidth - clientWidth - 1); // -1 for rounding errors
-    }
-  };
-
-  useEffect(() => {
-    handleScroll(); // Initial check
-    window.addEventListener('resize', handleScroll);
-    return () => window.removeEventListener('resize', handleScroll);
-  }, []);
-
-  const scrollLeft = () => {
-    if (scrollContainerRef.current) {
-      scrollContainerRef.current.scrollBy({ left: -200, behavior: 'smooth' });
-    }
-  };
-
-  const scrollRight = () => {
-    if (scrollContainerRef.current) {
-      scrollContainerRef.current.scrollBy({ left: 200, behavior: 'smooth' });
-    }
-  };
+  const {
+    scrollContainerRef,
+    showLeftArrow,
+    showRightArrow,
+    handleScroll,
+    scrollLeft,
+    scrollRight
+  } = useHorizontalScroll();
 
   const updateFilter = (key, value) => {
     const params = new URLSearchParams(searchParams);
