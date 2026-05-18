@@ -12,7 +12,7 @@ import { getDictionary } from "@/lib/dictionaries";
 import { headers } from "next/headers";
 import { BASE_URL } from "@/lib/constants";
 
-import { SpeedInsights } from "@vercel-speed-insights/next";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 import Script from "next/script";
 
 export async function generateMetadata({ params }) {
