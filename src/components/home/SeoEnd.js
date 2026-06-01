@@ -55,7 +55,7 @@ const SeoEnd = forwardRef((props, ref) => {
             },
             {
               xPercent: isDesktop ? -20 : 0, // Offset heavily to the left on desktop for padding!
-              opacity: 0.15, // Blend with yellow
+              opacity: 0.65, // Increased opacity
               duration: 1.5,
               ease: "power3.out",
               scrollTrigger: {
