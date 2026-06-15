@@ -280,3 +280,9 @@ h6 {
     min-width: 0;
   }
 }
+
+/* Ensure favorited alert overlays are decoupled from local relative scopes */
+.toast-notification-container,
+.react-toastify {
+  z-index: 999999 !important;
+}

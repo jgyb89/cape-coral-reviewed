@@ -1,15 +1,20 @@
 import { getListings } from "@/lib/api";
 import { getBlogPosts } from "@/lib/actions";
 import { getLocalizedUrl, BASE_URL, ALL_CATEGORIES, DIRECTORY_TYPES } from "@/lib/constants";
+import { getEvents } from "@/lib/graphql/events";
 
 
 export default async function sitemap() {
   const listings = await getListings();
   const posts = await getBlogPosts();
 
+  const eventsResponse = await getEvents();
+  const events = eventsResponse?.data?.nodes || [];
+
   const staticPages = [
     "",
     "/directory",
+    "/events",
     "/blog",
     "/register",
     "/register-business",
@@ -72,5 +77,19 @@ export default async function sitemap() {
     priority: 0.6,
   }));
 
-  return [...staticEntries, ...directoryTypeEntries, ...categoryEntries, ...listingEntries, ...postEntries];
+  const eventEntries = events.map((event) => ({
+    url: `${BASE_URL}${getLocalizedUrl(`/events/${event.slug}`, "en")}`,
+    lastModified: new Date(event.date || new Date()),
+    changeFrequency: "weekly",
+    priority: 0.7,
+  }));
+
+  return [
+    ...staticEntries,
+    ...directoryTypeEntries,
+    ...categoryEntries,
+    ...listingEntries,
+    ...postEntries,
+    ...eventEntries,
+  ];
 }
