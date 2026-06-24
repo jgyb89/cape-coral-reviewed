@@ -2,18 +2,8 @@
 
 import { useState } from 'react';
 import { submitContactForm } from '@/lib/actions';
+import { formatPhoneNumber, EMAIL_REGEX } from '@/lib/formatUtils';
 import styles from './ContactForm.module.css';
-
-const formatPhoneNumber = (value) => {
-  if (!value) return value;
-  const phoneNumber = value.replace(/[^\d]/g, '');
-  const phoneNumberLength = phoneNumber.length;
-  if (phoneNumberLength < 4) return phoneNumber;
-  if (phoneNumberLength < 7) {
-    return `(${phoneNumber.slice(0, 3)}) ${phoneNumber.slice(3)}`;
-  }
-  return `(${phoneNumber.slice(0, 3)}) ${phoneNumber.slice(3, 6)}-${phoneNumber.slice(6, 10)}`;
-};
 
 export default function ContactForm() {
   const [formData, setFormData] = useState({
@@ -47,18 +37,15 @@ export default function ContactForm() {
         if (!val) return "Last name is required";
         if (val.length < 2) return "Last name must be at least 2 characters";
         return "";
-      case 'email': {
-        const emailRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;
+      case 'email':
         if (!value) return "Email is required";
-        if (!emailRegex.test(value)) return "Please enter a valid email address";
+        if (!EMAIL_REGEX.test(value)) return "Please enter a valid email address";
         return "";
-      }
-      case 'phone': {
+      case 'phone':
         if (!value) return "";
         const digits = value.replace(/\D/g, "");
         if (digits.length !== 10) return "Phone number must be exactly 10 digits";
         return "";
-      }
       case 'message':
         if (!val) return "Message is required";
         if (val.length < 5) return "Message must be at least 5 characters";
