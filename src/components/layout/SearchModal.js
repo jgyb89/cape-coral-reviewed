@@ -50,7 +50,7 @@ const getCategoryRoute = (slug) => {
 };
 /**
  * SearchModal Component
- * A predictive search modal for the Cape Coral Directory.
+ * A predictive search modal for the Rockford Directory.
  */
 export default function SearchModal({
   isOpen,
@@ -179,7 +179,7 @@ export default function SearchModal({
       <div className={styles["search-modal__container"]}>
         <div className={styles["search-modal__header"]}>
           <h2 className={styles["search-modal__title"]}>
-            {t.title || "Search Cape Coral"}
+            {t.title || "Search Rockford"}
           </h2>
           <button onClick={onClose} className={styles["search-modal__close"]}>
             <span className="material-symbols-outlined">close</span>

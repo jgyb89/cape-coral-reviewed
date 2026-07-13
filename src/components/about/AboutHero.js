@@ -42,10 +42,10 @@ export default function AboutHero() {
 
       <div className={styles.container}>
         <h1 ref={textRef} className={styles.heroTitle}>
-          About Cape Coral Reviewed
+          About Rockford Reviewed
         </h1>
         <p className={`${styles.heroSubtitle} fade-in-up`}>
-          Created to help people discover the best Cape Coral businesses,
+          Created to help people discover the best Rockford businesses,
           restaurants, services, events, and local experiences.
         </p>
       </div>

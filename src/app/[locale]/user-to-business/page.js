@@ -6,8 +6,8 @@ export async function generateMetadata({ params }) {
   const { locale } = await params;
   const dict = await getDictionary(locale);
   return {
-    title: `${dict?.userToBusiness?.title || 'Upgrade to Business'} - Cape Coral Directory`,
-    description: dict?.userToBusiness?.subtitle || 'Get more out of Cape Coral Directory by upgrading your account.'
+    title: `${dict?.userToBusiness?.title || 'Upgrade to Business'} - Rockford Directory`,
+    description: dict?.userToBusiness?.subtitle || 'Get more out of Rockford Directory by upgrading your account.'
   };
 }
 

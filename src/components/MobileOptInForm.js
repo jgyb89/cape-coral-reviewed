@@ -300,13 +300,13 @@ export default function MobileOptInForm() {
           <p className={styles.checkboxDescription}>
             By submitting this form and signing up for text messages, you
             consent to receive recurring marketing SMS and MMS messages from
-            Cape Coral Reviewed at the mobile number provided, including
+            Rockford Reviewed at the mobile number provided, including
             messages sent using an automatic telephone dialing system or other
             automated technology. Consent is not a condition of purchase.
             Message frequency varies. Message and data rates may apply. Reply
             STOP to opt out and HELP for assistance. View our{" "}
             <a
-              href="https://www.capecoralreviewed.com/terms-of-service"
+              href="https://www.rockfordreviewed.com/terms-of-service"
               target="_blank"
               rel="noopener noreferrer"
             >
@@ -314,7 +314,7 @@ export default function MobileOptInForm() {
             </a>{" "}
             |{" "}
             <a
-              href="https://www.capecoralreviewed.com/privacy-policy"
+              href="https://www.rockfordreviewed.com/privacy-policy"
               target="_blank"
               rel="noopener noreferrer"
             >
@@ -322,7 +322,7 @@ export default function MobileOptInForm() {
             </a>{" "}
             |{" "}
             <a
-              href="https://www.capecoralreviewed.com/mobile-terms"
+              href="https://www.rockfordreviewed.com/mobile-terms"
               target="_blank"
               rel="noopener noreferrer"
             >
@@ -353,13 +353,13 @@ export default function MobileOptInForm() {
           <p className={styles.checkboxDescription}>
             By submitting this form and signing up for text messages, you
             consent to receive recurring account alerts SMS and MMS messages
-            from Cape Coral Reviewed at the mobile number provided, including
+            from Rockford Reviewed at the mobile number provided, including
             messages sent using an automatic telephone dialing system or other
             automated technology. Consent is not a condition of purchase.
             Message frequency varies. Message and data rates may apply. Reply
             STOP to opt out and HELP for assistance. View our{" "}
             <a
-              href="https://www.capecoralreviewed.com/terms-of-service"
+              href="https://www.rockfordreviewed.com/terms-of-service"
               target="_blank"
               rel="noopener noreferrer"
             >
@@ -367,7 +367,7 @@ export default function MobileOptInForm() {
             </a>{" "}
             |{" "}
             <a
-              href="https://www.capecoralreviewed.com/privacy-policy"
+              href="https://www.rockfordreviewed.com/privacy-policy"
               target="_blank"
               rel="noopener noreferrer"
             >
@@ -375,7 +375,7 @@ export default function MobileOptInForm() {
             </a>{" "}
             |{" "}
             <a
-              href="https://www.capecoralreviewed.com/mobile-terms"
+              href="https://www.rockfordreviewed.com/mobile-terms"
               target="_blank"
               rel="noopener noreferrer"
             >

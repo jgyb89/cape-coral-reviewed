@@ -38,7 +38,7 @@ const Step1General = ({ formData, updateFormData, nextStep }) => {
           type="text"
           id="title"
           className={`${styles['step-form__input']} ${errors.title ? styles['step-form__input--error'] : ''}`}
-          placeholder="e.g. Cape Coral Plumbing"
+          placeholder="e.g. Rockford Plumbing"
           value={formData.title}
           onChange={(e) => updateFormData({ title: e.target.value })}
           required

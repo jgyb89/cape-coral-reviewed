@@ -5,7 +5,7 @@ import RecoverPasswordForm from '@/components/auth/RecoverPasswordForm';
 import Link from 'next/link';
 
 export const metadata = {
-  title: 'Sign In | Cape Coral Reviewed',
+  title: 'Sign In | Rockford Reviewed',
 };
 
 export default async function LoginPage({ searchParams }) {

@@ -16,15 +16,15 @@ import { BASE_URL } from "@/lib/constants";
 import styles from "./page.module.css";
 
 export const metadata = {
-  title: "Cape Coral Reviewed - Local Business Directory",
+  title: "Rockford Reviewed - Local Business Directory",
   description:
-    "Looking for the best and most popular Cape Coral businesses, restaurants, services, and local spots? Cape Coral Reviewed helps residents, visitors, and business owners like you connect through real reviews, local recommendations, honest business spotlights, and true community-driven guides.",
+    "Looking for the best and most popular Rockford businesses, restaurants, services, and local spots? Rockford Reviewed helps residents, visitors, and business owners like you connect through real reviews, local recommendations, honest business spotlights, and true community-driven guides.",
   openGraph: {
-    title: "Cape Coral Reviewed",
+    title: "Rockford Reviewed",
     description:
-      "Looking for the best and most popular Cape Coral businesses, restaurants, services, and local spots? Cape Coral Reviewed helps residents, visitors, and business owners like you connect through real reviews, local recommendations, honest business spotlights, and true community-driven guides.",
+      "Looking for the best and most popular Rockford businesses, restaurants, services, and local spots? Rockford Reviewed helps residents, visitors, and business owners like you connect through real reviews, local recommendations, honest business spotlights, and true community-driven guides.",
     url: BASE_URL,
-    siteName: "Cape Coral Reviewed",
+    siteName: "Rockford Reviewed",
     locale: "en_US",
     type: "website",
   },
@@ -69,7 +69,7 @@ export default async function HomePage({ params }) {
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "WebSite",
-    name: "Cape Coral Reviewed",
+    name: "Rockford Reviewed",
     url: BASE_URL,
     potentialAction: {
       "@type": "SearchAction",

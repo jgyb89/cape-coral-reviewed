@@ -7,8 +7,8 @@ import DOMPurify from "isomorphic-dompurify";
 import { formatImageUrl } from "@/lib/formatImageUrl";
 
 export const metadata = {
-  title: "Cape Coral News & Reviews | Blog",
-  description: "Explore the latest news, reviews, and featured businesses in Cape Coral.",
+  title: "Rockford News & Reviews | Blog",
+  description: "Explore the latest news, reviews, and featured businesses in Rockford.",
 };
 
 export default async function BlogPage({ params }) {
@@ -39,7 +39,7 @@ export default async function BlogPage({ params }) {
           color: 'var(--color-text)',
           lineHeight: '1.1'
         }}>
-          {t.title || "Cape Coral News & Reviews"}
+          {t.title || "Rockford News & Reviews"}
         </h1>
         <p style={{ 
           fontSize: 'clamp(1rem, 3vw, 1.25rem)', 
@@ -48,7 +48,7 @@ export default async function BlogPage({ params }) {
           marginBottom: '1.5rem',
           lineHeight: '1.4' 
         }}>
-          {t.subtitle || "Stay up to date with the latest happenings, business spotlights, and local guides in the Cape Coral community."}
+          {t.subtitle || "Stay up to date with the latest happenings, business spotlights, and local guides in the Rockford community."}
         </p>
       </div>
       

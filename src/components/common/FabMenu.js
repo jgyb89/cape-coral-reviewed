@@ -199,7 +199,7 @@ export default function FabMenu() {
       </Link>
 
       <a
-        href="https://www.facebook.com/groups/capecoralreviewed/"
+        href="https://www.facebook.com/groups/rockfordreviewed/"
         target="_blank"
         rel="noreferrer"
         className={styles.fabItem}
@@ -212,7 +212,7 @@ export default function FabMenu() {
       </a>
 
       <a
-        href="https://www.instagram.com/capecoralreviewed/"
+        href="https://www.instagram.com/rockfordreviewed/"
         target="_blank"
         rel="noreferrer"
         className={styles.fabItem}
@@ -225,7 +225,7 @@ export default function FabMenu() {
       </a>
 
       <a
-        href="https://www.youtube.com/@CapeCoralReviewed"
+        href="https://www.youtube.com/@rockfordreviewed"
         target="_blank"
         rel="noreferrer"
         className={styles.fabItem}
@@ -238,7 +238,7 @@ export default function FabMenu() {
       </a>
 
       <a
-        href="https://www.tiktok.com/@capecoralreviewed"
+        href="https://www.tiktok.com/@rockfordreviewed"
         target="_blank"
         rel="noreferrer"
         className={styles.fabItem}

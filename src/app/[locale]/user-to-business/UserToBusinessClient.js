@@ -61,7 +61,7 @@ export default function UserToBusinessClient({ dict, categoriesData }) {
             </h1>
           </div>
           <p className={`${styles.heroSubtitle} hero-subtitle-anim`}>
-            {t.subtitle || "Get more out of Cape Coral Directory by upgrading your account."}
+            {t.subtitle || "Get more out of Rockford Directory by upgrading your account."}
           </p>
           <div className={`${styles.heroFeatures} hero-features-anim`}>
             <div className={styles.heroFeatureItem}>

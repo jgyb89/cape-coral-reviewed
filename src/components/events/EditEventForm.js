@@ -481,7 +481,7 @@ export default function EditEventForm({ initialData, locale }) {
               type="text"
               id="title"
               style={inputStyle(errors.title)}
-              placeholder="E.g., Cape Coral Seafood Festival"
+              placeholder="E.g., Rockford Seafood Festival"
               value={formData.title}
               onChange={(e) => updateFormData({ title: e.target.value })}
             />
@@ -637,7 +637,7 @@ export default function EditEventForm({ initialData, locale }) {
               type="text"
               id="venue_name"
               style={inputStyle(errors.venue_name)}
-              placeholder="E.g., Cape Coral Yacht Club"
+              placeholder="E.g., Rockford Yacht Club"
               value={formData.venue_name}
               onChange={(e) => updateFormData({ venue_name: e.target.value })}
             />
@@ -656,7 +656,7 @@ export default function EditEventForm({ initialData, locale }) {
                   type="text"
                   id="event_address"
                   style={inputStyle(false)}
-                  placeholder="123 Example St, Cape Coral, FL"
+                  placeholder="123 Example St, Rockford, IL"
                   value={formData.event_address?.address || ''}
                   onChange={(e) => updateFormData({
                     event_address: { ...formData.event_address, address: e.target.value }

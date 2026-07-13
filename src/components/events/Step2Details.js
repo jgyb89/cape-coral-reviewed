@@ -289,7 +289,7 @@ const Step2Details = ({ formData, updateFormData, nextStep, prevStep }) => {
           type="text"
           id="venue_name"
           className={`${styles['step-form__input']} ${errors.venue_name ? styles['step-form__input--error'] : ''}`}
-          placeholder="E.g., Cape Coral Yacht Club"
+          placeholder="E.g., Rockford Yacht Club"
           value={formData.venue_name}
           onChange={(e) => updateFormData({ venue_name: e.target.value })}
         />
@@ -308,7 +308,7 @@ const Step2Details = ({ formData, updateFormData, nextStep, prevStep }) => {
               type="text"
               id="event_address"
               className={styles['step-form__input']}
-              placeholder="123 Example St, Cape Coral, FL"
+              placeholder="123 Example St, Rockford, IL"
               value={formData.event_address?.address || ''}
               onChange={(e) => updateFormData({
                 event_address: { ...formData.event_address, address: e.target.value }

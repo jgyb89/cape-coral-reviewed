@@ -109,32 +109,32 @@ export default function AboutMission() {
           <p className="breeze-text">
             We’re residents ourselves, and we built this site for residents,
             visitors, and business owners who want a better way to connect with
-            our amazing Cape Coral community.
+            our amazing Rockford community.
           </p>
           <p className="breeze-text">
             Whether you’re looking for a trusted local service, a new restaurant
             to try, a weekend event, or a small business worth supporting, Cape
             Coral Reviewed gives you a place to start. Our mission is to make
-            Cape Coral reviews more useful, local business discovery easier, and
+            Rockford reviews more useful, local business discovery easier, and
             community recommendations more reliable.
           </p>
           <p className="breeze-text">
             We look forward to standing alongside you as we support local right
-            here in beautiful Cape Coral, FL.
+            here in beautiful Rockford, IL.
           </p>
         </div>
         <div className={styles.spacer}></div>
         <div className={styles.textBlock}>
-          <h2 className="breeze-text">Why Cape Coral Reviewed Exists</h2>
+          <h2 className="breeze-text">Why Rockford Reviewed Exists</h2>
           <p className="breeze-text">
-            Residents know that Cape Coral is growing, and so is the number of
+            Residents know that Rockford is growing, and so is the number of
             businesses serving the area. That’s a good thing, but it can also
             make it harder to know who to trust, where to go, and which local
             spots are truly worth recommending.
           </p>
           <p className="breeze-text">
             <strong>
-              Cape Coral Reviewed was created to solve that problem. For locals,
+              Rockford Reviewed was created to solve that problem. For locals,
               by locals. Updated often.
             </strong>
           </p>
@@ -149,12 +149,12 @@ export default function AboutMission() {
             <li className="breeze-text">Business spotlights</li>
             <li className="breeze-text">Community reviews</li>
             <li className="breeze-text">
-              Cape Coral businesses that deserve attention
+              Rockford businesses that deserve attention
             </li>
           </ul>
           <p className="breeze-text" style={{ marginTop: "2rem" }}>
             Our goal is simple: help residents and visitors find legitimate
-            local businesses and help good Cape Coral businesses connect with
+            local businesses and help good Rockford businesses connect with
             people who actually need them.
           </p>
         </div>

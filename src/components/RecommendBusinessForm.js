@@ -110,7 +110,7 @@ export default function RecommendBusinessForm() {
         <div className={styles.successMessage}>
           <span className="material-symbols-outlined" style={{ fontSize: '3rem', marginBottom: '1rem', color: '#10b981' }}>check_circle</span>
           <h3>Thank you for your recommendation!</h3>
-          <p>Our team will review this business and reach out to them soon. We appreciate you helping us grow the Cape Coral directory!</p>
+          <p>Our team will review this business and reach out to them soon. We appreciate you helping us grow the Rockford directory!</p>
           <button onClick={() => {
             setFormData({
               submitterName: '',
@@ -164,7 +164,7 @@ export default function RecommendBusinessForm() {
             className={`${styles.input} ${fieldErrors.businessName ? styles.inputInvalid : ''}`} 
             value={formData.businessName} 
             onChange={handleChange} 
-            placeholder="Cape Coral Bakery" 
+            placeholder="Rockford Bakery" 
           />
           {fieldErrors.businessName && <span className={styles.errorText}>{fieldErrors.businessName}</span>}
         </div>
@@ -179,7 +179,7 @@ export default function RecommendBusinessForm() {
             className={`${styles.input} ${fieldErrors.businessAddress ? styles.inputInvalid : ''}`} 
             value={formData.businessAddress} 
             onChange={handleChange} 
-            placeholder="123 Cape Coral Pkwy" 
+            placeholder="123 Rockford Pkwy" 
           />
           {fieldErrors.businessAddress && <span className={styles.errorText}>{fieldErrors.businessAddress}</span>}
         </div>

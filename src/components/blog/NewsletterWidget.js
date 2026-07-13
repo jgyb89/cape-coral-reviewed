@@ -38,7 +38,7 @@ export default function NewsletterWidget() {
         mail
       </span>
       <h3 style={{ fontSize: '1.5rem', fontWeight: '700', color: '#1e293b', marginBottom: '0.5rem', fontFamily: 'var(--font-heading)' }}>
-        Stay Updated on Cape Coral
+        Stay Updated on Rockford
       </h3>
       <p style={{ color: '#475569', marginBottom: '1.5rem', fontSize: '0.95rem', maxWidth: '400px', margin: '0 auto 1.5rem auto' }}>
         Get the latest local business reviews, events, and community news delivered straight to your inbox.

@@ -7,7 +7,7 @@ import NewsletterFAQ from "@/components/newsletter/NewsletterFAQ";
 import NewsletterForm from "@/components/newsletter/NewsletterForm";
 
 export const metadata = {
-  title: "Stay Connected: The Cape Coral Reviewed Weekly Newsletter",
+  title: "Stay Connected: The Rockford Reviewed Weekly Newsletter",
   description: "Join the local community list. Get exclusive reviews, upcoming events, and business features delivered to your inbox.",
 };
 
@@ -32,7 +32,7 @@ export default function NewsletterPage() {
               Join the Local Insider List
             </h3>
             <p className="text-gray-300 mb-8 leading-relaxed">
-              Don't miss out on the best of Cape Coral. Sign up for free weekly updates.
+              Don't miss out on the best of Rockford. Sign up for free weekly updates.
             </p>
             <NewsletterForm />
           </div>

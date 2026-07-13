@@ -43,7 +43,7 @@ export default function HomepageInfo() {
           duration: 1,
           "--weight": "800",
           fontWeight: 800,
-          color: "#fff", // Cape Coral Red
+          color: "#fff", // Rockford Red
           ease: "power3.inOut",
           repeat: 0,
           yoyo: true,
@@ -96,7 +96,7 @@ export default function HomepageInfo() {
         </div>
         <div className={styles.headlineMaskContainer}>
           <h2 className="breeze-text">
-            Cape Coral is more than just a destination
+            Rockford is more than just a destination
           </h2>
         </div>
         <p className="breeze-text">

@@ -100,7 +100,7 @@ export default function Navbar({ currentUser: propCurrentUser, dict, locale }) {
         <Link href={getLocalizedUrl("/", locale)} className={styles['nav-brand']}>
           <Image
             src={capeCoralLogo}
-            alt="Cape Coral Reviewed Logo"
+            alt="Rockford Reviewed Logo"
             className={styles['nav-logo']}
             priority // Recommended for logos/above-the-fold content
           />
@@ -298,7 +298,7 @@ export default function Navbar({ currentUser: propCurrentUser, dict, locale }) {
         >
           <div className={styles['flyout-header']}>
             <Link href={getLocalizedUrl("/", locale)} className={styles['flyout-brand']} onClick={closeMobileMenu}>
-              Cape Coral Directory
+              Rockford Directory
             </Link>
             <button className={styles['flyout-close']} onClick={closeMobileMenu}>
               <span className="material-symbols-outlined">close</span>

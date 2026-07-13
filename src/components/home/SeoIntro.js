@@ -107,13 +107,13 @@ const SeoIntro = forwardRef((props, ref) => {
             <div className={styles.leftTextColumn}>
               <div className={styles.headlineMaskContainer}>
                 <h2 className="breeze-text">
-                  Cape Coral Reviewed: Local Reviews, Businesses & Community
+                  Rockford Reviewed: Local Reviews, Businesses & Community
                   Guides
                 </h2>
               </div>
               <p className="breeze-text">
-                Looking for the best and most popular Cape Coral businesses,
-                restaurants, services, and local spots? Cape Coral Reviewed
+                Looking for the best and most popular Rockford businesses,
+                restaurants, services, and local spots? Rockford Reviewed
                 helps residents, visitors, and business owners like you connect
                 through real reviews, local recommendations, honest business
                 spotlights, and true community-driven guides.

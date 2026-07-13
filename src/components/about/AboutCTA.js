@@ -44,22 +44,22 @@ export default function AboutCTA() {
         <p>
           We believe local recommendations should be helpful, honest, and easy
           to find. That means our focus is not just on listing businesses. It is
-          on building a community resource people can actually use. Cape Coral
+          on building a community resource people can actually use. Rockford
           Reviewed brings together local reviews, business information, guides,
           spotlights, and community input so people can make more confident
           decisions.
         </p>
         <p>
-          We’re here to support Cape Coral businesses, highlight the people
+          We’re here to support Rockford businesses, highlight the people
           doing good work, and give residents a better way to discover what is
           happening right here at home.
         </p>
         <div className={styles.divider}></div>
         <h2 className={styles.headline}>
-          Support Local. Review Local. Discover Cape Coral.
+          Support Local. Review Local. Discover Rockford.
         </h2>
         <p className={styles.subHeadline}>
-          Cape Coral Reviewed is more than a directory. It is a growing local
+          Rockford Reviewed is more than a directory. It is a growing local
           platform for people who care about this city and want to support the
           businesses that make it unique. Explore the directory, read the latest
           reviews, recommend your favorite business, or submit your own listing.
@@ -69,7 +69,7 @@ export default function AboutCTA() {
             href={`/${currentLocale}/directory`}
             className={styles.primaryBtn}
           >
-            Explore Cape Coral Businesses
+            Explore Rockford Businesses
           </Link>
           <Link
             href={`/${currentLocale}/submit-listing`}

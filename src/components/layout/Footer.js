@@ -36,7 +36,7 @@ export default function Footer({ locale = "en" }) {
             >
               <Image
                 src="/cape-coral-reviewed-logo.webp"
-                alt="Cape Coral Reviewed"
+                alt="Rockford Reviewed"
                 width={180}
                 height={60}
                 style={{ height: "auto", width: "auto", maxWidth: "100%" }}
@@ -44,7 +44,7 @@ export default function Footer({ locale = "en" }) {
             </Link>
             <p className={styles["footer__text"]}>
               Your ultimate guide to discovering the best local businesses,
-              restaurants, and services in Cape Coral, Florida. Support local!
+              restaurants, and services in Rockford, Illinois. Support local!
             </p>
           </div>
 
@@ -86,7 +86,7 @@ export default function Footer({ locale = "en" }) {
           <div className={styles["footer__col"]}>
             <h3 className={styles["footer__heading"]}>Stay Updated</h3>
             <p className={styles["footer__text"]}>
-              Subscribe to get the latest reviews and local Cape Coral news
+              Subscribe to get the latest reviews and local Rockford news
               delivered to your inbox.
             </p>
             <form
@@ -113,7 +113,7 @@ export default function Footer({ locale = "en" }) {
         {/* Bottom Section: Copyright & Legal */}
         <div className={styles["footer__bottom"]}>
           <p className={styles["footer__copyright"]}>
-            &copy; {currentYear} Cape Coral Reviewed. All rights reserved.
+            &copy; {currentYear} Rockford Reviewed. All rights reserved.
           </p>
 
           <div className={styles["footer__legal"]}>
@@ -142,7 +142,7 @@ export default function Footer({ locale = "en" }) {
           {/* Social Icons */}
           <div className={styles["footer__socials"]}>
             <a
-              href="https://www.facebook.com/CapeCoralReviewed/"
+              href="https://www.facebook.com/rockfordreviewed/"
               target="_blank"
               rel="noopener noreferrer"
               className={styles["footer__social-link"]}
@@ -156,7 +156,7 @@ export default function Footer({ locale = "en" }) {
               />
             </a>
             <a
-              href="https://www.instagram.com/capecoralreviewed/"
+              href="https://www.instagram.com/rockfordreviewed/"
               target="_blank"
               rel="noopener noreferrer"
               className={styles["footer__social-link"]}
@@ -170,7 +170,7 @@ export default function Footer({ locale = "en" }) {
               />
             </a>
             <a
-              href="https://www.youtube.com/@CapeCoralReviewed"
+              href="https://www.youtube.com/@rockfordreviewed"
               target="_blank"
               rel="noopener noreferrer"
               className={styles["footer__social-link"]}
@@ -184,7 +184,7 @@ export default function Footer({ locale = "en" }) {
               />
             </a>
             <a
-              href="https://www.tiktok.com/@capecoralreviewed"
+              href="https://www.tiktok.com/@rockfordreviewed"
               target="_blank"
               rel="noopener noreferrer"
               className={styles["footer__social-link"]}

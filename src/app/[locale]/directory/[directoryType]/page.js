@@ -10,8 +10,8 @@ export async function generateMetadata({ params }) {
   const capitalizedType = directoryType.charAt(0).toUpperCase() + directoryType.slice(1).replace(/-/g, ' ');
   
   return {
-    title: `${capitalizedType} in Cape Coral - Cape Coral Reviewed`,
-    description: `Browse the best ${capitalizedType} businesses in Cape Coral, Florida. Read reviews and find contact information.`,
+    title: `${capitalizedType} in Rockford - Rockford Reviewed`,
+    description: `Browse the best ${capitalizedType} businesses in Rockford, Illinois. Read reviews and find contact information.`,
   };
 }
 
@@ -37,7 +37,7 @@ export default async function DirectoryTypePage({ params }) {
           color: 'var(--color-text)',
           textTransform: 'capitalize'
         }}>
-          Best {typeName} in Cape Coral
+          Best {typeName} in Rockford
         </h1>
       </header>
 

@@ -104,7 +104,7 @@ export default function ContactForm() {
         <div className={styles.successMessage}>
           <span className="material-symbols-outlined" style={{ fontSize: '3rem', marginBottom: '1rem', color: '#10b981' }}>check_circle</span>
           <h3>Message Sent!</h3>
-          <p>Thank you for reaching out to Cape Coral Reviewed. Our team will get back to you shortly.</p>
+          <p>Thank you for reaching out to Rockford Reviewed. Our team will get back to you shortly.</p>
           <button onClick={() => {
             setFormData({
               firstName: '',

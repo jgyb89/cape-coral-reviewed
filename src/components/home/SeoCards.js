@@ -64,9 +64,9 @@ const SeoCards = forwardRef((props, ref) => {
         <div className={styles.cardsContainer}>
           <div ref={leftCardRef} className={styles.tideCard}>
             <Store size={48} className={styles.cardIcon} />
-            <h3>Are You a Cape Coral Business Owner?</h3>
+            <h3>Are You a Rockford Business Owner?</h3>
             <p>
-              Cape Coral Reviewed gives local businesses like yours a place to
+              Rockford Reviewed gives local businesses like yours a place to
               get discovered by residents and visitors actively looking for
               recommendations. Build visibility, collect reviews, and connect
               with a community that wants to support local.
@@ -81,10 +81,10 @@ const SeoCards = forwardRef((props, ref) => {
 
           <div ref={rightCardRef} className={styles.tideCard}>
             <Users size={48} className={styles.cardIcon} />
-            <h3>Join the Cape Coral Community</h3>
+            <h3>Join the Rockford Community</h3>
             <p>
               Your experience matters. When you leave a review, recommend a
-              business, or share a local favorite, you help other Cape Coral
+              business, or share a local favorite, you help other Rockford
               residents make better decisions and help us build a better
               resource for local business discovery.
             </p>

@@ -14,11 +14,11 @@ export default function NewsletterTestimonial() {
           </span>
           <blockquote className={styles.blockquoteContent}>
             <p className={styles.quoteText}>
-              "I used to spend hours figuring out what to do on the weekends. Now I just wait for the Friday email from Cape Coral Reviewed!"
+              "I used to spend hours figuring out what to do on the weekends. Now I just wait for the Friday email from Rockford Reviewed!"
             </p>
             <footer>
               <strong className={styles.authorName}>Sarah M.</strong>
-              <span className={styles.authorTitle}>Cape Coral Resident</span>
+              <span className={styles.authorTitle}>Rockford Resident</span>
             </footer>
           </blockquote>
         </div>

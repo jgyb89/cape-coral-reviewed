@@ -1,12 +1,12 @@
 /**
  * Utility to check if a business is currently open based on its ACF hours.
- * Uses Florida timezone (America/New_York).
+ * Uses Rockford timezone (America/Chicago).
  */
 export function checkIfOpenNow(listingData) {
   if (!listingData) return false;
 
-  // 1. Get current time in Cape Coral (Florida)
-  const capeCoralTime = new Date().toLocaleString("en-US", { timeZone: "America/New_York" });
+  // 1. Get current time in Rockford (Illinois)
+  const capeCoralTime = new Date().toLocaleString("en-US", { timeZone: "America/Chicago" });
   const localDate = new Date(capeCoralTime);
   
   const currentDay = localDate.getDay(); // 0 (Sun) to 6 (Sat)

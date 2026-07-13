@@ -50,7 +50,7 @@ export default function NewsletterShowcase() {
     <section ref={sectionRef} className={styles.showcaseSection}>
       <div className={styles.showcaseHeader}>
         <h2 className="text-3xl lg:text-4xl font-bold mb-4" style={{ fontFamily: 'var(--font-heading)' }}>
-          The Pulse of Cape Coral, Delivered.
+          The Pulse of Rockford, Delivered.
         </h2>
         <p className="text-lg opacity-90 max-w-2xl mx-auto">
           See what you've been missing. From hidden deli spots to major local festivals, get the inside scoop before anyone else.
@@ -65,7 +65,7 @@ export default function NewsletterShowcase() {
               <div className={styles.imageWrapper}>
                 <Image
                   src={img}
-                  alt={`Cape Coral Newsletter Issue ${i}`}
+                  alt={`Rockford Newsletter Issue ${i}`}
                   fill
                   style={{ objectFit: "cover", objectPosition: "top" }} 
                 />

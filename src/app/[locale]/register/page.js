@@ -3,8 +3,8 @@ import RegisterForm from '@/components/auth/RegisterForm';
 import { getDictionary } from '@/lib/dictionaries';
 
 export const metadata = {
-  title: 'Register | Cape Coral Directory',
-  description: 'Create a new account on Cape Coral Directory.',
+  title: 'Register | Rockford Directory',
+  description: 'Create a new account on Rockford Directory.',
 };
 
 export default async function RegisterPage({ params }) {

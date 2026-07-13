@@ -58,15 +58,15 @@ export async function generateMetadata({ params }) {
 
   if (!listing) {
     return {
-      title: "Listing Not Found - Cape Coral Reviewed",
+      title: "Listing Not Found - Rockford Reviewed",
     };
   }
 
   const seoTitle =
-    listing.seo?.title || `${listing.title} - Cape Coral Reviewed`;
+    listing.seo?.title || `${listing.title} - Rockford Reviewed`;
   const seoDesc =
     listing.seo?.metaDesc ||
-    `Find details, reviews, and contact info for ${listing.title} in Cape Coral, FL.`;
+    `Find details, reviews, and contact info for ${listing.title} in Rockford, IL.`;
   const ogImage = formatImageUrl(listing.seo?.opengraphImage?.sourceUrl);
 
   return {
@@ -171,8 +171,8 @@ export default async function DirectoryListingPage({ params }) {
     address: {
       "@type": "PostalAddress",
       streetAddress: listingdata.addressStreet || "",
-      addressLocality: listingdata.addressCity || "Cape Coral",
-      addressRegion: listingdata.addressState || "FL",
+      addressLocality: listingdata.addressCity || "Rockford",
+      addressRegion: listingdata.addressState || "IL",
       postalCode: listingdata.addressZipCode || "",
       addressCountry: "US",
     },
@@ -240,7 +240,7 @@ export default async function DirectoryListingPage({ params }) {
             />
             <ShareButton
               title={listing.title}
-              text={`Check out ${listing.title} on Cape Coral Reviewed!`}
+              text={`Check out ${listing.title} on Rockford Reviewed!`}
             />
             <button className="listing-action-btn">
               <span className="material-symbols-outlined">flag</span>{" "}

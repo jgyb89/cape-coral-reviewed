@@ -213,7 +213,7 @@ export default function EventsClient({ events, currentUser, locale }) {
               marginBottom: "0.5rem",
             }}
           >
-            Cape Coral Events
+            Rockford Events
           </h1>
           <p
             style={{

@@ -4,8 +4,8 @@ import { getDictionary } from "@/lib/dictionaries";
 import DirectoryFilterManager from "@/components/directory/DirectoryFilterManager";
 
 export const metadata = {
-  title: "Local Business Directory - Cape Coral Reviewed",
-  description: "Browse our comprehensive directory of local businesses in Cape Coral, Florida.",
+  title: "Local Business Directory - Rockford Reviewed",
+  description: "Browse our comprehensive directory of local businesses in Rockford, Illinois.",
 };
 
 export default async function DirectoryIndexPage({ params }) {
@@ -43,7 +43,7 @@ export default async function DirectoryIndexPage({ params }) {
           margin: '0 auto 1rem',
           lineHeight: '1.4'
         }}>
-          {t.subtitle || "Explore the best local services, restaurants, and shops in Cape Coral."}
+          {t.subtitle || "Explore the best local services, restaurants, and shops in Rockford."}
         </p>
       </header>
 

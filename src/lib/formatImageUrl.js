@@ -2,7 +2,7 @@
  * TEMPORARY STAGING FIX
  * 
  * This utility intercepts image URLs coming from the WordPress database.
- * If the database accidentally returns the production URL (capecoralreviewed.com),
+ * If the database accidentally returns the production URL (rockfordreviewed.com),
  * this forces it to use the staging URL so the images successfully load.
  * 
  * TODO: Delete this file and remove its imports when pushing to production.
@@ -14,7 +14,7 @@ export function formatImageUrl(sourceUrl) {
   if (!sourceUrl) return "/placeholder-image.jpg";
 
   const productionDomain = BASE_URL;
-  const stagingDomain = "https://staging.capecoralreviewed.com";
+  const stagingDomain = "https://staging.rockfordreviewed.com";
 
   // If the URL already has staging, leave it alone
   if (sourceUrl.includes(stagingDomain)) {

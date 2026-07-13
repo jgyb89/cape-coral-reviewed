@@ -86,7 +86,7 @@ const Step2Contact = ({ formData, updateFormData, nextStep, prevStep }) => {
             type="text"
             id="city"
             className={styles['step-form__input']}
-            placeholder="Cape Coral"
+            placeholder="Rockford"
             value={formData.city || ''}
             onChange={(e) => updateFormData({ city: e.target.value })}
           />

@@ -51,7 +51,7 @@ const Step1BasicInfo = ({ formData, updateFormData, nextStep }) => {
           type="text"
           id="title"
           className={`${styles['step-form__input']} ${errors.title ? styles['step-form__input--error'] : ''}`}
-          placeholder="E.g., Cape Coral Seafood Festival"
+          placeholder="E.g., Rockford Seafood Festival"
           value={formData.title}
           onChange={(e) => updateFormData({ title: e.target.value })}
         />

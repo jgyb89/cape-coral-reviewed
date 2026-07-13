@@ -63,10 +63,10 @@ const SeoMiddle = forwardRef((props, ref) => {
           <div className={styles.textBlock}>
             {/* Mask Container Wrapper */}
             <div className={styles.headlineMaskContainer}>
-              <h2 className="breeze-text">Find Cape Coral Businesses Locals Are Talking About</h2>
+              <h2 className="breeze-text">Find Rockford Businesses Locals Are Talking About</h2>
             </div>
             <p className="breeze-text">
-              Cape Coral is full of great places to eat, shop, visit, and support. The problem is knowing where to start. Here at Cape Coral Reviewed, we bring local businesses into one easy-to-use directory so you can search by category, read reviews, browse featured businesses, and find recommendations from people who actually live, work, and spend time right here in the community.
+              Rockford is full of great places to eat, shop, visit, and support. The problem is knowing where to start. Here at Rockford Reviewed, we bring local businesses into one easy-to-use directory so you can search by category, read reviews, browse featured businesses, and find recommendations from people who actually live, work, and spend time right here in the community.
             </p>
           </div>
         </div>

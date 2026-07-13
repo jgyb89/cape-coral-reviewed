@@ -37,7 +37,7 @@ export default function AboutCategories() {
       <div className={styles.container}>
         <h2 className="breeze-text">What We Do</h2>
         <p className="breeze-text">
-          Cape Coral Reviewed helps locals and visitors explore the city through reviews, guides, business listings, and community content. We cover and organize local businesses across categories like:
+          Rockford Reviewed helps locals and visitors explore the city through reviews, guides, business listings, and community content. We cover and organize local businesses across categories like:
         </p>
         
         <div className={styles.pillContainer}>
@@ -47,11 +47,11 @@ export default function AboutCategories() {
           <div className="category-pill">Health, wellness, beauty, and spas</div>
           <div className="category-pill">Real estate, auto, and transport</div>
           <div className="category-pill">Local events, attractions, and community news</div>
-          <div className="category-pill">Featured Cape Coral businesses and service providers</div>
+          <div className="category-pill">Featured Rockford businesses and service providers</div>
         </div>
         
         <p className="breeze-text">
-          We also publish Cape Coral reviews, business spotlights, event coverage, and local guides designed to help people make better decisions and support local businesses.
+          We also publish Rockford reviews, business spotlights, event coverage, and local guides designed to help people make better decisions and support local businesses.
         </p>
       </div>
     </section>

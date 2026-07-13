@@ -188,7 +188,7 @@ export default function UserToBusinessForm({ dict, categoriesData = [] }) {
             className={`${styles.input} ${fieldErrors.businessName ? styles.inputInvalid : ''}`} 
             value={formData.businessName} 
             onChange={handleChange} 
-            placeholder="Cape Coral Bakery" 
+            placeholder="Rockford Bakery" 
           />
           {fieldErrors.businessName && <span className={styles.errorText}>{fieldErrors.businessName}</span>}
         </div>

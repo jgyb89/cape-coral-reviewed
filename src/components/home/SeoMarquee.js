@@ -85,7 +85,7 @@ export default function SeoMarquee() {
       </div>
       <p className={`breeze-text ${styles.marqueeDesc}`}>
         Every review and spotlight is created to help people make better local
-        choices and support the businesses that keep Cape Coral moving and
+        choices and support the businesses that keep Rockford moving and
         growing.
       </p>
     </div>

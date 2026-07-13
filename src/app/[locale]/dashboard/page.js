@@ -4,7 +4,7 @@ import { getViewer } from '@/lib/auth';
 import Link from 'next/link';
 
 export const metadata = {
-  title: 'Dashboard | Cape Coral Reviewed',
+  title: 'Dashboard | Rockford Reviewed',
 };
 
 export default async function DashboardRoot() {
@@ -21,7 +21,7 @@ export default async function DashboardRoot() {
           Welcome back, {viewer?.firstName || 'User'}!
         </h1>
         <p style={{ margin: 0, color: '#64748b' }}>
-          Manage your account activity and explore Cape Coral.
+          Manage your account activity and explore Rockford.
         </p>
       </header>
 
@@ -66,7 +66,7 @@ export default async function DashboardRoot() {
                 <span className="material-symbols-outlined">favorite</span>
                 <h3>Saved Favorites</h3>
               </div>
-              <p>Quick access to your saved spots around Cape Coral.</p>
+              <p>Quick access to your saved spots around Rockford.</p>
               <Link href={`/dashboard/favorites`} className="bento-link">View All &rarr;</Link>
             </div>
             <div className="bento-card bento-card--highlight">
@@ -84,7 +84,7 @@ export default async function DashboardRoot() {
                 <span className="material-symbols-outlined" style={{ fontSize: '2rem' }}>reviews</span>
                 <h3 style={{ fontSize: '1.5rem' }}>My Reviews</h3>
               </div>
-              <p>See all the feedback you&apos;ve shared with the Cape Coral community. Your reviews help others discover the best places in town!</p>
+              <p>See all the feedback you&apos;ve shared with the Rockford community. Your reviews help others discover the best places in town!</p>
               <Link href={`/dashboard/reviews`} className="bento-link">View My Reviews &rarr;</Link>
             </div>
           </div>

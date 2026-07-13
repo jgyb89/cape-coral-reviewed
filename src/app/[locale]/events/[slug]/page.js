@@ -21,12 +21,12 @@ export async function generateMetadata({ params }) {
 
   if (!event) {
     return {
-      title: "Event Not Found - Cape Coral Reviewed",
+      title: "Event Not Found - Rockford Reviewed",
     };
   }
 
-  const title = `${event.title} - Cape Coral Events`;
-  const description = "Discover this upcoming event in Cape Coral.";
+  const title = `${event.title} - Rockford Events`;
+  const description = "Discover this upcoming event in Rockford.";
   const ogImage = formatImageUrl(event.featuredImage?.node?.sourceUrl);
 
   return {
@@ -219,7 +219,7 @@ export default async function SingleEventPage({ params }) {
               />
               <ShareButton
                 title={title}
-                text={`Check out ${title} on Cape Coral Reviewed!`}
+                text={`Check out ${title} on Rockford Reviewed!`}
               />
             </div>
           </div>

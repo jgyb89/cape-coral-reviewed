@@ -124,7 +124,7 @@ export default function Newsletter() {
           >
             <Image
               src="/cape-coral-newsletter-pilates.png"
-              alt="Pilates in Cape Coral"
+              alt="Pilates in Rockford"
               fill
               className={styles.imageFit}
             />
@@ -135,7 +135,7 @@ export default function Newsletter() {
           >
             <Image
               src="/cape-coral-newsletter-bike-night.png"
-              alt="Cape Coral Bike Night"
+              alt="Rockford Bike Night"
               fill
               className={styles.imageFit}
             />
@@ -146,11 +146,11 @@ export default function Newsletter() {
         <div className={styles.formColumn}>
           <div className={styles.headlineMaskContainer}>
             <h2 className="breeze-text">
-              Stay Updated on Cape Coral
+              Stay Updated on Rockford
             </h2>
           </div>
           <p className="breeze-text">
-            Want the latest Cape Coral business reviews, restaurant features,
+            Want the latest Rockford business reviews, restaurant features,
             event coverage, and local recommendations delivered straight to your
             inbox?
           </p>

@@ -1,6 +1,6 @@
 import categoriesData from "./categories-data.json";
 
-export const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://capecoralreviewed.com";
+export const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://rockfordreviewed.com";
 
 // Dynamically generate directory types from navigation data
 export const DIRECTORY_TYPES = categoriesData.map((cat) => ({

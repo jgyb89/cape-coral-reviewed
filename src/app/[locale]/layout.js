@@ -17,10 +17,10 @@ export async function generateMetadata() {
   return {
     metadataBase: new URL(BASE_URL),
     title: {
-      template: "%s | Cape Coral Reviewed",
-      default: "Cape Coral Reviewed",
+      template: "%s | Rockford Reviewed",
+      default: "Rockford Reviewed",
     },
-    description: "The premier local directory for Cape Coral, Florida.",
+    description: "The premier local directory for Rockford, Illinois.",
     icons: {
       icon: "/cape-coral-reviewed-icon.svg",
       apple: "/cape-coral-reviewed-icon.svg",

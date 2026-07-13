@@ -7,11 +7,11 @@ import { BASE_URL } from "@/lib/constants";
 export async function generateMetadata({ params }) {
   const { locale } = await params;
   return {
-    title: "Cape Coral Events | Local Community Happenings",
-    description: "Discover upcoming events, festivals, concerts, and community gatherings in Cape Coral. Submit your own local events to be featured.",
+    title: "Rockford Events | Local Community Happenings",
+    description: "Discover upcoming events, festivals, concerts, and community gatherings in Rockford. Submit your own local events to be featured.",
     openGraph: {
-      title: "Cape Coral Events",
-      description: "Discover upcoming events, festivals, concerts, and community gatherings in Cape Coral.",
+      title: "Rockford Events",
+      description: "Discover upcoming events, festivals, concerts, and community gatherings in Rockford.",
       url: `${BASE_URL}${locale === "es" ? "/es/events" : "/events"}`,
       type: "website",
     },

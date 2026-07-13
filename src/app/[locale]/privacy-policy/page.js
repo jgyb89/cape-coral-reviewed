@@ -2,8 +2,8 @@ import BackButton from "@/components/common/BackButton";
 import styles from "../legal.module.css";
 
 export const metadata = {
-  title: "Privacy Policy | Cape Coral Reviewed",
-  description: "Privacy Policy for Cape Coral Reviewed.",
+  title: "Privacy Policy | Rockford Reviewed",
+  description: "Privacy Policy for Rockford Reviewed.",
 };
 
 export default function PrivacyPolicyPage() {
@@ -12,7 +12,7 @@ export default function PrivacyPolicyPage() {
       <BackButton />
 
       <h1 className={styles.title}>
-        CAPE CORAL REVIEWED
+        ROCKFORD REVIEWED
         <br />
         PRIVACY POLICY
       </h1>
@@ -23,7 +23,7 @@ export default function PrivacyPolicyPage() {
       <div className={styles.content}>
         <h2>Introduction</h2>
         <p>
-          Cape Coral Reviewed ("Cape Coral Reviewed," "we," "our," or "us") respects your privacy and is committed to protecting the personal information you provide when visiting our website, interacting with our advertisements, participating in our community platforms, subscribing to our newsletters, requesting information, or otherwise using our services. This Privacy Policy explains how we collect, use, disclose, retain, and protect your information. By using our website or services, you consent to the collection, use, and disclosure of information as described in this Privacy Policy.
+          Rockford Reviewed ("Rockford Reviewed," "we," "our," or "us") respects your privacy and is committed to protecting the personal information you provide when visiting our website, interacting with our advertisements, participating in our community platforms, subscribing to our newsletters, requesting information, or otherwise using our services. This Privacy Policy explains how we collect, use, disclose, retain, and protect your information. By using our website or services, you consent to the collection, use, and disclosure of information as described in this Privacy Policy.
         </p>
 
         <h2>Information We Collect</h2>
@@ -47,7 +47,7 @@ export default function PrivacyPolicyPage() {
 
         <h2>Lead Generation and Information Sharing</h2>
         <p>
-          Cape Coral Reviewed operates as a lead generation, advertising, referral, and marketing platform. When you submit information through our website, advertisements, landing pages, surveys, quote requests, newsletter registrations, promotions, or other forms, you expressly authorize us to share, sell, license, transfer, or otherwise provide your information to advertisers, marketing partners, affiliates, lead buyers, contractors, service providers, and other third parties that may contact you regarding products, services, estimates, consultations, promotions, or other opportunities.
+          Rockford Reviewed operates as a lead generation, advertising, referral, and marketing platform. When you submit information through our website, advertisements, landing pages, surveys, quote requests, newsletter registrations, promotions, or other forms, you expressly authorize us to share, sell, license, transfer, or otherwise provide your information to advertisers, marketing partners, affiliates, lead buyers, contractors, service providers, and other third parties that may contact you regarding products, services, estimates, consultations, promotions, or other opportunities.
         </p>
         <p>
           Your information may be distributed to one or multiple businesses depending upon the nature of your request. We do not guarantee that you will be contacted by any specific business or receive any particular offer or service.
@@ -55,7 +55,7 @@ export default function PrivacyPolicyPage() {
 
         <h2>Consent to Communications</h2>
         <p>
-          By providing your contact information, you expressly consent to receive communications from Cape Coral Reviewed and our affiliates, marketing partners, advertisers, lead buyers, service providers, and other authorized third parties. These communications may be delivered through telephone calls, artificial voice messages, prerecorded voice messages, SMS messages, MMS messages, email communications, direct mail, and other methods.
+          By providing your contact information, you expressly consent to receive communications from Rockford Reviewed and our affiliates, marketing partners, advertisers, lead buyers, service providers, and other authorized third parties. These communications may be delivered through telephone calls, artificial voice messages, prerecorded voice messages, SMS messages, MMS messages, email communications, direct mail, and other methods.
         </p>
         <p>
           Such communications may be initiated using automated technologies where permitted by law. Your consent is not a condition of purchasing any goods or services. You may revoke certain marketing communications as described in this Privacy Policy.
@@ -63,7 +63,7 @@ export default function PrivacyPolicyPage() {
 
         <h2>SMS and Mobile Messaging Privacy</h2>
         <p>
-          If you opt into a Cape Coral Reviewed SMS or MMS messaging program, we may collect and use your mobile number, message interactions, carrier information, opt-in records, opt-out records, delivery confirmations, and related messaging data to administer and improve our messaging services.
+          If you opt into a Rockford Reviewed SMS or MMS messaging program, we may collect and use your mobile number, message interactions, carrier information, opt-in records, opt-out records, delivery confirmations, and related messaging data to administer and improve our messaging services.
         </p>
         <p>
           Message frequency varies. Message and data rates may apply. You may opt out of text messages at any time by replying STOP to any message. You may request assistance by replying HELP or by contacting us directly.
@@ -141,11 +141,11 @@ export default function PrivacyPolicyPage() {
 
         <h2>Contact Information</h2>
         <p>
-          <strong>Cape Coral Reviewed</strong><br/>
+          <strong>Rockford Reviewed</strong><br/>
           944 Country Club Boulevard, Suite 205<br/>
-          Cape Coral, Florida 33990<br/>
-          Email: <a href="mailto:info@capecoralreviewed.com" className={styles.link}>info@capecoralreviewed.com</a><br/>
-          Website: <a href="https://www.capecoralreviewed.com" target="_blank" rel="noopener noreferrer" className={styles.link}>www.capecoralreviewed.com</a>
+          Rockford, Illinois 33990<br/>
+          Email: <a href="mailto:info@rockfordreviewed.com" className={styles.link}>info@rockfordreviewed.com</a><br/>
+          Website: <a href="https://www.rockfordreviewed.com" target="_blank" rel="noopener noreferrer" className={styles.link}>www.rockfordreviewed.com</a>
         </p>
       </div>
     </main>

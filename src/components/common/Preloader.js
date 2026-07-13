@@ -75,7 +75,7 @@ export default function Preloader() {
         <div ref={logoRef}>
           <Image
             src="/cape-coral-reviewed-round-logo-white.webp"
-            alt="Cape Coral Reviewed"
+            alt="Rockford Reviewed"
             width={400}
             height={400}
             priority

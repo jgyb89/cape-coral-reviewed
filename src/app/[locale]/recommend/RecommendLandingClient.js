@@ -125,7 +125,7 @@ export default function RecommendLandingClient() {
           </div>
           <p className={`${styles.heroSubtitle} hero-subtitle-anim`}>
             Know a local hidden gem or a business that provides outstanding
-            service in Cape Coral, Florida? Recommend them to be added to our
+            service in Rockford, Illinois? Recommend them to be added to our
             premier local directory and featured across our platforms.
           </p>
           <div className={`${styles.heroFeatures} hero-features-anim`}>
@@ -220,7 +220,7 @@ export default function RecommendLandingClient() {
             <h3 className={styles.benefitTitle}>Newsletter Feature</h3>
             <p className={styles.benefitDesc}>
               We highlight recommended businesses in our weekly newsletter,
-              delivered straight to the inboxes of engaged Cape Coral locals.
+              delivered straight to the inboxes of engaged Rockford locals.
             </p>
           </div>
 
@@ -303,9 +303,9 @@ export default function RecommendLandingClient() {
       {/* About Section */}
       <section className={styles.aboutSection}>
         <div className={styles.aboutContainer} ref={aboutRef}>
-          <h2 className={styles.aboutTitle}>What is Cape Coral Reviewed?</h2>
+          <h2 className={styles.aboutTitle}>What is Rockford Reviewed?</h2>
           <p className={styles.aboutDesc}>
-            Cape Coral Reviewed is the premier destination for discovering the
+            Rockford Reviewed is the premier destination for discovering the
             absolute best that our city has to offer. We are passionate locals
             dedicated to uncovering hidden gems, highlighting outstanding
             services, and building a stronger community. Whether it&apos;s a

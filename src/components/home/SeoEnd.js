@@ -85,7 +85,7 @@ const SeoEnd = forwardRef((props, ref) => {
         <div ref={bgImageRef} className={styles.bgImageWrapper}>
           <Image
             src="/cape-coral-facebook-reel-grid.jpg"
-            alt="Cape Coral Community"
+            alt="Rockford Community"
             fill
             className={styles.bgImage}
             priority
@@ -103,10 +103,10 @@ const SeoEnd = forwardRef((props, ref) => {
               </div>
               <p className="breeze-text">
                 We’re not here to create another noisy online group full of
-                random posts and arguments. Cape Coral Reviewed is focused on
+                random posts and arguments. Rockford Reviewed is focused on
                 useful information, helpful recommendations, and local
                 businesses that are worth knowing about. Less noise. Better
-                information. Stronger local connections. That’s Cape Coral
+                information. Stronger local connections. That’s Rockford
                 Reviewed.
               </p>
             </div>

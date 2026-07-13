@@ -391,7 +391,7 @@ export default function SunsetTransition() {
         <div ref={modalRef} className={styles.introModal}>
           <div className={styles.modalContent}>
             <h2 className={styles.modalTitle}>
-              Explore Cape Coral
+              Explore Rockford
             </h2>
             <div className={styles.categoryGrid}>
               {CATEGORIES.map((cat, idx) => (

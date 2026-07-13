@@ -18,14 +18,14 @@ export async function generateMetadata({ params }) {
 
   if (!post) {
     return {
-      title: "Post Not Found | Cape Coral News",
+      title: "Post Not Found | Rockford News",
     };
   }
 
   return {
-    title: post.seo?.title || `${post.title} | Cape Coral News`,
+    title: post.seo?.title || `${post.title} | Rockford News`,
     description:
-      post.seo?.metaDesc || "Read more about this story on Cape Coral News.",
+      post.seo?.metaDesc || "Read more about this story on Rockford News.",
   };
 }
 

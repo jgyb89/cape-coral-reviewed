@@ -5,18 +5,18 @@ export default function NewsletterFeatures() {
   const features = [
     {
       icon: "calendar_today",
-      title: "Cape Coral Events & Things to Do",
-      body: "We aggregate the best local vibe in Cape Coral—from the Cape Coral Farmers Market to live music at local waterfront bars, so you never miss a weekend beat."
+      title: "Rockford Events & Things to Do",
+      body: "We aggregate the best local vibe in Rockford—from the Rockford Farmers Market to live music at local waterfront bars, so you never miss a weekend beat."
     },
     {
       icon: "business",
       title: "Honest Local Business Reviews",
-      body: "Looking for the best seafood in Cape Coral or a reliable plumber? We feature top-rated pros and authentic reviews for local services."
+      body: "Looking for the best seafood in Rockford or a reliable plumber? We feature top-rated pros and authentic reviews for local services."
     },
     {
       icon: "loyalty",
       title: "SWFL Community News & Alerts",
-      body: "Stay ahead of city changes, hurricane season tips, and neighborhood growth updates affecting Lee County and Cape Coral residents."
+      body: "Stay ahead of city changes, local tips, and neighborhood growth updates affecting Winnebago County and Rockford residents."
     }
   ];
 

@@ -5,12 +5,12 @@ import styles from "./NewsletterFAQ.module.css";
 export default function NewsletterFAQ() {
   const faqs = [
     {
-      question: "Is the Cape Coral Reviewed newsletter free?",
-      answer: "Yes! Our weekly roundups of Cape Coral events and news are 100% free for subscribers."
+      question: "Is the Rockford Reviewed newsletter free?",
+      answer: "Yes! Our weekly roundups of Rockford events and news are 100% free for subscribers."
     },
     {
       question: "How often will I receive emails?",
-      answer: "We send out one curated email every Thursday morning, just in time for you to plan your weekend in Cape Coral."
+      answer: "We send out one curated email every Thursday morning, just in time for you to plan your weekend in Rockford."
     },
     {
       question: "How can I feature my local business in the newsletter?",

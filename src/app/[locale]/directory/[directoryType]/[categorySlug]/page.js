@@ -11,8 +11,8 @@ export async function generateMetadata({ params }) {
   const capitalizedCategory = categorySlug.charAt(0).toUpperCase() + categorySlug.slice(1).replace(/-/g, ' ');
   
   return {
-    title: `${capitalizedCategory} in ${capitalizedType} - Cape Coral Reviewed`,
-    description: `Browse the best ${capitalizedCategory} in ${capitalizedType} in Cape Coral, Florida. Read reviews and find contact information.`,
+    title: `${capitalizedCategory} in ${capitalizedType} - Rockford Reviewed`,
+    description: `Browse the best ${capitalizedCategory} in ${capitalizedType} in Rockford, Illinois. Read reviews and find contact information.`,
   };
 }
 
@@ -38,7 +38,7 @@ export default async function CategoryPage({ params }) {
           color: 'var(--color-text)',
           textTransform: 'capitalize'
         }}>
-          Best {categoryName} in Cape Coral
+          Best {categoryName} in Rockford
         </h1>
       </header>
 
