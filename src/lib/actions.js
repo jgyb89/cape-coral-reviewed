@@ -185,7 +185,7 @@ export async function removeFavoriteListing(listingId) {
     const currentFavorites =
       viewer.userData?.favoriteListings?.nodes.map((n) => n.databaseId) || [];
     const updatedFavorites = currentFavorites.filter(
-      (id) => id.toString() !== listingId.toString(),
+      (id) => id?.toString() !== listingId?.toString(),
     );
 
     const mutation = `
@@ -345,8 +345,11 @@ function mapPayloadToAcf(payload) {
     hours_friday: ld.hoursFriday || payload.hoursFriday || "",
     hours_saturday: ld.hoursSaturday || payload.hoursSaturday || "",
     hours_sunday: ld.hoursSunday || payload.hoursSunday || "",
-    directoryTypes: payload.selectedDirectoryType ? [payload.selectedDirectoryType] : [],
-    ccrlistingcategories: payload.selectedCategories || payload.categories || [],
+    directoryTypes: payload.selectedDirectoryType
+      ? [payload.selectedDirectoryType]
+      : [],
+    ccrlistingcategories:
+      payload.selectedCategories || payload.categories || [],
   };
 }
 
@@ -803,14 +806,18 @@ export async function submitContactForm(formData) {
  */
 export async function submitMobileOptInForm(formData) {
   try {
-    await submitGravityForm(16, [
-      { id: 1, value: formData.get("firstName") || "" },
-      { id: 3, value: formData.get("lastName") || "" },
-      { id: 4, emailValues: { value: formData.get("email") || "" } },
-      { id: 5, value: formData.get("phone") || "" },
-      { id: 6, value: formData.get("consent1") ? "1" : "" },
-      { id: 7, value: formData.get("consent2") ? "1" : "" },
-    ], false);
+    await submitGravityForm(
+      16,
+      [
+        { id: 1, value: formData.get("firstName") || "" },
+        { id: 3, value: formData.get("lastName") || "" },
+        { id: 4, emailValues: { value: formData.get("email") || "" } },
+        { id: 5, value: formData.get("phone") || "" },
+        { id: 6, value: formData.get("consent1") ? "1" : "" },
+        { id: 7, value: formData.get("consent2") ? "1" : "" },
+      ],
+      false,
+    );
     return { success: true };
   } catch (error) {
     console.error("Mobile Opt-In Form Error:", error);
@@ -829,13 +836,13 @@ export async function submitNewsletterForm(formData) {
   }
 
   const formId = 15;
-  
+
   // CRITICAL: GraphQL Gravity Forms requires 'emailValues' for email fields, not just 'value'
   const fieldValues = [
-    { 
-      id: 1, 
-      emailValues: { value: email } 
-    }
+    {
+      id: 1,
+      emailValues: { value: email },
+    },
   ];
 
   try {
@@ -843,7 +850,11 @@ export async function submitNewsletterForm(formData) {
     return { success: true };
   } catch (error) {
     console.error("Newsletter submission error:", error);
-    return { success: false, error: error.message || "Failed to join the newsletter. Please try again." };
+    return {
+      success: false,
+      error:
+        error.message || "Failed to join the newsletter. Please try again.",
+    };
   }
 }
 
@@ -871,7 +882,11 @@ export async function submitBlogComment(postId, content) {
 
   try {
     // requireAuth = true enforces the JWT token is sent
-    const json = await fetchGraphQL(mutation, { postId: parseInt(postId, 10), content }, true);
+    const json = await fetchGraphQL(
+      mutation,
+      { postId: parseInt(postId, 10), content },
+      true,
+    );
     if (json.errors) return { success: false, error: json.errors[0].message };
     return { success: true, comment: json.data.createComment.comment };
   } catch (error) {
@@ -1029,7 +1044,8 @@ export async function submitEventComment(formData) {
     console.error("Submit Event Comment Error:", error);
     return {
       success: false,
-      message: error.message || "Network error occurred while submitting comment.",
+      message:
+        error.message || "Network error occurred while submitting comment.",
     };
   }
 }

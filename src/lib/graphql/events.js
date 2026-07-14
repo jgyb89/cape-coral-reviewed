@@ -160,8 +160,8 @@ export async function createEventMutation(payload) {
     price: payload.price,
     ticket_url: payload.ticket_url,
     is_recurring: payload.is_recurring ? true : false,
-    recurrence_rule: payload.recurrence_rule || '',
-    _primary_category: payload.primaryCategory || '',
+    recurrence_rule: payload.recurrence_rule || "",
+    _primary_category: payload.primaryCategory || "",
     _custom_tags: payload.customTags || [],
   };
 
@@ -216,8 +216,8 @@ export async function updateEventMutation(databaseId, payload) {
     price: payload.price,
     ticket_url: payload.ticket_url,
     is_recurring: payload.is_recurring ? true : false,
-    recurrence_rule: payload.recurrence_rule || '',
-    _primary_category: payload.primaryCategory || '',
+    recurrence_rule: payload.recurrence_rule || "",
+    _primary_category: payload.primaryCategory || "",
     _custom_tags: payload.customTags || [],
   };
 

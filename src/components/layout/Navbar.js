@@ -6,7 +6,7 @@ import { useRouter, usePathname } from "next/navigation";
 import LoginModal from "@/components/auth/LoginModal";
 import SearchModal from "@/components/layout/SearchModal";
 import styles from "./Navbar.module.css";
-import capeCoralLogo from "../../../public/cape-coral-reviewed-logo.svg";
+import rockfordLogo from "../../../public/rockford-reviewed-logo-horizontal-black.svg";
 import Image from "next/image";
 import { getLocalizedUrl } from "@/lib/constants";
 import { categories } from "@/lib/navigation";
@@ -99,7 +99,7 @@ export default function Navbar({ currentUser: propCurrentUser, dict, locale }) {
       <nav className={styles['main-nav']}>
         <Link href={getLocalizedUrl("/", locale)} className={styles['nav-brand']}>
           <Image
-            src={capeCoralLogo}
+            src={rockfordLogo}
             alt="Rockford Reviewed Logo"
             className={styles['nav-logo']}
             priority // Recommended for logos/above-the-fold content

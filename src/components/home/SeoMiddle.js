@@ -52,7 +52,7 @@ const SeoMiddle = forwardRef((props, ref) => {
         {/* Background Decorative Icon */}
         <div className={styles.backgroundIcon}>
           <Image
-            src="/cape-coral-reviewed-icon-black.svg"
+            src="/rockford-reviewed-logo-badge.svg"
             alt="Decorative Background Logo"
             fill
             className={styles.bgIconImage}

@@ -35,7 +35,7 @@ export default function Footer({ locale = "en" }) {
               className={styles["footer__logo"]}
             >
               <Image
-                src="/cape-coral-reviewed-logo.webp"
+                src="/rockford-reviewed-logo-horizontal-white.svg"
                 alt="Rockford Reviewed"
                 width={180}
                 height={60}

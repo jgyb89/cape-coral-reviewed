@@ -22,8 +22,8 @@ export async function generateMetadata() {
     },
     description: "The premier local directory for Rockford, Illinois.",
     icons: {
-      icon: "/cape-coral-reviewed-icon.svg",
-      apple: "/cape-coral-reviewed-icon.svg",
+      icon: "/rockford-reviewed-logo-badge.svg",
+      apple: "/rockford-reviewed-logo-badge.svg",
     },
   };
 }

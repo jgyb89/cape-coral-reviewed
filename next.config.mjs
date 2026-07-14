@@ -6,19 +6,19 @@ const nextConfig = {
     remotePatterns: [
       {
         protocol: "https",
-        hostname: "staging.capecoralreviewed.com",
+        hostname: "staging.rockfordreviewed.com",
         port: "",
         pathname: "/wp-content/uploads/**",
       },
       {
         protocol: "https",
-        hostname: "capecoralreviewed.com",
+        hostname: "rockfordreviewed.com",
         port: "",
         pathname: "/wp-content/uploads/**",
       },
       {
         protocol: "https",
-        hostname: "wp.capecoralreviewed.com",
+        hostname: "wp.rockfordreviewed.com",
         port: "",
         pathname: "/wp-content/uploads/**",
       },
@@ -26,7 +26,7 @@ const nextConfig = {
   },
   experimental: {
     serverActions: {
-      allowedOrigins: ["capecoralreviewed.com", "staging.capecoralreviewed.com", "wp.capecoralreviewed.com"],
+      allowedOrigins: ["rockfordreviewed.com", "staging.rockfordreviewed.com", "wp.rockfordreviewed.com"],
     },
   },
   async redirects() {
@@ -40,36 +40,6 @@ const nextConfig = {
       permanent: true,
     }));
   },
-  async headers() {
-    return [
-      {
-        source: "/:path*",
-        headers: [
-          {
-            key: "X-Frame-Options",
-            value: "DENY",
-          },
-          {
-            key: "X-Content-Type-Options",
-            value: "nosniff",
-          },
-          {
-            key: "Referrer-Policy",
-            value: "strict-origin-when-cross-origin",
-          },
-          {
-            key: "Permissions-Policy",
-            value:
-              "camera=(), microphone=(), geolocation=(), browsing-topics=()",
-          },
-          {
-            key: "Content-Security-Policy",
-            value:
-              "default-src 'self'; script-src 'self' 'unsafe-eval' 'unsafe-inline' https://accounts.google.com https://va.vercel-scripts.com https://www.googletagmanager.com https://maps.googleapis.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' blob: data: https://*.capecoralreviewed.com https://i.ytimg.com https://*.youtube.com https://www.google-analytics.com https://www.googletagmanager.com https://maps.googleapis.com https://maps.gstatic.com; connect-src 'self' https://*.capecoralreviewed.com https://accounts.google.com https://www.google-analytics.com https://stats.g.doubleclick.net https://www.googletagmanager.com https://maps.googleapis.com https://maps.gstatic.com; font-src 'self' data: https://fonts.gstatic.com; frame-src 'self' https://www.youtube.com https://player.vimeo.com https://accounts.google.com; media-src 'self' https://wp.capecoralreviewed.com;",
-          },
-        ],
-      },
-    ];
   },
 };
 

@@ -74,7 +74,7 @@ export default function Preloader() {
       <div className={styles.preloaderContent}>
         <div ref={logoRef}>
           <Image
-            src="/cape-coral-reviewed-round-logo-white.webp"
+            src="/rockford-reviewed-logo-stack-white.svg"
             alt="Rockford Reviewed"
             width={400}
             height={400}

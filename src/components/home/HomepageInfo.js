@@ -8,7 +8,7 @@ import { SplitText } from "gsap/dist/SplitText";
 import styles from "./HomepageInfo.module.css";
 
 // White Round Logo SVG
-import whiteRoundLogo from "../../../public/cape-coral-reviewed-icon.svg";
+import whiteRoundLogo from "../../../public/rockford-reviewed-logo-badge.svg";
 
 export default function HomepageInfo() {
   const containerRef = useRef(null);
