@@ -230,7 +230,7 @@ export default async function DirectoryListingPage({ params }) {
 
       <main className="listing-main">
         <div className="listing-top-actions">
-          <BackButton label={t.goBack || "Go Back"} />
+          <BackButton label={t.goBack || "Go Back"} fallback="/directory" />
           <div className="listing-action-group">
             <FavoriteButton
               listingId={listing.databaseId}
