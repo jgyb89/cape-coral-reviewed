@@ -146,7 +146,7 @@ export default async function BlogPostPage({ params }) {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
       <article className="blog-post-main">
-        <BackButton />
+        <BackButton fallback="/blog" />
         <header className="blog-post__header">
           <div className="blog-post__meta">
             {categoriesString && (
