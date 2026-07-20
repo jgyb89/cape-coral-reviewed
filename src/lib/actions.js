@@ -533,8 +533,8 @@ export async function submitListing(formData) {
           ? [{ id: 28, value: formData.galleryImages }]
           : []),
       ],
-      false,
-    ); // Usually listing submission doesn't strictly *require* auth but uses it if available
+      true,
+    );
 
     revalidatePath("/directory", "layout");
     return { success: true };
