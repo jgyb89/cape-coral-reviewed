@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { useRouter, useParams } from 'next/navigation';
+import { createEventMutation } from '@/lib/graphql/events';
 import { submitEventForm, uploadWPImage } from '@/lib/actions';
 import imageCompression from 'browser-image-compression';
 
@@ -64,18 +65,34 @@ const Step3Media = ({ formData, updateFormData, prevStep }) => {
 
       setUploadStep('saving');
 
-      // Execute Gravity Forms submission
-      const result = await submitEventForm({
+      // Execute createEventMutation
+      const graphqlResult = await createEventMutation({
         title: formData.title,
-        description: formData.description,
-        author: formData.author || '',
+        content: formData.description,
+        status: "PENDING",
+        primaryCategory: formData.primaryCategory,
+        customTags: formData.customTags,
+        start_date: formData.start_date,
+        end_date: formData.end_date,
+        venue_name: formData.venue_name,
+        event_address: formData.event_address,
+        price: formData.price,
+        ticket_url: formData.ticket_url,
+        featuredImageId: featuredImageId ? Number.parseInt(featuredImageId, 10) : null,
       });
 
-      if (result.success) {
+      if (graphqlResult.success) {
+        // Execute Gravity Forms submission
+        await submitEventForm({
+          title: formData.title,
+          description: formData.description,
+          author: formData.author || '',
+        });
+
         setUploadStep('complete');
         // We'll show a pending approval state before redirecting or show it inline
       } else {
-        alert(`Error: ${result.message}`);
+        alert(`Error: ${graphqlResult.message}`);
         setUploadStep('idle');
       }
     } catch (error) {

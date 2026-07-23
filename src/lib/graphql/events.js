@@ -184,6 +184,7 @@ export async function createEventMutation(payload) {
         input: {
           title: payload.title,
           content: payload.content,
+          status: payload.status || "PENDING",
           featuredImageId: payload.featuredImageId || null,
           eventDetailsJson: JSON.stringify(acfData),
         },
