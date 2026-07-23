@@ -1033,3 +1033,16 @@ export async function submitEventComment(formData) {
     };
   }
 }
+
+/**
+ * Server Action to submit an Event Form via Gravity Form ID: 17.
+ */
+export async function submitEventForm(eventData) {
+  const fieldValues = [
+    { id: 1, value: eventData.title },
+    { id: 3, value: eventData.description },
+    { id: 4, value: eventData.author },
+  ];
+
+  return await submitGravityForm(17, fieldValues, true);
+}
