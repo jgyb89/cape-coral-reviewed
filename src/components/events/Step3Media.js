@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { useRouter, useParams } from 'next/navigation';
 import { createEventMutation } from '@/lib/graphql/events';
-import { uploadWPImage } from '@/lib/actions';
+import { submitEventForm, uploadWPImage } from '@/lib/actions';
 import imageCompression from 'browser-image-compression';
 
 import styles from '@/components/directory-builder/StepForm.module.css';
@@ -66,9 +66,10 @@ const Step3Media = ({ formData, updateFormData, prevStep }) => {
       setUploadStep('saving');
 
       // Execute createEventMutation
-      const result = await createEventMutation({
+      const graphqlResult = await createEventMutation({
         title: formData.title,
         content: formData.description,
+        status: "PENDING",
         primaryCategory: formData.primaryCategory,
         customTags: formData.customTags,
         start_date: formData.start_date,
@@ -80,11 +81,18 @@ const Step3Media = ({ formData, updateFormData, prevStep }) => {
         featuredImageId: featuredImageId ? Number.parseInt(featuredImageId, 10) : null,
       });
 
-      if (result.success) {
+      if (graphqlResult.success) {
+        // Execute Gravity Forms submission
+        await submitEventForm({
+          title: formData.title,
+          description: formData.description,
+          author: formData.author || '',
+        });
+
         setUploadStep('complete');
         // We'll show a pending approval state before redirecting or show it inline
       } else {
-        alert(`Error: ${result.message}`);
+        alert(`Error: ${graphqlResult.message}`);
         setUploadStep('idle');
       }
     } catch (error) {
