@@ -40,6 +40,12 @@ export default async function RootLayout({ children, params }) {
     <html lang={locale}>
       <head>
         <Script
+          async
+          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9224507908532843"
+          crossOrigin="anonymous"
+          strategy="afterInteractive"
+        />
+        <Script
           src="https://www.googletagmanager.com/gtag/js?id=G-TBEXLYNPDT"
           strategy="afterInteractive"
         />
