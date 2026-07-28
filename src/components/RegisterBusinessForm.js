@@ -50,14 +50,17 @@ export default function RegisterBusinessForm({ locale = "en" }) {
       email: (v) => {
         if (!v) return "Email is required";
         // Safe email regex: avoiding nested quantifiers that cause ReDoS
-        const emailRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;
+        const emailRegex =
+          /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;
         return emailRegex.test(v) ? "" : "Please enter a valid email address";
       },
       website: (v) => {
         if (!v) return "";
         try {
-          const url = new URL(v.startsWith('http') ? v : `https://${v}`);
-          return (url.protocol === "http:" || url.protocol === "https:") ? "" : "Please enter a valid URL";
+          const url = new URL(v.startsWith("http") ? v : `https://${v}`);
+          return url.protocol === "http:" || url.protocol === "https:"
+            ? ""
+            : "Please enter a valid URL";
         } catch (e) {
           console.debug("Invalid URL:", e);
           return "Please enter a valid URL";
@@ -73,7 +76,8 @@ export default function RegisterBusinessForm({ locale = "en" }) {
         if (!v) return "Phone number is required";
         return v.length < 14 ? "Please enter a valid phone number" : "";
       },
-      consent: (v) => (v ? "" : "You must agree to the Terms of Services and Privacy Policy"),
+      consent: (v) =>
+        v ? "" : "You must agree to the Terms of Services and Privacy Policy",
     };
 
     return validations[name] ? validations[name](value) : "";
@@ -148,7 +152,7 @@ export default function RegisterBusinessForm({ locale = "en" }) {
       {
         id: 4,
         value: formData.password,
-      }
+      },
     );
 
     // Field 17 is the Consent checkbox. WPGraphQL expects a single 'value' string.
@@ -170,7 +174,7 @@ export default function RegisterBusinessForm({ locale = "en" }) {
     if (formData.generateLeads) {
       marketingValues.push({
         inputId: 19.2,
-        value: "Does your website generate leads for you?",
+        value: "Do you need help with lead generation?",
       });
     }
     if (formData.facelift) {
@@ -399,27 +403,55 @@ export default function RegisterBusinessForm({ locale = "en" }) {
             checked={formData.consent}
             onChange={handleChange}
           />
-          <label htmlFor="consent" style={{ fontSize: '0.9rem', color: '#475569', lineHeight: '1.5' }}>
+          <label
+            htmlFor="consent"
+            style={{ fontSize: "0.9rem", color: "#475569", lineHeight: "1.5" }}
+          >
             {"I agree to the "}
-            <a 
-              href={`/terms-of-service`} 
-              target="_blank" 
-              rel="noopener noreferrer" 
-              style={{ color: '#e04c4c', textDecoration: 'underline', display: 'inline-flex', alignItems: 'center', gap: '2px', fontWeight: '500' }}
+            <a
+              href={`/terms-of-service`}
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{
+                color: "#e04c4c",
+                textDecoration: "underline",
+                display: "inline-flex",
+                alignItems: "center",
+                gap: "2px",
+                fontWeight: "500",
+              }}
             >
               Terms of Service{" "}
-              <span className="material-symbols-outlined" style={{ fontSize: '14px' }}>open_in_new</span>
+              <span
+                className="material-symbols-outlined"
+                style={{ fontSize: "14px" }}
+              >
+                open_in_new
+              </span>
             </a>
             {" and "}
-            <a 
-              href={`/privacy-policy`} 
-              target="_blank" 
-              rel="noopener noreferrer" 
-              style={{ color: '#e04c4c', textDecoration: 'underline', display: 'inline-flex', alignItems: 'center', gap: '2px', fontWeight: '500' }}
+            <a
+              href={`/privacy-policy`}
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{
+                color: "#e04c4c",
+                textDecoration: "underline",
+                display: "inline-flex",
+                alignItems: "center",
+                gap: "2px",
+                fontWeight: "500",
+              }}
             >
               Privacy Policy{" "}
-              <span className="material-symbols-outlined" style={{ fontSize: '14px' }}>open_in_new</span>
-            </a>.
+              <span
+                className="material-symbols-outlined"
+                style={{ fontSize: "14px" }}
+              >
+                open_in_new
+              </span>
+            </a>
+            .
           </label>
         </div>
         {fieldErrors.consent && (
