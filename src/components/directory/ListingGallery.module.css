@@ -14,6 +14,15 @@
   background: #f7fafc;
 }
 
+.listing-gallery__main--clickable {
+  cursor: pointer;
+  transition: opacity 0.2s ease-in-out;
+}
+
+.listing-gallery__main--clickable:hover {
+  opacity: 0.95;
+}
+
 .listing-gallery__thumbnails {
   display: flex;
   gap: 0.5rem;
@@ -45,5 +54,84 @@
 
 .listing-gallery__thumbnail--active {
   opacity: 1;
-  border-color: #e04c4c; /* Matches var(--color-primary) if defined */
+  border-color: #e04c4c; /* Cape Coral Brand Red */
+}
+
+/* --- Lightbox Modal Styles --- */
+
+.lightbox-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.85); /* Darkens background to 85% */
+  z-index: 10000; /* Puts it above all site headers and navigation menus */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer; /* Indicates clicking the dark background will close it */
+}
+
+.lightbox-close {
+  position: absolute;
+  top: 1.5rem;
+  right: 2rem;
+  background: transparent;
+  border: none;
+  color: #ffffff;
+  font-size: 3rem;
+  line-height: 1;
+  cursor: pointer;
+  z-index: 10001;
+  padding: 0.5rem;
+  transition: opacity 0.2s;
+}
+
+.lightbox-close:hover {
+  opacity: 0.7;
+}
+
+.lightbox-content {
+  position: relative;
+  width: 90vw;
+  height: 90vh;
+  max-width: 1400px;
+  cursor: default; /* Resets the cursor so clicking the image doesn't show a pointer */
+}
+
+/* --- Lightbox Navigation Arrows --- */
+
+.lightbox-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background-color: #000000;
+  color: #ffffff;
+  border: none;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 1.25rem;
+  cursor: pointer;
+  z-index: 10002;
+  transition: background-color 0.2s, opacity 0.2s;
+  opacity: 0.6; /* Semi-transparent by default to not distract from the image */
+}
+
+.lightbox-arrow:hover {
+  opacity: 1;
+  background-color: #222222;
+}
+
+.lightbox-arrow--left {
+  /* Uses clamp to keep it close to the edge on mobile, but spacious on desktop */
+  left: clamp(1rem, 3vw, 3rem); 
+}
+
+.lightbox-arrow--right {
+  right: clamp(1rem, 3vw, 3rem);
 }
