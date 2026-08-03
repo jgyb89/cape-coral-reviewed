@@ -66,6 +66,14 @@ export default function ListingGallery({ featuredImage, galleryImages = [] }) {
       <div 
         className={`${styles['listing-gallery__main']} ${styles['listing-gallery__main--clickable']}`}
         onClick={() => setIsLightboxOpen(true)}
+        role="button"
+        tabIndex={0}
+        onKeyDown={(e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            setIsLightboxOpen(true);
+          }
+        }}
       >
         <Image
           src={activeImage}
@@ -101,8 +109,23 @@ export default function ListingGallery({ featuredImage, galleryImages = [] }) {
 
       {/* Lightbox Modal */}
       {isLightboxOpen && (
-        <div className={styles['lightbox-overlay']} onClick={closeLightbox}>
+        <div 
+          className={styles['lightbox-overlay']} 
+          onClick={(e) => {
+            if (e.target === e.currentTarget) closeLightbox();
+          }}
+          role="dialog"
+          aria-modal="true"
+          aria-label="Image lightbox"
+          onKeyDown={(e) => {
+            if (e.target === e.currentTarget && (e.key === 'Enter' || e.key === ' ')) {
+              closeLightbox();
+            }
+          }}
+          tabIndex={-1}
+        >
           <button 
+            type="button"
             className={styles['lightbox-close']} 
             onClick={closeLightbox}
             aria-label="Close image"
@@ -114,6 +137,7 @@ export default function ListingGallery({ featuredImage, galleryImages = [] }) {
           {displayImages.length > 1 && (
             <>
               <button
+                type="button"
                 className={`${styles['lightbox-arrow']} ${styles['lightbox-arrow--left']}`}
                 onClick={goToPrev}
                 aria-label="Previous image"
@@ -122,6 +146,7 @@ export default function ListingGallery({ featuredImage, galleryImages = [] }) {
               </button>
               
               <button
+                type="button"
                 className={`${styles['lightbox-arrow']} ${styles['lightbox-arrow--right']}`}
                 onClick={goToNext}
                 aria-label="Next image"
@@ -131,10 +156,7 @@ export default function ListingGallery({ featuredImage, galleryImages = [] }) {
             </>
           )}
 
-          <div 
-            className={styles['lightbox-content']}
-            onClick={(e) => e.stopPropagation()} // Prevent clicking the image from closing the modal
-          >
+          <div className={styles['lightbox-content']}>
             <Image
               src={activeImage}
               alt="Full screen listing image"
