@@ -89,7 +89,7 @@ export default function CcrCard({ listing, currentUser: propCurrentUser, locale 
   // Author data
   const authorNode = listing?.author?.node;
   const authorName = authorNode?.name || 'Business Owner';
-  const authorImage = authorNode?.customAvatar?.customAvatar?.node?.sourceUrl || authorNode?.avatar?.url || '/placeholder-avatar.jpg';
+  const authorImage = authorNode?.customAvatar?.customAvatar?.node?.sourceUrl || authorNode?.avatar?.url || '/cape-coral-reviewed-icon.svg';
   
   // Transition: Use user-level featured status
   // Note: if my ACF user field group is named something other than userData in GraphQL, please swap out that key

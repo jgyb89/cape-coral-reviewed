@@ -65,7 +65,7 @@ export default function ProfileAvatar({ user }) {
   const isFeatured = !!user?.userData?.isFeaturedUser;
   const userName = user?.name || 'Business Owner';
   // Fallback chain: customAvatar (ACF) -> avatar (WP Default) -> placeholder
-  const currentImage = user?.customAvatar?.customAvatar?.node?.sourceUrl || user?.avatar?.url || user?.avatarUrl || '/placeholder-avatar.jpg'; 
+  const currentImage = user?.customAvatar?.customAvatar?.node?.sourceUrl || user?.avatar?.url || user?.avatarUrl || '/cape-coral-reviewed-icon.svg'; 
 
   const validateAndProcessFile = (file) => {
     setError('');
