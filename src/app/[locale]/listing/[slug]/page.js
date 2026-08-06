@@ -69,9 +69,16 @@ export async function generateMetadata({ params }) {
     `Find details, reviews, and contact info for ${listing.title} in Cape Coral, FL.`;
   const ogImage = formatImageUrl(listing.seo?.opengraphImage?.sourceUrl);
 
+  const reviewCount = listing.reviews?.nodes?.length || 0;
+  const contentHtml = listing.content || "";
+  const rawTextLength = contentHtml.replace(/<[^>]*>?/gm, '').trim().length;
+  const hasImage = !!listing.featuredImage?.node?.sourceUrl;
+  const isGhostListing = !hasImage && reviewCount === 0 && rawTextLength < 50;
+
   return {
     title: seoTitle,
     description: seoDesc,
+    robots: { index: !isGhostListing, follow: true },
     openGraph: {
       title: seoTitle,
       description: seoDesc,

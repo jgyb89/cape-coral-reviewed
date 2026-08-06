@@ -22,11 +22,13 @@ export default async function DirectoryTypePage({ params }) {
   const currentUser = null;
 
   // Derive directory type name from the first listing if available, or use the slug
-  const typeName = listings[0]?.directoryTypes?.nodes.find(n => n.slug === directoryType)?.name || directoryType.replace(/-/g, ' ');
+  const typeNode = listings[0]?.directoryTypes?.nodes.find(n => n.slug === directoryType);
+  const typeName = typeNode?.name || directoryType.replace(/-/g, ' ');
+  const typeDescription = typeNode?.description || "";
 
   return (
     <main style={{ padding: "clamp(1.5rem, 4vw, 3rem) 1rem 0", maxWidth: "1200px", margin: "0 auto", fontFamily: "sans-serif" }}>
-      <header style={{ marginBottom: "1rem" }}>
+      <header style={{ marginBottom: "2rem", textAlign: "center" }}>
         <h1 style={{ 
           fontFamily: 'var(--font-heading)', 
           fontSize: 'clamp(1.75rem, 6vw, 3.5rem)', 
@@ -39,6 +41,9 @@ export default async function DirectoryTypePage({ params }) {
         }}>
           Best {typeName} in Cape Coral
         </h1>
+        {typeDescription && (
+          <div style={{ maxWidth: "800px", margin: "0 auto", color: "#4a5568", lineHeight: "1.6", fontSize: "1.1rem" }} dangerouslySetInnerHTML={{ __html: typeDescription }} />
+        )}
       </header>
 
       <Suspense fallback={<div style={{ textAlign: 'center', padding: '3rem', color: '#64748b' }}>Loading listings...</div>}>

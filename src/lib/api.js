@@ -12,8 +12,8 @@ const CORE_LISTING_FIELDS = `
     addressStreet addressCity phoneNumber priceRange
     hoursMonday hoursTuesday hoursWednesday hoursThursday hoursFriday hoursSaturday hoursSunday
   }
-  directoryTypes { nodes { name slug } }
-  ccrlistingcategories { nodes { name slug } }
+  directoryTypes { nodes { name slug description } }
+  ccrlistingcategories { nodes { name slug description } }
   reviews { nodes { reviewFields { starRating } } }
   author { 
     node { 
