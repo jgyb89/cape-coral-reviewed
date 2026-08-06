@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useRef, useCallback } from 'react';
+import React, { useState, useRef, useCallback, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
@@ -65,7 +65,14 @@ export default function ProfileAvatar({ user }) {
   const isFeatured = !!user?.userData?.isFeaturedUser;
   const userName = user?.name || 'Business Owner';
   // Fallback chain: customAvatar (ACF) -> avatar (WP Default) -> placeholder
-  const currentImage = user?.customAvatar?.customAvatar?.node?.sourceUrl || user?.avatar?.url || user?.avatarUrl || '/cape-coral-reviewed-icon.svg'; 
+  const initialImage = user?.customAvatar?.customAvatar?.node?.sourceUrl || user?.avatar?.url || user?.avatarUrl || '/cape-coral-reviewed-icon.svg'; 
+  
+  const [currentImageSrc, setCurrentImageSrc] = useState(initialImage);
+
+  // Sync state if props change
+  useEffect(() => {
+    setCurrentImageSrc(initialImage);
+  }, [initialImage]);
 
   const validateAndProcessFile = (file) => {
     setError('');
@@ -158,11 +165,12 @@ export default function ProfileAvatar({ user }) {
           {/* The Image Wrapper safely constraints the Next.js fill property */}
           <div className={styles['avatar-image-wrap']}>
             <Image 
-              src={currentImage} 
+              src={currentImageSrc} 
               alt={userName} 
               fill 
               style={{ objectFit: 'cover' }} 
               sizes="90px"
+              onError={() => setCurrentImageSrc('/cape-coral-reviewed-icon.svg')}
             />
             <div className={styles['avatar-hover-overlay']}>
               <span className="material-symbols-outlined">edit</span>

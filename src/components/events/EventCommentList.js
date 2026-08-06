@@ -65,7 +65,15 @@ export default function EventCommentList({ comments, noCommentsYet = "No comment
               <header style={{ display: 'flex', gap: '1rem', marginBottom: '1.25rem', alignItems: 'center' }}>
                 <div style={{ width: '40px', height: '40px', borderRadius: '50%', backgroundColor: '#e2e8f0', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#64748b', fontSize: '1.2rem', fontWeight: 'bold', flexShrink: 0, overflow: 'hidden' }}>
                   {comment.author?.node?.avatar?.url ? (
-                    <img src={comment.author.node.avatar.url} alt="avatar" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                    <img 
+                      src={comment.author.node.avatar.url} 
+                      alt="avatar" 
+                      style={{ width: '100%', height: '100%', objectFit: 'cover' }} 
+                      onError={(e) => {
+                        e.currentTarget.onerror = null; // Prevent infinite loops
+                        e.currentTarget.src = '/cape-coral-reviewed-icon.svg';
+                      }}
+                    />
                   ) : (
                     comment.author?.node?.name ? comment.author.node.name.charAt(0).toUpperCase() : <span className="material-symbols-outlined">person</span>
                   )}
