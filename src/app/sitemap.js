@@ -16,10 +16,6 @@ export default async function sitemap() {
     "/directory",
     "/events",
     "/blog",
-    "/register",
-    "/register-business",
-    "/login",
-    "/submit-listing",
     "/privacy-policy",
     "/terms-of-service",
   ];

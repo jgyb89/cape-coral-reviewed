@@ -10,9 +10,13 @@ export async function generateMetadata({ params }) {
   const capitalizedType = directoryType.charAt(0).toUpperCase() + directoryType.slice(1).replace(/-/g, ' ');
   const capitalizedCategory = categorySlug.charAt(0).toUpperCase() + categorySlug.slice(1).replace(/-/g, ' ');
   
+  const listings = await getListingsByCategory(categorySlug, directoryType);
+  const shouldIndex = listings && listings.length > 0;
+
   return {
     title: `${capitalizedCategory} in ${capitalizedType} - Cape Coral Reviewed`,
     description: `Browse the best ${capitalizedCategory} in ${capitalizedType} in Cape Coral, Florida. Read reviews and find contact information.`,
+    robots: { index: shouldIndex, follow: shouldIndex }
   };
 }
 
