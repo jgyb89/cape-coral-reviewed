@@ -89,8 +89,14 @@ export default function CcrCard({ listing, currentUser: propCurrentUser, locale 
   // Author data
   const authorNode = listing?.author?.node;
   const authorName = authorNode?.name || 'Business Owner';
-  const authorImage = authorNode?.customAvatar?.customAvatar?.node?.sourceUrl || authorNode?.avatar?.url || '/cape-coral-reviewed-icon.svg';
+  const initialAuthorImage = authorNode?.customAvatar?.customAvatar?.node?.sourceUrl || authorNode?.avatar?.url || '/cape-coral-reviewed-icon.svg';
   
+  const [authorImageSrc, setAuthorImageSrc] = useState(initialAuthorImage);
+
+  useEffect(() => {
+    setAuthorImageSrc(initialAuthorImage);
+  }, [initialAuthorImage]);
+
   // Transition: Use user-level featured status
   // Note: if my ACF user field group is named something other than userData in GraphQL, please swap out that key
   const isFeatured = !!authorNode?.userData?.isFeaturedUser;
@@ -125,11 +131,12 @@ export default function CcrCard({ listing, currentUser: propCurrentUser, locale 
           <div className={`${styles['ccr-card__author-wrapper']} ${isVerified ? styles['ccr-card__author-wrapper--verified'] : ''}`}>
             <div className={styles['ccr-card__author-img-container']}>
               <Image 
-                src={authorImage} 
+                src={authorImageSrc} 
                 alt={authorName} 
                 fill 
                 style={{ objectFit: 'cover' }} 
                 sizes="54px"
+                onError={() => setAuthorImageSrc('/cape-coral-reviewed-icon.svg')}
               />
             </div>
             {isVerified && (

@@ -7,6 +7,23 @@ import { submitBlogComment } from '@/lib/actions';
 import LoginModal from '@/components/auth/LoginModal';
 import styles from './BlogComments.module.css';
 
+function AvatarImage({ src, alt, className }) {
+  const [imgSrc, setImgSrc] = useState(src || '/cape-coral-reviewed-icon.svg');
+
+  return (
+    <Image 
+      src={imgSrc} 
+      alt={alt} 
+      width={40} 
+      height={40} 
+      className={className} 
+      onError={() => {
+        setImgSrc('/cape-coral-reviewed-icon.svg');
+      }}
+    />
+  );
+}
+
 export default function BlogComments({ postId, initialComments = [], currentUser }) {
   const [comments, setComments] = useState(initialComments);
   const [newComment, setNewComment] = useState('');
@@ -73,11 +90,9 @@ export default function BlogComments({ postId, initialComments = [], currentUser
           {comments.map((comment) => (
             <div key={comment.id} className={styles.commentItem}>
               <div className={styles.commentHeader}>
-                <Image 
-                  src={comment.author?.node?.avatar?.url || '/cape-coral-reviewed-icon.svg'} 
+                <AvatarImage 
+                  src={comment.author?.node?.avatar?.url} 
                   alt={comment.author?.node?.name || 'User'} 
-                  width={40} 
-                  height={40} 
                   className={styles.avatar} 
                 />
                 <div>
