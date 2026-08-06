@@ -74,7 +74,7 @@ export default function BlogComments({ postId, initialComments = [], currentUser
             <div key={comment.id} className={styles.commentItem}>
               <div className={styles.commentHeader}>
                 <Image 
-                  src={comment.author?.node?.avatar?.url || '/default-avatar.png'} 
+                  src={comment.author?.node?.avatar?.url || '/cape-coral-reviewed-icon.svg'} 
                   alt={comment.author?.node?.name || 'User'} 
                   width={40} 
                   height={40} 
