@@ -99,22 +99,40 @@ export async function getEventBySlug(slug) {
 }
 
 export async function getAuthEventBySlug(slug) {
-  // Bypass the EventIdType enum by filtering the plural 'events' list by the slug (name)
-  const query = `
-    query GetAuthEventBySlug($slug: String!) {
-      events(where: { name: $slug, stati: [PUBLISH, PENDING, DRAFT] }, first: 1) {
-        nodes {
-          ${EVENT_FIELDS}
-        }
-      }
-    }
-  `;
-
-  const variables = { slug };
-
   try {
-    // IMPORTANT: Pass 'true' as the third parameter so it requires a JWT token
+    const viewer = await getViewer();
+    if (!viewer) return null;
+
+    // Check if the current user is an admin
+    const isAdmin = viewer.roles?.nodes?.some(r => r.name.toLowerCase() === 'administrator');
+
+    // If Admin, query globally. If regular Business user, restrict to their author ID.
+    const query = isAdmin
+      ? `
+        query GetAuthEventBySlugAdmin($slug: String!) {
+          events(where: { name: $slug, stati: [PUBLISH, PENDING, DRAFT] }, first: 1) {
+            nodes {
+              ${EVENT_FIELDS}
+            }
+          }
+        }
+      `
+      : `
+        query GetAuthEventBySlugUser($slug: String!, $author: Int!) {
+          events(where: { name: $slug, author: $author, stati: [PUBLISH, PENDING, DRAFT] }, first: 1) {
+            nodes {
+              ${EVENT_FIELDS}
+            }
+          }
+        }
+      `;
+
+    // Assign variables based on the user's role
+    const variables = isAdmin ? { slug } : { slug, author: viewer.databaseId };
+    
+    // Pass 'true' to require the JWT token
     const json = await fetchGraphQL(query, variables, true);
+    
     // Return the first node from the filtered list, or null if not found
     return json?.data?.events?.nodes?.[0] || null;
   } catch (error) {
