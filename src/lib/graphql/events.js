@@ -103,38 +103,36 @@ export async function getAuthEventBySlug(slug) {
     const viewer = await getViewer();
     if (!viewer) return null;
 
-    // Check if the current user is an admin
     const isAdmin = viewer.roles?.nodes?.some(r => r.name.toLowerCase() === 'administrator');
+    const isId = /^\d+$/.test(slug);
 
-    // If Admin, query globally. If regular Business user, restrict to their author ID.
-    const query = isAdmin
-      ? `
-        query GetAuthEventBySlugAdmin($slug: String!) {
-          events(where: { name: $slug, stati: [PUBLISH, PENDING, DRAFT] }, first: 1) {
-            nodes {
+    if (isAdmin) {
+      const query = isId
+        ? `
+          query GetAuthEventByIdAdmin($id: ID!) {
+            event(id: $id, idType: DATABASE_ID, asPreview: true) {
               ${EVENT_FIELDS}
             }
           }
-        }
-      `
-      : `
-        query GetAuthEventBySlugUser($slug: String!, $author: Int!) {
-          events(where: { name: $slug, author: $author, stati: [PUBLISH, PENDING, DRAFT] }, first: 1) {
-            nodes {
-              ${EVENT_FIELDS}
+        `
+        : `
+          query GetAuthEventBySlugAdmin($slug: String!) {
+            events(where: { name: $slug, stati: [PUBLISH, PENDING, DRAFT] }, first: 1) {
+              nodes {
+                ${EVENT_FIELDS}
+              }
             }
           }
-        }
-      `;
+        `;
+      const variables = isId ? { id: slug } : { slug };
+      const json = await fetchGraphQL(query, variables, true);
+      return isId ? (json?.data?.event || null) : (json?.data?.events?.nodes?.[0] || null);
+    }
 
-    // Assign variables based on the user's role
-    const variables = isAdmin ? { slug } : { slug, author: viewer.databaseId };
-    
-    // Pass 'true' to require the JWT token
-    const json = await fetchGraphQL(query, variables, true);
-    
-    // Return the first node from the filtered list, or null if not found
-    return json?.data?.events?.nodes?.[0] || null;
+    // For regular users, we fetch their events.
+    // We match against either slug or databaseId (if slug is missing for pending posts).
+    const userEvents = await getUserEvents();
+    return userEvents.find(e => e.slug === slug || e.databaseId?.toString() === slug) || null;
   } catch (error) {
     console.error("Error fetching auth event by slug:", error);
     return null;
