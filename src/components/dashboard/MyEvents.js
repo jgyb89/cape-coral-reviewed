@@ -134,21 +134,27 @@ export default async function MyEvents({ locale }) {
                 <div
                   style={{ display: "flex", gap: "1rem", alignItems: "center" }}
                 >
-                  <Link
-                    href={getLocalizedUrl(`/events/${event.slug}`, locale)}
-                    style={{
-                      color: "#e04c4c",
-                      fontWeight: "600",
-                      textDecoration: "none",
-                      fontSize: "0.95rem",
-                    }}
-                  >
-                    View
-                  </Link>
+                  {status === "publish" ? (
+                    <Link
+                      href={getLocalizedUrl(`/events/${event.slug}`, locale)}
+                      style={{
+                        color: "#e04c4c",
+                        fontWeight: "600",
+                        textDecoration: "none",
+                        fontSize: "0.95rem",
+                      }}
+                    >
+                      View
+                    </Link>
+                  ) : (
+                    <span style={{ color: "#a0aec0", fontSize: "0.95rem" }}>
+                      View (Pending)
+                    </span>
+                  )}
                   <span style={{ color: "#e2e8f0" }}>|</span>
                   <Link
                     href={getLocalizedUrl(
-                      `/dashboard/events/${event.slug}/edit`,
+                      `/dashboard/events/${event.slug || event.databaseId}/edit`,
                       locale,
                     )}
                     style={{
