@@ -400,7 +400,7 @@ export default async function SingleEventPage({ params }) {
                         }}
                       >
                         update
-                      </span>
+                      </span>{" "}
                       Recurring Event
                     </span>
                   </div>
@@ -474,34 +474,13 @@ export default async function SingleEventPage({ params }) {
                       href={ticketUrl}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="listing-primary-btn"
-                      style={{
-                        display: "block",
-                        width: "100%",
-                        textAlign: "center",
-                        padding: "1.2rem",
-                        borderRadius: "8px",
-                        fontSize: "1.1rem",
-                        border: "none",
-                        cursor: "pointer",
-                        textDecoration: "none",
-                      }}
+                      className="listing-primary-btn event-cta-btn"
                     >
                       {isFree ? "Register / RSVP" : "Buy Tickets"}
                     </a>
                   ) : (
                     <button
-                      className="listing-primary-btn"
-                      style={{
-                        display: "block",
-                        width: "100%",
-                        textAlign: "center",
-                        padding: "1.2rem",
-                        borderRadius: "8px",
-                        fontSize: "1.1rem",
-                        border: "none",
-                        cursor: "pointer",
-                      }}
+                      className="listing-primary-btn event-cta-btn"
                     >
                       Save Event
                     </button>
