@@ -3,10 +3,19 @@ import { getListings } from "@/lib/api";
 import { getDictionary } from "@/lib/dictionaries";
 import DirectoryFilterManager from "@/components/directory/DirectoryFilterManager";
 
-export const metadata = {
-  title: "Local Business Directory - Cape Coral Reviewed",
-  description: "Browse our comprehensive directory of local businesses in Cape Coral, Florida.",
-};
+export async function generateMetadata({ searchParams }) {
+  const queryParams = await searchParams;
+  const hasQueryParams = Object.keys(queryParams || {}).length > 0;
+  
+  return {
+    title: "Local Business Directory - Cape Coral Reviewed",
+    description: "Browse our comprehensive directory of local businesses in Cape Coral, Florida.",
+    robots: {
+      index: !hasQueryParams,
+      follow: true,
+    },
+  };
+}
 
 export default async function DirectoryIndexPage({ params }) {
   const { locale } = await params;

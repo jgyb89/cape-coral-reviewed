@@ -9,6 +9,7 @@ import NewsletterForm from "@/components/newsletter/NewsletterForm";
 export const metadata = {
   title: "Stay Connected: The Cape Coral Reviewed Weekly Newsletter",
   description: "Join the local community list. Get exclusive reviews, upcoming events, and business features delivered to your inbox.",
+  robots: { index: false },
 };
 
 export default function NewsletterPage() {

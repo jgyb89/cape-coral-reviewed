@@ -29,9 +29,14 @@ export async function generateMetadata({ params }) {
   const description = "Discover this upcoming event in Cape Coral.";
   const ogImage = formatImageUrl(event.featuredImage?.node?.sourceUrl);
 
+  const contentHtml = event.content || "";
+  const rawTextLength = contentHtml.replace(/<[^>]*>?/gm, '').trim().length;
+  const isGhostEvent = rawTextLength < 50;
+
   return {
     title,
     description,
+    robots: { index: !isGhostEvent, follow: true },
     openGraph: {
       title,
       description,

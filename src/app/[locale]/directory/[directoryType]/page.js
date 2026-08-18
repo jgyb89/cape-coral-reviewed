@@ -6,13 +6,20 @@ import { getDictionary } from "@/lib/dictionaries";
 import DirectoryFilterManager from "@/components/directory/DirectoryFilterManager";
 import DirectorySEO from "@/components/directory/DirectorySEO";
 
-export async function generateMetadata({ params }) {
+export async function generateMetadata({ params, searchParams }) {
   const { directoryType } = await params;
   const capitalizedType = directoryType.charAt(0).toUpperCase() + directoryType.slice(1).replace(/-/g, ' ');
+  
+  const queryParams = await searchParams;
+  const hasQueryParams = Object.keys(queryParams || {}).length > 0;
   
   return {
     title: `${capitalizedType} in Cape Coral - Cape Coral Reviewed`,
     description: `Browse the best ${capitalizedType} businesses in Cape Coral, Florida. Read reviews and find contact information.`,
+    robots: {
+      index: !hasQueryParams,
+      follow: true,
+    }
   };
 }
 
