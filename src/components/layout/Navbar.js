@@ -184,9 +184,13 @@ export default function Navbar({ currentUser: propCurrentUser, dict, locale }) {
                 <div className={styles["mega-menu-grid"]}>
                   {categories.map((cat) => (
                     <div key={cat.slug} className={styles["mega-menu-column"]}>
-                      <h4 className={styles["mega-menu-title"]}>
+                      <Link
+                        href={getLocalizedUrl(`/directory/${cat.slug}`, locale)}
+                        className={styles["mega-menu-title"]}
+                        onClick={() => setIsListingsOpen(false)}
+                      >
                         {cat.icon} {cat.title}
-                      </h4>
+                      </Link>
                       <div className={styles["mega-menu-subs"]}>
                         {cat.subs.map((sub) => (
                           <Link
