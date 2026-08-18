@@ -4,6 +4,7 @@ import Link from "next/link";
 import { getListingsByDirectoryType } from "@/lib/api";
 import { getDictionary } from "@/lib/dictionaries";
 import DirectoryFilterManager from "@/components/directory/DirectoryFilterManager";
+import DirectorySEO from "@/components/directory/DirectorySEO";
 
 export async function generateMetadata({ params }) {
   const { directoryType } = await params;
@@ -27,29 +28,32 @@ export default async function DirectoryTypePage({ params }) {
   const typeDescription = typeNode?.description || "";
 
   return (
-    <main style={{ padding: "clamp(1.5rem, 4vw, 3rem) 1rem 0", maxWidth: "1200px", margin: "0 auto", fontFamily: "sans-serif" }}>
-      <header style={{ marginBottom: "2rem", textAlign: "center" }}>
-        <h1 style={{ 
-          fontFamily: 'var(--font-heading)', 
-          fontSize: 'clamp(1.75rem, 6vw, 3.5rem)', 
-          fontWeight: '800', 
-          lineHeight: '1.1',
-          marginTop: '1rem',
-          marginBottom: '0.5rem',
-          color: 'var(--color-text)',
-          textTransform: 'capitalize'
-        }}>
-          Best {typeName} in Cape Coral
-        </h1>
-        {typeDescription && (
-          <div style={{ maxWidth: "800px", margin: "0 auto", color: "#4a5568", lineHeight: "1.6", fontSize: "1.1rem" }} dangerouslySetInnerHTML={{ __html: typeDescription }} />
-        )}
-      </header>
+    <>
+      <main style={{ padding: "clamp(1.5rem, 4vw, 3rem) 1rem 0", maxWidth: "1200px", margin: "0 auto", fontFamily: "sans-serif" }}>
+        <header style={{ marginBottom: "2rem", textAlign: "center" }}>
+          <h1 style={{ 
+            fontFamily: 'var(--font-heading)', 
+            fontSize: 'clamp(1.75rem, 6vw, 3.5rem)', 
+            fontWeight: '800', 
+            lineHeight: '1.1',
+            marginTop: '1rem',
+            marginBottom: '0.5rem',
+            color: 'var(--color-text)',
+            textTransform: 'capitalize'
+          }}>
+            Best {typeName} in Cape Coral
+          </h1>
+          {typeDescription && (
+            <div style={{ maxWidth: "800px", margin: "0 auto", color: "#4a5568", lineHeight: "1.6", fontSize: "1.1rem" }} dangerouslySetInnerHTML={{ __html: typeDescription }} />
+          )}
+        </header>
 
-      <Suspense fallback={<div style={{ textAlign: 'center', padding: '3rem', color: '#64748b' }}>Loading listings...</div>}>
-        <DirectoryFilterManager listings={listings} currentUser={currentUser} dict={dict} locale={locale} />
-      </Suspense>
-    </main>
+        <Suspense fallback={<div style={{ textAlign: 'center', padding: '3rem', color: '#64748b' }}>Loading listings...</div>}>
+          <DirectoryFilterManager listings={listings} currentUser={currentUser} dict={dict} locale={locale} />
+        </Suspense>
+      </main>
+      <DirectorySEO directoryType={directoryType} />
+    </>
   );
 }
 

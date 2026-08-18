@@ -71,9 +71,9 @@ const formatEventbriteDateRange = (startStr, endStr) => {
   }
 
   // Different Days
-  return { 
-    dateString: `${startDate} – ${endDate}`, 
-    timeString: `${startTime} to ${endTime}`
+  return {
+    dateString: `${startDate} – ${endDate}`,
+    timeString: `${startTime} to ${endTime}`,
   };
 };
 
@@ -104,7 +104,11 @@ export default async function SingleEventPage({ params }) {
   const allEvents = await getEvents();
   const now = new Date();
   const recommendedEvents = allEvents
-    .filter((e) => (e.status === "PUBLISH" || e.status === "publish") && e.databaseId !== event.databaseId)
+    .filter(
+      (e) =>
+        (e.status === "PUBLISH" || e.status === "publish") &&
+        e.databaseId !== event.databaseId,
+    )
     .filter((e) => {
       const startStr = e.eventDetails?.startDateTime || e.date;
       const endStr = e.eventDetails?.endDateTime || startStr;
@@ -137,11 +141,18 @@ export default async function SingleEventPage({ params }) {
     }
   }
 
-  const { dateString, timeString } = formatEventbriteDateRange(rawStartDate, rawEndDate);
+  const { dateString, timeString } = formatEventbriteDateRange(
+    rawStartDate,
+    rawEndDate,
+  );
 
   const venueName = eventDetails?.venueName || "Venue TBA";
   const rawPrice = eventDetails?.price || "";
-  const isFree = !rawPrice || rawPrice.toLowerCase() === 'free' || rawPrice === '0' || rawPrice === '$0';
+  const isFree =
+    !rawPrice ||
+    rawPrice.toLowerCase() === "free" ||
+    rawPrice === "0" ||
+    rawPrice === "$0";
   const ticketUrl = eventDetails?.ticketUrl || eventDetails?.ticket_url;
   const hasTicketUrl = Boolean(ticketUrl);
 
@@ -369,11 +380,27 @@ export default async function SingleEventPage({ params }) {
 
                 {isRecurring && (
                   <div style={{ marginBottom: "1rem" }}>
-                    <span style={{ 
-                      display: "inline-block", backgroundColor: "#e6f4ea", color: "#137333", 
-                      padding: "0.25rem 0.75rem", borderRadius: "16px", fontSize: "0.85rem", fontWeight: "600" 
-                    }}>
-                      <span className="material-symbols-outlined" style={{ fontSize: "1rem", verticalAlign: "text-bottom", marginRight: "4px" }}>update</span>
+                    <span
+                      style={{
+                        display: "inline-block",
+                        backgroundColor: "#e6f4ea",
+                        color: "#137333",
+                        padding: "0.25rem 0.75rem",
+                        borderRadius: "16px",
+                        fontSize: "0.85rem",
+                        fontWeight: "600",
+                      }}
+                    >
+                      <span
+                        className="material-symbols-outlined"
+                        style={{
+                          fontSize: "1rem",
+                          verticalAlign: "text-bottom",
+                          marginRight: "4px",
+                        }}
+                      >
+                        update
+                      </span>{" "}
                       Recurring Event
                     </span>
                   </div>
@@ -381,20 +408,40 @@ export default async function SingleEventPage({ params }) {
 
                 <div
                   className="listing-card__item"
-                  style={{ alignItems: "flex-start", gap: '0.75rem' }}
+                  style={{ alignItems: "flex-start", gap: "0.75rem" }}
                 >
-                  <span className="material-symbols-outlined listing-card__icon" style={{ marginTop: '2px' }}>
+                  <span
+                    className="material-symbols-outlined listing-card__icon"
+                    style={{ marginTop: "2px" }}
+                  >
                     calendar_today
                   </span>
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: '0.25rem' }}>
+                  <div
+                    style={{
+                      display: "flex",
+                      flexDirection: "column",
+                      gap: "0.25rem",
+                    }}
+                  >
                     <span
                       className="listing-card__text"
-                      style={{ fontWeight: "600", fontSize: '1.05rem', color: '#1a1a1a', lineHeight: '1.2' }}
+                      style={{
+                        fontWeight: "600",
+                        fontSize: "1.05rem",
+                        color: "#1a1a1a",
+                        lineHeight: "1.2",
+                      }}
                     >
                       {dateString}
                     </span>
                     {timeString && (
-                      <span style={{ fontSize: '0.95rem', color: '#555', fontWeight: '500' }}>
+                      <span
+                        style={{
+                          fontSize: "0.95rem",
+                          color: "#555",
+                          fontWeight: "500",
+                        }}
+                      >
                         {timeString}
                       </span>
                     )}
@@ -427,34 +474,13 @@ export default async function SingleEventPage({ params }) {
                       href={ticketUrl}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="listing-primary-btn"
-                      style={{
-                        display: "block",
-                        width: "100%",
-                        textAlign: "center",
-                        padding: "1.2rem",
-                        borderRadius: "8px",
-                        fontSize: "1.1rem",
-                        border: "none",
-                        cursor: "pointer",
-                        textDecoration: "none",
-                      }}
+                      className="listing-primary-btn event-cta-btn"
                     >
                       {isFree ? "Register / RSVP" : "Buy Tickets"}
                     </a>
                   ) : (
                     <button
-                      className="listing-primary-btn"
-                      style={{
-                        display: "block",
-                        width: "100%",
-                        textAlign: "center",
-                        padding: "1.2rem",
-                        borderRadius: "8px",
-                        fontSize: "1.1rem",
-                        border: "none",
-                        cursor: "pointer",
-                      }}
+                      className="listing-primary-btn event-cta-btn"
                     >
                       Save Event
                     </button>
