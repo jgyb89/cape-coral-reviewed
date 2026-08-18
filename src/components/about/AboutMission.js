@@ -1,108 +1,18 @@
 "use client";
 
-import { useEffect, useRef } from "react";
-import gsap from "gsap";
-import { ScrollTrigger } from "gsap/dist/ScrollTrigger";
+import { useRef } from "react";
+import useBreezeAnimation from "@/hooks/useBreezeAnimation";
+import AnimatedLinesSvg from "@/components/ui/AnimatedLinesSvg";
 import styles from "./AboutMission.module.css";
 
 export default function AboutMission() {
   const sectionRef = useRef(null);
 
-  useEffect(() => {
-    gsap.registerPlugin(ScrollTrigger);
-    const ctx = gsap.context(() => {
-      const breezeElements = gsap.utils.toArray(".breeze-text");
-
-      breezeElements.forEach((el, index) => {
-        const rot = index % 2 === 0 ? 2 : -2; // Gentle alternating breeze
-        gsap.fromTo(
-          el,
-          { opacity: 0, y: 40, rotationZ: rot },
-          {
-            opacity: 1,
-            y: 0,
-            rotationZ: 0,
-            duration: 1,
-            ease: "power2.out",
-            scrollTrigger: {
-              trigger: el,
-              start: "top 85%",
-            },
-          },
-        );
-      });
-
-      // SVG lines animation
-      const paths = gsap.utils.toArray(".animated-line");
-      paths.forEach((path, i) => {
-        // Force the layout length for our 100-unit path
-        const length = path.getTotalLength() || 100;
-        gsap.set(path, {
-          strokeDasharray: length,
-          strokeDashoffset: length,
-        });
-
-        gsap.to(path, {
-          strokeDashoffset: 0,
-          ease: "power2.inOut",
-          duration: 2.5,
-          delay: i * 0.2,
-          scrollTrigger: {
-            trigger: sectionRef.current,
-            start: "top 75%",
-          },
-        });
-      });
-    }, sectionRef);
-    return () => ctx.revert();
-  }, []);
+  useBreezeAnimation(sectionRef);
 
   return (
     <section ref={sectionRef} className={styles.section}>
-      {/* SVG Animated Lines */}
-      <svg
-        className={styles.svgLines}
-        viewBox="0 0 140 10000"
-        preserveAspectRatio="xMinYMin slice"
-        xmlns="http://www.w3.org/2000/svg"
-      >
-        {/* Brand Red */}
-        <path
-          className="animated-line"
-          d="M 105 0 L 105 10000"
-          stroke="#e94f37"
-          strokeWidth="32"
-          fill="none"
-          strokeLinecap="round"
-        />
-        {/* Orange */}
-        <path
-          className="animated-line"
-          d="M 75 0 L 75 10000"
-          stroke="#ff8c00"
-          strokeWidth="32"
-          fill="none"
-          strokeLinecap="round"
-        />
-        {/* Brand Yellow */}
-        <path
-          className="animated-line"
-          d="M 45 0 L 45 10000"
-          stroke="#ffd700"
-          strokeWidth="32"
-          fill="none"
-          strokeLinecap="round"
-        />
-        {/* White */}
-        <path
-          className="animated-line"
-          d="M 15 0 L 15 10000"
-          stroke="#ffffff"
-          strokeWidth="32"
-          fill="none"
-          strokeLinecap="round"
-        />
-      </svg>
+      <AnimatedLinesSvg className={styles.svgLines} />
 
       <div className={styles.container}>
         <div className={styles.textBlock}>
