@@ -27,7 +27,7 @@ export default function NewsletterForm() {
 
   return (
     <div className={styles.formWrapper}>
-      <form onSubmit={handleSubmit} className={styles.formContainer}>
+      <form action="javascript:void(0);" onSubmit={handleSubmit} className={styles.formContainer}>
         {status === "success" ? (
           <div className={styles.successBox}>
             <p className={styles.successText}>Thanks for subscribing! Keep an eye on your inbox.</p>

@@ -156,6 +156,7 @@ export default function Newsletter() {
           </p>
           <form
             className={styles.formGroup}
+            action="javascript:void(0);"
             onSubmit={handleSubmit}
           >
             {status === "success" ? (
