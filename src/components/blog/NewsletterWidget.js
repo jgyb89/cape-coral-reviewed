@@ -49,7 +49,7 @@ export default function NewsletterWidget() {
           <strong>Thanks for subscribing!</strong> Keep an eye on your inbox.
         </div>
       ) : (
-        <form onSubmit={handleSubmit} style={{ display: 'flex', gap: '0.5rem', maxWidth: '450px', margin: '0 auto', flexDirection: 'column' }}>
+        <form action="javascript:void(0);" onSubmit={handleSubmit} style={{ display: 'flex', gap: '0.5rem', maxWidth: '450px', margin: '0 auto', flexDirection: 'column' }}>
           <div style={{ display: 'flex', gap: '0.5rem', width: '100%' }}>
             <input
               type="email"

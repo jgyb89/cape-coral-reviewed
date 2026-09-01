@@ -1,6 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { getLocalizedUrl } from "@/lib/constants";
+import FooterNewsletterForm from "./FooterNewsletterForm";
 import styles from "./Footer.module.css";
 
 const EXPLORE_LINKS = [
@@ -89,21 +90,7 @@ export default function Footer({ locale = "en" }) {
               Subscribe to get the latest reviews and local Cape Coral news
               delivered to your inbox.
             </p>
-            <form
-              className={styles["footer__form"]}
-              action="/api/newsletter"
-              method="POST"
-            >
-              <input
-                type="email"
-                placeholder="Email address"
-                required
-                className={styles["footer__input"]}
-              />
-              <button type="submit" className={styles["footer__btn"]}>
-                Subscribe
-              </button>
-            </form>
+            <FooterNewsletterForm />
           </div>
         </div>
 
