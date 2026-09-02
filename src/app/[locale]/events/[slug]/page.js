@@ -12,6 +12,7 @@ import EventCard from "@/components/events/EventCard";
 import FavoriteButton from "@/components/directory/FavoriteButton";
 import ShareButton from "@/components/directory/ShareButton";
 import { expandRecurringEvents } from "@/lib/eventUtils";
+import AdUnit from "@/components/ads/AdUnit";
 import "../../listing/[slug]/ListingPage.css";
 import "./EventPage.css";
 
@@ -532,6 +533,10 @@ export default async function SingleEventPage({ params }) {
               </div>
             </div>
           )}
+
+          <div style={{ marginTop: "3rem" }}>
+            <AdUnit type="horizontal" />
+          </div>
         </div>
       </main>
     </>

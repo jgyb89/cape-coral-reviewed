@@ -1,6 +1,7 @@
 // src/lib/actions.js
 "use server";
 
+import { isRedirectError } from "next/dist/client/components/redirect";
 import { cookies } from "next/headers";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
@@ -23,6 +24,9 @@ export async function fetchGraphQL(query, variables = {}, requireAuth = true) {
     headers["Authorization"] = `Bearer ${token}`;
   }
 
+  let json;
+  let shouldRedirect = false;
+  
   try {
     const res = await fetch(GRAPHQL_URL, {
       method: "POST",
@@ -39,13 +43,19 @@ export async function fetchGraphQL(query, variables = {}, requireAuth = true) {
       console.error("Unexpected content-type inside fetchGraphQL");
       return { errors: [{ message: "Invalid JSON response" }] };
     }
-    const json = await res.json();
-    await handleGraphQLError(json);
-    return json;
+    json = await res.json();
+    shouldRedirect = await handleGraphQLError(json);
   } catch (error) {
+    if (isRedirectError(error)) throw error;
     console.error("GraphQL fetch failed inside fetchGraphQL");
     return { errors: [{ message: error.message }] };
   }
+
+  if (shouldRedirect) {
+    redirect("/login");
+  }
+
+  return json;
 }
 
 /**
@@ -81,6 +91,7 @@ export async function handleLogin(username, password) {
     const user = await loginUser(username, password);
     return { success: true, user };
   } catch (error) {
+    if (isRedirectError(error)) throw error;
     return { success: false, error: error.message };
   }
 }
@@ -102,21 +113,22 @@ async function handleGraphQLError(json) {
       const cookieStore = await cookies();
       cookieStore.set("authToken", "", { maxAge: 0 });
       cookieStore.set("hasSession", "", { maxAge: 0 });
-      redirect("/login");
+      return true;
     }
 
     throw new Error(json.errors[0].message);
   }
+  return false;
 }
 
 /**
  * Server Action to update the user's profile.
  */
 export async function updateUserProfile(formData) {
-  try {
-    const viewer = await getViewer();
-    if (!viewer?.id) redirect("/login");
+  const viewer = await getViewer();
+  if (!viewer?.id) redirect("/login");
 
+  try {
     const mutation = `
       mutation UpdateUserProfile($input: UpdateUserInput!) {
         updateUser(input: $input) {
@@ -150,6 +162,7 @@ export async function updateUserProfile(formData) {
     revalidatePath("/dashboard", "layout");
     return { success: true, user: json.data.updateUser.user };
   } catch (error) {
+    if (isRedirectError(error)) throw error;
     console.error("Update Profile Error:", error);
     return { success: false, error: error.message };
   }
@@ -169,6 +182,7 @@ export async function deleteUserReview(reviewId) {
     revalidatePath("/", "layout");
     return { success: true };
   } catch (error) {
+    if (isRedirectError(error)) throw error;
     console.error("Delete Review Error:", error);
     return { success: false, error: error.message };
   }
@@ -178,10 +192,10 @@ export async function deleteUserReview(reviewId) {
  * Server Action to remove a listing from user's favorites.
  */
 export async function removeFavoriteListing(listingId) {
-  try {
-    const viewer = await getViewer();
-    if (!viewer) throw new Error("Could not fetch viewer data");
+  const viewer = await getViewer();
+  if (!viewer) redirect("/login");
 
+  try {
     const currentFavorites =
       viewer.userData?.favoriteListings?.nodes.map((n) => n.databaseId) || [];
     const updatedFavorites = currentFavorites.filter(
@@ -203,16 +217,17 @@ export async function removeFavoriteListing(listingId) {
     );
     return { success: true };
   } catch (error) {
+    if (isRedirectError(error)) throw error;
     console.error("Remove Favorite Error:", error);
     return { success: false, error: error.message };
   }
 }
 
 export async function toggleFavoriteListing(listingId) {
-  try {
-    const viewer = await getViewer();
-    if (!viewer) throw new Error("Could not fetch viewer data");
+  const viewer = await getViewer();
+  if (!viewer) redirect("/login");
 
+  try {
     const currentFavorites =
       viewer.userData?.favoriteListings?.nodes?.map((n) => n.databaseId) || [];
     const listingDbId = Number.parseInt(listingId, 10);
@@ -241,6 +256,7 @@ export async function toggleFavoriteListing(listingId) {
     revalidatePath("/dashboard/favorites");
     return { success: true };
   } catch (error) {
+    if (isRedirectError(error)) throw error;
     console.error("Toggle Favorite Error:", error);
     return {
       success: false,
@@ -282,6 +298,7 @@ export async function submitUserReview(formData) {
     revalidatePath("/", "layout");
     return { success: true };
   } catch (error) {
+    if (isRedirectError(error)) throw error;
     console.error("Submit Review Action Error:", error);
     return {
       success: false,
@@ -318,6 +335,7 @@ export async function getListingForEdit(databaseId) {
     const json = await fetchGraphQL(query, { id: databaseId }, true);
     return json.data?.ccrlisting || null;
   } catch (error) {
+    if (isRedirectError(error)) throw error;
     console.error("Get Listing For Edit Error:", error);
     return null;
   }
@@ -354,10 +372,10 @@ function mapPayloadToAcf(payload) {
  * Server Action to update an existing user listing.
  */
 export async function updateUserListing(databaseId, payload) {
-  try {
-    const viewer = await getViewer();
-    if (!viewer) throw new Error("Unauthorized");
+  const viewer = await getViewer();
+  if (!viewer) redirect("/login");
 
+  try {
     const listing = await getListingForEdit(databaseId);
     if (!listing || listing.author?.node?.databaseId !== viewer.databaseId) {
       throw new Error("You do not have permission to edit this listing.");
@@ -408,6 +426,7 @@ export async function updateUserListing(databaseId, payload) {
     revalidatePath("/directory", "layout");
     return { success: true };
   } catch (error) {
+    if (isRedirectError(error)) throw error;
     return { success: false, error: error.message };
   }
 }
@@ -416,10 +435,10 @@ export async function updateUserListing(databaseId, payload) {
  * Server Action to delete a user's listing.
  */
 export async function deleteUserListing(listingId) {
-  try {
-    const viewer = await getViewer();
-    if (!viewer) throw new Error("Unauthorized");
+  const viewer = await getViewer();
+  if (!viewer) redirect("/login");
 
+  try {
     const listing = await getListingForEdit(listingId);
     if (!listing || listing.author?.node?.databaseId !== viewer.databaseId) {
       throw new Error("You do not have permission to delete this listing.");
@@ -437,6 +456,7 @@ export async function deleteUserListing(listingId) {
     revalidatePath("/directory", "layout");
     return { success: true };
   } catch (error) {
+    if (isRedirectError(error)) throw error;
     console.error("Delete Listing Error:", error);
     return { success: false, error: error.message };
   }
@@ -470,6 +490,7 @@ export async function updateUserReview(reviewId, formData) {
     revalidatePath("/", "layout");
     return { success: true };
   } catch (error) {
+    if (isRedirectError(error)) throw error;
     console.error("Update Review Error:", error);
     return { success: false, error: error.message };
   }
@@ -487,6 +508,7 @@ export async function submitBugReport(formData) {
     ]);
     return { success: true };
   } catch (error) {
+    if (isRedirectError(error)) throw error;
     console.error("Bug Report Submission Error:", error);
     return { success: false, message: error.message };
   }
@@ -539,6 +561,7 @@ export async function submitListing(formData) {
     revalidatePath("/directory", "layout");
     return { success: true };
   } catch (error) {
+    if (isRedirectError(error)) throw error;
     console.error("Submit Listing Error:", error);
     return { success: false, message: error.message };
   }
@@ -552,6 +575,7 @@ export async function registerBusiness(fieldValues) {
     await submitGravityForm(7, fieldValues);
     return { success: true };
   } catch (error) {
+    if (isRedirectError(error)) throw error;
     console.error("Register Business Error:", error);
     return { success: false, message: error.message };
   }
@@ -592,6 +616,7 @@ async function moderateImage(file) {
       }
     }
   } catch (error) {
+    if (isRedirectError(error)) throw error;
     if (error.message.includes("safety guidelines")) throw error;
     console.error("Moderation API error:", error);
   }
@@ -690,6 +715,7 @@ export async function getBlogPosts() {
     const json = await fetchGraphQL(query, {}, false);
     return json.data?.posts?.nodes || [];
   } catch (error) {
+    if (isRedirectError(error)) throw error;
     console.error("Error fetching blog posts:", error);
     return [];
   }
@@ -728,6 +754,7 @@ export async function getBlogPostBySlug(slug) {
     const json = await fetchGraphQL(query, { id: slug }, false);
     return json.data?.post || null;
   } catch (error) {
+    if (isRedirectError(error)) throw error;
     console.error("Error fetching blog post by slug:", error);
     return null;
   }
@@ -754,6 +781,7 @@ export async function getSidebarListings() {
     const json = await fetchGraphQL(query, {}, false);
     return json.data?.ccrlistings?.nodes || [];
   } catch (error) {
+    if (isRedirectError(error)) throw error;
     console.error("Error fetching sidebar listings:", error);
     return [];
   }
@@ -774,6 +802,7 @@ export async function submitClaimForm(formData) {
     ]);
     return { success: true };
   } catch (error) {
+    if (isRedirectError(error)) throw error;
     console.error("Claim Form Error:", error);
     return { success: false, message: error.message };
   }
@@ -793,6 +822,7 @@ export async function submitContactForm(formData) {
     ]);
     return { success: true };
   } catch (error) {
+    if (isRedirectError(error)) throw error;
     console.error("Contact Form Error:", error);
     return { success: false, message: error.message };
   }
@@ -813,6 +843,7 @@ export async function submitMobileOptInForm(formData) {
     ], false);
     return { success: true };
   } catch (error) {
+    if (isRedirectError(error)) throw error;
     console.error("Mobile Opt-In Form Error:", error);
     return { success: false, error: error.message };
   }
@@ -842,6 +873,7 @@ export async function submitNewsletterForm(formData) {
     await submitGravityForm(formId, fieldValues);
     return { success: true };
   } catch (error) {
+    if (isRedirectError(error)) throw error;
     console.error("Newsletter submission error:", error);
     return { success: false, error: error.message || "Failed to join the newsletter. Please try again." };
   }
@@ -875,6 +907,7 @@ export async function submitBlogComment(postId, content) {
     if (json.errors) return { success: false, error: json.errors[0].message };
     return { success: true, comment: json.data.createComment.comment };
   } catch (error) {
+    if (isRedirectError(error)) throw error;
     console.error("Comment submission error:", error);
     return { success: false, error: error.message };
   }
@@ -899,6 +932,7 @@ export async function requestPasswordReset(usernameOrEmail) {
     await fetchGraphQL(query, { username: usernameOrEmail }, false);
     return { success: true };
   } catch (error) {
+    if (isRedirectError(error)) throw error;
     console.error("Password reset request error:", error);
     return { success: false, error: error.message };
   }
@@ -950,6 +984,7 @@ export async function handleGoogleLogin(credential) {
       };
     }
   } catch (error) {
+    if (isRedirectError(error)) throw error;
     console.error("Google Auth Error:", error);
     return { success: false, error: "Network error during Google login." };
   }
@@ -1026,6 +1061,7 @@ export async function submitEventComment(formData) {
     revalidatePath("/events", "layout");
     return { success: true };
   } catch (error) {
+    if (isRedirectError(error)) throw error;
     console.error("Submit Event Comment Error:", error);
     return {
       success: false,

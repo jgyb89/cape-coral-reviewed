@@ -4,6 +4,7 @@ import { getSidebarListings } from "@/lib/actions";
 import { formatImageUrl } from "@/lib/formatImageUrl";
 import { getLocalizedUrl } from "@/lib/constants";
 import PropTypes from 'prop-types';
+import AdUnit from "@/components/ads/AdUnit";
 
 export default async function BlogSidebar({ locale = "en" }) {
   const listings = await getSidebarListings();
@@ -67,6 +68,9 @@ export default async function BlogSidebar({ locale = "en" }) {
             );
           })}
         </div>
+      </div>
+      <div className="sidebar-widget" style={{ marginTop: '2rem' }}>
+        <AdUnit type="vertical" />
       </div>
     </aside>
   );

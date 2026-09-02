@@ -1,0 +1,28 @@
+/* Base state: Takes up width so AdSense can measure it, but remains invisible */
+.wrapper {
+  width: 100%;
+  min-height: 1px;
+  background-color: transparent;
+  padding: 0;
+  margin: 0;
+  transition: all 0.3s ease;
+}
+
+/* Filled state: Applies the brand styling only once the ad successfully loads */
+.wrapper--filled {
+  background-color: #f6eee3;
+  padding: 16px;
+  margin: 2rem 0;
+  border-radius: 12px;
+  border: 1px solid #eaeaea;
+  text-align: center;
+}
+
+.label {
+  font-family: var(--font-body, sans-serif);
+  font-size: 0.75rem;
+  color: #333;
+  text-transform: uppercase;
+  margin-bottom: 12px;
+  display: block;
+}

@@ -1,6 +1,8 @@
 // src/components/directory/CcrCardGrid.js
+import React from 'react';
 import PropTypes from 'prop-types';
 import CcrCard from './CcrCard';
+import AdUnit from "@/components/ads/AdUnit";
 import styles from './CcrCardGrid.module.css';
 
 export default function CcrCardGrid({ listings, currentUser, locale = 'en' }) {
@@ -17,8 +19,17 @@ export default function CcrCardGrid({ listings, currentUser, locale = 'en' }) {
 
   return (
     <div className={styles['ccr-card-grid']}>
-      {listings.map((listing) => (
-        <CcrCard key={listing.id || listing.slug} listing={listing} currentUser={currentUser} locale={locale} />
+      {listings.map((listing, index) => (
+        <React.Fragment key={listing.databaseId || listing.id || listing.slug}>
+          <CcrCard listing={listing} currentUser={currentUser} locale={locale} />
+          
+          {/* Inject In-Feed Ad safely after the 11th item without removing data */}
+          {index === 10 && (
+            <div style={{ gridColumn: '1 / -1', width: '100%' }}>
+              <AdUnit type="in-feed" />
+            </div>
+          )}
+        </React.Fragment>
       ))}
     </div>
   );

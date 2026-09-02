@@ -1,9 +1,10 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import React, { useState, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import EventCard from "@/components/events/EventCard";
 import LoginModal from "@/components/auth/LoginModal";
+import AdUnit from "@/components/ads/AdUnit";
 import PropTypes from "prop-types";
 import { getLocalizedUrl } from "@/lib/constants";
 import { EVENT_CATEGORIES } from "@/lib/constants/events";
@@ -29,13 +30,21 @@ function PaginatedEventSection({ title, events, locale, currentUser }) {
     <section>
       <h2 className="thematic-section-header">{title}</h2>
       <div className="event-discovery-grid">
-        {visibleEvents.map((event) => (
-          <EventCard
-            key={`${title}-${event.id}`}
-            event={event}
-            locale={locale}
-            currentUser={currentUser}
-          />
+        {visibleEvents.map((event, index) => (
+          <React.Fragment key={`${title}-${event.id || event.databaseId}`}>
+            <EventCard
+              event={event}
+              locale={locale}
+              currentUser={currentUser}
+            />
+            
+            {/* Inject In-Feed Ad after the 8th item (index 7) */}
+            {index === 7 && (
+              <div style={{ gridColumn: '1 / -1', width: '100%' }}>
+                <AdUnit type="in-feed" />
+              </div>
+            )}
+          </React.Fragment>
         ))}
       </div>
       {hasMore && (

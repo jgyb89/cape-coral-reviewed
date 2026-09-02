@@ -14,6 +14,7 @@ import StarRating from "@/components/ui/StarRating";
 import ClaimListing from "@/components/directory/ClaimListing";
 import { formatImageUrl } from "@/lib/formatImageUrl";
 import { BASE_URL } from "@/lib/constants";
+import AdUnit from "@/components/ads/AdUnit";
 import "./ListingPage.css";
 
 /**
@@ -72,8 +73,8 @@ export async function generateMetadata({ params }) {
   const reviewCount = listing.reviews?.nodes?.length || 0;
   const contentHtml = listing.content || "";
   const rawTextLength = contentHtml.replace(/<[^>]*>?/gm, '').trim().length;
-  const hasImage = !!listing.featuredImage?.node?.sourceUrl;
-  const isGhostListing = !hasImage && reviewCount === 0 && rawTextLength < 50;
+  // Strictly require at least 200 chars of text OR a user review to allow indexing
+  const isGhostListing = !(rawTextLength > 200 || reviewCount > 0);
 
   return {
     title: seoTitle,
@@ -438,6 +439,8 @@ export default async function DirectoryListingPage({ params }) {
             currentUser={currentUser}
           />
         </section>
+
+        <AdUnit type="horizontal" />
       </main>
 
       <aside className="listing-sidebar">

@@ -2,8 +2,9 @@
 "use client";
 
 
-import { useState } from "react";
+import React, { useState } from "react";
 import BlogCard from "./BlogCard";
+import AdUnit from "@/components/ads/AdUnit";
 import PropTypes from 'prop-types';
 import styles from "./Blog.module.css";
 import { useHorizontalScroll } from "@/hooks/useHorizontalScroll";
@@ -77,8 +78,17 @@ export default function BlogView({ posts, dict = {}, locale = "en" }) {
 
       {filteredPosts.length > 0 ? (
         <div className={styles['blog-grid']}>
-          {filteredPosts.map((post) => (
-            <BlogCard key={post.id || post.slug} post={post} locale={locale} />
+          {filteredPosts.map((post, index) => (
+            <React.Fragment key={post.id || post.slug}>
+              <BlogCard post={post} locale={locale} />
+              
+              {/* Inject In-Feed Ad safely after the 11th item without removing data */}
+              {index === 10 && (
+                <div style={{ gridColumn: '1 / -1', width: '100%' }}>
+                  <AdUnit type="in-feed" />
+                </div>
+              )}
+            </React.Fragment>
           ))}
         </div>
       ) : (
