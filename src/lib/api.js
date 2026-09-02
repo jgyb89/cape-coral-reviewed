@@ -167,7 +167,7 @@ export async function getListingBySlug(slug) {
 export async function getListings(categorySlug = null) {
   const query = categorySlug
     ? `query GetListingsWithCategory($categorySlug: [String]) {
-        ccrlistings(first: 100, where: { 
+        ccrlistings(first: 1000, where: { 
           taxQuery: {
             taxArray: [
               { taxonomy: CCRLISTINGCATEGORY, field: SLUG, terms: $categorySlug }
@@ -180,7 +180,7 @@ export async function getListings(categorySlug = null) {
         }
       }`
     : `query GetListingsAll {
-        ccrlistings(first: 100) {
+        ccrlistings(first: 1000) {
           nodes {
             ${CORE_LISTING_FIELDS}
           }
@@ -219,7 +219,7 @@ export async function getListings(categorySlug = null) {
 export async function getListingsByCategory(categorySlug, directoryType = null) {
   const query = `
     query GetListingsByCategory($categorySlug: [String], $directoryType: [String]) {
-      ccrlistings(first: 100, where: { 
+      ccrlistings(first: 1000, where: { 
         taxQuery: {
           relation: AND,
           taxArray: [
@@ -252,7 +252,7 @@ export async function getListingsByCategory(categorySlug, directoryType = null) 
 export async function getListingsByDirectoryType(directoryTypeSlug) {
   const query = `
     query GetListingsByDirectoryType($directoryType: [String]) {
-      ccrlistings(first: 100, where: { 
+      ccrlistings(first: 1000, where: { 
         taxQuery: {
           taxArray: [{ taxonomy: DIRECTORYTYPE, field: SLUG, terms: $directoryType }]
         }

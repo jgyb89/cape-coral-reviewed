@@ -9,6 +9,7 @@ import BlogSidebar from "@/components/blog/BlogSidebar";
 import BackButton from "@/components/blog/BackButton";
 import NewsletterWidget from '@/components/blog/NewsletterWidget';
 import BlogComments from "@/components/blog/BlogComments";
+import AdUnit from "@/components/ads/AdUnit";
 import { getViewer } from "@/lib/auth";
 import "./BlogPost.css";
 
@@ -50,13 +51,23 @@ export default async function BlogPostPage({ params }) {
 
   const rawContent = post.content || "";
 
-  // 1. Extract valid video src URLs and swap the entire iframe for a safe div placeholder
-  let contentWithSafePlaceholders = rawContent.replace(
+  // 1. Safely count and inject ad placeholders after the 3rd and 7th paragraphs
+  let pCount = 0;
+  const contentWithAdPlaceholders = rawContent.replace(/<\/p>/gi, (match) => {
+    pCount++;
+    if (pCount === 3 || pCount === 7) {
+      return `${match}<div class="in-article-ad-placeholder"></div>`;
+    }
+    return match;
+  });
+
+  // 2. Extract valid video src URLs and swap the entire iframe for a safe div placeholder
+  let contentWithSafePlaceholders = contentWithAdPlaceholders.replace(
     /<iframe[^>]*src="(https:\/\/(?:www\.)?(?:youtube\.com|youtu\.be|player\.vimeo\.com|tiktok\.com)[^"]*)"[^>]*>[\s\S]*?<\/iframe>/gi,
     '<div class="secure-video-embed" data-src="$1"></div>'
   );
 
-  // 2. Safely extract Newsletter Shortcode OUT of <p> tags to prevent React Hydration errors
+  // 3. Safely extract Newsletter Shortcode OUT of <p> tags to prevent React Hydration errors
   contentWithSafePlaceholders = contentWithSafePlaceholders.replace(
     /<p>([\s\S]*?)\[newsletter_widget\]([\s\S]*?)<\/p>/gi,
     (match, before, after) => {
@@ -66,7 +77,7 @@ export default async function BlogPostPage({ params }) {
     }
   );
 
-  // 3. Catch any remaining shortcodes that were not wrapped in <p> tags
+  // 4. Catch any remaining shortcodes that were not wrapped in <p> tags
   contentWithSafePlaceholders = contentWithSafePlaceholders.replace(
     /\[newsletter_widget\]/gi,
     '<div class="newsletter-widget-placeholder"></div>'
@@ -124,6 +135,11 @@ export default async function BlogPostPage({ params }) {
       // 2. Newsletter Widget Logic
       if (domNode.name === 'div' && domNode.attribs?.class === 'newsletter-widget-placeholder') {
         return <NewsletterWidget />;
+      }
+
+      // 3. AdSense In-Article Logic
+      if (domNode.name === 'div' && domNode.attribs?.class === 'in-article-ad-placeholder') {
+        return <AdUnit type="in-article" />;
       }
     }
   };
@@ -184,6 +200,8 @@ export default async function BlogPostPage({ params }) {
           initialComments={post.comments?.nodes} 
           currentUser={viewer} 
         />
+
+        <AdUnit type="horizontal" />
       </article>
 
       <BlogSidebar locale={locale} />
