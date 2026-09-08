@@ -357,6 +357,22 @@ export default function PrivacyPolicyPage() {
           We encourage you to review the privacy policies of third-party
           websites and services before providing them with personal information.
         </p>
+        <p>
+          Third-party vendors, including Google, use cookies to serve ads based
+          on a user&apos;s prior visits to this website. These third parties may
+          place and read cookies on your browser, or use web beacons to collect
+          information as a result of ad serving. To learn more about how Google
+          collects and uses this data, please visit{" "}
+          <a
+            href="https://www.google.com/policies/privacy/partners/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className={styles.link}
+          >
+            How Google uses data when you use our partners&apos; sites or apps
+          </a>
+          .
+        </p>
 
         <h2>Data Retention</h2>
         <p>
