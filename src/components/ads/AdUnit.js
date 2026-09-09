@@ -12,10 +12,10 @@ export default function AdUnit({ type = "horizontal", isGridCard = false }) {
 
   // 1. Safe Ad Injection tied to Route Changes
   useEffect(() => {
-    let timeoutId;
-
-    if (adRef.current && !adRef.current.getAttribute('data-ad-status')) {
-      timeoutId = setTimeout(() => {
+    // Delay the AdSense push by 250ms to allow Next.js to finish painting the DOM
+    // and updating the <title> during client-side route transitions.
+    const timeoutId = setTimeout(() => {
+      if (adRef.current && !adRef.current.getAttribute('data-ad-status')) {
         try {
           if (typeof window !== 'undefined') {
             (window.adsbygoogle = window.adsbygoogle || []).push({});
@@ -23,12 +23,11 @@ export default function AdUnit({ type = "horizontal", isGridCard = false }) {
         } catch (err) {
           console.warn("AdSense error:", err);
         }
-      }, 250);
-    }
+      }
+    }, 250);
 
-    return () => {
-      if (timeoutId) clearTimeout(timeoutId);
-    };
+    // Cleanup the timeout if the component unmounts before it fires
+    return () => clearTimeout(timeoutId);
   }, [pathname]);
 
   // 2. Observer for CSS class toggling
