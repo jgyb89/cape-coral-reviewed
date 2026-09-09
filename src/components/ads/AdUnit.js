@@ -5,7 +5,7 @@ import { usePathname } from 'next/navigation';
 import styles from "./AdUnit.module.css";
 import PropTypes from "prop-types";
 
-export default function AdUnit({ type = "horizontal", isGridCard = false }) {
+export default function AdUnit({ type = "horizontal", isGridCard = false, isPlain = false }) {
   const adRef = useRef(null);
   const pathname = usePathname();
   const [isFilled, setIsFilled] = useState(false);
@@ -64,12 +64,14 @@ export default function AdUnit({ type = "horizontal", isGridCard = false }) {
   const wrapperClasses = [
     styles.wrapper,
     isFilled ? styles['wrapper--filled'] : "",
-    isGridCard ? styles['wrapper--gridCard'] : ""
+    isGridCard ? styles['wrapper--gridCard'] : "",
+    isPlain ? styles['wrapper--plain'] : ""
   ].filter(Boolean).join(" ");
 
   return (
     <div className={wrapperClasses}>
-      {isFilled && <span className={styles.label}>{type === 'in-feed' ? 'Sponsored' : 'Advertisement'}</span>}
+      {isFilled && !isPlain && <span className={styles.label}>{type === 'in-feed' ? 'Sponsored' : 'Advertisement'}</span>}
+      {isFilled && isPlain && <span className={styles.label} style={{ marginBottom: '8px', color: '#888' }}>Advertisement</span>}
       <ins
         ref={adRef}
         className="adsbygoogle"
@@ -85,4 +87,5 @@ export default function AdUnit({ type = "horizontal", isGridCard = false }) {
 AdUnit.propTypes = {
   type: PropTypes.oneOf(["horizontal", "vertical", "in-feed", "in-article"]),
   isGridCard: PropTypes.bool,
+  isPlain: PropTypes.bool,
 };

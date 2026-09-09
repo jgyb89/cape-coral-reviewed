@@ -139,7 +139,7 @@ export default async function BlogPostPage({ params }) {
 
       // 3. AdSense In-Article Logic
       if (domNode.name === 'div' && domNode.attribs?.class === 'in-article-ad-placeholder') {
-        return <AdUnit type="in-article" />;
+        return <AdUnit type="in-article" isPlain={true} />;
       }
     }
   };
@@ -201,7 +201,7 @@ export default async function BlogPostPage({ params }) {
           currentUser={viewer} 
         />
 
-        <AdUnit type="horizontal" />
+        <AdUnit type="horizontal" isPlain={true} />
       </article>
 
       <BlogSidebar locale={locale} />
