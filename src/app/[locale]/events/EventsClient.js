@@ -40,9 +40,7 @@ function PaginatedEventSection({ title, events, locale, currentUser }) {
             
             {/* Inject In-Feed Ad after the 8th item (index 7) */}
             {index === 7 && (
-              <div style={{ gridColumn: '1 / -1', width: '100%' }}>
-                <AdUnit type="in-feed" />
-              </div>
+              <AdUnit type="in-feed" isGridCard={true} />
             )}
           </React.Fragment>
         ))}

@@ -84,9 +84,7 @@ export default function BlogView({ posts, dict = {}, locale = "en" }) {
               
               {/* Inject In-Feed Ad safely after the 11th item without removing data */}
               {index === 10 && (
-                <div style={{ gridColumn: '1 / -1', width: '100%' }}>
-                  <AdUnit type="in-feed" />
-                </div>
+                <AdUnit type="in-feed" isGridCard={true} />
               )}
             </React.Fragment>
           ))}
