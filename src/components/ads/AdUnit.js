@@ -12,15 +12,23 @@ export default function AdUnit({ type = "horizontal", isGridCard = false }) {
 
   // 1. Safe Ad Injection tied to Route Changes
   useEffect(() => {
+    let timeoutId;
+
     if (adRef.current && !adRef.current.getAttribute('data-ad-status')) {
-      try {
-        if (typeof window !== 'undefined') {
-          (window.adsbygoogle = window.adsbygoogle || []).push({});
+      timeoutId = setTimeout(() => {
+        try {
+          if (typeof window !== 'undefined') {
+            (window.adsbygoogle = window.adsbygoogle || []).push({});
+          }
+        } catch (err) {
+          console.warn("AdSense error:", err);
         }
-      } catch (err) {
-        console.warn("AdSense error:", err);
-      }
+      }, 250);
     }
+
+    return () => {
+      if (timeoutId) clearTimeout(timeoutId);
+    };
   }, [pathname]);
 
   // 2. Observer for CSS class toggling
