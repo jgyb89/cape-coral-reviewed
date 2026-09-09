@@ -1,28 +1,15 @@
 "use client";
 
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import CcrCard from './CcrCard';
 import AdUnit from "@/components/ads/AdUnit";
+import ResponsiveGridAd from "@/components/ads/ResponsiveGridAd";
+import { useDeviceType } from "@/hooks/useDeviceType";
 import styles from './CcrCardGrid.module.css';
 
 export default function CcrCardGrid({ listings, currentUser, locale = 'en' }) {
-  const [deviceType, setDeviceType] = useState('desktop');
-
-  useEffect(() => {
-    const handleResize = () => {
-      if (window.innerWidth < 768) {
-        setDeviceType('mobile');
-      } else if (window.innerWidth >= 768 && window.innerWidth < 1024) {
-        setDeviceType('tablet');
-      } else {
-        setDeviceType('desktop');
-      }
-    };
-    handleResize(); // Initial check
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
+  const deviceType = useDeviceType();
 
   if (!listings || listings.length === 0) {
     return (
@@ -40,18 +27,7 @@ export default function CcrCardGrid({ listings, currentUser, locale = 'en' }) {
       {listings.map((listing, index) => (
         <React.Fragment key={listing.databaseId || listing.id || listing.slug}>
           <CcrCard listing={listing} currentUser={currentUser} locale={locale} />
-          
-          {/* Mobile Ads: After 3rd item (index 2) and 9th item (index 8) */}
-          {deviceType === 'mobile' && (index === 2 || index === 8) && (
-            <AdUnit type="in-feed" isGridCard={true} />
-          )}
-
-          {/* Tablet Ads: After 2nd item (index 1) and 8th item (index 7) spanning both columns */}
-          {deviceType === 'tablet' && (index === 1 || index === 7) && (
-            <div style={{ gridColumn: '1 / -1', width: '100%' }}>
-              <AdUnit type="horizontal" />
-            </div>
-          )}
+          <ResponsiveGridAd index={index} deviceType={deviceType} />
         </React.Fragment>
       ))}
 

@@ -4,10 +4,12 @@
 import React, { useState, useEffect } from "react";
 import BlogCard from "./BlogCard";
 import AdUnit from "@/components/ads/AdUnit";
+import ResponsiveGridAd from "@/components/ads/ResponsiveGridAd";
 import Pagination from "@/components/common/Pagination";
 import PropTypes from 'prop-types';
 import styles from "./Blog.module.css";
 import { useHorizontalScroll } from "@/hooks/useHorizontalScroll";
+import { useDeviceType } from "@/hooks/useDeviceType";
 
 export default function BlogView({ posts, dict = {}, locale = "en" }) {
   const t = dict?.blog?.tabs || {};
@@ -21,7 +23,7 @@ export default function BlogView({ posts, dict = {}, locale = "en" }) {
   const [activeTab, setActiveTab] = useState('all');
   const [currentPage, setCurrentPage] = useState(1);
   const ITEMS_PER_PAGE = 11;
-  const [deviceType, setDeviceType] = useState('desktop');
+  const deviceType = useDeviceType();
   
   // Call our new custom hook!
   const {
@@ -37,22 +39,6 @@ export default function BlogView({ posts, dict = {}, locale = "en" }) {
   useEffect(() => {
     setCurrentPage(1);
   }, [activeTab]);
-
-  // Track window resize to coordinate grid injections
-  useEffect(() => {
-    const handleResize = () => {
-      if (window.innerWidth < 768) {
-        setDeviceType('mobile');
-      } else if (window.innerWidth >= 768 && window.innerWidth < 1024) {
-        setDeviceType('tablet');
-      } else {
-        setDeviceType('desktop');
-      }
-    };
-    handleResize(); // Initial check
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
 
   const filteredPosts = posts.filter(post => {
     if (activeTab === 'all') return true;
@@ -104,18 +90,7 @@ export default function BlogView({ posts, dict = {}, locale = "en" }) {
             {paginatedPosts.map((post, index) => (
               <React.Fragment key={post.id || post.slug}>
                 <BlogCard post={post} locale={locale} />
-                
-                {/* Mobile Ads: After 3rd item (index 2) and 9th item (index 8) */}
-                {deviceType === 'mobile' && (index === 2 || index === 8) && (
-                  <AdUnit type="in-feed" isGridCard={true} />
-                )}
-
-                {/* Tablet Ads: After 2nd item (index 1) and 8th item (index 7) spanning both columns */}
-                {deviceType === 'tablet' && (index === 1 || index === 7) && (
-                  <div style={{ gridColumn: '1 / -1', width: '100%' }}>
-                    <AdUnit type="horizontal" />
-                  </div>
-                )}
+                <ResponsiveGridAd index={index} deviceType={deviceType} />
               </React.Fragment>
             ))}
 
