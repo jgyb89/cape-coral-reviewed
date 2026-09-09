@@ -21,7 +21,7 @@ export default function PrivacyPolicyPage() {
       <div className={styles.content}>
         <h2>Introduction</h2>
         <p>
-          Cape Coral Reviewed ("Cape Coral Reviewed," "we," "our," or "us")
+          Cape Coral Reviewed (&#34;Cape Coral Reviewed,&#34; &#34;we,&#34; &#34;our,&#34; or &#34;us&#34;)
           respects your privacy and is committed to protecting the personal
           information we collect through our website, e-commerce and retail
           store, advertisements, newsletters, community platforms, social media
@@ -350,7 +350,7 @@ export default function PrivacyPolicyPage() {
         <p>
           We are not responsible for the privacy practices, policies, content,
           security, or data practices of third parties. Your interactions with
-          third-party services may be governed by those parties' separate
+          third-party services may be governed by those parties&#39; separate
           privacy policies and terms.
         </p>
         <p>
@@ -394,7 +394,7 @@ export default function PrivacyPolicyPage() {
           guarantee absolute security of information.
         </p>
 
-        <h2>Children's Privacy</h2>
+        <h2>Children&#39;s Privacy</h2>
         <p>
           Our website, services, and e-commerce store are intended for
           individuals who are at least eighteen (18) years of age.

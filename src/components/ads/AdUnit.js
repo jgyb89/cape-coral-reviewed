@@ -1,101 +1,81 @@
 "use client";
 
 import React, { useEffect, useRef, useState } from "react";
+import { usePathname } from 'next/navigation';
 import styles from "./AdUnit.module.css";
 import PropTypes from "prop-types";
 
-const AdUnit = ({ type = "horizontal" }) => {
+export default function AdUnit({ type = "horizontal", isGridCard = false }) {
   const adRef = useRef(null);
+  const pathname = usePathname();
   const [isFilled, setIsFilled] = useState(false);
 
+  // 1. Safe Ad Injection tied to Route Changes
   useEffect(() => {
-    try {
-      (window.adsbygoogle = window.adsbygoogle || []).push({});
-    } catch (err) {
-      console.error("AdSense error:", err);
+    if (adRef.current && !adRef.current.getAttribute('data-ad-status')) {
+      try {
+        if (typeof window !== 'undefined') {
+          (window.adsbygoogle = window.adsbygoogle || []).push({});
+        }
+      } catch (err) {
+        console.warn("AdSense error:", err);
+      }
     }
-  }, []);
+  }, [pathname]);
 
+  // 2. Observer for CSS class toggling
   useEffect(() => {
     if (!adRef.current) return;
     
-    // Observe the <ins> tag for AdSense injecting 'data-ad-status'
     const observer = new MutationObserver((mutations) => {
       mutations.forEach((mutation) => {
         if (mutation.attributeName === 'data-ad-status') {
           const status = adRef.current.getAttribute('data-ad-status');
-          if (status === 'filled') {
-            setIsFilled(true);
-          }
+          if (status === 'filled') setIsFilled(true);
         }
       });
     });
-
+    
     observer.observe(adRef.current, { attributes: true });
-
     return () => observer.disconnect();
   }, []);
 
-  const renderAd = () => {
-    const commonProps = {
-      className: "adsbygoogle",
-      style: { display: "block" },
-      "data-ad-client": "ca-pub-9224507908532843",
-      ref: adRef,
-    };
-
+  const getAdConfig = () => {
     switch (type) {
-      case "horizontal":
-        return (
-          <ins
-            {...commonProps}
-            data-ad-slot="6396218035"
-            data-ad-format="auto"
-            data-full-width-responsive="true"
-          />
-        );
       case "vertical":
-        return (
-          <ins
-            {...commonProps}
-            data-ad-slot="6929580824"
-            data-ad-format="auto"
-            data-full-width-responsive="true"
-          />
-        );
+        return { "data-ad-slot": "6929580824", "data-ad-format": "auto" };
       case "in-feed":
-        return (
-          <ins
-            {...commonProps}
-            data-ad-slot="2265401331"
-            data-ad-format="fluid"
-            data-ad-layout-key="-67+dx+w-g4+ep"
-          />
-        );
+        return { "data-ad-slot": "2265401331", "data-ad-format": "fluid", "data-ad-layout-key": "-67+dx+w-g4+ep" };
       case "in-article":
-        return (
-          <ins
-            {...commonProps}
-            data-ad-slot="7381996648"
-            data-ad-format="fluid"
-            data-ad-layout="in-article"
-          />
-        );
+        return { "data-ad-slot": "7381996648", "data-ad-format": "fluid", "data-ad-layout": "in-article" };
+      case "horizontal":
       default:
-        return null;
+        return { "data-ad-slot": "6396218035", "data-ad-format": "auto" };
     }
   };
 
+  const wrapperClasses = [
+    styles.wrapper,
+    isFilled ? styles['wrapper--filled'] : "",
+    isGridCard ? styles['wrapper--gridCard'] : ""
+  ].filter(Boolean).join(" ");
+
   return (
-    <div className={`${styles.wrapper} ${isFilled ? styles["wrapper--filled"] : ""}`}>
-      {isFilled && <span className={styles.label}>Advertisement</span>}
-      {renderAd()}
+    <div className={wrapperClasses}>
+      {isFilled && <span className={styles.label}>{type === 'in-feed' ? 'Sponsored' : 'Advertisement'}</span>}
+      <ins
+        ref={adRef}
+        className="adsbygoogle"
+        style={{ display: "block" }}
+        data-ad-client="ca-pub-9224507908532843"
+        data-full-width-responsive="true"
+        {...getAdConfig()}
+      />
     </div>
   );
-};
+}
 
 AdUnit.propTypes = {
   type: PropTypes.oneOf(["horizontal", "vertical", "in-feed", "in-article"]),
+  isGridCard: PropTypes.bool,
 };
-
-export default AdUnit;

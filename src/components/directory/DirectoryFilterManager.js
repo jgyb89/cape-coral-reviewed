@@ -58,7 +58,7 @@ const DirectoryFilterManager = ({ listings, currentUser, dict = {}, locale = "en
   const sortByFilter = searchParams.get('sort') || 'newest';
 
   const [currentPage, setCurrentPage] = useState(1);
-  const ITEMS_PER_PAGE = 12;
+  const ITEMS_PER_PAGE = 11;
 
   const filteredAndSortedListings = useMemo(() => {
     let result = [...listings];

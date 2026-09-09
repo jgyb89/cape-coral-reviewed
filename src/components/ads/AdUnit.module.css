@@ -3,19 +3,24 @@
   width: 100%;
   min-height: 1px;
   background-color: transparent;
-  padding: 0;
+  padding: 0 16px; /* Pre-apply horizontal padding so AdSense measures correctly */
   margin: 0;
+  box-sizing: border-box; /* Crucial for preventing horizontal overflow */
   transition: all 0.3s ease;
 }
 
 /* Filled state: Applies the brand styling only once the ad successfully loads */
 .wrapper--filled {
   background-color: #f6eee3;
-  padding: 16px;
+  padding: 16px; /* Adds the top/bottom padding now that it's visible */
   margin: 2rem 0;
   border-radius: 12px;
   border: 1px solid #eaeaea;
-  text-align: center;
+  overflow: hidden; /* Prevent iframe bleed */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
 
 .label {
@@ -25,4 +30,15 @@
   text-transform: uppercase;
   margin-bottom: 12px;
   display: block;
+  text-align: center;
+  width: 100%;
+}
+
+/* Modifier for Grid Card integration */
+.wrapper--gridCard {
+  height: 100%;
+}
+
+.wrapper--gridCard.wrapper--filled {
+  margin: 0;
 }
