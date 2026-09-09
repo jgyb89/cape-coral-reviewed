@@ -42,3 +42,12 @@
 .wrapper--gridCard.wrapper--filled {
   margin: 0;
 }
+
+/* Modifier for Plain / Native Article integration */
+.wrapper--plain.wrapper--filled {
+  background-color: transparent;
+  padding: 0;
+  border: none;
+  border-radius: 0;
+  margin: 2.5rem 0;
+}

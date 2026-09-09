@@ -1,4 +1,5 @@
 /* src/app/blog/page.js */
+import { Suspense } from "react";
 import PropTypes from "prop-types";
 import BlogView from "@/components/blog/BlogView";
 import { getBlogPosts } from "@/lib/actions";
@@ -52,7 +53,9 @@ export default async function BlogPage({ params }) {
         </p>
       </div>
       
-      <BlogView posts={formattedPosts} dict={dict} locale={locale} />
+      <Suspense fallback={<div style={{ textAlign: 'center', padding: '3rem' }}>Loading posts...</div>}>
+        <BlogView posts={formattedPosts} dict={dict} locale={locale} />
+      </Suspense>
     </main>
   );
 }

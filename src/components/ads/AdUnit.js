@@ -5,22 +5,29 @@ import { usePathname } from 'next/navigation';
 import styles from "./AdUnit.module.css";
 import PropTypes from "prop-types";
 
-export default function AdUnit({ type = "horizontal", isGridCard = false }) {
+export default function AdUnit({ type = "horizontal", isGridCard = false, isPlain = false }) {
   const adRef = useRef(null);
   const pathname = usePathname();
   const [isFilled, setIsFilled] = useState(false);
 
   // 1. Safe Ad Injection tied to Route Changes
   useEffect(() => {
-    if (adRef.current && !adRef.current.getAttribute('data-ad-status')) {
-      try {
-        if (typeof window !== 'undefined') {
-          (window.adsbygoogle = window.adsbygoogle || []).push({});
+    // Delay the AdSense push by 250ms to allow Next.js to finish painting the DOM
+    // and updating the <title> during client-side route transitions.
+    const timeoutId = setTimeout(() => {
+      if (adRef.current && !adRef.current.getAttribute('data-ad-status')) {
+        try {
+          if (typeof window !== 'undefined') {
+            (window.adsbygoogle = window.adsbygoogle || []).push({});
+          }
+        } catch (err) {
+          console.warn("AdSense error:", err);
         }
-      } catch (err) {
-        console.warn("AdSense error:", err);
       }
-    }
+    }, 250);
+
+    // Cleanup the timeout if the component unmounts before it fires
+    return () => clearTimeout(timeoutId);
   }, [pathname]);
 
   // 2. Observer for CSS class toggling
@@ -57,12 +64,14 @@ export default function AdUnit({ type = "horizontal", isGridCard = false }) {
   const wrapperClasses = [
     styles.wrapper,
     isFilled ? styles['wrapper--filled'] : "",
-    isGridCard ? styles['wrapper--gridCard'] : ""
+    isGridCard ? styles['wrapper--gridCard'] : "",
+    isPlain ? styles['wrapper--plain'] : ""
   ].filter(Boolean).join(" ");
 
   return (
     <div className={wrapperClasses}>
-      {isFilled && <span className={styles.label}>{type === 'in-feed' ? 'Sponsored' : 'Advertisement'}</span>}
+      {isFilled && !isPlain && <span className={styles.label}>{type === 'in-feed' ? 'Sponsored' : 'Advertisement'}</span>}
+      {isFilled && isPlain && <span className={styles.label} style={{ marginBottom: '8px', color: '#888' }}>Advertisement</span>}
       <ins
         ref={adRef}
         className="adsbygoogle"
@@ -78,4 +87,5 @@ export default function AdUnit({ type = "horizontal", isGridCard = false }) {
 AdUnit.propTypes = {
   type: PropTypes.oneOf(["horizontal", "vertical", "in-feed", "in-article"]),
   isGridCard: PropTypes.bool,
+  isPlain: PropTypes.bool,
 };
