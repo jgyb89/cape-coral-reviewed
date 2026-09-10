@@ -5,16 +5,28 @@ import { usePathname } from 'next/navigation';
 import styles from "./AdUnit.module.css";
 import PropTypes from "prop-types";
 
-export default function AdUnit({ type = "horizontal", isGridCard = false, isPlain = false }) {
+// Track if the app has finished its initial SSR load.
+// If a user navigates to a new page after 2 seconds, it's considered a client-side navigation.
+let isAppInitialLoad = true;
+if (typeof window !== 'undefined') {
+  setTimeout(() => {
+    isAppInitialLoad = false;
+  }, 2000);
+}
+
+export default function AdUnit({ type = "horizontal", isGridCard = false, isPlain = false, isSidebarWidget = false }) {
   const adRef = useRef(null);
   const pathname = usePathname();
   const [isFilled, setIsFilled] = useState(false);
 
   // 1. Safe Ad Injection tied to Route Changes
   useEffect(() => {
-    // Delay the AdSense push by 250ms to allow Next.js to finish painting the DOM
-    // and updating the <title> during client-side route transitions.
-    const timeoutId = setTimeout(() => {
+    // Reset state on route change so we don't carry over "filled" state from previous pages
+    setIsFilled(false);
+
+    let timeoutId;
+    
+    const pushAd = () => {
       if (adRef.current && !adRef.current.getAttribute('data-ad-status')) {
         try {
           if (typeof window !== 'undefined') {
@@ -24,10 +36,19 @@ export default function AdUnit({ type = "horizontal", isGridCard = false, isPlai
           console.warn("AdSense error:", err);
         }
       }
-    }, 250);
+    };
 
-    // Cleanup the timeout if the component unmounts before it fires
-    return () => clearTimeout(timeoutId);
+    if (isAppInitialLoad) {
+      // First page load: push immediately so AdSense picks it up during hydration
+      pushAd();
+    } else {
+      // Client-side route transitions: Delay by 250ms to allow Next.js to update <title>
+      timeoutId = setTimeout(pushAd, 250);
+    }
+
+    return () => {
+      if (timeoutId) clearTimeout(timeoutId);
+    };
   }, [pathname]);
 
   // 2. Observer for CSS class toggling
@@ -38,14 +59,18 @@ export default function AdUnit({ type = "horizontal", isGridCard = false, isPlai
       mutations.forEach((mutation) => {
         if (mutation.attributeName === 'data-ad-status') {
           const status = adRef.current.getAttribute('data-ad-status');
-          if (status === 'filled') setIsFilled(true);
+          if (status === 'filled') {
+            setIsFilled(true);
+          } else if (status === 'unfilled') {
+            setIsFilled(false);
+          }
         }
       });
     });
     
     observer.observe(adRef.current, { attributes: true });
     return () => observer.disconnect();
-  }, []);
+  }, [pathname]);
 
   const getAdConfig = () => {
     switch (type) {
@@ -63,13 +88,14 @@ export default function AdUnit({ type = "horizontal", isGridCard = false, isPlai
 
   const wrapperClasses = [
     styles.wrapper,
-    isFilled ? styles['wrapper--filled'] : "",
+    isFilled && !isSidebarWidget ? styles['wrapper--filled'] : "",
     isGridCard ? styles['wrapper--gridCard'] : "",
-    isPlain ? styles['wrapper--plain'] : ""
+    isPlain ? styles['wrapper--plain'] : "",
+    isFilled && isSidebarWidget ? styles['wrapper--sidebarWidget'] : ""
   ].filter(Boolean).join(" ");
 
   return (
-    <div className={wrapperClasses}>
+    <div key={pathname} className={wrapperClasses}>
       {isFilled && !isPlain && <span className={styles.label}>{type === 'in-feed' ? 'Sponsored' : 'Advertisement'}</span>}
       {isFilled && isPlain && <span className={styles.label} style={{ marginBottom: '8px', color: '#888' }}>Advertisement</span>}
       <ins
@@ -88,4 +114,5 @@ AdUnit.propTypes = {
   type: PropTypes.oneOf(["horizontal", "vertical", "in-feed", "in-article"]),
   isGridCard: PropTypes.bool,
   isPlain: PropTypes.bool,
+  isSidebarWidget: PropTypes.bool,
 };
