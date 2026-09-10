@@ -69,8 +69,8 @@ export default async function BlogSidebar({ locale = "en" }) {
           })}
         </div>
       </div>
-      <div className="sidebar-widget" style={{ marginTop: '2rem' }}>
-        <AdUnit type="vertical" />
+      <div style={{ marginTop: '2rem' }}>
+        <AdUnit type="vertical" isSidebarWidget={true} />
       </div>
     </aside>
   );
