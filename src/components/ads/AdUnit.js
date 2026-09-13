@@ -79,7 +79,8 @@ export default function AdUnit({ type = "horizontal", isGridCard = false, isPlai
       case "in-feed":
         return { "data-ad-slot": "2265401331", "data-ad-format": "fluid", "data-ad-layout-key": "-67+dx+w-g4+ep" };
       case "in-article":
-        return { "data-ad-slot": "7381996648", "data-ad-format": "fluid", "data-ad-layout": "in-article" };
+        // Switched from "fluid" / "in-article" layout to standard horizontal display to reduce whitespace wrapping
+        return { "data-ad-slot": "7381996648", "data-ad-format": "horizontal" };
       case "horizontal":
       default:
         return { "data-ad-slot": "6396218035", "data-ad-format": "auto" };
