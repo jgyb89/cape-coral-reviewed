@@ -273,6 +273,8 @@ export default async function SingleEventPage({ params }) {
                 }}
               />
 
+              <AdUnit type="horizontal" mobileOnly={true} />
+
               <section className="listing-card">
                 <h2 className="listing-card__title">
                   <span className="material-symbols-outlined">info</span>
@@ -291,6 +293,8 @@ export default async function SingleEventPage({ params }) {
                   </p>
                 )}
               </section>
+
+              <AdUnit type="horizontal" desktopOnly={true} />
 
               <section className="listing-card">
                 <h2 className="listing-card__title">

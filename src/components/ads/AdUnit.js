@@ -14,7 +14,14 @@ if (typeof window !== 'undefined') {
   }, 2000);
 }
 
-export default function AdUnit({ type = "horizontal", isGridCard = false, isPlain = false, isSidebarWidget = false }) {
+export default function AdUnit({ 
+  type = "horizontal", 
+  isGridCard = false, 
+  isPlain = false, 
+  isSidebarWidget = false,
+  desktopOnly = false,
+  mobileOnly = false
+}) {
   const adRef = useRef(null);
   const pathname = usePathname();
   const [isFilled, setIsFilled] = useState(false);
@@ -27,7 +34,15 @@ export default function AdUnit({ type = "horizontal", isGridCard = false, isPlai
     let timeoutId;
     
     const pushAd = () => {
-      if (adRef.current && !adRef.current.getAttribute('data-ad-status')) {
+      // Don't push if the element is hidden via CSS or doesn't exist
+      if (!adRef.current) return;
+      
+      // Basic check if the element is hidden (e.g. mobileOnly on desktop)
+      if (window.getComputedStyle(adRef.current.parentElement).display === 'none') {
+        return; 
+      }
+      
+      if (!adRef.current.getAttribute('data-ad-status')) {
         try {
           if (typeof window !== 'undefined') {
             (window.adsbygoogle = window.adsbygoogle || []).push({});
@@ -92,7 +107,9 @@ export default function AdUnit({ type = "horizontal", isGridCard = false, isPlai
     isFilled && !isSidebarWidget ? styles['wrapper--filled'] : "",
     isGridCard ? styles['wrapper--gridCard'] : "",
     isPlain ? styles['wrapper--plain'] : "",
-    isFilled && isSidebarWidget ? styles['wrapper--sidebarWidget'] : ""
+    isFilled && isSidebarWidget ? styles['wrapper--sidebarWidget'] : "",
+    desktopOnly ? styles['wrapper--desktopOnly'] : "",
+    mobileOnly ? styles['wrapper--mobileOnly'] : ""
   ].filter(Boolean).join(" ");
 
   return (
