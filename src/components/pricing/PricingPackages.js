@@ -261,10 +261,23 @@ export default function PricingPackages() {
 
       {/* Modals */}
       {openModal === "starter" && (
-        <div className={styles.modalOverlay} onClick={handleClose}>
+        <div 
+          className={styles.modalOverlay} 
+          onClick={handleClose}
+          role="button"
+          tabIndex={0}
+          onKeyDown={(e) => {
+            if (e.key === "Enter" || e.key === " ") {
+              e.preventDefault();
+              handleClose();
+            }
+          }}
+        >
           <div
             className={styles.modalDialog}
             onClick={(e) => e.stopPropagation()}
+            role="presentation"
+            onKeyDown={(e) => e.stopPropagation()}
           >
             <div className={styles.modalHeader}>
               <h3>Local Starter Includes:</h3>
@@ -316,10 +329,23 @@ export default function PricingPackages() {
       )}
 
       {openModal === "monthly" && (
-        <div className={styles.modalOverlay} onClick={handleClose}>
+        <div 
+          className={styles.modalOverlay} 
+          onClick={handleClose}
+          role="button"
+          tabIndex={0}
+          onKeyDown={(e) => {
+            if (e.key === "Enter" || e.key === " ") {
+              e.preventDefault();
+              handleClose();
+            }
+          }}
+        >
           <div
             className={styles.modalDialog}
             onClick={(e) => e.stopPropagation()}
+            role="presentation"
+            onKeyDown={(e) => e.stopPropagation()}
           >
             <div className={styles.modalHeader}>
               <h3>Monthly Visibility Includes:</h3>
@@ -351,10 +377,23 @@ export default function PricingPackages() {
       )}
 
       {openModal === "growth" && (
-        <div className={styles.modalOverlay} onClick={handleClose}>
+        <div 
+          className={styles.modalOverlay} 
+          onClick={handleClose}
+          role="button"
+          tabIndex={0}
+          onKeyDown={(e) => {
+            if (e.key === "Enter" || e.key === " ") {
+              e.preventDefault();
+              handleClose();
+            }
+          }}
+        >
           <div
             className={styles.modalDialog}
             onClick={(e) => e.stopPropagation()}
+            role="presentation"
+            onKeyDown={(e) => e.stopPropagation()}
           >
             <div className={styles.modalHeader}>
               <h3>Local Growth includes everything in Local Starter, plus:</h3>
