@@ -36,7 +36,7 @@ export default async function DirectoryTypePage({ params }) {
 
   return (
     <>
-      <main style={{ padding: "clamp(1.5rem, 4vw, 3rem) 1rem 0", maxWidth: "1200px", margin: "0 auto", fontFamily: "sans-serif" }}>
+      <div className="directory-page-wrapper">
         <header style={{ marginBottom: "2rem", textAlign: "center" }}>
           <h1 style={{ 
             fontFamily: 'var(--font-heading)', 
@@ -58,7 +58,7 @@ export default async function DirectoryTypePage({ params }) {
         <Suspense fallback={<div style={{ textAlign: 'center', padding: '3rem', color: '#64748b' }}>Loading listings...</div>}>
           <DirectoryFilterManager listings={listings} currentUser={currentUser} dict={dict} locale={locale} />
         </Suspense>
-      </main>
+      </div>
       <DirectorySEO directoryType={directoryType} />
     </>
   );

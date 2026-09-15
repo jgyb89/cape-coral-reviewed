@@ -286,3 +286,14 @@ h6 {
 .react-toastify {
   z-index: 999999 !important;
 }
+
+/* Directory Page Wrapper - Prevents AdSense from hijacking inline styles */
+.directory-page-wrapper {
+  padding: clamp(1.5rem, 4vw, 3rem) 1rem 0;
+  width: 100% !important;
+  max-width: 1200px !important;
+  margin: 0 auto !important;
+  box-sizing: border-box !important;
+  overflow-x: hidden !important;
+  font-family: var(--font-body), sans-serif;
+}
