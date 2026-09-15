@@ -26,14 +26,7 @@ export default async function DirectoryIndexPage({ params }) {
   const t = dict?.directory || {};
 
   return (
-    <main
-      style={{
-        padding: "clamp(1.5rem, 4vw, 3rem) 1rem 0",
-        fontFamily: "sans-serif",
-        maxWidth: "1200px",
-        margin: "0 auto",
-      }}
-    >
+    <div className="directory-page-wrapper">
       <header style={{ marginBottom: "1rem", textAlign: "center" }}>
         <h1 style={{ 
           fontFamily: 'var(--font-heading)', 
@@ -59,6 +52,6 @@ export default async function DirectoryIndexPage({ params }) {
       <Suspense fallback={<div style={{ textAlign: 'center', padding: '3rem', color: '#64748b' }}>Loading listings...</div>}>
         <DirectoryFilterManager listings={listings} currentUser={currentUser} dict={dict} locale={locale} />
       </Suspense>
-    </main>
+    </div>
   );
 }
