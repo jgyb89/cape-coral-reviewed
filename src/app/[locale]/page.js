@@ -14,6 +14,8 @@ import { expandRecurringEvents } from "@/lib/eventUtils";
 import EventCard from "@/components/events/EventCard";
 import { BASE_URL } from "@/lib/constants";
 import styles from "./page.module.css";
+import PricingPackages from "@/components/pricing/PricingPackages";
+import React from "react";
 
 export const metadata = {
   title: "Cape Coral Reviewed - Local Business Directory",
@@ -48,23 +50,29 @@ export default async function HomePage({ params }) {
   const today = new Date();
   today.setHours(0, 0, 0, 0);
 
-  const upcomingEvents = allEvents.filter(event => {
-    const eStartStr = event.eventDetails?.startDateTime || event.date;
-    if (!eStartStr) return false;
+  const upcomingEvents = allEvents
+    .filter((event) => {
+      const eStartStr = event.eventDetails?.startDateTime || event.date;
+      if (!eStartStr) return false;
 
-    const eEndStr = event.eventDetails?.endDateTime || eStartStr;
-    const endDate = new Date(eEndStr.replace(" ", "T"));
+      const eEndStr = event.eventDetails?.endDateTime || eStartStr;
+      const endDate = new Date(eEndStr.replace(" ", "T"));
 
-    const endDay = new Date(endDate);
-    endDay.setHours(0, 0, 0, 0);
+      const endDay = new Date(endDate);
+      endDay.setHours(0, 0, 0, 0);
 
-    // Keep the event if its end date is today or in the future
-    return endDay >= today;
-  }).sort((a, b) => {
-    const dateA = new Date((a.eventDetails?.startDateTime || a.date).replace(" ", "T"));
-    const dateB = new Date((b.eventDetails?.startDateTime || b.date).replace(" ", "T"));
-    return dateA - dateB;
-  });
+      // Keep the event if its end date is today or in the future
+      return endDay >= today;
+    })
+    .sort((a, b) => {
+      const dateA = new Date(
+        (a.eventDetails?.startDateTime || a.date).replace(" ", "T"),
+      );
+      const dateB = new Date(
+        (b.eventDetails?.startDateTime || b.date).replace(" ", "T"),
+      );
+      return dateA - dateB;
+    });
 
   const jsonLd = {
     "@context": "https://schema.org",
@@ -113,7 +121,11 @@ export default async function HomePage({ params }) {
             viewAllLink="/events"
             viewAllText="View All Events &rarr;"
             items={upcomingEvents.map((event) => (
-              <EventCard key={event.id || event.databaseId} event={event} locale={locale} />
+              <EventCard
+                key={event.id || event.databaseId}
+                event={event}
+                locale={locale}
+              />
             ))}
           />
         )}
@@ -137,6 +149,7 @@ export default async function HomePage({ params }) {
         </div>
       </section>
 
+      <PricingPackages />
       {/* Sunset Animation Transition */}
       <SunsetTransition />
     </main>
