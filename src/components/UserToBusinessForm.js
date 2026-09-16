@@ -31,7 +31,10 @@ export default function UserToBusinessForm({ dict, categoriesData = [] }) {
   const [error, setError] = useState(null);
 
   const validateField = (name, value) => {
-    const val = value ? (typeof value === 'string' ? value.trim() : value) : "";
+    let val = "";
+    if (value) {
+      val = typeof value === 'string' ? value.trim() : value;
+    }
     
     switch (name) {
       case 'firstName':

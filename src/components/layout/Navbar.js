@@ -155,6 +155,7 @@ export default function Navbar({ currentUser: propCurrentUser, dict, locale }) {
             onMouseEnter={() => setIsListingsOpen(true)}
             onMouseLeave={() => setIsListingsOpen(false)}
             tabIndex={0}
+            role="button"
             onFocus={() => setIsListingsOpen(true)}
             onBlur={() => setIsListingsOpen(false)}
           >
@@ -263,6 +264,7 @@ export default function Navbar({ currentUser: propCurrentUser, dict, locale }) {
                 onMouseEnter={() => setIsAccountOpen(true)}
                 onMouseLeave={() => setIsAccountOpen(false)}
                 tabIndex={0}
+                role="button"
                 onFocus={() => setIsAccountOpen(true)}
                 onBlur={() => setIsAccountOpen(false)}
               >

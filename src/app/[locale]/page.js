@@ -1,6 +1,5 @@
 import PropTypes from "prop-types";
 import { getListings } from "@/lib/api";
-import { getDictionary } from "@/lib/dictionaries";
 import Script from "next/script";
 import HeroSlideshow from "@/components/home/HeroSlideshow";
 import PaginatedFeed from "@/components/home/PaginatedFeed";
@@ -14,7 +13,6 @@ import { expandRecurringEvents } from "@/lib/eventUtils";
 import EventCard from "@/components/events/EventCard";
 import { BASE_URL } from "@/lib/constants";
 import styles from "./page.module.css";
-import PricingPackages from "@/components/pricing/PricingPackages";
 import React from "react";
 
 export const metadata = {

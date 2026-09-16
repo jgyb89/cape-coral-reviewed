@@ -54,7 +54,7 @@ export default function FavoriteListings({ favorites: initialFavorites = [], loc
       <DashboardSortDropdown currentSortProp={currentSort} onSortChange={setCurrentSort} />
       <div className={styles['favorite-listings__grid']}>
         {sortedFavorites.map((listing, index) => {
-          if (!listing || !listing.title) return null;
+          if (!listing?.title) return null;
 
           const imageUrl = formatImageUrl(listing.featuredImage?.node?.sourceUrl);
           const listingUrl = listing.__typename === 'Event' ? `/events/${listing.slug}` : `/listing/${listing.slug}`;

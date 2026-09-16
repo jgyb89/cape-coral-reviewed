@@ -208,7 +208,6 @@ export default function SearchModal({
               placeholder={t.placeholder || "What are you looking for?"}
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              autoFocus
             />
           </form>
 

@@ -171,7 +171,6 @@ export default async function SingleEventPage({ params }) {
   const addressString = addressObj?.streetAddress || addressObj?.address || "";
 
   return (
-    <>
       <main
         style={{
           backgroundColor: "#fdfdfd",
@@ -275,7 +274,7 @@ export default async function SingleEventPage({ params }) {
 
               <section className="listing-card">
                 <h2 className="listing-card__title">
-                  <span className="material-symbols-outlined">info</span>
+                  <span className="material-symbols-outlined">info</span>{" "}
                   About this event
                 </h2>
                 {content ? (
@@ -294,7 +293,7 @@ export default async function SingleEventPage({ params }) {
 
               <section className="listing-card">
                 <h2 className="listing-card__title">
-                  <span className="material-symbols-outlined">location_on</span>
+                  <span className="material-symbols-outlined">location_on</span>{" "}
                   Location
                 </h2>
                 <div className="listing-card__item">
@@ -380,7 +379,7 @@ export default async function SingleEventPage({ params }) {
                 }}
               >
                 <h2 className="listing-card__title">
-                  <span className="material-symbols-outlined">event</span>
+                  <span className="material-symbols-outlined">event</span>{" "}
                   Event Details
                 </h2>
 
@@ -539,6 +538,5 @@ export default async function SingleEventPage({ params }) {
           </div>
         </div>
       </main>
-    </>
   );
 }

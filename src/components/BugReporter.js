@@ -39,7 +39,7 @@ export default function BugReporter() {
       } else {
         alert(result.message || "Something went wrong. Please try again.");
       }
-    } catch (error) {
+    } catch (error) { console.error(error);
       alert("An error occurred. Please try again.");
     } finally {
       setIsSubmitting(false);

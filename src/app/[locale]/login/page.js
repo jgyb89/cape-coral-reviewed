@@ -1,5 +1,4 @@
 import PropTypes from 'prop-types';
-import { getDictionary } from '@/lib/dictionaries';
 import LoginForm from '@/components/auth/LoginForm';
 import RecoverPasswordForm from '@/components/auth/RecoverPasswordForm';
 import Link from 'next/link';

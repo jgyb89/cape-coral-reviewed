@@ -240,7 +240,7 @@
     box-shadow 0.2s;
   width: fit-content;
   text-decoration: none;
-  background-color: #e94f37;
+  background-color: #b91c1c;
   color: #ffffff;
 }
 
@@ -281,12 +281,12 @@
 
 .categoryCard:hover {
   background-color: rgba(233, 79, 55, 0.1);
-  border-color: #e94f37;
+  border-color: #b91c1c;
   transform: translateY(-4px);
 }
 
 .categoryIcon {
-  color: #e94f37;
+  color: #b91c1c;
 }
 
 .categoryName {

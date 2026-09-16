@@ -31,13 +31,13 @@ async function safeJsonParse(res) {
     return null;
   }
   const contentType = res.headers.get("content-type");
-  if (!contentType || !contentType.includes("application/json")) {
+  if (!contentType?.includes("application/json")) {
     console.error(`Unexpected content-type: ${contentType}`);
     return null;
   }
   try {
     return await res.json();
-  } catch (error) {
+  } catch (error) { console.error("API Error:", error);
     console.error("JSON parsing failed:", error);
     return null;
   }
@@ -158,7 +158,7 @@ export async function getListingBySlug(slug) {
     }
 
     return json.data?.ccrlisting;
-  } catch (error) {
+  } catch (error) { console.error("API Error:", error);
     console.error("Network or Fetch Error:", error);
     return null;
   }
@@ -210,7 +210,7 @@ export async function getListings(categorySlug = null) {
     }
 
     return json.data?.ccrlistings?.nodes || [];
-  } catch (error) {
+  } catch (error) { console.error("API Error:", error);
     console.error("Fetch Error:", error);
     return [];
   }
@@ -244,7 +244,7 @@ export async function getListingsByCategory(categorySlug, directoryType = null) 
     });
     const json = await safeJsonParse(res);
     return json?.data?.ccrlistings?.nodes || [];
-  } catch (error) {
+  } catch (error) { console.error("API Error:", error);
     return [];
   }
 }
@@ -272,7 +272,7 @@ export async function getListingsByDirectoryType(directoryTypeSlug) {
     });
     const json = await safeJsonParse(res);
     return json?.data?.ccrlistings?.nodes || [];
-  } catch (error) {
+  } catch (error) { console.error("API Error:", error);
     return [];
   }
 }
@@ -322,7 +322,7 @@ export async function updateUserFavorites(userId, favoriteIdsArray, authToken) {
       throw new Error("Failed to update favorites");
     }
     return json.data?.updateUser?.user;
-  } catch (error) {
+  } catch (error) { console.error("API Error:", error);
     console.error("Error updating favorites:", error);
     return null;
   }

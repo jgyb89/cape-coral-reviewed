@@ -1,5 +1,4 @@
 /* eslint-disable @next/next/no-html-link-for-pages */
-import PropTypes from 'prop-types';
 import { poppins, openSans } from '@/app/fonts';
 import { getViewer } from '@/lib/auth';
 import Navbar from '@/components/layout/Navbar';

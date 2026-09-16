@@ -78,7 +78,7 @@ export default function CcrCard({ listing, currentUser: propCurrentUser, locale 
   if (!listing) return null;
 
   const { title, slug, featuredImage } = listing;
-  const listingdata = listing.listingdata || {};
+  
 
   const listingUrl = getLocalizedUrl(`/listing/${slug}`, locale);
 

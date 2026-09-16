@@ -6,7 +6,7 @@ import { ScrollTrigger } from 'gsap/dist/ScrollTrigger';
 
 export default function useBreezeAnimation(sectionRef) {
   useEffect(() => {
-    if (!sectionRef || !sectionRef.current) return;
+    if (!sectionRef?.current) return;
 
     gsap.registerPlugin(ScrollTrigger);
     

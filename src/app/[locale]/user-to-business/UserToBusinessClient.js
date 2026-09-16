@@ -67,19 +67,19 @@ export default function UserToBusinessClient({ dict, categoriesData }) {
             <div className={styles.heroFeatureItem}>
               <span className={`material-symbols-outlined ${styles.featureIcon}`}>
                 storefront
-              </span>
+              </span>{" "}
               Manage your listings
             </div>
             <div className={styles.heroFeatureItem}>
               <span className={`material-symbols-outlined ${styles.featureIcon}`}>
                 analytics
-              </span>
+              </span>{" "}
               View detailed analytics
             </div>
             <div className={styles.heroFeatureItem}>
               <span className={`material-symbols-outlined ${styles.featureIcon}`}>
                 campaign
-              </span>
+              </span>{" "}
               Post events and news
             </div>
           </div>

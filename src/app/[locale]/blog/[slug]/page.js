@@ -30,6 +30,49 @@ export async function generateMetadata({ params }) {
   };
 }
 
+const parseOptions = {
+    replace: (domNode) => {
+      if (domNode.name === 'div' && domNode.attribs?.class === 'secure-video-embed') {
+        const src = domNode.attribs['data-src'];
+        
+        // Smart Detection: Check if the URL belongs to a portrait-first platform/format
+        const isPortrait = src.includes('shorts') || src.includes('tiktok');
+
+        return (
+          <div style={{ marginBottom: '2.5rem', width: '100%', display: 'flex', justifyContent: 'center' }}>
+            <iframe
+              src={src}
+              style={{
+                width: '100%',
+                // Cap portrait videos at a realistic phone width, allow landscape to be wider
+                maxWidth: isPortrait ? '400px' : '800px', 
+                // Your requested minimum height fallback
+                minHeight: '450px', 
+                borderRadius: '12px',
+                backgroundColor: '#000',
+                boxShadow: '0 10px 30px rgba(0,0,0,0.15)'
+              }}
+              frameBorder="0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              allowFullScreen
+              title="Video Embed"
+            />
+          </div>
+        );
+      }
+
+      // 2. Newsletter Widget Logic
+      if (domNode.name === 'div' && domNode.attribs?.class === 'newsletter-widget-placeholder') {
+        return <NewsletterWidget />;
+      }
+
+      // 3. AdSense In-Article Logic
+      if (domNode.name === 'div' && domNode.attribs?.class === 'in-article-ad-placeholder') {
+        return <AdUnit type="in-article" isPlain={true} />;
+      }
+    }
+  };
+
 export default async function BlogPostPage({ params }) {
   const { slug, locale } = await params;
   const post = await getBlogPostBySlug(slug);
@@ -101,49 +144,7 @@ export default async function BlogPostPage({ params }) {
     ],
   });
 
-  const parseOptions = {
-    replace: (domNode) => {
-      if (domNode.name === 'div' && domNode.attribs?.class === 'secure-video-embed') {
-        const src = domNode.attribs['data-src'];
-        
-        // Smart Detection: Check if the URL belongs to a portrait-first platform/format
-        const isPortrait = src.includes('shorts') || src.includes('tiktok');
-
-        return (
-          <div style={{ marginBottom: '2.5rem', width: '100%', display: 'flex', justifyContent: 'center' }}>
-            <iframe
-              src={src}
-              style={{
-                width: '100%',
-                // Cap portrait videos at a realistic phone width, allow landscape to be wider
-                maxWidth: isPortrait ? '400px' : '800px', 
-                // Your requested minimum height fallback
-                minHeight: '450px', 
-                borderRadius: '12px',
-                backgroundColor: '#000',
-                boxShadow: '0 10px 30px rgba(0,0,0,0.15)'
-              }}
-              frameBorder="0"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-              allowFullScreen
-              title="Video Embed"
-            />
-          </div>
-        );
-      }
-
-      // 2. Newsletter Widget Logic
-      if (domNode.name === 'div' && domNode.attribs?.class === 'newsletter-widget-placeholder') {
-        return <NewsletterWidget />;
-      }
-
-      // 3. AdSense In-Article Logic
-      if (domNode.name === 'div' && domNode.attribs?.class === 'in-article-ad-placeholder') {
-        return <AdUnit type="in-article" isPlain={true} />;
-      }
-    }
-  };
-
+  
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "BlogPosting",

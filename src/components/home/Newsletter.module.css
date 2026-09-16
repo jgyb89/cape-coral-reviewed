@@ -18,7 +18,7 @@
   height: 200%;
   z-index: 0;
   /* Initial state set in JS to avoid hydration mismatch, but we'll provide a fallback */
-  background: linear-gradient(135deg, #e94f37, #ff8c00, #ffd700);
+  background: linear-gradient(135deg, #b91c1c, #ff8c00, #ffd700);
 }
 
 .container {
@@ -119,12 +119,12 @@
 
 .input:focus {
   outline: none;
-  border-color: #e94f37;
+  border-color: #b91c1c;
   box-shadow: 0 0 0 4px rgba(233, 79, 55, 0.1);
 }
 
 .submitBtn {
-  background-color: #e94f37;
+  background-color: #b91c1c;
   color: #ffffff;
   border: none;
   border-radius: 100px;
@@ -155,7 +155,7 @@
 .successMessage {
   padding: 1.5rem;
   background-color: rgba(50, 205, 50, 0.1);
-  color: #2b8a2b;
+  color: #166534;
   border: 1px solid rgba(50, 205, 50, 0.2);
   border-radius: 12px;
   font-weight: 500;
@@ -163,7 +163,7 @@
 }
 
 .errorText {
-  color: #e94f37;
+  color: #b91c1c;
   margin-top: 0.5rem;
   font-size: 0.95rem;
   font-weight: 500;

@@ -1,14 +1,13 @@
 import PropTypes from "prop-types";
 import { Suspense } from "react";
-import Link from "next/link";
 import { getListingsByCategory } from "@/lib/api";
 import { getDictionary } from "@/lib/dictionaries";
 import DirectoryFilterManager from "@/components/directory/DirectoryFilterManager";
 
 export async function generateMetadata({ params, searchParams }) {
   const { directoryType, categorySlug } = await params;
-  const capitalizedType = directoryType.charAt(0).toUpperCase() + directoryType.slice(1).replace(/-/g, ' ');
-  const capitalizedCategory = categorySlug.charAt(0).toUpperCase() + categorySlug.slice(1).replace(/-/g, ' ');
+  const capitalizedType = directoryType.charAt(0).toUpperCase() + directoryType.slice(1).replaceAll(/-/g, ' ');
+  const capitalizedCategory = categorySlug.charAt(0).toUpperCase() + categorySlug.slice(1).replaceAll(/-/g, ' ');
   
   const queryParams = await searchParams;
   const hasQueryParams = Object.keys(queryParams || {}).length > 0;
@@ -31,7 +30,7 @@ export default async function CategoryPage({ params }) {
 
   // Derive category data from the first listing if available
   const categoryNode = listings[0]?.ccrlistingcategories?.nodes?.find(n => n.slug === categorySlug);
-  const categoryName = categoryNode?.name || categorySlug.replace(/-/g, ' ');
+  const categoryName = categoryNode?.name || categorySlug.replaceAll(/-/g, ' ');
   const categoryDescription = categoryNode?.description || "";
 
   return (

@@ -31,7 +31,7 @@
 .divider {
   width: 100px;
   height: 4px;
-  background-color: #e94f37; /* Coral */
+  background-color: #b91c1c; /* Coral */
   margin: 4rem auto;
   border-radius: 2px;
 }
@@ -69,7 +69,7 @@
 }
 
 .primaryBtn {
-  background-color: #e94f37;
+  background-color: #b91c1c;
   color: #ffffff;
 }
 

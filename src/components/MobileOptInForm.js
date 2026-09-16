@@ -32,33 +32,20 @@ export default function MobileOptInForm() {
     const val = typeof value === "string" ? value.trim() : value;
 
     const rules = {
-      firstName: () =>
-        !val
-          ? "First name is required"
-          : val.length < 2
-            ? "First name must be at least 2 characters"
-            : "",
-      lastName: () =>
-        !val
-          ? "Last name is required"
-          : val.length < 2
-            ? "Last name must be at least 2 characters"
-            : "",
-      email: () =>
-        !val
-          ? "Email is required"
-          : !EMAIL_REGEX.test(val)
-            ? "Please enter a valid email address"
-            : "",
-      phone: () =>
-        !val
-          ? "Phone number is required"
-          : val.replace(/\D/g, "").length !== 10
-            ? "Phone number must be exactly 10 digits"
-            : "",
-      consent1: () =>
-        !val ? "You must agree to receive marketing messages" : "",
-      consent2: () => (!val ? "You must agree to receive account alerts" : ""),
+      firstName: () => { if (!val
+          ) return "First name is required"; if (val.length < 2
+            ) return "First name must be at least 2 characters"; return ""; },
+      lastName: () => { if (!val
+          ) return "Last name is required"; if (val.length < 2
+            ) return "Last name must be at least 2 characters"; return ""; },
+      email: () => { if (!val
+          ) return "Email is required"; if (!EMAIL_REGEX.test(val)
+            ) return "Please enter a valid email address"; return ""; },
+      phone: () => { if (!val
+          ) return "Phone number is required"; if (val.replace(/\D/g, "").length !== 10
+            ) return "Phone number must be exactly 10 digits"; return ""; },
+      consent1: () => { if (!val ) return "You must agree to receive marketing messages"; if ("",
+      consent2: () => (!val ) return "You must agree to receive account alerts"; return ""; }),
     };
 
     return rules[name] ? rules[name]() : "";

@@ -1,14 +1,12 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import Image from "next/image";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/dist/ScrollTrigger";
 import { SplitText } from "gsap/dist/SplitText";
 import styles from "./HomepageInfo.module.css";
 
 // White Round Logo SVG
-import whiteRoundLogo from "../../../public/cape-coral-reviewed-icon.svg";
 
 export default function HomepageInfo() {
   const containerRef = useRef(null);

@@ -42,7 +42,7 @@ export default async function sitemap() {
       path = `/directory/${cat.directoryType}/${cat.slug}`;
     } else if (cat.parentSlug) {
       const parent = ALL_CATEGORIES.find((p) => p.slug === cat.parentSlug);
-      if (parent && parent.directoryType) {
+      if (parent?.directoryType) {
         path = `/directory/${parent.directoryType}/${cat.slug}`;
       }
     }

@@ -5,7 +5,6 @@ import Link from "next/link";
 import { useParams } from "next/navigation";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/dist/ScrollTrigger";
-import { Store, Users, Mail, ArrowRight } from "lucide-react";
 import { getLocalizedUrl } from "@/lib/constants";
 import styles from "./SeoCards.module.css";
 

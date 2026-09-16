@@ -8,11 +8,11 @@ export default function StarRating({ rating }) {
 
   return (
     <div className="star-rating" style={{ display: 'inline-flex', color: '#f59e0b', fontSize: '1.1rem' }}>
-      {[...Array(fullStars)].map((_, i) => (
+      {[...new Array(fullStars)].map((_, i) => (
         <span key={`full-${i}`} className="material-symbols-outlined" style={{ fontVariationSettings: "'FILL' 1" }}>star</span>
       ))}
       {hasHalfStar && <span className="material-symbols-outlined" style={{ fontVariationSettings: "'FILL' 1" }}>star_half</span>}
-      {[...Array(emptyStars)].map((_, i) => (
+      {[...new Array(emptyStars)].map((_, i) => (
         <span key={`empty-${i}`} className="material-symbols-outlined">star</span>
       ))}
     </div>

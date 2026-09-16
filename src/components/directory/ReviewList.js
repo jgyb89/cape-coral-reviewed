@@ -111,7 +111,7 @@ export default function ReviewList({ reviews, noReviewsYet = "No reviews yet. Be
           });
 
           // Ensure star rating falls within 1-5, reading from ACF reviewFields
-          const rating = Number.parseFloat(review.reviewFields?.starRating) || 0;
+          
           
           const isLongReview = (review.content || '').split(' ').length > WORD_LIMIT;
 

@@ -279,17 +279,17 @@ export default function RegisterForm({ dict = {}, locale = "en" }) {
             rel="noopener noreferrer" 
             style={{ color: '#e04c4c', textDecoration: 'underline', display: 'inline-flex', alignItems: 'center', gap: '2px', fontWeight: '500' }}
           >
-            Terms of Service
+            Terms of Service{" "}
             <span className="material-symbols-outlined" style={{ fontSize: '14px' }}>open_in_new</span>
           </a>
           {' '}and{' '}
           <a 
-            href={`/privacy-policy`} 
+            href="/privacy-policy" 
             target="_blank" 
-            rel="noopener noreferrer" 
+            rel="noopener noreferrer"
             style={{ color: '#e04c4c', textDecoration: 'underline', display: 'inline-flex', alignItems: 'center', gap: '2px', fontWeight: '500' }}
           >
-            Privacy Policy
+            Privacy Policy{" "}
             <span className="material-symbols-outlined" style={{ fontSize: '14px' }}>open_in_new</span>
           </a>.
         </label>

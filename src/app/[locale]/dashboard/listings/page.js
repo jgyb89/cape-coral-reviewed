@@ -47,7 +47,7 @@ async function fetchMyListings(authToken) {
 
     if (res.ok) {
       const contentType = res.headers.get("content-type");
-      if (contentType && contentType.includes("application/json")) {
+      if (contentType?.includes("application/json")) {
         return await res.json();
       }
       console.error(`Unexpected content-type in listings page: ${contentType}`);
@@ -81,8 +81,8 @@ export default async function MyListingsPage({ params, searchParams }) {
     redirect(`/dashboard`);
   }
 
-  const roles = viewer.roles.nodes.map(r => r.name.toLowerCase());
-  if (!roles.includes('business') && !roles.includes('administrator')) {
+  const roles = new Set(viewer.roles.nodes.map(r => r.name.toLowerCase()));
+  if (!roles.has('business') && !roles.has('administrator')) {
     redirect(`/dashboard`);
   }
 

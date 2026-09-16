@@ -27,14 +27,17 @@ export default function ContactForm() {
   const [error, setError] = useState(null);
 
   const validateField = (name, value) => {
-    const val = value ? (typeof value === 'string' ? value.trim() : value) : "";
+    let val = "";
+    if (value) {
+      val = typeof value === 'string' ? value.trim() : value;
+    }
     
     const rules = {
-      firstName: () => !val ? "First name is required" : (val.length < 2 ? "First name must be at least 2 characters" : ""),
-      lastName: () => !val ? "Last name is required" : (val.length < 2 ? "Last name must be at least 2 characters" : ""),
-      email: () => !value ? "Email is required" : (!EMAIL_REGEX.test(value) ? "Please enter a valid email address" : ""),
-      phone: () => !value ? "" : (value.replace(/\D/g, "").length !== 10 ? "Phone number must be exactly 10 digits" : ""),
-      message: () => !val ? "Message is required" : (val.length < 5 ? "Message must be at least 5 characters" : "")
+      firstName: () => { if (!val ) return "First name is required"; if (val.length < 2 ) return "First name must be at least 2 characters"; return ""; },
+      lastName: () => { if (!val ) return "Last name is required"; if (val.length < 2 ) return "Last name must be at least 2 characters"; return ""; },
+      email: () => { if (!value ) return "Email is required"; if (!EMAIL_REGEX.test(value) ) return "Please enter a valid email address"; return ""; },
+      phone: () => { if (!value ) return ""; if (value.replace(/\D/g, "").length !== 10 ) return "Phone number must be exactly 10 digits"; return ""; },
+      message: () => { if (!val ) return "Message is required"; if (val.length < 5 ) return "Message must be at least 5 characters"; return ""; }
     };
 
     return rules[name] ? rules[name]() : "";
