@@ -51,7 +51,7 @@ const formatEventbriteDateRange = (startStr, endStr) => {
   const start = new Date(startStr);
   const end = endStr ? new Date(endStr) : null;
 
-  if (isNaN(start.getTime())) return { dateString: startStr, timeString: "" };
+  if (Number.isNaN(start.getTime())) return { dateString: startStr, timeString: "" };
 
   const timeOpts = { hour: "numeric", minute: "2-digit", hour12: true };
   const dateOpts = {
@@ -64,7 +64,7 @@ const formatEventbriteDateRange = (startStr, endStr) => {
   const startTime = new Intl.DateTimeFormat("en-US", timeOpts).format(start);
   const startDate = new Intl.DateTimeFormat("en-US", dateOpts).format(start);
 
-  if (!end || isNaN(end.getTime())) {
+  if (!end || Number.isNaN(end.getTime())) {
     return { dateString: startDate, timeString: startTime };
   }
 
