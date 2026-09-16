@@ -44,8 +44,8 @@ export default function MobileOptInForm() {
       phone: () => { if (!val
           ) return "Phone number is required"; if (val.replace(/\D/g, "").length !== 10
             ) return "Phone number must be exactly 10 digits"; return ""; },
-      consent1: () => { if (!val ) return "You must agree to receive marketing messages"; if ("",
-      consent2: () => (!val ) return "You must agree to receive account alerts"; return ""; }),
+      consent1: () => { if (!val) return "You must agree to receive marketing messages"; return ""; },
+      consent2: () => { if (!val) return "You must agree to receive account alerts"; return ""; }
     };
 
     return rules[name] ? rules[name]() : "";
