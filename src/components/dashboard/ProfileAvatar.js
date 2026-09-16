@@ -12,7 +12,7 @@ async function getCroppedImg(imageSrc, pixelCrop) {
   const image = await new Promise((resolve, reject) => {
     const img = new globalThis.Image();
     img.addEventListener("load", () => resolve(img));
-    img.addEventListener("error", (error) => reject(error));
+    img.addEventListener("error", () => reject(new Error("Failed to load image")));
     img.src = imageSrc;
   });
 
@@ -237,8 +237,9 @@ export default function ProfileAvatar({ user }) {
                       />
                     </div>
                     <div style={{ padding: '0 10px' }}>
-                      <label style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.85rem', color: '#64748b', fontWeight: 600 }}>Zoom</label>
+                      <label htmlFor="zoom-input" style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.85rem', color: '#64748b', fontWeight: 600 }}>Zoom</label>
                       <input
+                        id="zoom-input"
                         type="range"
                         value={zoom}
                         min={1}

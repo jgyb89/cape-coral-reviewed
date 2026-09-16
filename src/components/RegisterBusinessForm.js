@@ -450,8 +450,7 @@ export default function RegisterBusinessForm({ locale = "en" }) {
               >
                 open_in_new
               </span>
-            </a>
-            .
+            </a>.
           </label>
         </div>
         {fieldErrors.consent && (

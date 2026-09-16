@@ -36,7 +36,7 @@ export function checkIfOpenNow(listingData) {
   const match = safeHoursStr.match(/(\d{1,2}:\d{2})\s*(AM|PM)\s*[-–—to]+\s*(\d{1,2}:\d{2})\s*(AM|PM)/i);
   if (!match) return false;
 
-  const [_, startTime, startPeriod, endTime, endPeriod] = match;
+  const [, startTime, startPeriod, endTime, endPeriod] = match;
 
   const timeToMinutes = (timeStr, period) => {
     let [hours, minutes] = timeStr.split(':').map(Number);

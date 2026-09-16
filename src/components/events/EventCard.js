@@ -30,7 +30,11 @@ export default function EventCard({ event, locale = 'en', viewMode = 'grid', cur
     ? `$${rawPrice}` 
     : rawPrice;
   
-  const descriptionSnippet = content ? (content.slice(0, 1000).replace(/<[^<>]+>/g, '').substring(0, 100) + (content.length > 100 ? '...' : '')) : '';
+  let descriptionSnippet = '';
+  if (content) {
+    const cleanContent = content.slice(0, 1000).replace(/<[^<>]+>/g, '');
+    descriptionSnippet = cleanContent.substring(0, 100) + (content.length > 100 ? '...' : '');
+  }
 
   return (
     <div className={`${styles.eventCard} ${viewMode === 'list' ? styles.listView : ''}`}>

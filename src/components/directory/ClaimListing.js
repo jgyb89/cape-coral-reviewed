@@ -89,23 +89,23 @@ export default function ClaimListing({ listingTitle, listingSlug }) {
               ) : (
                 <form onSubmit={handleSubmit}>
                   <div className={styles['claim-modal__group']}>
-                    <label className={styles['claim-modal__label']}>Full Name <span>*</span></label>
-                    <input required type="text" name="fullName" value={formData.fullName} onChange={handleChange} className={styles['claim-modal__input']} placeholder="Full Name" />
+                    <label htmlFor="claim-fullName" className={styles['claim-modal__label']}>Full Name <span>*</span></label>
+                    <input id="claim-fullName" required type="text" name="fullName" value={formData.fullName} onChange={handleChange} className={styles['claim-modal__input']} placeholder="Full Name" />
                   </div>
                   
                   <div className={styles['claim-modal__group']}>
-                    <label className={styles['claim-modal__label']}>Email <span>*</span></label>
-                    <input required type="email" name="email" value={formData.email} onChange={handleChange} className={styles['claim-modal__input']} placeholder="email@example.com" />
+                    <label htmlFor="claim-email" className={styles['claim-modal__label']}>Email <span>*</span></label>
+                    <input id="claim-email" required type="email" name="email" value={formData.email} onChange={handleChange} className={styles['claim-modal__input']} placeholder="email@example.com" />
                   </div>
                   
                   <div className={styles['claim-modal__group']}>
-                    <label className={styles['claim-modal__label']}>Phone <span>*</span></label>
-                    <input required type="tel" name="phone" value={formData.phone} onChange={handleChange} className={styles['claim-modal__input']} placeholder="111-111-235" />
+                    <label htmlFor="claim-phone" className={styles['claim-modal__label']}>Phone <span>*</span></label>
+                    <input id="claim-phone" required type="tel" name="phone" value={formData.phone} onChange={handleChange} className={styles['claim-modal__input']} placeholder="111-111-235" />
                   </div>
                   
                   <div className={styles['claim-modal__group']}>
-                    <label className={styles['claim-modal__label']}>Verification Details <span>*</span></label>
-                    <textarea required name="details" value={formData.details} onChange={handleChange} className={styles['claim-modal__textarea']} placeholder="Details description about your business..." />
+                    <label htmlFor="claim-details" className={styles['claim-modal__label']}>Verification Details <span>*</span></label>
+                    <textarea id="claim-details" required name="details" value={formData.details} onChange={handleChange} className={styles['claim-modal__textarea']} placeholder="Details description about your business..." />
                   </div>
 
                   {error && <p style={{ color: '#e04c4c', fontSize: '0.9rem', marginBottom: '1rem' }}>{error}</p>}
@@ -115,7 +115,7 @@ export default function ClaimListing({ listingTitle, listingSlug }) {
                   </button>
 
                   <div className={styles['claim-modal__footer']}>
-                    <span className="material-symbols-outlined" style={{ color: '#16a34a', fontSize: '1.1rem' }}>lock</span>
+                    <span className="material-symbols-outlined" style={{ color: '#16a34a', fontSize: '1.1rem' }}>lock</span>{" "}
                     Secure Claim Process
                   </div>
                 </form>

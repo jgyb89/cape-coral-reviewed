@@ -882,20 +882,27 @@ const CategorySection = ({
                 }}
               >
                 {searchResults.map((suggestion) => (
-                  <li
-                    key={suggestion.slug}
-                    onMouseDown={(e) => {
-                      e.preventDefault();
-                      handleCategoryToggle(suggestion.slug);
-                      setCatInput("");
-                    }}
-                    style={{
-                      padding: "0.6rem 1rem",
-                      cursor: "pointer",
-                      fontSize: "0.95rem",
-                    }}
-                  >
-                    {suggestion.name}
+                  <li key={suggestion.slug} style={{ margin: 0, padding: 0 }}>
+                    <button
+                      type="button"
+                      onMouseDown={(e) => {
+                        e.preventDefault();
+                        handleCategoryToggle(suggestion.slug);
+                        setCatInput("");
+                      }}
+                      style={{
+                        width: "100%",
+                        textAlign: "left",
+                        background: "none",
+                        border: "none",
+                        padding: "0.6rem 1rem",
+                        cursor: "pointer",
+                        fontSize: "0.95rem",
+                        color: "inherit",
+                      }}
+                    >
+                      {suggestion.name}
+                    </button>
                   </li>
                 ))}
               </ul>

@@ -19,12 +19,12 @@ function processSingleEvent(event, now) {
     }
 
     const parts = seedStartStr.split(/[-T: ]/);
-    const y = parseInt(parts[0], 10);
-    const m = parseInt(parts[1], 10) - 1;
-    const d = parseInt(parts[2], 10);
-    const h = parts[3] ? parseInt(parts[3], 10) : 0;
-    const min = parts[4] ? parseInt(parts[4], 10) : 0;
-    const s = parts[5] ? parseInt(parts[5], 10) : 0;
+    const y = Number.parseInt(parts[0], 10);
+    const m = Number.parseInt(parts[1], 10) - 1;
+    const d = Number.parseInt(parts[2], 10);
+    const h = parts[3] ? Number.parseInt(parts[3], 10) : 0;
+    const min = parts[4] ? Number.parseInt(parts[4], 10) : 0;
+    const s = parts[5] ? Number.parseInt(parts[5], 10) : 0;
     
     const naiveUtcStart = new Date(Date.UTC(y, m, d, h, min, s));
     const rule = rrulestr(details.recurrenceRule, { dtstart: naiveUtcStart });

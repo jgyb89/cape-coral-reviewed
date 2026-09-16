@@ -27,10 +27,11 @@ export default function AdUnit({ type = "horizontal", isGridCard = false, isPlai
     let timeoutId;
     
     const pushAd = () => {
-      if (adRef.current && !adRef.current.getAttribute('data-ad-status')) {
+      if (adRef.current && !adRef.current.dataset.adStatus) {
         try {
           if (typeof window !== 'undefined') {
-            (window.adsbygoogle = window.adsbygoogle || []).push({});
+            window.adsbygoogle = window.adsbygoogle || [];
+            window.adsbygoogle.push({});
           }
         } catch (err) {
           console.warn("AdSense error:", err);
@@ -58,7 +59,7 @@ export default function AdUnit({ type = "horizontal", isGridCard = false, isPlai
     const observer = new MutationObserver((mutations) => {
       mutations.forEach((mutation) => {
         if (mutation.attributeName === 'data-ad-status') {
-          const status = adRef.current.getAttribute('data-ad-status');
+          const status = adRef.current.dataset.adStatus;
           if (status === 'filled') {
             setIsFilled(true);
           } else if (status === 'unfilled') {

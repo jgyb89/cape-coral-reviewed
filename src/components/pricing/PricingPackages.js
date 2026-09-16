@@ -261,19 +261,12 @@ export default function PricingPackages() {
         <div
           className={styles.modalOverlay}
           onClick={handleClose}
-          role="button"
-          tabIndex={0}
-          onKeyDown={(e) => {
-            if (e.key === "Enter" || e.key === " ") {
-              e.preventDefault();
-              handleClose();
-            }
-          }}
+          aria-hidden="true"
         >
           <div
             className={styles.modalDialog}
             onClick={(e) => e.stopPropagation()}
-            role="presentation"
+            role="dialog" aria-modal="true"
             onKeyDown={(e) => e.stopPropagation()}
           >
             <div className={styles.modalHeader}>
@@ -329,19 +322,12 @@ export default function PricingPackages() {
         <div
           className={styles.modalOverlay}
           onClick={handleClose}
-          role="button"
-          tabIndex={0}
-          onKeyDown={(e) => {
-            if (e.key === "Enter" || e.key === " ") {
-              e.preventDefault();
-              handleClose();
-            }
-          }}
+          aria-hidden="true"
         >
           <div
             className={styles.modalDialog}
             onClick={(e) => e.stopPropagation()}
-            role="presentation"
+            role="dialog" aria-modal="true"
             onKeyDown={(e) => e.stopPropagation()}
           >
             <div className={styles.modalHeader}>
@@ -377,19 +363,12 @@ export default function PricingPackages() {
         <div
           className={styles.modalOverlay}
           onClick={handleClose}
-          role="button"
-          tabIndex={0}
-          onKeyDown={(e) => {
-            if (e.key === "Enter" || e.key === " ") {
-              e.preventDefault();
-              handleClose();
-            }
-          }}
+          aria-hidden="true"
         >
           <div
             className={styles.modalDialog}
             onClick={(e) => e.stopPropagation()}
-            role="presentation"
+            role="dialog" aria-modal="true"
             onKeyDown={(e) => e.stopPropagation()}
           >
             <div className={styles.modalHeader}>

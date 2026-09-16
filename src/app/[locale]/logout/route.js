@@ -14,8 +14,8 @@ export async function GET(request) {
     const pathname = refererUrl.pathname;
 
     // Extract the locale from the path (assuming /[locale]/...)
-    const segments = pathname.split('/').filter(Boolean);
-    const locale = segments[0] && ['en', 'es'].includes(segments[0]) ? segments[0] : 'en';
+    const firstSegment = pathname.split('/').find(Boolean);
+    const locale = firstSegment && ['en', 'es'].includes(firstSegment) ? firstSegment : 'en';
 
     // Check if user was inside the dashboard
     if (pathname.includes('/dashboard')) {

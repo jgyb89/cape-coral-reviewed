@@ -1,5 +1,4 @@
 // src/app/[locale]/dashboard/page.js
-import PropTypes from 'prop-types';
 import { getViewer } from '@/lib/auth';
 import Link from 'next/link';
 

@@ -27,7 +27,7 @@ export default function BackButton() {
       onFocus={(e) => e.currentTarget.style.color = '#e04c4c'}
       onBlur={(e) => e.currentTarget.style.color = '#64748b'}
     >
-      <span className="material-symbols-outlined" style={{ fontSize: '1.25rem' }}>arrow_back</span>
+      <span className="material-symbols-outlined" style={{ fontSize: '1.25rem' }}>arrow_back</span>{" "}
       Back
     </button>
   );

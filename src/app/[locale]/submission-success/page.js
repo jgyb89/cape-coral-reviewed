@@ -5,7 +5,7 @@ import { useParams } from 'next/navigation';
 
 export default function SubmissionSuccessPage() {
   const params = useParams();
-  const locale = params.locale || 'en';
+  
   const [progress, setProgress] = useState(0);
 
   useEffect(() => {

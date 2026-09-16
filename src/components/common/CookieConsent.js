@@ -17,7 +17,7 @@ export default function CookieConsent() {
     // Check if consent cookie already exists
     const hasConsent = document.cookie
       .split("; ")
-      .find((row) => row.startsWith("ccr_cookie_consent="));
+      .some((row) => row.startsWith("ccr_cookie_consent="));
     if (!hasConsent) {
       setIsVisible(true);
     }
@@ -107,7 +107,7 @@ export default function CookieConsent() {
             <div className={styles.accordionList}>
               <details className={styles.accordion}>
                 <summary className={styles.accordionSummary}>
-                  Necessary
+                  Necessary{" "}
                   <span style={{ color: "#10b981", fontSize: "0.85rem" }}>
                     Always Active
                   </span>
@@ -127,8 +127,7 @@ export default function CookieConsent() {
                     onKeyDown={(e) => {
                       if (e.key === "Enter" || e.key === " ") e.stopPropagation();
                     }}
-                    role="presentation"
-                    style={{ display: 'inline-block' }}
+                    style={{ display: "inline-block" }} 
                   >
                     <label className={styles.toggle}>
                       <input
@@ -156,8 +155,7 @@ export default function CookieConsent() {
                     onKeyDown={(e) => {
                       if (e.key === "Enter" || e.key === " ") e.stopPropagation();
                     }}
-                    role="presentation"
-                    style={{ display: 'inline-block' }}
+                    style={{ display: "inline-block" }} 
                   >
                     <label className={styles.toggle}>
                       <input
@@ -185,8 +183,7 @@ export default function CookieConsent() {
                     onKeyDown={(e) => {
                       if (e.key === "Enter" || e.key === " ") e.stopPropagation();
                     }}
-                    role="presentation"
-                    style={{ display: 'inline-block' }}
+                    style={{ display: "inline-block" }} 
                   >
                     <label className={styles.toggle}>
                       <input

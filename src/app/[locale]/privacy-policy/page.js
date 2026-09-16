@@ -370,8 +370,7 @@ export default function PrivacyPolicyPage() {
             className={styles.link}
           >
             How Google uses data when you use our partners&apos; sites or apps
-          </a>
-          .
+          </a>.
         </p>
 
         <h2>Data Retention</h2>

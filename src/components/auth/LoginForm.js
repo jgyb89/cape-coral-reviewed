@@ -21,7 +21,7 @@ const formatAuthError = (errorString) => {
 
 export default function LoginForm() {
   const params = useParams();
-  const locale = params?.locale || 'en';
+  
   const [formData, setFormData] = useState({
     username: '',
     password: '',

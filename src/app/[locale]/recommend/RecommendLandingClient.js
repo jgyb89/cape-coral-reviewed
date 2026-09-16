@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useRef } from "react";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
 import { ScrollTrigger } from "gsap/dist/ScrollTrigger";
@@ -134,7 +134,7 @@ export default function RecommendLandingClient() {
                 className={`material-symbols-outlined ${styles.featureIcon}`}
               >
                 campaign
-              </span>
+              </span>{" "}
               Reach thousands of local residents
             </div>
             <div className={styles.heroFeatureItem}>
@@ -142,7 +142,7 @@ export default function RecommendLandingClient() {
                 className={`material-symbols-outlined ${styles.featureIcon}`}
               >
                 thumb_up
-              </span>
+              </span>{" "}
               100% Free for recommended businesses
             </div>
             <div className={styles.heroFeatureItem}>
@@ -150,7 +150,7 @@ export default function RecommendLandingClient() {
                 className={`material-symbols-outlined ${styles.featureIcon}`}
               >
                 verified
-              </span>
+              </span>{" "}
               Boost their local credibility and SEO
             </div>
           </div>
@@ -294,7 +294,7 @@ export default function RecommendLandingClient() {
             onClick={scrollToForm}
             className={`${styles.ctaButton} ${styles.ctaButtonPrimary}`}
           >
-            Recommend A Business Now
+            Recommend A Business Now{" "}
             <span className="material-symbols-outlined">arrow_upward</span>
           </button>
         </div>

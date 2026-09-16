@@ -39,7 +39,7 @@ export async function fetchGraphQL(query, variables = {}, requireAuth = true) {
       return { errors: [{ message: `HTTP Error: ${res.status}` }] };
     }
     const contentType = res.headers.get("content-type");
-    if (!contentType || !contentType.includes("application/json")) {
+    if (!contentType?.includes("application/json")) {
       console.error("Unexpected content-type inside fetchGraphQL");
       return { errors: [{ message: "Invalid JSON response" }] };
     }
@@ -903,7 +903,7 @@ export async function submitBlogComment(postId, content) {
 
   try {
     // requireAuth = true enforces the JWT token is sent
-    const json = await fetchGraphQL(mutation, { postId: parseInt(postId, 10), content }, true);
+    const json = await fetchGraphQL(mutation, { postId: Number.parseInt(postId, 10), content }, true);
     if (json.errors) return { success: false, error: json.errors[0].message };
     return { success: true, comment: json.data.createComment.comment };
   } catch (error) {

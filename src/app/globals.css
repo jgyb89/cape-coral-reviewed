@@ -1,6 +1,7 @@
 html {
   line-height: 1.15;
   -webkit-text-size-adjust: 100%;
+  background-color: #231f20;
 }
 main {
   display: block;
@@ -16,7 +17,7 @@ hr {
 }
 
 :root {
-  --color-primary: #e94f37;
+  --color-primary: #b91c1c;
   --color-secondary: #ffc845;
   --color-accent: #f6eee3;
   --color-text: #333333;
@@ -36,6 +37,7 @@ body {
   font-family: var(--font-open-sans), sans-serif;
   color: var(--color-text);
   background-color: var(--color-bg);
+  background-clip: content-box;
   line-height: 1.5;
 }
 
@@ -125,8 +127,8 @@ h6 {
   gap: 0.5rem;
   padding: 0.5rem 1.25rem;
   background: #fff;
-  color: #e04c4c;
-  border: 1px solid #e04c4c;
+  color: #b91c1c;
+  border: 1px solid #b91c1c;
   border-radius: 8px;
   font-weight: 600;
   font-size: 0.95rem;
@@ -137,7 +139,7 @@ h6 {
 }
 
 .listing-action-btn:hover {
-  background: #e04c4c;
+  background: #b91c1c;
   color: #fff;
 }
 
@@ -159,7 +161,7 @@ h6 {
   align-items: center;
   gap: 0.5rem;
   padding: 0.75rem 1.5rem;
-  background: #e04c4c;
+  background: #b91c1c;
   color: #fff;
   border: none;
   border-radius: 8px;

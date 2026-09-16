@@ -5,7 +5,6 @@ import { useSearchParams, useRouter, usePathname } from "next/navigation";
 import PropTypes from "prop-types";
 import Breadcrumbs from "../common/Breadcrumbs";
 import CcrCardGrid from "./CcrCardGrid";
-import DirectoryFilters, { QUICK_PILLS, getCategoryRoute, getDynamicPills } from "./DirectoryFilters";
 import Pagination from "../common/Pagination";
 import styles from "./DirectoryFilterManager.module.css";
 import { checkIfOpenNow } from '@/lib/timeUtils';
@@ -127,7 +126,7 @@ const DirectoryFilterManager = ({ listings, currentUser, dict = {}, locale = "en
           className={styles['toggle-filters-btn']}
           onClick={() => setIsModalOpen(true)}
         >
-          <span className="material-symbols-outlined">tune</span>
+          <span className="material-symbols-outlined">tune</span>{" "}
           Filters
         </button>
 

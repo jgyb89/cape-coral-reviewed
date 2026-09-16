@@ -35,7 +35,7 @@ const getCategoryRoute = (slug) => {
 
   if (category.parentSlug) {
     const parent = ALL_CATEGORIES.find(p => p.slug === category.parentSlug);
-    if (parent && parent.directoryType) {
+    if (parent?.directoryType) {
       return `/directory/${parent.directoryType}/${sanitizedSlug}`;
     }
   }

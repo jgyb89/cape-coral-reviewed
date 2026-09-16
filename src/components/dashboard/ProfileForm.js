@@ -78,7 +78,7 @@ export default function ProfileForm({ viewer }) {
         
         {feedback && (
           <p
-            className={`${styles['profile-form__feedback']} ${styles[`profile-form__feedback--${feedback.type}`]}`}
+            className={`${styles['profile-form__feedback']} ${styles['profile-form__feedback--' + feedback.type]}`}
           >
             {feedback.message}
           </p>
@@ -194,7 +194,7 @@ export default function ProfileForm({ viewer }) {
 
       {feedback && (
         <p
-          className={`${styles['profile-form__feedback']} ${styles[`profile-form__feedback--${feedback.type}`]}`}
+          className={`${styles['profile-form__feedback']} ${styles['profile-form__feedback--' + feedback.type]}`}
         >
           {feedback.message}
         </p>

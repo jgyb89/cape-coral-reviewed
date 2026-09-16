@@ -1,6 +1,5 @@
 import PropTypes from "prop-types";
 import { Suspense } from "react";
-import Link from "next/link";
 import { getListingsByDirectoryType } from "@/lib/api";
 import { getDictionary } from "@/lib/dictionaries";
 import DirectoryFilterManager from "@/components/directory/DirectoryFilterManager";
@@ -8,7 +7,7 @@ import DirectorySEO from "@/components/directory/DirectorySEO";
 
 export async function generateMetadata({ params, searchParams }) {
   const { directoryType } = await params;
-  const capitalizedType = directoryType.charAt(0).toUpperCase() + directoryType.slice(1).replace(/-/g, ' ');
+  const capitalizedType = directoryType.charAt(0).toUpperCase() + directoryType.slice(1).replaceAll(/-/g, ' ');
   
   const queryParams = await searchParams;
   const hasQueryParams = Object.keys(queryParams || {}).length > 0;
@@ -31,7 +30,7 @@ export default async function DirectoryTypePage({ params }) {
 
   // Derive directory type name from the first listing if available, or use the slug
   const typeNode = listings[0]?.directoryTypes?.nodes.find(n => n.slug === directoryType);
-  const typeName = typeNode?.name || directoryType.replace(/-/g, ' ');
+  const typeName = typeNode?.name || directoryType.replaceAll(/-/g, ' ');
   const typeDescription = typeNode?.description || "";
 
   return (

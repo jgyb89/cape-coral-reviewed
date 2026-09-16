@@ -290,10 +290,20 @@ const DirectoryFilters = ({ isModalOpen, setIsModalOpen }) => {
                 {[0, 1, 2, 3, 4, 5].map((rating) => (
                   <li 
                     key={rating}
+                    role="option"
+                    aria-selected={ratingFilter === rating}
+                    tabIndex={0}
                     className={`${styles['custom-select__option']} ${ratingFilter === rating ? styles['custom-select__option--selected'] : ''}`}
                     onClick={() => {
                       updateFilter('rating', rating.toString());
                       setOpenDropdown(null);
+                    }}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        updateFilter('rating', rating.toString());
+                        setOpenDropdown(null);
+                      }
                     }}
                   >
                     {rating === 0 ? 'Any Rating' : `${rating}+ Stars`}
