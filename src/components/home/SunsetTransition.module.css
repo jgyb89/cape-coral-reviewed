@@ -38,6 +38,10 @@
   object-position: bottom center;
 }
 
+.mobileImage {
+  display: none !important;
+}
+
 .modalTitle {
   color: #fff;
   font-size: 2rem;
@@ -168,6 +172,10 @@
 }
 
 /* 5. Palm Landing - Proportional, Edge-to-Edge framing */
+.mobilePalmLanding {
+  display: none;
+}
+
 .palmLanding {
   position: absolute;
   bottom: -15vh; /* Extends below the viewport to prevent a bottom gap when translated upwards by GSAP */
@@ -313,17 +321,17 @@
    if the 6-button grid needs more physical space! 
   */
   .animationViewport {
-    min-height: 85vh; 
-    height: auto; 
+    min-height: 85vh;
+    height: auto;
     padding-bottom: 5vh; /* Adds safe breathing room below the modal */
   }
 
   .sky {
-    transform: scaleX(2.0); 
+    transform: scaleX(2);
   }
 
   .sun {
-    width: 60vw; 
+    width: 60vw;
     height: 60vw;
     top: 8vh;
   }
@@ -341,13 +349,35 @@
   }
 
   .oceanWrapper {
-    top: 42vh; 
+    top: 42vh;
+  }
+
+  .desktopImage {
+    display: none !important;
+  }
+
+  .mobileImage {
+    display: block !important;
+  }
+
+  .mobilePalmLanding {
+    display: block;
+    position: absolute;
+    top: 0vh; /* Covers the red sky entirely */
+    left: 0;
+    width: 100%;
+    height: 192vh; /* Matches oceanWrapper's initial bottom (42vh + 150vh) */
+    z-index: 10;
   }
 
   .palmLanding {
-    height: 70vh;
-    min-height: 40vh;
-    bottom: -15vh; /* Pushed further down to compensate for the taller viewport */
+    top: 42vh;
+    height: 150vh;
+    min-height: 80vh;
+    bottom: auto;
+    background-color: rgb(35, 31, 32);
+    z-index: 3;
+    margin-top: 200px;
   }
 
   /* Modal Adjustments: 
@@ -358,10 +388,10 @@
     position: relative; /* Takes it out of absolute bottom locking */
     margin: 55vh auto 0 auto; /* Pushes it down below the sun/clouds */
     width: 92%;
-    max-width: 100%; 
+    max-width: 100%;
     padding: 1.5rem;
     height: auto;
-    bottom: auto; 
+    bottom: auto;
   }
 
   .modalTitle {

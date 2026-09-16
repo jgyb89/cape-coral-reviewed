@@ -26,16 +26,15 @@ export default function PricingPackages() {
         handleClose();
       }
     };
-    
+
     if (openModal) {
       window.addEventListener("keydown", handleKeyDown);
     }
-    
+
     return () => {
       window.removeEventListener("keydown", handleKeyDown);
     };
   }, [openModal]);
-
 
   return (
     <div className={styles.wrapper}>
@@ -49,19 +48,19 @@ export default function PricingPackages() {
 
         <div className={styles.container}>
           <div className={styles.header}>
-            <h2
+            <h1
               style={{
                 margin: "0 0 10px 0",
-                fontSize: "2.5rem",
+                fontSize: "2.8rem",
                 color: "#ffffff",
               }}
             >
-              Business Pricing Packages
-            </h2>
+              Your Business. Your Community. Your Spotlight.
+            </h1>
             <p
               style={{
-                fontSize: "1.5rem",
-                fontWeight: "bold",
+                fontSize: "1.4rem",
+                fontWeight: "200",
                 color: "#ffffff",
                 margin: 0,
               }}
@@ -253,18 +252,29 @@ export default function PricingPackages() {
             </div>
           </div>
 
-          <div className={styles.footerNote}>
-            Your Business. Your Community. Your Spotlight.
-          </div>
+          <div className={styles.footerNote}>&nbsp;</div>
         </div>
       </section>
 
       {/* Modals */}
       {openModal === "starter" && (
-        <div className={styles.modalOverlay} onClick={handleClose}>
+        <div
+          className={styles.modalOverlay}
+          onClick={handleClose}
+          role="button"
+          tabIndex={0}
+          onKeyDown={(e) => {
+            if (e.key === "Enter" || e.key === " ") {
+              e.preventDefault();
+              handleClose();
+            }
+          }}
+        >
           <div
             className={styles.modalDialog}
             onClick={(e) => e.stopPropagation()}
+            role="presentation"
+            onKeyDown={(e) => e.stopPropagation()}
           >
             <div className={styles.modalHeader}>
               <h3>Local Starter Includes:</h3>
@@ -316,10 +326,23 @@ export default function PricingPackages() {
       )}
 
       {openModal === "monthly" && (
-        <div className={styles.modalOverlay} onClick={handleClose}>
+        <div
+          className={styles.modalOverlay}
+          onClick={handleClose}
+          role="button"
+          tabIndex={0}
+          onKeyDown={(e) => {
+            if (e.key === "Enter" || e.key === " ") {
+              e.preventDefault();
+              handleClose();
+            }
+          }}
+        >
           <div
             className={styles.modalDialog}
             onClick={(e) => e.stopPropagation()}
+            role="presentation"
+            onKeyDown={(e) => e.stopPropagation()}
           >
             <div className={styles.modalHeader}>
               <h3>Monthly Visibility Includes:</h3>
@@ -351,10 +374,23 @@ export default function PricingPackages() {
       )}
 
       {openModal === "growth" && (
-        <div className={styles.modalOverlay} onClick={handleClose}>
+        <div
+          className={styles.modalOverlay}
+          onClick={handleClose}
+          role="button"
+          tabIndex={0}
+          onKeyDown={(e) => {
+            if (e.key === "Enter" || e.key === " ") {
+              e.preventDefault();
+              handleClose();
+            }
+          }}
+        >
           <div
             className={styles.modalDialog}
             onClick={(e) => e.stopPropagation()}
+            role="presentation"
+            onKeyDown={(e) => e.stopPropagation()}
           >
             <div className={styles.modalHeader}>
               <h3>Local Growth includes everything in Local Starter, plus:</h3>

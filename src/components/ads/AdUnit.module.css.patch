@@ -1,0 +1,23 @@
+--- src/components/ads/AdUnit.module.css
++++ src/components/ads/AdUnit.module.css
+@@ -52,15 +52,11 @@
+ }
+ 
+ /* Visibility Modifiers */
+-.wrapper--desktopOnly {
+-  display: block;
+-}
+ @media (max-width: 767px) {
+   .wrapper--desktopOnly {
+     display: none !important;
+   }
+ }
+ 
+ .wrapper--mobileOnly {
+   display: none !important;
+ }
+-@media (max-width: 767px) {
+-  .wrapper--mobileOnly {
+-    display: flex !important;
+-  }
+-}

@@ -72,6 +72,7 @@ export default function SunsetTransition() {
   const cloudReflectLeftRef = useRef(null);
   const cloudReflectRightRef = useRef(null);
   const palmLandingRef = useRef(null);
+  const mobilePalmRef = useRef(null);
   const modalRef = useRef(null);
 
   const star1Ref = useRef(null);
@@ -157,6 +158,11 @@ export default function SunsetTransition() {
           tl.to(
             oceanWrapperRef.current,
             { height: "35vh", duration: 1, ease: "power1.inOut" },
+            0,
+          );
+          tl.to(
+            mobilePalmRef.current,
+            { y: "-115vh", duration: 1, ease: "power1.inOut" },
             0,
           );
           tl.to(
@@ -377,13 +383,23 @@ export default function SunsetTransition() {
           </div>
         </div>
 
+        {/* Mobile Palm Landing - Split out for independent GSAP animation */}
+        <div ref={mobilePalmRef} className={styles.mobilePalmLanding}>
+          <Image
+            src="/Palm-landing-mobile.svg"
+            alt="Palm Landing Mobile"
+            fill
+            className={`${styles.imageFitCoverBottom} ${styles.mobileImage}`}
+          />
+        </div>
+
         {/* Palm Landing */}
         <div ref={palmLandingRef} className={styles.palmLanding}>
           <Image
             src="/Palm-landing.svg"
             alt="Palm Landing"
             fill
-            className={styles.imageFitCoverBottom}
+            className={`${styles.imageFitCoverBottom} ${styles.desktopImage}`}
           />
         </div>
 

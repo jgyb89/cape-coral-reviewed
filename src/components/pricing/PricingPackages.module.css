@@ -76,7 +76,7 @@
   margin-bottom: 3rem;
 }
 
-.header h2 {
+.header h1 {
   font-size: 3.8rem;
   letter-spacing: -0.02em;
   color: #fff;
@@ -92,7 +92,6 @@
   scroll-snap-type: x mandatory;
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
-  padding-bottom: 2rem;
   margin: 0 -1rem;
   padding: 0 1rem 2rem 1rem;
 }
@@ -250,14 +249,44 @@
   cursor: pointer;
   transition:
     transform 0.2s,
-    box-shadow 0.2s;
+    box-shadow 0.2s,
+    color 0.2s;
   width: 100%;
   margin-top: 2rem;
+  position: relative;
+  overflow: hidden;
+  z-index: 1;
+}
+
+.moreDetailsBtn::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 120%;
+  aspect-ratio: 1 / 1;
+  background: linear-gradient(
+    135deg,
+    #e04c4c 0%,
+    #ea580c 45%,
+    #f59e0b 65%,
+    #fbbf24 85%,
+    #d97706 100%
+  );
+  border-radius: 50%;
+  transform: translate(-50%, -50%) scale(0);
+  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: -1;
 }
 
 .moreDetailsBtn:hover {
   transform: translateY(-4px);
   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+  color: #ffffff;
+}
+
+.moreDetailsBtn:hover::before {
+  transform: translate(-50%, -50%) scale(1);
 }
 
 /* Additional Services Section (White Background) */

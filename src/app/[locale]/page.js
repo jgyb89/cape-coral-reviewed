@@ -149,7 +149,6 @@ export default async function HomePage({ params }) {
         </div>
       </section>
 
-      <PricingPackages />
       {/* Sunset Animation Transition */}
       <SunsetTransition />
     </main>
