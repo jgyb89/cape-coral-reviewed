@@ -1,4 +1,4 @@
-import styles from "./legal.module.css";
+import styles from "./page.module.css";
 import PropTypes from "prop-types";
 import { getListings } from "@/lib/api";
 import Script from "next/script";
@@ -13,7 +13,6 @@ import { getEvents } from "@/lib/graphql/events";
 import { expandRecurringEvents } from "@/lib/eventUtils";
 import EventCard from "@/components/events/EventCard";
 import { BASE_URL } from "@/lib/constants";
-import "./page.module.css";
 import React from "react";
 export const metadata = {
   title: "Cape Coral Reviewed - Local Business Directory",

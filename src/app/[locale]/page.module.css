@@ -8,3 +8,13 @@
   margin: 40px auto;
   padding: 0 2vw;
 }
+
+.inline-style-1 {
+  background-color: #ffffff;
+  padding: 4rem 0;
+  overflow-x: hidden;
+}
+
+.container {
+  min-width: 0;
+}
