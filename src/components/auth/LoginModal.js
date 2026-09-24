@@ -14,6 +14,22 @@ const formatAuthError = (errorString) => {
   if (!errorString) return "An error occurred during login. Please verify your credentials and try again.";
   const err = errorString.toLowerCase();
   
+  if (err.includes("fetch failed") || err.includes("network error") || err.includes("timeout")) {
+    return "Our servers are currently unreachable. Please check your connection and try again later.";
+  }
+
+  if (err.includes("google login failed")) {
+    return "Unable to sign in with Google. Please try again or use your email.";
+  }
+
+  if (err.includes("unconfirmed") || err.includes("inactive") || err.includes("pending activation")) {
+    return "Your account has not been activated yet. Please check your email for the activation link.";
+  }
+
+  if (err.includes("empty_username") || err.includes("empty_password")) {
+    return "Please enter both your username and password.";
+  }
+  
   if (err.includes("the username or password you entered is incorrect")) {
     return "The username or password you entered is incorrect. Please try again.";
   }
