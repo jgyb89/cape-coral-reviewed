@@ -31,7 +31,7 @@
 }
 
 .filter-input:focus {
-  border-color: #b91c1c;
+  border-color: #e94f37;
 }
 
 .filter-group {
@@ -75,12 +75,12 @@
 
 .custom-select__button:focus {
   outline: none;
-  border-color: #b91c1c;
+  border-color: #e94f37;
   box-shadow: 0 0 0 2px rgba(224, 76, 76, 0.1);
 }
 
 .custom-select__button[aria-expanded="true"] {
-  border-color: #b91c1c;
+  border-color: #e94f37;
 }
 
 /* The Dropdown Menu List */
@@ -122,7 +122,7 @@
 
 .custom-select__option--selected {
   background-color: #fff1f1;
-  color: #b91c1c;
+  color: #e94f37;
   font-weight: 600;
 }
 
@@ -193,7 +193,7 @@ input:checked + .slider:before {
   transition: color 0.2s;
 }
 .btn-clear:hover {
-  color: #b91c1c;
+  color: #e94f37;
 }
 
 .btn-filter-mobile {
@@ -286,9 +286,9 @@ input:checked + .slider:before {
 }
 
 .category-pill--active {
-  background-color: #b91c1c;
+  background-color: #e94f37;
   color: #ffffff;
-  border-color: #b91c1c;
+  border-color: #e94f37;
 }
 
 /* Unified Predictive Dropdown */

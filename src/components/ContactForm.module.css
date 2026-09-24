@@ -84,12 +84,12 @@
 }
 
 .inputInvalid {
-  border-color: #b91c1c;
+  border-color: #e94f37;
   background-color: #fff5f5;
 }
 
 .errorText {
-  color: #b91c1c;
+  color: #e94f37;
   font-size: 0.85rem;
   margin-top: 0.25rem;
   display: block;

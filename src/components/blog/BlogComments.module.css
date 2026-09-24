@@ -22,7 +22,7 @@
 }
 
 .headerActionBtn {
-  background: #b91c1c;
+  background: #e94f37;
   color: white;
   font-weight: 600;
   padding: 0.6rem 1.25rem;
@@ -105,12 +105,12 @@
 
 .textarea:focus {
   outline: none;
-  border-color: #b91c1c;
+  border-color: #e94f37;
   box-shadow: 0 0 0 3px rgba(224, 76, 76, 0.1);
 }
 
 .submitBtn {
-  background: #b91c1c;
+  background: #e94f37;
   color: white;
   font-weight: 600;
   padding: 0.75rem 1.5rem;

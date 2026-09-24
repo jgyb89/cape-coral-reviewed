@@ -80,7 +80,7 @@
 }
 
 .category-btn.active {
-  color: #b91c1c;
+  color: #e94f37;
 }
 
 .category-btn.active .material-symbols-outlined {
@@ -96,4 +96,9 @@
   display: flex;
   align-items: center;
   gap: 0.5rem;
+}
+
+.inline-style-1 {
+  background-color: #fdfdfd;
+  min-height: 100vh;
 }

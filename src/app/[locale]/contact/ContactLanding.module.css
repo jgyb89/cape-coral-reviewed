@@ -36,7 +36,7 @@
 }
 
 .contactHighlight {
-  color: #b91c1c;
+  color: #e94f37;
   display: inline-block;
 }
 
@@ -61,7 +61,7 @@
 }
 
 .infoIcon {
-  color: #b91c1c;
+  color: #e94f37;
   background: #fef2f2;
   border-radius: 12px;
   padding: 0.75rem;
@@ -100,4 +100,9 @@
   border-radius: 24px;
   z-index: -1;
   filter: blur(20px);
+}
+
+.inline-style-1 {
+  background-color: #f8fafc;
+  min-height: 100vh;
 }

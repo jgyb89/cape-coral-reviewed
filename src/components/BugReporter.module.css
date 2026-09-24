@@ -14,7 +14,7 @@
   width: 56px;
   height: 56px;
   border-radius: 50%;
-  background-color: #b91c1c; /* Using primary brand red */
+  background-color: #e94f37; /* Using primary brand red */
   color: #ffffff;
   border: none;
   cursor: pointer;
@@ -87,7 +87,7 @@
 
 .bug-reporter__input:focus {
   outline: none;
-  border-color: #b91c1c;
+  border-color: #e94f37;
 }
 
 .bug-reporter__input--textarea {

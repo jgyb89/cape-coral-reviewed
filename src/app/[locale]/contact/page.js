@@ -1,21 +1,22 @@
+import styles from "./ContactLanding.module.css";
 import ContactLandingClient from './ContactLandingClient';
-
 export const metadata = {
   title: 'Contact Us | Cape Coral Reviewed',
   description: 'Get in touch with the Cape Coral Reviewed team. We would love to hear from you regarding partnerships, questions, or general inquiries.',
   keywords: 'contact Cape Coral Reviewed, reach out, partnerships, local directory support',
-  robots: { index: false },
+  robots: {
+    index: false
+  }
 };
-
 export async function generateStaticParams() {
-  return [{ locale: "en" }, { locale: "es" }];
+  return [{
+    locale: "en"
+  }, {
+    locale: "es"
+  }];
 }
-
 export default async function ContactPage() {
-
-  return (
-    <main style={{ backgroundColor: '#f8fafc', minHeight: '100vh' }}>
+  return <main className={styles["inline-style-1"]}>
       <ContactLandingClient />
-    </main>
-  );
+    </main>;
 }

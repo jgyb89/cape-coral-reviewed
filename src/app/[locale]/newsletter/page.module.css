@@ -1,0 +1,9 @@
+
+.inline-style-1 {
+  min-height: 100vh;
+  background-color: #fff;
+}
+
+.inline-style-2 {
+  font-family: var(--font-heading);
+}

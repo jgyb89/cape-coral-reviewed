@@ -1,3 +1,4 @@
+import styles from "./legal.module.css";
 import PropTypes from "prop-types";
 import { getListings } from "@/lib/api";
 import Script from "next/script";
@@ -12,9 +13,8 @@ import { getEvents } from "@/lib/graphql/events";
 import { expandRecurringEvents } from "@/lib/eventUtils";
 import EventCard from "@/components/events/EventCard";
 import { BASE_URL } from "@/lib/constants";
-import styles from "./page.module.css";
+import "./page.module.css";
 import React from "react";
-
 export const metadata = {
   title: "Cape Coral Reviewed - Local Business Directory",
   description:
@@ -29,7 +29,6 @@ export const metadata = {
     type: "website",
   },
 };
-
 export default async function HomePage({ params }) {
   const { locale } = await params;
   const listings = await getListings();
@@ -38,24 +37,18 @@ export default async function HomePage({ params }) {
   const featuredListings = listings.filter(
     (listing) => listing.author?.node?.userData?.isFeaturedUser === true,
   );
-
   const popularListings = listings;
-
   const eventsResponse = await getEvents();
   const rawEvents = eventsResponse || [];
   const allEvents = expandRecurringEvents(rawEvents, 3);
-
   const today = new Date();
   today.setHours(0, 0, 0, 0);
-
   const upcomingEvents = allEvents
     .filter((event) => {
       const eStartStr = event.eventDetails?.startDateTime || event.date;
       if (!eStartStr) return false;
-
       const eEndStr = event.eventDetails?.endDateTime || eStartStr;
       const endDate = new Date(eEndStr.replace(" ", "T"));
-
       const endDay = new Date(endDate);
       endDay.setHours(0, 0, 0, 0);
 
@@ -71,7 +64,6 @@ export default async function HomePage({ params }) {
       );
       return dateA - dateB;
     });
-
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "WebSite",
@@ -83,13 +75,14 @@ export default async function HomePage({ params }) {
       "query-input": "required name=search_term_string",
     },
   };
-
   return (
     <main className={styles.main}>
       <Script
         id="json-ld"
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(jsonLd),
+        }}
       />
       {/* Hero Section */}
       <HeroSlideshow featuredListings={featuredListings} locale={locale} />
@@ -135,13 +128,7 @@ export default async function HomePage({ params }) {
       {/* Coastal Sunrise GSAP Journey & SEO Story */}
       <BeachySeoStory />
 
-      <section
-        style={{
-          backgroundColor: "#ffffff",
-          padding: "4rem 0",
-          overflowX: "hidden",
-        }}
-      >
+      <section className={styles["inline-style-1"]}>
         <div className={styles.container}>
           <SeoCards />
         </div>
@@ -152,7 +139,6 @@ export default async function HomePage({ params }) {
     </main>
   );
 }
-
 HomePage.propTypes = {
   params: PropTypes.object.isRequired,
 };

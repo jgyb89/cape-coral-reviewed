@@ -51,7 +51,7 @@
   text-decoration: none !important;
 }
 .nav-link:hover {
-  color: #b91c1c; /* Brand Red */
+  color: #e94f37; /* Brand Red */
 }
 
 .mobile-actions {
@@ -166,7 +166,7 @@
 }
 
 .mega-menu-title:hover {
-  color: #b91c1c; /* Brand Red */
+  color: #e94f37; /* Brand Red */
 }
 
 .mega-menu-subs {
@@ -230,7 +230,7 @@
 .nav-dropdown a:hover,
 .nav-dropdown button:hover {
   background-color: #f5f5f5;
-  color: var(--color-primary, #b91c1c);
+  color: var(--color-primary, #e94f37);
 }
 
 .nav-login-btn {
@@ -241,7 +241,7 @@
 
 /* Specific CTA Button Styles */
 .business-signup a {
-  background-color: #b91c1c;
+  background-color: #e94f37;
   color: #fff !important;
   padding: 10px 20px;
   border-radius: 5px;
@@ -449,7 +449,7 @@
   .flyout-link:hover,
   .flyout-action:hover {
     background: #fafafa;
-    color: var(--color-primary, #b91c1c);
+    color: var(--color-primary, #e94f37);
   }
   .flyout-icon {
     font-size: 1.25rem;
@@ -610,12 +610,12 @@
 
 .locale-btn:hover {
   background: #f5f5f5;
-  border-color: #b91c1c;
+  border-color: #e94f37;
 }
 
 .locale-btn.active {
-  color: #b91c1c;
-  border-color: #b91c1c;
+  color: #e94f37;
+  border-color: #e94f37;
 }
 
 /* Mobile adjustments */
