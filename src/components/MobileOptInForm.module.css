@@ -22,7 +22,7 @@
 }
 
 .requiredStar {
-  color: #b91c1c;
+  color: #e94f37;
   margin-left: 2px;
 }
 
@@ -39,13 +39,13 @@
 
 .input:focus {
   outline: none;
-  border-color: #b91c1c;
+  border-color: #e94f37;
   box-shadow: 0 0 0 3px rgba(233, 79, 55, 0.1);
 }
 
 .submitBtn {
   width: 100%;
-  background: #b91c1c;
+  background: #e94f37;
   color: #ffffff;
   border: none;
   border-radius: 8px;
@@ -85,12 +85,12 @@
 }
 
 .inputInvalid {
-  border-color: #b91c1c;
+  border-color: #e94f37;
   background-color: #fff5f5;
 }
 
 .errorText {
-  color: #b91c1c;
+  color: #e94f37;
   font-size: 0.85rem;
   margin-top: 0.35rem;
   display: block;
@@ -113,7 +113,7 @@
   width: 1.125rem;
   height: 1.125rem;
   cursor: pointer;
-  accent-color: #b91c1c;
+  accent-color: #e94f37;
 }
 
 .checkboxLabel {
@@ -133,7 +133,7 @@
 }
 
 .checkboxDescription a {
-  color: #b91c1c;
+  color: #e94f37;
   text-decoration: underline;
   font-weight: 500;
   transition: opacity 0.2s ease;

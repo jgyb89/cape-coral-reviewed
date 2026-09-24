@@ -30,8 +30,8 @@
 }
 .btn:disabled { opacity: 0.4; cursor: not-allowed; }
 .active {
-  background: #b91c1c;
+  background: #e94f37;
   color: #ffffff;
-  border-color: #b91c1c;
+  border-color: #e94f37;
 }
 .active:hover { background: #c53030; }

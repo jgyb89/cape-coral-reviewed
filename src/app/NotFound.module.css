@@ -20,7 +20,7 @@
 
 .not-found__icon {
   font-size: 5rem;
-  color: #b91c1c;
+  color: #e94f37;
   margin-bottom: 1rem;
 }
 
@@ -59,9 +59,9 @@
 }
 
 .not-found__btn--primary {
-  background-color: #b91c1c;
+  background-color: #e94f37;
   color: #ffffff;
-  border: 2px solid #b91c1c;
+  border: 2px solid #e94f37;
 }
 
 .not-found__btn--primary:hover {
@@ -79,4 +79,20 @@
   background-color: #f1f5f9;
   color: #1e293b;
   border-color: #94a3b8;
+}
+
+.inline-style-1 {
+  margin: 0px;
+  padding: 0px;
+}
+
+.inline-style-2 {
+  min-height: 100vh;
+  background-color: #f8fafc;
+  font-family: var(--font-open-sans), sans-serif;
+}
+
+.inline-style-3 {
+  min-height: calc(100vh - 80px);
+  background-color: #f8fafc;
 }

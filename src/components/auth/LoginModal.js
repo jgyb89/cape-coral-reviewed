@@ -13,6 +13,11 @@ import styles from "./LoginModal.module.css";
 const formatAuthError = (errorString) => {
   if (!errorString) return "An error occurred during login. Please verify your credentials and try again.";
   const err = errorString.toLowerCase();
+  
+  if (err.includes("the username or password you entered is incorrect")) {
+    return "The username or password you entered is incorrect. Please try again.";
+  }
+  
   if (err.includes("invalid_username") || err.includes("invalid_email")) {
     return "We couldn't find an account with that username or email.";
   }

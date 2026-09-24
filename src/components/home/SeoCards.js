@@ -6,6 +6,7 @@ import { useParams } from "next/navigation";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/dist/ScrollTrigger";
 import { getLocalizedUrl } from "@/lib/constants";
+import { Store, Users, ArrowRight } from "lucide-react";
 import styles from "./SeoCards.module.css";
 
 const SeoCards = forwardRef((props, ref) => {

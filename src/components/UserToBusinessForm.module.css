@@ -38,13 +38,13 @@
 
 .input:focus, .textarea:focus {
   outline: none;
-  border-color: #b91c1c;
+  border-color: #e94f37;
   box-shadow: 0 0 0 3px rgba(224, 76, 76, 0.1);
 }
 
 .submitBtn {
   width: 100%;
-  background: #b91c1c;
+  background: #e94f37;
   color: #ffffff;
   border: none;
   border-radius: 8px;
@@ -84,12 +84,12 @@
 }
 
 .inputInvalid {
-  border-color: #b91c1c;
+  border-color: #e94f37;
   background-color: #fff5f5;
 }
 
 .errorText {
-  color: #b91c1c;
+  color: #e94f37;
   font-size: 0.85rem;
   margin-top: 0.25rem;
   display: block;

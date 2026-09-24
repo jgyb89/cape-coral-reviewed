@@ -1,0 +1,17 @@
+
+.inline-style-1 {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.inline-style-2 {
+  margin: 0 0 0.5rem 0;
+}
+
+.inline-style-3 {
+  margin: 0px;
+}

@@ -148,7 +148,7 @@
 }
 
 .searchForm:focus-within {
-  border-color: #b91c1c;
+  border-color: #e94f37;
   box-shadow: 0 0 0 3px rgba(224, 76, 76, 0.15);
 }
 
@@ -217,8 +217,8 @@
 }
 
 .pillButtonActive {
-  border-color: #b91c1c;
-  background-color: #b91c1c;
+  border-color: #e94f37;
+  background-color: #e94f37;
   color: #ffffff;
 }
 
@@ -241,7 +241,7 @@
 
 .pillScrollButton:hover {
   color: #f7fafc;
-  background-color: #b91c1c;
+  background-color: #e94f37;
 }
 
 .pillScrollLeft {

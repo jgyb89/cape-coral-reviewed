@@ -5,19 +5,16 @@ import Navbar from '@/components/layout/Navbar';
 import "material-symbols/outlined.css";
 import './globals.css';
 import styles from './NotFound.module.css';
-
 export default async function NotFound() {
   // Securely check if the user is authenticated on the server
   const viewer = await getViewer();
-
-  return (
-    <html lang="en">
-      <body className={`${poppins.variable} ${openSans.variable}`} style={{ margin: 0, padding: 0 }}>
-        <div style={{ minHeight: '100vh', backgroundColor: '#f8fafc', fontFamily: 'var(--font-open-sans), sans-serif' }}>
+  return <html lang="en">
+      <body className={`${poppins.variable} ${openSans.variable} ${styles["inline-style-1"]}`}>
+        <div className={styles["inline-style-2"]}>
           {/* Inject Navbar with fallback locale */}
           <Navbar locale="en" currentUser={viewer} />
       
-      <div style={{ minHeight: 'calc(100vh - 80px)', backgroundColor: '#f8fafc' }}>
+      <div className={styles["inline-style-3"]}>
         <div className={styles['not-found']}>
           <div className={styles['not-found__content']}>
             <span className={`material-symbols-outlined ${styles['not-found__icon']}`}>
@@ -36,23 +33,18 @@ export default async function NotFound() {
               </a>
               
               {/* Conditional Button based on Auth State */}
-              {viewer ? (
-                <a href="/dashboard" className={`${styles['not-found__btn']} ${styles['not-found__btn--secondary']}`}>
+              {viewer ? <a href="/dashboard" className={`${styles['not-found__btn']} ${styles['not-found__btn--secondary']}`}>
                   <span className="material-symbols-outlined">person</span>{" "}
                   Go to Profile
-                </a>
-              ) : (
-                <a href="/directory" className={`${styles['not-found__btn']} ${styles['not-found__btn--secondary']}`}>
+                </a> : <a href="/directory" className={`${styles['not-found__btn']} ${styles['not-found__btn--secondary']}`}>
                   <span className="material-symbols-outlined">storefront</span>{" "}
                   View Directory
-                </a>
-              )}
+                </a>}
             </div>
           </div>
         </div>
       </div>
     </div>
   </body>
-</html>
-  );
+</html>;
 }

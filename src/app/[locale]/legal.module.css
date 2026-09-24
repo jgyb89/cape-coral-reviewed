@@ -56,10 +56,16 @@
 }
 
 .link {
-  color: #b91c1c;
+  color: #e94f37;
   text-decoration: none;
 }
 
 .link:hover {
   text-decoration: underline;
+}
+
+.inline-style-1 {
+  background-color: #ffffff;
+  padding: 4rem 0;
+  overflow-x: hidden;
 }

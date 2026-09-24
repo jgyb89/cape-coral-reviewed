@@ -195,7 +195,7 @@
 }
 
 .dashboard-modal-btn--primary {
-  background-color: #b91c1c;
+  background-color: #e94f37;
   color: #ffffff;
 }
 .dashboard-modal-btn--primary:hover {
@@ -255,7 +255,7 @@
 }
 
 .dashboard-back-btn:hover {
-  color: var(--color-primary, #b91c1c);
+  color: var(--color-primary, #e94f37);
 }
 
 .dashboard-back-btn .material-symbols-outlined {
@@ -324,7 +324,7 @@
 }
 
 .bento-card__header .material-symbols-outlined {
-  color: var(--color-primary, #b91c1c);
+  color: var(--color-primary, #e94f37);
 }
 
 .bento-card p {
@@ -336,7 +336,7 @@
 }
 
 .bento-link {
-  color: var(--color-primary, #b91c1c);
+  color: var(--color-primary, #e94f37);
   text-decoration: none;
   font-weight: 600;
   font-size: 0.95rem;
@@ -354,4 +354,36 @@
   .dashboard-desktop-only {
     display: none !important;
   }
+}
+
+.inline-style-1 {
+  margin-bottom: 2rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.inline-style-2 {
+  margin: 0 0 0.5rem 0;
+  color: #1e293b;
+}
+
+.inline-style-3 {
+  margin: 0px;
+  color: #64748b;
+}
+
+.inline-style-4 {
+  font-size: 2rem;
+}
+
+.inline-style-5 {
+  font-size: 1.5rem;
+}
+
+.inline-style-6 {
+  font-size: 2rem;
+}
+
+.inline-style-7 {
+  font-size: 1.5rem;
 }

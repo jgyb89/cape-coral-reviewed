@@ -1,65 +1,49 @@
+import styles from "./page.module.css";
 import PropTypes from 'prop-types';
 import LoginForm from '@/components/auth/LoginForm';
 import RecoverPasswordForm from '@/components/auth/RecoverPasswordForm';
 import Link from 'next/link';
-
 export const metadata = {
-  title: 'Sign In | Cape Coral Reviewed',
+  title: 'Sign In | Cape Coral Reviewed'
 };
-
-export default async function LoginPage({ searchParams }) {
-  
+export default async function LoginPage({
+  searchParams
+}) {
   // Safely await searchParams in Next.js 15+
   const resolvedSearchParams = await searchParams;
   const isRecover = resolvedSearchParams?.recover === 'true';
-
-  return (
-    <main style={{ 
-      minHeight: '80vh', 
-      display: 'flex', 
-      flexDirection: 'column', 
-      alignItems: 'center', 
-      justifyContent: 'center',
-      padding: '20px',
-      backgroundColor: '#f8fafc'
-    }}>
-      {isRecover ? (
-        <>
+  return <main className={styles["inline-style-1"]}>
+      {isRecover ? <>
           <RecoverPasswordForm />
-          <div style={{ marginTop: '1.5rem', textAlign: 'center' }}>
-            <Link href={`/login`} style={{ color: '#64748b', textDecoration: 'none', fontWeight: '500' }}>
+          <div className={styles["inline-style-2"]}>
+            <Link href={`/login`} className={styles["inline-style-3"]}>
               &larr; Back to Sign In
             </Link>
           </div>
-        </>
-      ) : (
-        <>
-          <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
-            <h1 style={{ fontSize: '2rem', fontWeight: '700', color: '#1e293b', marginBottom: '0.5rem' }}>
+        </> : <>
+          <div className={styles["inline-style-4"]}>
+            <h1 className={styles["inline-style-5"]}>
               Welcome Back
             </h1>
-            <p style={{ color: '#64748b' }}>Sign in to manage your directory listings and reviews.</p>
+            <p className={styles["inline-style-6"]}>Sign in to manage your directory listings and reviews.</p>
           </div>
 
           <LoginForm />
 
-          <div style={{ marginTop: '1.5rem', textAlign: 'center', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-            <Link href={`/login?recover=true`} style={{ color: '#e04c4c', textDecoration: 'none', fontWeight: '500' }}>
+          <div className={styles["inline-style-7"]}>
+            <Link href={`/login?recover=true`} className={styles["inline-style-8"]}>
               Forgot your password?
             </Link>
-            <p style={{ color: '#64748b', margin: 0 }}>
+            <p className={styles["inline-style-9"]}>
               Don&apos;t have an account?{' '}
-              <Link href={`/register`} style={{ color: '#e04c4c', fontWeight: '600', textDecoration: 'none' }}>
+              <Link href={`/register`} className={styles["inline-style-10"]}>
                 Sign Up
               </Link>
             </p>
           </div>
-        </>
-      )}
-    </main>
-  );
+        </>}
+    </main>;
 }
-
 LoginPage.propTypes = {
-  searchParams: PropTypes.object.isRequired,
+  searchParams: PropTypes.object.isRequired
 };
