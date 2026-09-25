@@ -87,7 +87,7 @@ export default async function HomePage({ params }) {
       <HeroSlideshow featuredListings={featuredListings} locale={locale} />
 
       {/* Main Content Layout - REPLACED WITH HORIZONTAL ROW */}
-      <div className={styles.container}>
+      <div className={styles.homeContainer}>
         {/* Popular Listings Section */}
         {popularListings && popularListings.length > 0 && (
           <PaginatedFeed
@@ -128,7 +128,7 @@ export default async function HomePage({ params }) {
       <BeachySeoStory />
 
       <section className={styles["inline-style-1"]}>
-        <div className={styles.container}>
+        <div className={styles.homeContainer}>
           <SeoCards />
         </div>
       </section>
