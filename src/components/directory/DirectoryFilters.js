@@ -1,36 +1,36 @@
-'use client';
+"use client";
 
-import React, { useState, useRef, useEffect } from 'react';
-import PropTypes from 'prop-types';
-import { createPortal } from 'react-dom';
-import Link from 'next/link';
-import { useRouter, useSearchParams, usePathname } from 'next/navigation';
-import { ALL_CATEGORIES } from '@/lib/constants';
-import styles from './DirectoryFilters.module.css';
+import React, { useState, useRef, useEffect } from "react";
+import PropTypes from "prop-types";
+import { createPortal } from "react-dom";
+import Link from "next/link";
+import { useRouter, useSearchParams, usePathname } from "next/navigation";
+import { ALL_CATEGORIES } from "@/lib/constants";
+import styles from "./DirectoryFilters.module.css";
 
 export const QUICK_PILLS = [
-  { label: 'Restaurants', slug: 'restaurants' },
-  { label: 'Bars & Nightlife', slug: 'bars-nightlife' },
-  { label: 'Cafes & Bakeries', slug: 'cafes-bakeries' },
-  { label: 'Medical & Dental', slug: 'medical-dental' },
-  { label: 'Contractors & Repair', slug: 'contractors-repair' },
-  { label: 'Beauty & Spas', slug: 'beauty-spas' },
-  { label: 'Real Estate', slug: 'real-estate' },
-  { label: 'Auto & Transport', slug: 'auto-transport' }
+  { label: "Restaurants", slug: "restaurants" },
+  { label: "Bars & Nightlife", slug: "bars-nightlife" },
+  { label: "Cafes & Bakeries", slug: "cafes-bakeries" },
+  { label: "Medical & Dental", slug: "medical-dental" },
+  { label: "Contractors & Repair", slug: "contractors-repair" },
+  { label: "Beauty & Spas", slug: "beauty-spas" },
+  { label: "Real Estate", slug: "real-estate" },
+  { label: "Auto & Transport", slug: "auto-transport" },
 ];
 
 export const getCategoryRoute = (slug) => {
-  const category = ALL_CATEGORIES.find(c => c.slug === slug);
-  if (!category) return '/directory';
+  const category = ALL_CATEGORIES.find((c) => c.slug === slug);
+  if (!category) return "/directory";
 
-  const sanitizedSlug = category.slug.replace(/-en$/, '');
+  const sanitizedSlug = category.slug.replace(/-en$/, "");
 
   if (category.directoryType) {
     return `/directory/${category.directoryType}/${sanitizedSlug}`;
   }
 
   if (category.parentSlug) {
-    const parent = ALL_CATEGORIES.find(p => p.slug === category.parentSlug);
+    const parent = ALL_CATEGORIES.find((p) => p.slug === category.parentSlug);
     if (parent && parent.directoryType) {
       return `/directory/${parent.directoryType}/${sanitizedSlug}`;
     }
@@ -40,20 +40,22 @@ export const getCategoryRoute = (slug) => {
 };
 
 export const getDynamicPills = (pathname) => {
-  const pathSegments = pathname.split('/').filter(Boolean);
-  const directoryIndex = pathSegments.indexOf('directory');
-  
+  const pathSegments = pathname.split("/").filter(Boolean);
+  const directoryIndex = pathSegments.indexOf("directory");
+
   // If we are inside a specific directory type (e.g., /directory/food-drink)
   if (directoryIndex !== -1 && pathSegments.length > directoryIndex + 1) {
     const dirTypeSlug = pathSegments[directoryIndex + 1];
-    
+
     // Find all sub-categories belonging to this parent directory type
-    const subCategories = ALL_CATEGORIES.filter(cat => cat.parentSlug === dirTypeSlug);
-    
+    const subCategories = ALL_CATEGORIES.filter(
+      (cat) => cat.parentSlug === dirTypeSlug,
+    );
+
     if (subCategories.length > 0) {
-      return subCategories.map(cat => ({
+      return subCategories.map((cat) => ({
         label: cat.name,
-        slug: cat.slug
+        slug: cat.slug,
       }));
     }
   }
@@ -73,9 +75,14 @@ const DirectoryFilters = ({ isModalOpen, setIsModalOpen }) => {
   }, []);
 
   // Unified Predictive Search State
-  const [searchTerm, setSearchTerm] = useState(searchParams.get('search') || '');
+  const [searchTerm, setSearchTerm] = useState(
+    searchParams.get("search") || "",
+  );
   const [debouncedSearch, setDebouncedSearch] = useState(searchTerm);
-  const [searchResults, setSearchResults] = useState({ listings: [], categories: [] });
+  const [searchResults, setSearchResults] = useState({
+    listings: [],
+    categories: [],
+  });
   const [isLoading, setIsLoading] = useState(false);
   const [isSearchFocused, setIsSearchFocused] = useState(false);
 
@@ -83,7 +90,7 @@ const DirectoryFilters = ({ isModalOpen, setIsModalOpen }) => {
   useEffect(() => {
     const timer = setTimeout(() => {
       setDebouncedSearch(searchTerm);
-      updateFilter('search', searchTerm);
+      updateFilter("search", searchTerm);
     }, 300);
     return () => clearTimeout(timer);
   }, [searchTerm]);
@@ -97,7 +104,7 @@ const DirectoryFilters = ({ isModalOpen, setIsModalOpen }) => {
 
     const fetchResults = async () => {
       setIsLoading(true);
-      
+
       const query = `
         query SearchQuery($searchTerm: String!) {
           ccrlistings(where: {search: $searchTerm}) {
@@ -121,18 +128,21 @@ const DirectoryFilters = ({ isModalOpen, setIsModalOpen }) => {
       `;
 
       try {
-        const response = await fetch(process.env.NEXT_PUBLIC_WORDPRESS_API_URL, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            "Accept": "application/json",
-            "User-Agent": "CCR-NextJS-Frontend/1.0"
+        const response = await fetch(
+          process.env.NEXT_PUBLIC_WORDPRESS_API_URL,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Accept: "application/json",
+              "User-Agent": "CCR-NextJS-Frontend/1.0",
+            },
+            body: JSON.stringify({
+              query,
+              variables: { searchTerm: debouncedSearch },
+            }),
           },
-          body: JSON.stringify({
-            query,
-            variables: { searchTerm: debouncedSearch },
-          }),
-        });
+        );
 
         const json = await response.json();
 
@@ -163,20 +173,23 @@ const DirectoryFilters = ({ isModalOpen, setIsModalOpen }) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
         setOpenDropdown(null);
       }
-      if (ratingDropdownRef.current && !ratingDropdownRef.current.contains(event.target)) {
-        if (openDropdown === 'rating') setOpenDropdown(null);
+      if (
+        ratingDropdownRef.current &&
+        !ratingDropdownRef.current.contains(event.target)
+      ) {
+        if (openDropdown === "rating") setOpenDropdown(null);
       }
     }
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [openDropdown]);
 
-  const ratingFilter = Number.parseInt(searchParams.get('rating')) || 0;
-  const openNowFilter = searchParams.get('open') === 'true';
+  const ratingFilter = Number.parseInt(searchParams.get("rating")) || 0;
+  const openNowFilter = searchParams.get("open") === "true";
 
   const updateFilter = (key, value) => {
     const params = new URLSearchParams(searchParams);
-    if (value && value !== '0') {
+    if (value && value !== "0") {
       params.set(key, value);
     } else {
       params.delete(key);
@@ -186,18 +199,18 @@ const DirectoryFilters = ({ isModalOpen, setIsModalOpen }) => {
 
   const clearFilters = () => {
     router.push(pathname);
-    setSearchTerm('');
+    setSearchTerm("");
     if (setIsModalOpen) setIsModalOpen(false);
   };
 
   const handleCategoryClick = (slug) => {
-    const segments = pathname.split('/').filter(Boolean);
-    const isSpanish = pathname.split('/').find(Boolean) === 'es';
-    const localePrefix = isSpanish ? '/es' : '';
+    const segments = pathname.split("/").filter(Boolean);
+    const isSpanish = pathname.split("/").find(Boolean) === "es";
+    const localePrefix = isSpanish ? "/es" : "";
 
     if (!slug || pathname.includes(slug)) {
       // Deselecting: Step back to the parent directory type if available, else root directory
-      const directoryIndex = segments.indexOf('directory');
+      const directoryIndex = segments.indexOf("directory");
       if (directoryIndex !== -1 && segments.length > directoryIndex + 1) {
         const dirTypeSlug = segments[directoryIndex + 1];
         router.push(`${localePrefix}/directory/${dirTypeSlug}`);
@@ -210,7 +223,7 @@ const DirectoryFilters = ({ isModalOpen, setIsModalOpen }) => {
       router.push(`${localePrefix}${route}`);
     }
     setIsSearchFocused(false);
-    setSearchTerm('');
+    setSearchTerm("");
     if (setIsModalOpen) setIsModalOpen(false);
   };
 
@@ -218,16 +231,16 @@ const DirectoryFilters = ({ isModalOpen, setIsModalOpen }) => {
     const activePills = getDynamicPills(pathname);
     const pillsContent = (
       <>
-        <button 
-          className={`${styles['category-pill']} ${pathname.endsWith('/directory') ? styles['category-pill--active'] : ''}`}
-          onClick={() => handleCategoryClick('')}
+        <button
+          className={`${styles["category-pill"]} ${pathname.endsWith("/directory") ? styles["category-pill--active"] : ""}`}
+          onClick={() => handleCategoryClick("")}
         >
           All
         </button>
-        {activePills.map(pill => (
-          <button 
+        {activePills.map((pill) => (
+          <button
             key={`pill-${pill.slug}`}
-            className={`${styles['category-pill']} ${pathname.includes(pill.slug) ? styles['category-pill--active'] : ''}`}
+            className={`${styles["category-pill"]} ${pathname.includes(pill.slug) ? styles["category-pill--active"] : ""}`}
             onClick={() => handleCategoryClick(pill.slug)}
           >
             {pill.label}
@@ -238,75 +251,118 @@ const DirectoryFilters = ({ isModalOpen, setIsModalOpen }) => {
 
     if (isMobile) {
       return (
-        <div className={styles['category-pills-mobile']}>
-          {pillsContent}
-        </div>
+        <div className={styles["category-pills-mobile"]}>{pillsContent}</div>
       );
     }
 
     return (
-      <div className={styles['category-pills-desktop']}>
-        {pillsContent}
-      </div>
+      <div className={styles["category-pills-desktop"]}>{pillsContent}</div>
     );
   };
 
   const modalContent = isModalOpen ? (
-    <div className={styles['modal-overlay']}>
-      <button 
-        type="button" 
+    <div className={styles["modal-overlay"]}>
+      <button
+        type="button"
         onClick={() => setIsModalOpen(false)}
         aria-label="Close modal backdrop"
-        style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', background: 'transparent', border: 'none', cursor: 'default', padding: 0 }}
+        style={{
+          position: "absolute",
+          inset: 0,
+          width: "100%",
+          height: "100%",
+          background: "transparent",
+          border: "none",
+          cursor: "default",
+          padding: 0,
+        }}
         tabIndex={-1}
       />
-      <div className={styles['modal-content']} style={{ position: 'relative' }}>
-        <div className={styles['modal-header']}>
-          <h3 style={{ margin: 0, fontSize: '1.25rem', fontFamily: 'var(--font-heading)' }}>Filters</h3>
-          <button onClick={() => setIsModalOpen(false)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#64748b' }}>
+      <div className={styles["modal-content"]} style={{ position: "relative" }}>
+        <div className={styles["modal-header"]}>
+          <h3
+            style={{
+              margin: 0,
+              fontSize: "1.25rem",
+              fontFamily: "var(--font-heading)",
+            }}
+          >
+            Filters
+          </h3>
+          <button
+            onClick={() => setIsModalOpen(false)}
+            style={{
+              background: "none",
+              border: "none",
+              cursor: "pointer",
+              color: "#64748b",
+            }}
+          >
             <span className="material-symbols-outlined">close</span>
           </button>
         </div>
 
         {/* Minimum Rating (Label Top) */}
-        <div className={styles['filter-group']} style={{ flexDirection: 'column', alignItems: 'flex-start', width: '100%' }}>
-          <div className={styles['filter-label']}>Minimum Rating</div>
-          <div className={styles['custom-select']} ref={ratingDropdownRef} style={{ width: '100%' }}>
-            <button 
-              type="button" 
-              className={styles['custom-select__button']}
-              onClick={() => setOpenDropdown(openDropdown === 'rating' ? null : 'rating')}
-              aria-expanded={openDropdown === 'rating'}
+        <div
+          className={styles["filter-group"]}
+          style={{
+            flexDirection: "column",
+            alignItems: "flex-start",
+            width: "100%",
+          }}
+        >
+          <div className={styles["filter-label"]}>Minimum Rating</div>
+          <div
+            className={styles["custom-select"]}
+            ref={ratingDropdownRef}
+            style={{ width: "100%" }}
+          >
+            <button
+              type="button"
+              className={styles["custom-select__button"]}
+              onClick={() =>
+                setOpenDropdown(openDropdown === "rating" ? null : "rating")
+              }
+              aria-expanded={openDropdown === "rating"}
             >
-              {ratingFilter === 0 ? 'Any Rating' : (
-                <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-                  {ratingFilter}+ <span className={`material-symbols-outlined ${styles['star-icon']}`}>star</span>
+              {ratingFilter === 0 ? (
+                "Any Rating"
+              ) : (
+                <span
+                  style={{ display: "flex", alignItems: "center", gap: "4px" }}
+                >
+                  {ratingFilter}+{" "}
+                  <span
+                    className={`material-symbols-outlined ${styles["star-icon"]}`}
+                  >
+                    star
+                  </span>
                 </span>
               )}
               <span className="material-symbols-outlined">expand_more</span>
             </button>
-            {openDropdown === 'rating' && (
-              <ul className={styles['custom-select__menu']}>
+            {openDropdown === "rating" && (
+              <ul className={styles["custom-select__menu"]}>
                 {[0, 1, 2, 3, 4, 5].map((rating) => (
-                  <li 
+                  <li
                     key={rating}
                     role="option"
                     aria-selected={ratingFilter === rating}
                     tabIndex={0}
-                    className={`${styles['custom-select__option']} ${ratingFilter === rating ? styles['custom-select__option--selected'] : ''}`}
+                    className={`${styles["custom-select__option"]} ${ratingFilter === rating ? styles["custom-select__option--selected"] : ""}`}
                     onClick={() => {
-                      updateFilter('rating', rating.toString());
+                      updateFilter("rating", rating.toString());
                       setOpenDropdown(null);
                     }}
                     onKeyDown={(e) => {
-                      if (e.key === 'Enter' || e.key === ' ') {
+                      if (e.key === "Enter" || e.key === " ") {
                         e.preventDefault();
-                        updateFilter('rating', rating.toString());
+                        updateFilter("rating", rating.toString());
                         setOpenDropdown(null);
                       }
                     }}
                   >
-                    {rating === 0 ? 'Any Rating' : `${rating}+ Stars`}
+                    {rating === 0 ? "Any Rating" : `${rating}+ Stars`}
                   </li>
                 ))}
               </ul>
@@ -315,33 +371,90 @@ const DirectoryFilters = ({ isModalOpen, setIsModalOpen }) => {
         </div>
 
         {/* Open Now */}
-        <div className={styles['filter-group']} style={{ justifyContent: 'space-between', width: '100%', flexDirection: 'row', alignItems: 'center' }}>
-          <div className={styles['filter-label']}>Open Now</div>
-          <label className={styles['toggle-switch']}>
-            <span style={{ border: 0, clip: 'rect(0 0 0 0)', height: '1px', margin: '-1px', overflow: 'hidden', padding: 0, position: 'absolute', width: '1px' }}>Toggle Open Now</span>
-            <input 
-              type="checkbox" 
+        <div
+          className={styles["filter-group"]}
+          style={{
+            justifyContent: "space-between",
+            width: "100%",
+            flexDirection: "row",
+            alignItems: "center",
+          }}
+        >
+          <div className={styles["filter-label"]}>Open Now</div>
+          <label className={styles["toggle-switch"]}>
+            <span
+              style={{
+                border: 0,
+                clip: "rect(0 0 0 0)",
+                height: "1px",
+                margin: "-1px",
+                overflow: "hidden",
+                padding: 0,
+                position: "absolute",
+                width: "1px",
+              }}
+            >
+              Toggle Open Now
+            </span>
+            <input
+              type="checkbox"
               checked={openNowFilter}
-              onChange={(e) => updateFilter('open', e.target.checked ? 'true' : null)}
+              onChange={(e) =>
+                updateFilter("open", e.target.checked ? "true" : null)
+              }
             />
-            <span className={styles['slider']}></span>
+            <span className={styles["slider"]}></span>
           </label>
         </div>
 
         {/* Categories */}
-        <div style={{ width: '100%' }}>
-          <div className={styles['filter-label']} style={{ display: 'block', marginBottom: '0.75rem' }}>Quick Categories</div>
-          <div className={styles['category-pills-mobile']}>
+        <div style={{ width: "100%" }}>
+          <div
+            className={styles["filter-label"]}
+            style={{ display: "block", marginBottom: "0.75rem" }}
+          >
+            Quick Categories
+          </div>
+          <div className={styles["category-pills-mobile"]}>
             {renderPills(true)}
           </div>
         </div>
 
         {/* Actions */}
-        <div style={{ marginTop: 'auto', display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
-          <button onClick={clearFilters} className={styles['btn-clear']} style={{ background: '#f1f5f9', borderRadius: '8px', width: '100%', padding: '0.75rem', fontWeight: 600 }}>
+        <div
+          style={{
+            marginTop: "auto",
+            display: "flex",
+            flexDirection: "column",
+            gap: "0.75rem",
+          }}
+        >
+          <button
+            onClick={clearFilters}
+            className={styles["btn-clear"]}
+            style={{
+              background: "#f1f5f9",
+              borderRadius: "8px",
+              width: "100%",
+              padding: "0.75rem",
+              fontWeight: 600,
+            }}
+          >
             Clear All Filters
           </button>
-          <button onClick={() => setIsModalOpen(false)} style={{ background: '#e04c4c', color: 'white', border: 'none', padding: '0.75rem', borderRadius: '8px', fontWeight: 600, cursor: 'pointer', width: '100%' }}>
+          <button
+            onClick={() => setIsModalOpen(false)}
+            style={{
+              background: "#e04c4c",
+              color: "white",
+              border: "none",
+              padding: "0.75rem",
+              borderRadius: "8px",
+              fontWeight: 600,
+              cursor: "pointer",
+              width: "100%",
+            }}
+          >
             Show Results
           </button>
         </div>
@@ -352,56 +465,89 @@ const DirectoryFilters = ({ isModalOpen, setIsModalOpen }) => {
   const renderPredictiveDropdown = () => {
     if (!isSearchFocused || debouncedSearch.length < 2) return null;
 
-    const isSpanish = pathname.split('/').find(Boolean) === 'es';
-    const localePrefix = isSpanish ? '/es' : '';
+    const isSpanish = pathname.split("/").find(Boolean) === "es";
+    const localePrefix = isSpanish ? "/es" : "";
     const hasCategories = searchResults.categories?.length > 0;
     const hasListings = searchResults.listings?.length > 0;
     const hasResults = hasCategories || hasListings;
 
     let dropdownContent = null;
     if (isLoading) {
-      dropdownContent = <div className={styles['predictive-message']}>Searching...</div>;
+      dropdownContent = (
+        <div className={styles["predictive-message"]}>Searching...</div>
+      );
     } else if (hasResults) {
       dropdownContent = (
-        <ul className={styles['predictive-list']}>
-          {hasCategories && searchResults.categories.map(cat => {
-            const route = getCategoryRoute(cat.slug);
-            const categoryHref = `${localePrefix}${route}`;
-            return (
-              <li key={`cat-${cat.slug}`} className={styles['predictive-item']}>
-                <Link href={categoryHref} className={styles['predictive-link']}>
-                  <span className={styles['predictive-title']}>{cat.name}</span>
-                  <span className={styles['predictive-type']}>Category</span>
+        <ul className={styles["predictive-list"]}>
+          {hasCategories &&
+            searchResults.categories.map((cat) => {
+              const route = getCategoryRoute(cat.slug);
+              const categoryHref = `${localePrefix}${route}`;
+              return (
+                <li
+                  key={`cat-${cat.slug}`}
+                  className={styles["predictive-item"]}
+                >
+                  <Link
+                    href={categoryHref}
+                    className={styles["predictive-link"]}
+                  >
+                    <span className={styles["predictive-title"]}>
+                      {cat.name}
+                    </span>
+                    <span className={styles["predictive-type"]}>Category</span>
+                  </Link>
+                </li>
+              );
+            })}
+          {hasListings &&
+            searchResults.listings.map((listing) => (
+              <li
+                key={`list-${listing.slug}`}
+                className={styles["predictive-item"]}
+              >
+                <Link
+                  href={`${localePrefix}/listing/${listing.slug}`}
+                  className={styles["predictive-link"]}
+                >
+                  <span className={styles["predictive-title"]}>
+                    {listing.title}
+                  </span>
+                  <span className={styles["predictive-type"]}>Listing</span>
                 </Link>
               </li>
-            );
-          })}
-          {hasListings && searchResults.listings.map(listing => (
-            <li key={`list-${listing.slug}`} className={styles['predictive-item']}>
-              <Link href={`${localePrefix}/listing/${listing.slug}`} className={styles['predictive-link']}>
-                <span className={styles['predictive-title']}>{listing.title}</span>
-                <span className={styles['predictive-type']}>Listing</span>
-              </Link>
-            </li>
-          ))}
+            ))}
         </ul>
       );
     } else {
-      dropdownContent = <div className={styles['predictive-message']}>No results found</div>;
+      dropdownContent = (
+        <div className={styles["predictive-message"]}>No results found</div>
+      );
     }
 
     return (
-      <div className={styles['predictive-dropdown']}>
-        {dropdownContent}
-      </div>
+      <div className={styles["predictive-dropdown"]}>{dropdownContent}</div>
     );
   };
 
   return (
     <>
       {/* 1. Universal Search Bar (Rendered inline in the top controls) */}
-      <div className={styles['filter-group-search']} style={{ width: '100%', position: 'relative' }}>
-        <span className="material-symbols-outlined" style={{ position: 'absolute', left: '12px', color: '#94a3b8', zIndex: 10 }}>search</span>
+      <div
+        className={styles["filter-group-search"]}
+        style={{ width: "100%", position: "relative" }}
+      >
+        <span
+          className="material-symbols-outlined"
+          style={{
+            position: "absolute",
+            left: "12px",
+            color: "#94a3b8",
+            zIndex: 10,
+          }}
+        >
+          search
+        </span>
         <input
           type="text"
           placeholder="Search businesses or categories..."
@@ -409,14 +555,16 @@ const DirectoryFilters = ({ isModalOpen, setIsModalOpen }) => {
           onChange={(e) => setSearchTerm(e.target.value)}
           onFocus={() => setIsSearchFocused(true)}
           onBlur={() => setTimeout(() => setIsSearchFocused(false), 200)}
-          className={styles['filter-input']}
-          style={{ width: '100%', paddingLeft: '2.5rem' }}
+          className={styles["filter-input"]}
+          style={{ width: "100%", paddingLeft: "2.5rem" }}
         />
         {renderPredictiveDropdown()}
       </div>
 
       {/* 2. Universal Left Slide-Out Modal (Portaled) */}
-      {mounted && typeof document !== 'undefined' ? createPortal(modalContent, document.body) : null}
+      {mounted && typeof document !== "undefined"
+        ? createPortal(modalContent, document.body)
+        : null}
     </>
   );
 };
