@@ -17,8 +17,8 @@ export default async function SubmitEventPage() {
   if (!viewer) {
     redirect(`/login`);
   }
-  return <main className={styles["inline-style-1"]}>
-      <h1 className={styles["inline-style-2"]}>
+  return <main className={styles["events-create__main"]}>
+      <h1 className={styles["events-create__title"]}>
         Submit a New Event
       </h1>
       <EventWizard />

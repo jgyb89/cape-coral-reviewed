@@ -107,10 +107,10 @@ export default async function SingleEventPage({
   const currentUser = await getViewer();
   const initialIsFavorite = currentUser?.userData?.favoriteListings?.nodes?.some(n => n.databaseId === event?.databaseId) || false;
   if (!event) {
-    return <main className="inline-style-1">
+    return <main className="events__not-found-main">
         <h1>Event Not Found</h1>
         <p>The event you are looking for does not exist or has been removed.</p>
-        <div className="inline-style-2">
+        <div className="events__not-found-back">
           <BackButton locale={locale} fallback="/events" />
         </div>
       </main>;
@@ -155,33 +155,33 @@ export default async function SingleEventPage({
   const price = rawPrice && rawPrice.toLowerCase() !== "free" && !rawPrice.startsWith("$") ? `$${rawPrice}` : rawPrice || "Free";
   const addressObj = eventDetails?.eventAddress;
   const addressString = addressObj?.streetAddress || addressObj?.address || "";
-  return <main className="inline-style-3">
+  return <main className="events__main">
         {/* Full-width Blurred Hero Backdrop */}
-        <div className="inline-style-4">
+        <div className="events__hero-backdrop">
           {imageUrl && <>
-              <Image src={imageUrl} alt="" fill priority className="inline-style-5" />
-              <Image src={imageUrl} alt={title} fill priority className="inline-style-6" />
+              <Image src={imageUrl} alt="" fill priority className="events__hero-bg-image" />
+              <Image src={imageUrl} alt={title} fill priority className="events__hero-fg-image" />
             </>}
         </div>
 
         {/* 1200px Container */}
-        <div className="inline-style-7">
-          <div className="inline-style-8">
+        <div className="events__container">
+          <div className="events__top-actions">
             <BackButton locale={locale} fallback="/events" />
-            <div className="inline-style-9">
+            <div className="events__action-buttons">
               <FavoriteButton listingId={event.databaseId} initialIsFavorite={initialIsFavorite} currentUser={currentUser} label="Favorite" />
               <ShareButton title={title} text={`Check out ${title} on Cape Coral Reviewed!`} />
             </div>
           </div>
 
-          <div className="inline-style-10">
+          <div className="events__content-grid">
             {/* Left Column */}
-            <div className="inline-style-11">
-              <h1 className="inline-style-12">
+            <div className="events__main-column">
+              <h1 className="events__title">
                 {title}
               </h1>
 
-              <div className="inline-style-13" />
+              <div className="events__divider" />
 
               <section className="listing-card">
                 <h2 className="listing-card__title">
@@ -207,13 +207,13 @@ export default async function SingleEventPage({
                   <div className="listing-card__text">
                     <strong>{venueName}</strong>
                     {addressString && <div>{addressString}</div>}
-                    <a href={`https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(addressString || venueName)}`} target="_blank" rel="noopener noreferrer" className="listing-card__link inline-style-14">
+                    <a href={`https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(addressString || venueName)}`} target="_blank" rel="noopener noreferrer" className="listing-card__link events__map-link">
                       Show map
                     </a>
                   </div>
                 </div>
-                <div className="inline-style-15">
-                  <div className="inline-style-16">
+                <div className="events__map-wrapper">
+                  <div className="events__map-inner">
                     <EventMap lat={addressObj?.latitude} lng={addressObj?.longitude} address={addressString || venueName} />
                   </div>
                 </div>
@@ -231,46 +231,46 @@ export default async function SingleEventPage({
             </div>
 
             {/* Right Column (Sticky) */}
-            <div className="inline-style-17">
-              <section className="listing-card inline-style-18">
+            <div className="events__sidebar-column">
+              <section className="listing-card events__sidebar-card">
                 <h2 className="listing-card__title">
                   <span className="material-symbols-outlined">event</span>{" "}
                   Event Details
                 </h2>
 
-                {isRecurring && <div className="inline-style-19">
-                    <span className="inline-style-20">
-                      <span className="material-symbols-outlined inline-style-21">
+                {isRecurring && <div className="events__recurring-wrapper">
+                    <span className="events__recurring-text">
+                      <span className="material-symbols-outlined events__recurring-icon">
                         update
                       </span>{" "}
                       Recurring Event
                     </span>
                   </div>}
 
-                <div className="listing-card__item inline-style-22">
-                  <span className="material-symbols-outlined listing-card__icon inline-style-23">
+                <div className="listing-card__item events__datetime-item">
+                  <span className="material-symbols-outlined listing-card__icon events__datetime-icon">
                     calendar_today
                   </span>
-                  <div className="inline-style-24">
-                    <span className="listing-card__text inline-style-25">
+                  <div className="events__datetime-details">
+                    <span className="listing-card__text events__date-string">
                       {dateString}
                     </span>
-                    {timeString && <span className="inline-style-26">
+                    {timeString && <span className="events__time-string">
                         {timeString}
                       </span>}
                   </div>
                 </div>
 
-                <div className="listing-card__item inline-style-27">
+                <div className="listing-card__item events__price-item">
                   <span className="material-symbols-outlined listing-card__icon">
                     sell
                   </span>
-                  <span className="listing-card__text inline-style-28">
+                  <span className="listing-card__text events__price-value">
                     {price}
                   </span>
                 </div>
 
-                <div className="inline-style-29">
+                <div className="events__ticket-wrapper">
                   {hasTicketUrl ? <a href={ticketUrl} target="_blank" rel="noopener noreferrer" className="listing-primary-btn event-cta-btn">
                       {isFree ? "Register / RSVP" : "Buy Tickets"}
                     </a> : <button className="listing-primary-btn event-cta-btn">
@@ -282,16 +282,16 @@ export default async function SingleEventPage({
           </div>
 
           {/* Recommended Events */}
-          {recommendedEvents.length > 0 && <div className="inline-style-30">
-              <h2 className="inline-style-31">
+          {recommendedEvents.length > 0 && <div className="events__recommended-section">
+              <h2 className="events__recommended-title">
                 Other events you may like
               </h2>
-              <div className="inline-style-32">
+              <div className="events__recommended-grid">
                 {recommendedEvents.map(recEvent => <EventCard key={recEvent.databaseId} event={recEvent} locale={locale} />)}
               </div>
             </div>}
 
-          <div className="inline-style-33">
+          <div className="events__ad-wrapper">
             <AdUnit type="horizontal" />
           </div>
         </div>
