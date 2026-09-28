@@ -123,6 +123,7 @@ export default function CookieConsent() {
                 <summary className={styles.accordionSummary}>
                   Preferences
                   <div 
+                    role="presentation"
                     onClick={(e) => e.stopPropagation()}
                     onKeyDown={(e) => {
                       if (e.key === "Enter" || e.key === " ") e.stopPropagation();
@@ -151,6 +152,7 @@ export default function CookieConsent() {
                 <summary className={styles.accordionSummary}>
                   Statistics
                   <div 
+                    role="presentation"
                     onClick={(e) => e.stopPropagation()}
                     onKeyDown={(e) => {
                       if (e.key === "Enter" || e.key === " ") e.stopPropagation();
@@ -179,6 +181,7 @@ export default function CookieConsent() {
                 <summary className={styles.accordionSummary}>
                   Marketing
                   <div 
+                    role="presentation"
                     onClick={(e) => e.stopPropagation()}
                     onKeyDown={(e) => {
                       if (e.key === "Enter" || e.key === " ") e.stopPropagation();
