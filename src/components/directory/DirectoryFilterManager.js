@@ -7,20 +7,28 @@ import Breadcrumbs from "../common/Breadcrumbs";
 import CcrCardGrid from "./CcrCardGrid";
 import Pagination from "../common/Pagination";
 import styles from "./DirectoryFilterManager.module.css";
-import { checkIfOpenNow } from '@/lib/timeUtils';
+import { checkIfOpenNow } from "@/lib/timeUtils";
 import { useHorizontalScroll } from "@/hooks/useHorizontalScroll";
+import { getDynamicPills, getCategoryRoute } from "./DirectoryFilters";
+import DirectoryFilters from "./DirectoryFilters";
 
 const getListingRating = (listing) => {
   const reviews = listing.reviews?.nodes || [];
   if (reviews.length === 0) return 0;
   const sum = reviews.reduce(
-    (acc, curr) => acc + (Number.parseFloat(curr.reviewFields?.starRating) || 0),
-    0
+    (acc, curr) =>
+      acc + (Number.parseFloat(curr.reviewFields?.starRating) || 0),
+    0,
   );
   return sum / reviews.length;
 };
 
-const DirectoryFilterManager = ({ listings, currentUser, dict = {}, locale = "en" }) => {
+const DirectoryFilterManager = ({
+  listings,
+  currentUser,
+  dict = {},
+  locale = "en",
+}) => {
   const searchParams = useSearchParams();
   const router = useRouter();
   const pathname = usePathname();
@@ -36,12 +44,12 @@ const DirectoryFilterManager = ({ listings, currentUser, dict = {}, locale = "en
     showRightArrow,
     handleScroll,
     scrollLeft,
-    scrollRight
+    scrollRight,
   } = useHorizontalScroll();
 
   const updateFilter = (key, value) => {
     const params = new URLSearchParams(searchParams);
-    if (value && value !== '0') {
+    if (value && value !== "0") {
       params.set(key, value);
     } else {
       params.delete(key);
@@ -50,24 +58,28 @@ const DirectoryFilterManager = ({ listings, currentUser, dict = {}, locale = "en
   };
 
   // Current Filters from URL
-  const categoryFilter = searchParams.get('category') || '';
-  const textSearchFilter = searchParams.get('search') || '';
-  const ratingFilter = Number.parseInt(searchParams.get('rating')) || 0;
-  const openNowFilter = searchParams.get('open') === 'true';
-  const sortByFilter = searchParams.get('sort') || 'newest';
+  const categoryFilter = searchParams.get("category") || "";
+  const textSearchFilter = searchParams.get("search") || "";
+  const ratingFilter = Number.parseInt(searchParams.get("rating")) || 0;
+  const openNowFilter = searchParams.get("open") === "true";
+  const sortByFilter = searchParams.get("sort") || "newest";
 
   const [currentPage, setCurrentPage] = useState(1);
   const ITEMS_PER_PAGE = 11;
 
   const filteredAndSortedListings = useMemo(() => {
     let result = [...listings];
-    
+
     // Filter by In-Page Category or Directory Type
     if (categoryFilter) {
       const filterTarget = categoryFilter.toLowerCase();
       result = result.filter((listing) => {
-        const matchesDirType = listing.directoryTypes?.nodes?.some(node => node.slug === filterTarget);
-        const matchesCategory = listing.ccrlistingcategories?.nodes?.some(node => node.slug === filterTarget);
+        const matchesDirType = listing.directoryTypes?.nodes?.some(
+          (node) => node.slug === filterTarget,
+        );
+        const matchesCategory = listing.ccrlistingcategories?.nodes?.some(
+          (node) => node.slug === filterTarget,
+        );
         return matchesDirType || matchesCategory;
       });
     }
@@ -78,14 +90,21 @@ const DirectoryFilterManager = ({ listings, currentUser, dict = {}, locale = "en
       result = result.filter((listing) => {
         if (listing.title?.toLowerCase().includes(target)) return true;
         if (listing.content?.toLowerCase().includes(target)) return true;
-        if (listing.ccrlistingcategories?.nodes?.some(node => node.name.toLowerCase().includes(target))) return true;
+        if (
+          listing.ccrlistingcategories?.nodes?.some((node) =>
+            node.name.toLowerCase().includes(target),
+          )
+        )
+          return true;
         return false;
       });
     }
 
     // Filter by Rating
     if (ratingFilter > 0) {
-      result = result.filter((listing) => getListingRating(listing) >= ratingFilter);
+      result = result.filter(
+        (listing) => getListingRating(listing) >= ratingFilter,
+      );
     }
 
     // Filter by Open Now
@@ -110,39 +129,54 @@ const DirectoryFilterManager = ({ listings, currentUser, dict = {}, locale = "en
     });
 
     return result;
-  }, [listings, categoryFilter, textSearchFilter, ratingFilter, openNowFilter, sortByFilter]);
+  }, [
+    listings,
+    categoryFilter,
+    textSearchFilter,
+    ratingFilter,
+    openNowFilter,
+    sortByFilter,
+  ]);
 
   // Reset page when filters change
   useEffect(() => {
     setCurrentPage(1);
-  }, [categoryFilter, textSearchFilter, ratingFilter, openNowFilter, sortByFilter]);
+  }, [
+    categoryFilter,
+    textSearchFilter,
+    ratingFilter,
+    openNowFilter,
+    sortByFilter,
+  ]);
 
   return (
-    <div className={styles['directory-filter-manager']}>
+    <div className={styles["directory-filter-manager"]}>
       <Breadcrumbs locale={locale} />
       {/* New Universal Top Bar */}
-      <div className={styles['top-controls']}>
-        <button 
-          className={styles['toggle-filters-btn']}
+      <div className={styles["top-controls"]}>
+        <button
+          className={styles["toggle-filters-btn"]}
           onClick={() => setIsModalOpen(true)}
         >
-          <span className="material-symbols-outlined">tune</span>{" "}
-          Filters
+          <span className="material-symbols-outlined">tune</span> Filters
         </button>
 
-        <span className={styles['results-count']}>
+        <span className={styles["results-count"]}>
           {filteredAndSortedListings.length} {t.listingsFound || "Results"}
         </span>
 
-        <div className={styles['search-wrapper']}>
+        <div className={styles["search-wrapper"]}>
           {/* The Search Bar physically lives here, but controls the modal via props */}
-          <DirectoryFilters isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} />
+          <DirectoryFilters
+            isModalOpen={isModalOpen}
+            setIsModalOpen={setIsModalOpen}
+          />
         </div>
 
-        <select 
-          className={styles['sort-dropdown']}
+        <select
+          className={styles["sort-dropdown"]}
           value={sortByFilter}
-          onChange={(e) => updateFilter('sort', e.target.value)}
+          onChange={(e) => updateFilter("sort", e.target.value)}
         >
           <option value="newest">Newest First</option>
           <option value="az">A-Z</option>
@@ -152,35 +186,38 @@ const DirectoryFilterManager = ({ listings, currentUser, dict = {}, locale = "en
       </div>
 
       {/* Desktop Horizontal Pills (Below Filter Bar, NOT Sticky) */}
-      <div className={styles['desktop-horizontal-pills-container']}>
+      <div className={styles["desktop-horizontal-pills-container"]}>
         {showLeftArrow && (
-          <button className={`${styles['scroll-arrow']} ${styles['scroll-arrow-left']}`} onClick={scrollLeft}>
+          <button
+            className={`${styles["scroll-arrow"]} ${styles["scroll-arrow-left"]}`}
+            onClick={scrollLeft}
+          >
             <span className="material-symbols-outlined">chevron_left</span>
           </button>
         )}
-        <div 
-          className={styles['desktop-horizontal-pills']} 
+        <div
+          className={styles["desktop-horizontal-pills"]}
           ref={scrollContainerRef}
           onScroll={handleScroll}
         >
-          <button 
-            className={`${styles['category-pill']} ${pathname.endsWith('/directory') ? styles['category-pill--active'] : ''}`}
-            onClick={() => router.push('/directory')}
+          <button
+            className={`${styles["category-pill"]} ${pathname.endsWith("/directory") ? styles["category-pill--active"] : ""}`}
+            onClick={() => router.push("/directory")}
           >
             All
           </button>
-          {activePills.map(pill => (
-            <button 
+          {activePills.map((pill) => (
+            <button
               key={pill.slug}
-              className={`${styles['category-pill']} ${pathname.includes(pill.slug) ? styles['category-pill--active'] : ''}`}
+              className={`${styles["category-pill"]} ${pathname.includes(pill.slug) ? styles["category-pill--active"] : ""}`}
               onClick={() => {
-                const segments = pathname.split('/').filter(Boolean);
-                const isSpanish = segments[0] === 'es';
-                const localePrefix = isSpanish ? '/es' : '';
+                const segments = pathname.split("/").filter(Boolean);
+                const isSpanish = segments[0] === "es";
+                const localePrefix = isSpanish ? "/es" : "";
 
                 if (pathname.includes(pill.slug)) {
                   // Deselect: Go back to the parent directory type if available
-                  const dirIndex = segments.indexOf('directory');
+                  const dirIndex = segments.indexOf("directory");
                   if (dirIndex !== -1 && segments.length > dirIndex + 1) {
                     const dirType = segments[dirIndex + 1];
                     router.push(`${localePrefix}/directory/${dirType}`);
@@ -198,7 +235,10 @@ const DirectoryFilterManager = ({ listings, currentUser, dict = {}, locale = "en
           ))}
         </div>
         {showRightArrow && (
-          <button className={`${styles['scroll-arrow']} ${styles['scroll-arrow-right']}`} onClick={scrollRight}>
+          <button
+            className={`${styles["scroll-arrow"]} ${styles["scroll-arrow-right"]}`}
+            onClick={scrollRight}
+          >
             <span className="material-symbols-outlined">chevron_right</span>
           </button>
         )}
@@ -206,23 +246,35 @@ const DirectoryFilterManager = ({ listings, currentUser, dict = {}, locale = "en
 
       {/* Main Feed */}
       {filteredAndSortedListings.length === 0 ? (
-        <div style={{ textAlign: "center", padding: "4rem", border: "1px dashed #ccc", borderRadius: "12px", marginTop: "2rem" }}>
+        <div
+          style={{
+            textAlign: "center",
+            padding: "4rem",
+            border: "1px dashed #ccc",
+            borderRadius: "12px",
+            marginTop: "2rem",
+          }}
+        >
           <p style={{ fontSize: "1.1rem", color: "#64748b" }}>
-            {t.noListingsFound || "No listings found matching your criteria. Try adjusting your filters or selecting a different category."}
+            {t.noListingsFound ||
+              "No listings found matching your criteria. Try adjusting your filters or selecting a different category."}
           </p>
         </div>
       ) : (
         <>
-          <CcrCardGrid 
-            listings={filteredAndSortedListings.slice((currentPage - 1) * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE)} 
-            currentUser={currentUser} 
-            locale={locale} 
+          <CcrCardGrid
+            listings={filteredAndSortedListings.slice(
+              (currentPage - 1) * ITEMS_PER_PAGE,
+              currentPage * ITEMS_PER_PAGE,
+            )}
+            currentUser={currentUser}
+            locale={locale}
           />
-          <Pagination 
-            totalItems={filteredAndSortedListings.length} 
-            itemsPerPage={ITEMS_PER_PAGE} 
-            currentPageProp={currentPage} 
-            onPageChange={setCurrentPage} 
+          <Pagination
+            totalItems={filteredAndSortedListings.length}
+            itemsPerPage={ITEMS_PER_PAGE}
+            currentPageProp={currentPage}
+            onPageChange={setCurrentPage}
           />
         </>
       )}
