@@ -30,7 +30,7 @@ export default async function EventsPage({
 
   // Fetch data concurrently for performance
   const [events, currentUser] = await Promise.all([getEvents(), getCurrentViewer()]);
-  return <main className="inline-style-1">
+  return <main className="events-client__main">
       <EventsClient events={events} currentUser={currentUser} locale={locale} />
     </main>;
 }
