@@ -9,12 +9,12 @@ export default async function NotFound() {
   // Securely check if the user is authenticated on the server
   const viewer = await getViewer();
   return <html lang="en">
-      <body className={`${poppins.variable} ${openSans.variable} ${styles["inline-style-1"]}`}>
-        <div className={styles["inline-style-2"]}>
+      <body className={`${poppins.variable} ${openSans.variable} ${styles["not-found__body"]}`}>
+        <div className={styles["not-found__layout"]}>
           {/* Inject Navbar with fallback locale */}
           <Navbar locale="en" currentUser={viewer} />
       
-      <div className={styles["inline-style-3"]}>
+      <div className={styles["not-found__main"]}>
         <div className={styles['not-found']}>
           <div className={styles['not-found__content']}>
             <span className={`material-symbols-outlined ${styles['not-found__icon']}`}>
