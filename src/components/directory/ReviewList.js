@@ -173,7 +173,7 @@ export default function ReviewList({ reviews, noReviewsYet = "No reviews yet. Be
                         </span>
                       ))}
                     </div>
-                    <span style={{ fontSize: '0.9rem', color: '#64748b', fontWeight: '500' }}>
+                    <span data-nosnippet style={{ fontSize: '0.9rem', color: '#64748b', fontWeight: '500' }}>
                       {new Date(review.date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
                     </span>
                   </div>
