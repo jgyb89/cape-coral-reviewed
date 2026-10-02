@@ -190,7 +190,7 @@ export default async function DirectoryListingPage({
             <FavoriteButton listingId={listing.databaseId} initialIsFavorite={initialIsFavorite} currentUser={currentUser} label={t.favorite || "Favorite"} />
             <ShareButton title={listing.title} text={`Check out ${listing.title} on Cape Coral Reviewed!`} />
             <button className="listing-action-btn">
-              <span className="material-symbols-outlined">flag</span>{" "}
+              <span data-nosnippet className="material-symbols-outlined">flag</span>{" "}
               <span className="listing-action-btn__text">
                 {t.report || "Report"}
               </span>
@@ -221,11 +221,11 @@ export default async function DirectoryListingPage({
 
         <section className="listing-card">
           <h2 className="listing-card__title">
-            <span className="material-symbols-outlined">info</span>{" "}
+            <span data-nosnippet className="material-symbols-outlined">info</span>{" "}
             Business Info
           </h2>
           <div className="listing-card__item">
-            <span className="material-symbols-outlined listing-card__icon">
+            <span data-nosnippet className="material-symbols-outlined listing-card__icon">
               location_on
             </span>{" "}
             <span className="listing-card__text">
@@ -234,13 +234,13 @@ export default async function DirectoryListingPage({
             </span>
           </div>
           <div className="listing-card__item">
-            <span className="material-symbols-outlined listing-card__icon">
+            <span data-nosnippet className="material-symbols-outlined listing-card__icon">
               call
             </span>{" "}
             <span className="listing-card__text">{listingdata.phoneNumber}</span>
           </div>
           {listingdata.websiteUrl && <div className="listing-card__item">
-              <span className="material-symbols-outlined listing-card__icon">
+              <span data-nosnippet className="material-symbols-outlined listing-card__icon">
                 language
               </span>{" "}
               <a href={listingdata.websiteUrl} className="listing-card__link" target="_blank" rel="noopener noreferrer">
@@ -251,14 +251,14 @@ export default async function DirectoryListingPage({
           {/* Integrated Social Links */}
           {socialLinks.length > 0 && <div className="listing-card__social inline-style-4">
               <h3 className="inline-style-5">
-                <span className="material-symbols-outlined inline-style-6">
+                <span data-nosnippet className="material-symbols-outlined inline-style-6">
                   share_reviews
                 </span>{" "}
                 Connect with us
               </h3>
               <div className="inline-style-7">
                 {socialLinks.map(url => <a key={url} href={url} target="_blank" rel="noopener noreferrer" className="listing-card__link inline-style-8">
-                    <span className="material-symbols-outlined inline-style-9">
+                    <span data-nosnippet className="material-symbols-outlined inline-style-9">
                       link
                     </span>{" "}
                     {getSocialPlatform(url)}
@@ -269,7 +269,7 @@ export default async function DirectoryListingPage({
 
         <section className="listing-card">
           <h2 className="listing-card__title">
-            <span className="material-symbols-outlined">description</span>{" "}
+            <span data-nosnippet className="material-symbols-outlined">description</span>{" "}
             {t.aboutBusiness || "About the Business"}
           </h2>
           <div className="listing-card__text inline-style-10" dangerouslySetInnerHTML={{
@@ -280,7 +280,7 @@ export default async function DirectoryListingPage({
         {/* Video Section */}
         {videoEmbedUrl && <section className="listing-card">
             <h2 className="listing-card__title">
-              <span className="material-symbols-outlined">play_circle</span>{" "}
+              <span data-nosnippet className="material-symbols-outlined">play_circle</span>{" "}
               Featured Video
             </h2>
             <div className="inline-style-11">
@@ -304,7 +304,7 @@ export default async function DirectoryListingPage({
 
         <section className="listing-card">
           <h2 className="listing-card__title">
-            <span className="material-symbols-outlined">schedule</span>{" "}
+            <span data-nosnippet className="material-symbols-outlined">schedule</span>{" "}
             {t.businessHours || "Business Hours"}
           </h2>
           {hours.map(h => <div key={h.day} className="listing-card__item inline-style-13">

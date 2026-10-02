@@ -81,18 +81,18 @@
   border-color: #94a3b8;
 }
 
-.inline-style-1 {
+.not-found__body {
   margin: 0px;
   padding: 0px;
 }
 
-.inline-style-2 {
+.not-found__layout {
   min-height: 100vh;
   background-color: #f8fafc;
   font-family: var(--font-open-sans), sans-serif;
 }
 
-.inline-style-3 {
+.not-found__main {
   min-height: calc(100vh - 80px);
   background-color: #f8fafc;
 }
