@@ -36,8 +36,8 @@ const parseOptions = {
 
       // Smart Detection: Check if the URL belongs to a portrait-first platform/format
       const isPortrait = src.includes('shorts') || src.includes('tiktok');
-      return <div className="inline-style-1">
-            <iframe src={src} frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowFullScreen title="Video Embed" className="inline-style-2" />
+      return <div className="blog-post__video-wrapper">
+            <iframe src={src} frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowFullScreen title="Video Embed" className="blog-post__video-iframe" />
           </div>;
     }
 
@@ -118,13 +118,13 @@ export default async function BlogPostPage({
             {categoriesString && <span className="blog-post__divider">•</span>}
             <time className="blog-post__date">{formattedDate}</time>
           </div>
-          <h1 className="inline-style-3">
+          <h1 className="blog-post__title">
             {post.title}
           </h1>
         </header>
 
-        {post.featuredImage?.node?.sourceUrl && <div className="blog-post__featured-image inline-style-4">
-            <Image src={formatImageUrl(post.featuredImage.node.sourceUrl)} alt={post.featuredImage.node.altText || post.title} fill priority className="inline-style-5" />
+        {post.featuredImage?.node?.sourceUrl && <div className="blog-post__featured-image blog-post__image-container">
+            <Image src={formatImageUrl(post.featuredImage.node.sourceUrl)} alt={post.featuredImage.node.altText || post.title} fill priority className="blog-post__image" />
           </div>}
 
         <div className="blog-post__content">

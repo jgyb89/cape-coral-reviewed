@@ -12,11 +12,11 @@ export default async function DashboardRoot() {
   const roles = viewer?.roles?.nodes?.map(role => role.name.toLowerCase()) || [];
   const isBusiness = roles.includes('business') || roles.includes('administrator');
   return <div className="dashboard-desktop-only">
-      <header className="inline-style-1">
-        <h1 className="inline-style-2">
+      <header className="dashboard-home__header">
+        <h1 className="dashboard-home__title">
           Welcome back, {viewer?.firstName || 'User'}!
         </h1>
-        <p className="inline-style-3">
+        <p className="dashboard-home__subtitle">
           Manage your account activity and explore Cape Coral.
         </p>
       </header>
@@ -45,8 +45,8 @@ export default async function DashboardRoot() {
           <div className="bento-col-large">
             <div className="bento-card bento-card--large">
               <div className="bento-card__header">
-                <span className="material-symbols-outlined inline-style-4">storefront</span>
-                <h3 className="inline-style-5">My Listings</h3>
+                <span className="material-symbols-outlined dashboard-home__card-icon--listings">storefront</span>
+                <h3 className="dashboard-home__card-title--listings">My Listings</h3>
               </div>
               <p>View, edit, and optimize your business directory listings. Keep your hours, photos, and descriptions up to date to attract more customers.</p>
               <Link href={`/dashboard/listings`} className="bento-link">Manage Listings &rarr;</Link>
@@ -76,8 +76,8 @@ export default async function DashboardRoot() {
           <div className="bento-col-large">
             <div className="bento-card bento-card--large">
               <div className="bento-card__header">
-                <span className="material-symbols-outlined inline-style-6">reviews</span>
-                <h3 className="inline-style-7">My Reviews</h3>
+                <span className="material-symbols-outlined dashboard-home__card-icon--reviews">reviews</span>
+                <h3 className="dashboard-home__card-title--reviews">My Reviews</h3>
               </div>
               <p>See all the feedback you&apos;ve shared with the Cape Coral community. Your reviews help others discover the best places in town!</p>
               <Link href={`/dashboard/reviews`} className="bento-link">View My Reviews &rarr;</Link>

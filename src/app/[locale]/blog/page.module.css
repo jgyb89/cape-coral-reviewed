@@ -1,11 +1,11 @@
 
-.inline-style-1 {
+.blog-index__header {
   max-width: 1200px;
   margin: 0 auto;
   padding: 2rem 1rem 0;
 }
 
-.inline-style-2 {
+.blog-index__title {
   font-family: var(--font-heading);
   font-size: clamp(2rem, 6vw, 3rem);
   font-weight: 800;
@@ -14,7 +14,7 @@
   line-height: 1.1;
 }
 
-.inline-style-3 {
+.blog-index__subtitle {
   font-size: clamp(1rem, 3vw, 1.25rem);
   color: #4a5568;
   max-width: 800px;
@@ -22,7 +22,7 @@
   line-height: 1.4;
 }
 
-.inline-style-4 {
+.blog-index__loading {
   text-align: center;
   padding: 3rem;
 }

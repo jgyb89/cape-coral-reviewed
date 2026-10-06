@@ -94,39 +94,39 @@ export default async function MyListingsPage({
       <Link href={`/dashboard`} className="dashboard-back-btn">
         <span className="material-symbols-outlined">arrow_back</span>{" "}Back to Dashboard
       </Link>
-      <header className={styles["inline-style-1"]}>
+      <header className={styles["dashboard-listings__header"]}>
         <div>
-          <h1 className={styles["inline-style-2"]}>My Listings</h1>
-          <p className={styles["inline-style-3"]}>Manage your business listings and update their details.</p>
+          <h1 className={styles["dashboard-listings__title"]}>My Listings</h1>
+          <p className={styles["dashboard-listings__subtitle"]}>Manage your business listings and update their details.</p>
         </div>
-        <Link href={`/submit-listing`} className={`listing-primary-btn ${styles["inline-style-4"]}`}>
+        <Link href={`/submit-listing`} className={`listing-primary-btn ${styles["dashboard-listings__add-btn"]}`}>
           <span className="material-symbols-outlined">add_business</span>{" "}
           Add New Listing
         </Link>
       </header>
 
-      {listings.length === 0 ? <div className={`blank-state ${styles["inline-style-5"]}`}>
-          <p className={styles["inline-style-6"]}>You haven&apos;t posted any listings yet.</p>
-          <Link href={`/submit-listing`} className={styles["inline-style-7"]}>Create your first listing now</Link>
+      {listings.length === 0 ? <div className={`blank-state ${styles["dashboard-listings__empty-state"]}`}>
+          <p className={styles["dashboard-listings__empty-text"]}>You haven&apos;t posted any listings yet.</p>
+          <Link href={`/submit-listing`} className={styles["dashboard-listings__empty-link"]}>Create your first listing now</Link>
         </div> : <>
           <DashboardSortDropdown />
-          <div className={`listings-grid ${styles["inline-style-8"]}`}>
-            {paginatedListings.map(listing => <div key={listing.databaseId} className={`listing-item ${styles["inline-style-9"]}`}>
+          <div className={`listings-grid ${styles["dashboard-listings__grid"]}`}>
+            {paginatedListings.map(listing => <div key={listing.databaseId} className={`listing-item ${styles["dashboard-listings__card"]}`}>
                 <div>
-                  <h3 className={styles["inline-style-10"]}>{listing.title}</h3>
-                  <p className={styles["inline-style-11"]}>
+                  <h3 className={styles["dashboard-listings__card-title"]}>{listing.title}</h3>
+                  <p className={styles["dashboard-listings__card-date"]}>
                     Published on {new Date(listing.date).toLocaleDateString()}
                   </p>
                 </div>
-                <div className={styles["inline-style-12"]}>
-                  <Link href={`/listing/${listing.slug}`} className={styles["inline-style-13"]}>
+                <div className={styles["dashboard-listings__card-actions"]}>
+                  <Link href={`/listing/${listing.slug}`} className={styles["dashboard-listings__action-view"]}>
                     View
                   </Link>
-                  <span className={styles["inline-style-14"]}>|</span>
-                  <Link href={`/dashboard/listings/edit/${listing.databaseId}`} className={styles["inline-style-15"]}>
+                  <span className={styles["dashboard-listings__action-divider1"]}>|</span>
+                  <Link href={`/dashboard/listings/edit/${listing.databaseId}`} className={styles["dashboard-listings__action-edit"]}>
                     Edit
                   </Link>
-                  <span className={styles["inline-style-16"]}>|</span>
+                  <span className={styles["dashboard-listings__action-divider2"]}>|</span>
                   <DeleteListingButton listingId={listing.databaseId} className="btn-delete" />
                 </div>
               </div>)}

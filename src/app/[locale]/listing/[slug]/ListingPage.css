@@ -226,28 +226,28 @@
   }
 }
 
-.inline-style-1 {
+.listing__not-found {
   padding: 3rem;
   text-align: center;
 }
 
-.inline-style-2 {
+.listing__main-title {
   display: flex;
   align-items: center;
   gap: 0.5rem;
 }
 
-.inline-style-3 {
+.listing-header__rating-text {
   margin-left: 0.5rem;
 }
 
-.inline-style-4 {
+.listing-social__wrapper {
   margin-top: 1.5rem;
   padding-top: 1.5rem;
   border-top: 1px solid #e2e8f0;
 }
 
-.inline-style-5 {
+.listing-social__heading {
   font-size: 1rem;
   font-weight: 600;
   margin-bottom: 1rem;
@@ -256,31 +256,31 @@
   gap: 0.5rem;
 }
 
-.inline-style-6 {
+.listing-social__heading-icon {
   font-size: 1.25rem;
 }
 
-.inline-style-7 {
+.listing-social__links-container {
   display: flex;
   flex-wrap: wrap;
   gap: 1rem;
 }
 
-.inline-style-8 {
+.listing-social__link-item {
   display: flex;
   align-items: center;
   gap: 0.25rem;
 }
 
-.inline-style-9 {
+.listing-social__link-icon {
   font-size: 1.1rem;
 }
 
-.inline-style-10 {
+.listing-about__text {
   white-space: pre-wrap;
 }
 
-.inline-style-11 {
+.listing-video__wrapper {
   position: relative;
   padding-bottom: 56.25%;
   height: 0px;
@@ -288,7 +288,7 @@
   border-radius: 8px;
 }
 
-.inline-style-12 {
+.listing-video__iframe {
   position: absolute;
   top: 0px;
   left: 0px;
@@ -296,10 +296,10 @@
   height: 100%;
 }
 
-.inline-style-13 {
+.listing-hours__item {
   justify-content: space-between;
 }
 
-.inline-style-14 {
+.listing-hours__day {
   font-weight: 600px;
 }

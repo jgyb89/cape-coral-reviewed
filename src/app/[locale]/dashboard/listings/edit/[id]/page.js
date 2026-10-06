@@ -19,18 +19,18 @@ export default async function EditListingPage({
       <Link href={`/dashboard`} className="dashboard-back-btn">
         <span className="material-symbols-outlined">arrow_back</span>{" "}Back to Dashboard
       </Link>
-      <div className={styles["inline-style-1"]}>
-        <Link href={`/dashboard/listings`} className={styles["inline-style-2"]}>
+      <div className={styles["dashboard-listing-edit__back-nav"]}>
+        <Link href={`/dashboard/listings`} className={styles["dashboard-listing-edit__back-link"]}>
           <span className="material-symbols-outlined">arrow_back</span>{" "}
           Back to My Listings
         </Link>
       </div>
 
-      <header className={styles["inline-style-3"]}>
-        <h1 className={styles["inline-style-4"]}>
+      <header className={styles["dashboard-listing-edit__header"]}>
+        <h1 className={styles["dashboard-listing-edit__title"]}>
           Edit Listing
         </h1>
-        <p className={styles["inline-style-5"]}>
+        <p className={styles["dashboard-listing-edit__subtitle"]}>
           Update your business information below.
         </p>
       </header>

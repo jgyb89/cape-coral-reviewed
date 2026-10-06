@@ -356,34 +356,34 @@
   }
 }
 
-.inline-style-1 {
+.dashboard-home__header {
   margin-bottom: 2rem;
   padding-bottom: 1rem;
   border-bottom: 1px solid #f1f5f9;
 }
 
-.inline-style-2 {
+.dashboard-home__title {
   margin: 0 0 0.5rem 0;
   color: #1e293b;
 }
 
-.inline-style-3 {
+.dashboard-home__subtitle {
   margin: 0px;
   color: #64748b;
 }
 
-.inline-style-4 {
+.dashboard-home__card-icon--listings {
   font-size: 2rem;
 }
 
-.inline-style-5 {
+.dashboard-home__card-title--listings {
   font-size: 1.5rem;
 }
 
-.inline-style-6 {
+.dashboard-home__card-icon--reviews {
   font-size: 2rem;
 }
 
-.inline-style-7 {
+.dashboard-home__card-title--reviews {
   font-size: 1.5rem;
 }

@@ -14,12 +14,12 @@ export default async function RegisterPage({
   } = await params;
   const dict = await getDictionary(locale);
   const t = dict?.register || {};
-  return <main className={styles["inline-style-1"]}>
-      <div className={styles["inline-style-2"]}>
-        <h1 className={styles["inline-style-3"]}>
+  return <main className={styles["auth-register__main"]}>
+      <div className={styles["auth-register__header"]}>
+        <h1 className={styles["auth-register__title"]}>
           {t.title || "Create an Account"}
         </h1>
-        <p className={styles["inline-style-4"]}>
+        <p className={styles["auth-register__subtitle"]}>
           {t.subtitle || "Join our community to list your business, leave reviews, and save your favorites."}
         </p>
         <RegisterForm dict={dict} locale={locale} />

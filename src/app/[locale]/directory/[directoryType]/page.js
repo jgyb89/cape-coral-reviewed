@@ -41,16 +41,16 @@ export default async function DirectoryTypePage({
   const typeDescription = typeNode?.description || "";
   return <>
       <div className="directory-page-wrapper">
-        <header className={styles["inline-style-1"]}>
-          <h1 className={styles["inline-style-2"]}>
+        <header className={styles["directory-type__header"]}>
+          <h1 className={styles["directory-type__title"]}>
             Best {typeName} in Cape Coral
           </h1>
           {typeDescription && <div dangerouslySetInnerHTML={{
           __html: typeDescription
-        }} className={styles["inline-style-3"]} />}
+        }} className={styles["directory-type__description"]} />}
         </header>
 
-        <Suspense fallback={<div className={styles["inline-style-4"]}>Loading listings...</div>}>
+        <Suspense fallback={<div className={styles["directory-type__loading"]}>Loading listings...</div>}>
           <DirectoryFilterManager listings={listings} currentUser={currentUser} dict={dict} locale={locale} />
         </Suspense>
       </div>

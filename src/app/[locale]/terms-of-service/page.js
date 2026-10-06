@@ -23,11 +23,11 @@ export default function TermsOfServicePage() {
         <p>
           PLEASE READ THESE TERMS OF SERVICE CAREFULLY BEFORE USING THIS WEBSITE
           OR PURCHASING ANY PRODUCTS OR SERVICES THROUGH THE WEBSITE. THESE
-          TERMS OF SERVICE ("TERMS") GOVERN YOUR ACCESS TO AND USE OF THE
+          TERMS OF SERVICE (&quot;TERMS&quot;) GOVERN YOUR ACCESS TO AND USE OF THE
           WEBSITE, INCLUDING THE CAPE CORAL REVIEWED WEBSITE, ANY E-COMMERCE OR
           RETAIL SUBDOMAINS, CONTENT, COMMUNICATIONS, PRODUCTS, ONLINE STORE,
-          AND SERVICES PROVIDED BY CAPE CORAL REVIEWED ("CAPE CORAL REVIEWED,"
-          "WE," "US," OR "OUR"). BY ACCESSING, BROWSING, USING, CREATING AN
+          AND SERVICES PROVIDED BY CAPE CORAL REVIEWED (&quot;CAPE CORAL REVIEWED,&quot;
+          &quot;WE,&quot; &quot;US,&quot; OR &quot;OUR&quot;). BY ACCESSING, BROWSING, USING, CREATING AN
           ACCOUNT, SUBMITTING INFORMATION, PLACING AN ORDER, OR OTHERWISE USING
           ANY PORTION OF THE WEBSITE OR SERVICES, YOU AGREE TO BE BOUND BY THESE
           TERMS AND OUR PRIVACY POLICY. IF YOU DO NOT AGREE TO THESE TERMS, YOU
@@ -122,7 +122,7 @@ export default function TermsOfServicePage() {
           We do not generally receive or store complete payment card information
           when payment processing is handled by a third-party payment processor.
           Your use of a third-party payment processor may also be subject to
-          that provider's separate terms and privacy practices.
+          that provider&apos;s separate terms and privacy practices.
         </p>
         <p>
           You agree to provide accurate billing and payment information and to
@@ -413,8 +413,8 @@ export default function TermsOfServicePage() {
         <h2>Disclaimer of Warranties</h2>
         <p>
           THE WEBSITE, SERVICES, CONTENT, COMMUNICATIONS, PRODUCTS, PRODUCT
-          DESCRIPTIONS, AND ALL RELATED MATERIALS ARE PROVIDED ON AN "AS IS" AND
-          "AS AVAILABLE" BASIS TO THE MAXIMUM EXTENT PERMITTED BY LAW.
+          DESCRIPTIONS, AND ALL RELATED MATERIALS ARE PROVIDED ON AN &quot;AS IS&quot; AND
+          &quot;AS AVAILABLE&quot; BASIS TO THE MAXIMUM EXTENT PERMITTED BY LAW.
         </p>
         <p>
           CAPE CORAL REVIEWED DISCLAIMS ALL WARRANTIES, WHETHER EXPRESS,
@@ -443,7 +443,7 @@ export default function TermsOfServicePage() {
           INTANGIBLE LOSSES.
         </p>
         <p>
-          TO THE MAXIMUM EXTENT PERMITTED BY LAW, CAPE CORAL REVIEWED'S TOTAL
+          TO THE MAXIMUM EXTENT PERMITTED BY LAW, CAPE CORAL REVIEWED&apos;S TOTAL
           AGGREGATE LIABILITY ARISING OUT OF OR RELATING TO THE WEBSITE,
           SERVICES, OR ANY PRODUCT PURCHASED THROUGH THE WEBSITE SHALL NOT
           EXCEED THE GREATER OF (A) ONE HUNDRED DOLLARS ($100.00) OR (B) THE
@@ -462,7 +462,7 @@ export default function TermsOfServicePage() {
           its owners, officers, directors, employees, contractors, affiliates,
           successors, assigns, agents, licensors, vendors, and partners from and
           against any claims, demands, actions, liabilities, damages, judgments,
-          losses, costs, and expenses, including reasonable attorneys' fees,
+          losses, costs, and expenses, including reasonable attorneys&apos; fees,
           arising out of or relating to your use of the Website, your violation
           of these Terms, your submitted content, your violation of applicable
           laws, your fraudulent or unauthorized use of the Website or purchasing

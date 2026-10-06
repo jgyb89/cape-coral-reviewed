@@ -1,9 +1,9 @@
 
-.inline-style-1 {
+.newsletter-page__main {
   min-height: 100vh;
   background-color: #fff;
 }
 
-.inline-style-2 {
+.newsletter-page__form-title {
   font-family: var(--font-heading);
 }

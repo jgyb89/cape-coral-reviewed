@@ -21,8 +21,8 @@ export default async function SubmitListingPage() {
   if (!userRoles.includes('business') && !userRoles.includes('administrator')) {
     redirect('/user-to-business');
   }
-  return <main className={styles["inline-style-1"]}>
-      <h1 className={styles["inline-style-2"]}>
+  return <main className={styles["submit-listing__main"]}>
+      <h1 className={styles["submit-listing__title"]}>
         Submit Your Business
       </h1>
       <ListingWizard />

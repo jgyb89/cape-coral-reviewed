@@ -1,5 +1,5 @@
 
-.inline-style-1 {
+.auth-register__main {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
@@ -8,19 +8,19 @@
   padding: 2rem 1rem;
 }
 
-.inline-style-2 {
+.auth-register__header {
   max-width: 600px;
   width: 100%;
 }
 
-.inline-style-3 {
+.auth-register__title {
   font-size: 2.5rem;
   font-weight: 800;
   margin-bottom: 1rem;
   text-align: center;
 }
 
-.inline-style-4 {
+.auth-register__subtitle {
   font-size: 1.1rem;
   color: #666;
   margin-bottom: 2.5rem;

@@ -109,7 +109,7 @@ export default async function DirectoryListingPage({
   const listing = await getListingBySlug(slug);
   const currentUser = null;
   if (!listing) {
-    return <main className="inline-style-1">
+    return <main className="listing__not-found">
         <h1>404: Listing Not Found</h1>
         <p>We couldn&apos;t find the business you&apos;re looking for.</p>
       </main>;
@@ -201,13 +201,13 @@ export default async function DirectoryListingPage({
         <ListingGallery featuredImage={featuredImage} galleryImages={galleryImages} />
 
         <header className="listing-header">
-          <h1 className="listing-title inline-style-2">
+          <h1 className="listing-title listing__main-title">
             {listing.title}
           </h1>
           <div className="listing-header__meta">
             <div className="listing-header__rating">
               <StarRating rating={averageRating} />
-              <span className="inline-style-3">
+              <span className="listing-header__rating-text">
                 {averageRating || "0.0"} ({reviewCount} reviews)
               </span>
             </div>
@@ -249,16 +249,16 @@ export default async function DirectoryListingPage({
             </div>}
 
           {/* Integrated Social Links */}
-          {socialLinks.length > 0 && <div className="listing-card__social inline-style-4">
-              <h3 className="inline-style-5">
-                <span data-nosnippet className="material-symbols-outlined inline-style-6">
+          {socialLinks.length > 0 && <div className="listing-card__social listing-social__wrapper">
+              <h3 className="listing-social__heading">
+                <span data-nosnippet className="material-symbols-outlined listing-social__heading-icon">
                   share_reviews
                 </span>{" "}
                 Connect with us
               </h3>
-              <div className="inline-style-7">
-                {socialLinks.map(url => <a key={url} href={url} target="_blank" rel="noopener noreferrer" className="listing-card__link inline-style-8">
-                    <span data-nosnippet className="material-symbols-outlined inline-style-9">
+              <div className="listing-social__links-container">
+                {socialLinks.map(url => <a key={url} href={url} target="_blank" rel="noopener noreferrer" className="listing-card__link listing-social__link-item">
+                    <span data-nosnippet className="material-symbols-outlined listing-social__link-icon">
                       link
                     </span>{" "}
                     {getSocialPlatform(url)}
@@ -272,7 +272,7 @@ export default async function DirectoryListingPage({
             <span data-nosnippet className="material-symbols-outlined">description</span>{" "}
             {t.aboutBusiness || "About the Business"}
           </h2>
-          <div className="listing-card__text inline-style-10" dangerouslySetInnerHTML={{
+          <div className="listing-card__text listing-about__text" dangerouslySetInnerHTML={{
           __html: cleanContent
         }} />
         </section>
@@ -283,8 +283,8 @@ export default async function DirectoryListingPage({
               <span data-nosnippet className="material-symbols-outlined">play_circle</span>{" "}
               Featured Video
             </h2>
-            <div className="inline-style-11">
-              <iframe src={videoEmbedUrl} frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen title="Featured Business Video" className="inline-style-12" />
+            <div className="listing-video__wrapper">
+              <iframe src={videoEmbedUrl} frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen title="Featured Business Video" className="listing-video__iframe" />
             </div>
           </section>}
 
@@ -307,8 +307,8 @@ export default async function DirectoryListingPage({
             <span data-nosnippet className="material-symbols-outlined">schedule</span>{" "}
             {t.businessHours || "Business Hours"}
           </h2>
-          {hours.map(h => <div key={h.day} className="listing-card__item inline-style-13">
-              <span className="inline-style-14">{h.day}</span>
+          {hours.map(h => <div key={h.day} className="listing-card__item listing-hours__item">
+              <span className="listing-hours__day">{h.day}</span>
               <span>{h.time || t.closed || "Closed"}</span>
             </div>)}
         </section>
