@@ -1,5 +1,5 @@
 
-.inline-style-1 {
+.dashboard-listings__header {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -8,42 +8,42 @@
   border-bottom: 1px solid #f1f5f9;
 }
 
-.inline-style-2 {
+.dashboard-listings__title {
   margin: 0 0 0.5rem 0;
 }
 
-.inline-style-3 {
+.dashboard-listings__subtitle {
   margin: 0px;
 }
 
-.inline-style-4 {
+.dashboard-listings__add-btn {
   text-decoration: none;
 }
 
-.inline-style-5 {
+.dashboard-listings__empty-state {
   text-align: center;
   padding: 3rem;
   background: #f9f9f9;
   border-radius: 12px;
 }
 
-.inline-style-6 {
+.dashboard-listings__empty-text {
   font-size: 1.2rem;
   color: #666;
   margin-bottom: 1.5rem;
 }
 
-.inline-style-7 {
+.dashboard-listings__empty-link {
   color: #e04c4c;
   font-weight: 600;
 }
 
-.inline-style-8 {
+.dashboard-listings__grid {
   display: grid;
   gap: 1.5rem;
 }
 
-.inline-style-9 {
+.dashboard-listings__card {
   background-color: #ffffff;
   padding: 1.5rem 2rem;
   border-radius: 12px;
@@ -54,41 +54,41 @@
   align-items: center;
 }
 
-.inline-style-10 {
+.dashboard-listings__card-title {
   margin: 0 0 0.5rem 0;
   font-size: 1.2rem;
 }
 
-.inline-style-11 {
+.dashboard-listings__card-date {
   margin: 0px;
   color: #666;
   font-size: 0.9rem;
 }
 
-.inline-style-12 {
+.dashboard-listings__card-actions {
   display: flex;
   gap: 1rem;
   align-items: center;
 }
 
-.inline-style-13 {
+.dashboard-listings__action-view {
   color: #e04c4c;
   font-weight: 600;
   text-decoration: none;
   font-size: 0.95rem;
 }
 
-.inline-style-14 {
+.dashboard-listings__action-divider1 {
   color: #e2e8f0;
 }
 
-.inline-style-15 {
+.dashboard-listings__action-edit {
   color: #4a5568;
   font-weight: 600;
   text-decoration: none;
   font-size: 0.95rem;
 }
 
-.inline-style-16 {
+.dashboard-listings__action-divider2 {
   color: #e2e8f0;
 }

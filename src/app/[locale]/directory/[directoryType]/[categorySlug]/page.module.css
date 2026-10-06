@@ -1,10 +1,10 @@
 
-.inline-style-1 {
+.directory-category__header {
   margin-bottom: 2rem;
   text-align: center;
 }
 
-.inline-style-2 {
+.directory-category__title {
   font-family: var(--font-heading);
   font-size: clamp(1.75rem, 6vw, 3.5rem);
   font-weight: 800;
@@ -15,7 +15,7 @@
   text-transform: capitalize;
 }
 
-.inline-style-3 {
+.directory-category__description {
   max-width: 800px;
   margin: 0 auto;
   color: #4a5568;
@@ -23,7 +23,7 @@
   font-size: 1.1rem;
 }
 
-.inline-style-4 {
+.directory-category__loading {
   text-align: center;
   padding: 3rem;
   color: #64748b;

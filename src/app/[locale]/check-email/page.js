@@ -22,7 +22,7 @@ export default function CheckEmailPage() {
           {t.message || "We've sent a verification link to your email address. Please click the link to activate your account and access your dashboard."}
         </p>
         <div className="check-email__actions">
-          <button onClick={() => setIsLoginModalOpen(true)} className={`check-email__button ${styles["inline-style-1"]}`}>
+          <button onClick={() => setIsLoginModalOpen(true)} className={`check-email__button ${styles["check-email__login-btn"]}`}>
             {t.loginButton || "Go to Login"}
           </button>
           <Link href={``} className="check-email__link">

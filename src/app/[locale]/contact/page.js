@@ -1,4 +1,4 @@
-import styles from "./ContactLanding.module.css";
+import styles from "./page.module.css";
 import ContactLandingClient from './ContactLandingClient';
 export const metadata = {
   title: 'Contact Us | Cape Coral Reviewed',
@@ -16,7 +16,7 @@ export async function generateStaticParams() {
   }];
 }
 export default async function ContactPage() {
-  return <main className={styles["inline-style-1"]}>
+  return <main className={styles["contact-page__main"]}>
       <ContactLandingClient />
     </main>;
 }

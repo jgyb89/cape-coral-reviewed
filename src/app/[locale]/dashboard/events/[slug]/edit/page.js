@@ -25,10 +25,10 @@ export default async function EditEventPage({
       <Link href={getLocalizedUrl("/dashboard/events", locale)} className="dashboard-back-btn">
         <span className="material-symbols-outlined">arrow_back</span> Back to My Events
       </Link>
-      <header className={styles["inline-style-1"]}>
+      <header className={styles["dashboard-event-edit__header"]}>
         <div>
-          <h1 className={styles["inline-style-2"]}>Edit Event</h1>
-          <p className={styles["inline-style-3"]}>Update details for &quot;{event.title}&quot;.</p>
+          <h1 className={styles["dashboard-event-edit__title"]}>Edit Event</h1>
+          <p className={styles["dashboard-event-edit__subtitle"]}>Update details for &quot;{event.title}&quot;.</p>
         </div>
       </header>
 

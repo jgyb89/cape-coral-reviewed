@@ -29,9 +29,9 @@ export default async function ProfilePage({
       <Link href={`/dashboard`} className="dashboard-back-btn">
         <span className="material-symbols-outlined">arrow_back</span> Back to Dashboard
       </Link>
-      <header className={styles["inline-style-1"]}>
-        <h1 className={styles["inline-style-2"]}>Profile Settings</h1>
-        <p className={styles["inline-style-3"]}>
+      <header className={styles["dashboard-profile__header"]}>
+        <h1 className={styles["dashboard-profile__title"]}>Profile Settings</h1>
+        <p className={styles["dashboard-profile__subtitle"]}>
           Update your personal information and manage how your email is displayed on the directory.
         </p>
       </header>

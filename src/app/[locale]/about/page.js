@@ -9,7 +9,7 @@ export const metadata = {
   description: "Cape Coral Reviewed is a local review, business directory, and community platform helping residents and visitors discover Cape Coral businesses, restaurants, services, events, and local recommendations."
 };
 export default function AboutPage() {
-  return <main className={styles["inline-style-1"]}>
+  return <main className={styles["about-page__main"]}>
       <AboutHero />
       <AboutMission />
       <AboutCategories />

@@ -1,5 +1,5 @@
 
-.inline-style-1 {
+.auth-login__main {
   min-height: 80vh;
   display: flex;
   flex-direction: column;
@@ -9,34 +9,34 @@
   background-color: #f8fafc;
 }
 
-.inline-style-2 {
+.auth-login__recover-back {
   margin-top: 1.5rem;
   text-align: center;
 }
 
-.inline-style-3 {
+.auth-login__recover-link {
   color: #64748b;
   text-decoration: none;
   font-weight: 500;
 }
 
-.inline-style-4 {
+.auth-login__header {
   text-align: center;
   margin-bottom: 2rem;
 }
 
-.inline-style-5 {
+.auth-login__title {
   font-size: 2rem;
   font-weight: 700;
   color: #1e293b;
   margin-bottom: 0.5rem;
 }
 
-.inline-style-6 {
+.auth-login__subtitle {
   color: #64748b;
 }
 
-.inline-style-7 {
+.auth-login__footer {
   margin-top: 1.5rem;
   text-align: center;
   display: flex;
@@ -44,18 +44,18 @@
   gap: 1rem;
 }
 
-.inline-style-8 {
+.auth-login__forgot-link {
   color: #e04c4c;
   text-decoration: none;
   font-weight: 500;
 }
 
-.inline-style-9 {
+.auth-login__signup-text {
   color: #64748b;
   margin: 0px;
 }
 
-.inline-style-10 {
+.auth-login__signup-link {
   color: #e04c4c;
   font-weight: 600;
   text-decoration: none;

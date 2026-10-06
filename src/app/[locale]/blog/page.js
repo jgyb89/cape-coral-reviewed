@@ -32,16 +32,16 @@ export default async function BlogPage({
     }) : ""
   }));
   return <main className="blog-page">
-      <div className={styles["inline-style-1"]}>
-        <h1 className={styles["inline-style-2"]}>
+      <div className={styles["blog-index__header"]}>
+        <h1 className={styles["blog-index__title"]}>
           {t.title || "Cape Coral News & Reviews"}
         </h1>
-        <p className={styles["inline-style-3"]}>
+        <p className={styles["blog-index__subtitle"]}>
           {t.subtitle || "Stay up to date with the latest happenings, business spotlights, and local guides in the Cape Coral community."}
         </p>
       </div>
       
-      <Suspense fallback={<div className={styles["inline-style-4"]}>Loading posts...</div>}>
+      <Suspense fallback={<div className={styles["blog-index__loading"]}>Loading posts...</div>}>
         <BlogView posts={formattedPosts} dict={dict} locale={locale} />
       </Suspense>
     </main>;

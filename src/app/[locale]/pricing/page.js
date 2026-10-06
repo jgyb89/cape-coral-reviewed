@@ -1,4 +1,5 @@
 import React from 'react';
+import styles from './page.module.css';
 import PricingPackages from '@/components/pricing/PricingPackages';
 
 export const metadata = {
@@ -8,7 +9,7 @@ export const metadata = {
 
 export default function PricingPage() {
   return (
-    <main>
+    <main className={styles["pricing-page__main"]}>
       <PricingPackages />
     </main>
   );

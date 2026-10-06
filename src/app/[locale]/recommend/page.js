@@ -16,7 +16,7 @@ export async function generateStaticParams() {
   }];
 }
 export default async function RecommendPage() {
-  return <main className={styles["inline-style-1"]}>
+  return <main className={styles["recommend-page__main"]}>
       <RecommendLandingClient />
     </main>;
 }

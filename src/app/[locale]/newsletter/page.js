@@ -14,7 +14,7 @@ export const metadata = {
   }
 };
 export default function NewsletterPage() {
-  return <main className={styles["inline-style-1"]}>
+  return <main className={styles["newsletter-page__main"]}>
       <NewsletterHero />
 
       <div className="max-w-7xl mx-auto px-4 py-12 grid grid-cols-1 lg:grid-cols-12 gap-12">
@@ -29,11 +29,11 @@ export default function NewsletterPage() {
         {/* Right Column: Sticky Conversion Form */}
         <div className="lg:col-span-4 order-first lg:order-last">
           <div className="sticky top-8 bg-[#231f20] p-8 rounded-2xl shadow-2xl">
-            <h3 className={`text-white text-2xl font-bold mb-4 ${styles["inline-style-2"]}`}>
+            <h3 className={`text-white text-2xl font-bold mb-4 ${styles["newsletter-page__form-title"]}`}>
               Join the Local Insider List
             </h3>
             <p className="text-gray-300 mb-8 leading-relaxed">
-              Don't miss out on the best of Cape Coral. Sign up for free weekly updates.
+              Don&apos;t miss out on the best of Cape Coral. Sign up for free weekly updates.
             </p>
             <NewsletterForm />
           </div>

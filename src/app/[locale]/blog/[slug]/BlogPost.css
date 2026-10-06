@@ -283,14 +283,14 @@
   box-shadow: 0 10px 30px rgba(0,0,0,0.15);
 }
 
-.inline-style-1 {
+.blog-post__video-wrapper {
   margin-bottom: 2.5rem;
   width: 100%;
   display: flex;
   justify-content: center;
 }
 
-.inline-style-2 {
+.blog-post__video-iframe {
   width: 100%;
   min-height: 450px;
   border-radius: 12px;
@@ -298,13 +298,13 @@
   box-shadow: 0 10px 30px rgba(0,0,0,0.15);
 }
 
-.inline-style-3 {
+.blog-post__title {
   font-size: 2.5rem;
   font-weight: 800;
   line-height: 1.2;
 }
 
-.inline-style-4 {
+.blog-post__image-container {
   position: relative;
   width: 100%;
   aspect-ratio: 4/3;
@@ -313,6 +313,6 @@
   margin-bottom: 2rem;
 }
 
-.inline-style-5 {
+.blog-post__image {
   object-fit: cover;
 }

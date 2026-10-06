@@ -44,16 +44,16 @@ export default async function CategoryPage({
   const categoryName = categoryNode?.name || categorySlug.replaceAll(/-/g, ' ');
   const categoryDescription = categoryNode?.description || "";
   return <div className="directory-page-wrapper">
-      <header className={styles["inline-style-1"]}>
-        <h1 className={styles["inline-style-2"]}>
+      <header className={styles["directory-category__header"]}>
+        <h1 className={styles["directory-category__title"]}>
           Best {categoryName} in Cape Coral
         </h1>
         {categoryDescription && <div dangerouslySetInnerHTML={{
         __html: categoryDescription
-      }} className={styles["inline-style-3"]} />}
+      }} className={styles["directory-category__description"]} />}
       </header>
 
-      <Suspense fallback={<div className={styles["inline-style-4"]}>Loading listings...</div>}>
+      <Suspense fallback={<div className={styles["directory-category__loading"]}>Loading listings...</div>}>
         <DirectoryFilterManager listings={listings} currentUser={currentUser} dict={dict} locale={locale} />
       </Suspense>
     </div>;

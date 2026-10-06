@@ -127,7 +127,7 @@ export default async function HomePage({ params }) {
       {/* Coastal Sunrise GSAP Journey & SEO Story */}
       <BeachySeoStory />
 
-      <section className={styles["inline-style-1"]}>
+      <section className={styles["home-page__section"]}>
         <div className={styles.homeContainer}>
           <SeoCards />
         </div>

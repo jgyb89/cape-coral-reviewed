@@ -1,14 +1,14 @@
 
-.inline-style-1 {
+.dashboard-favorites__header {
   margin-bottom: 2.5rem;
   padding-bottom: 1rem;
   border-bottom: 1px solid #f1f5f9;
 }
 
-.inline-style-2 {
+.dashboard-favorites__title {
   margin: 0 0 0.5rem 0;
 }
 
-.inline-style-3 {
+.dashboard-favorites__subtitle {
   margin: 0px;
 }

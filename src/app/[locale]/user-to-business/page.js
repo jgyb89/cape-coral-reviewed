@@ -1,6 +1,7 @@
 import { getDictionary } from '@/lib/dictionaries';
 import categoriesData from '@/lib/categories-data.json';
 import UserToBusinessClient from './UserToBusinessClient';
+import styles from './page.module.css';
 
 export async function generateMetadata({ params }) {
   const { locale } = await params;
@@ -21,7 +22,7 @@ export default async function UserToBusinessPage({ params }) {
   const dict = await getDictionary(locale);
 
   return (
-    <main>
+    <main className={styles["user-to-business-page__main"]}>
       <UserToBusinessClient dict={dict} categoriesData={categoriesData} />
     </main>
   );

@@ -22,8 +22,8 @@ export default function MobileTermsPage() {
         <h2>Agreement to Receive Text Messages</h2>
         <p>
           By providing your mobile telephone number and affirmatively opting
-          into a Cape Coral Reviewed ("Cape Coral Reviewed," "Company," "we,"
-          "our," or "us") text messaging program, you expressly consent to
+          into a Cape Coral Reviewed (&quot;Cape Coral Reviewed,&quot; &quot;Company,&quot; &quot;we,&quot;
+          &quot;our,&quot; or &quot;us&quot;) text messaging program, you expressly consent to
           receive recurring automated marketing, promotional, informational,
           transactional, customer service, community-related, newsletter, lead
           follow up, order related, account related, and other text messages
@@ -230,7 +230,7 @@ export default function MobileTermsPage() {
         <h2>Consent Records and Compliance Documentation</h2>
         <p>
           To comply with applicable federal and state laws, including the
-          Telephone Consumer Protection Act ("TCPA"), applicable Federal
+          Telephone Consumer Protection Act (&quot;TCPA&quot;), applicable Federal
           Communications Commission requirements, carrier requirements,
           telecommunications regulations, industry standards, fraud prevention
           obligations, and messaging platform requirements, Cape Coral Reviewed
@@ -270,7 +270,7 @@ export default function MobileTermsPage() {
         </p>
         <p>
           Cape Coral Reviewed does not sell or rent mobile opt-in information
-          for third parties' independent marketing purposes.
+          for third parties&apos; independent marketing purposes.
         </p>
         <p>
           Mobile telephone numbers, messaging opt-in information, and SMS
@@ -375,7 +375,7 @@ export default function MobileTermsPage() {
         <h2>Disclaimer of Warranties</h2>
         <p>
           TO THE MAXIMUM EXTENT PERMITTED BY LAW, ALL MESSAGING PROGRAMS ARE
-          PROVIDED ON AN "AS IS" AND "AS AVAILABLE" BASIS.
+          PROVIDED ON AN &quot;AS IS&quot; AND &quot;AS AVAILABLE&quot; BASIS.
         </p>
         <p>
           CAPE CORAL REVIEWED DISCLAIMS ALL WARRANTIES OF ANY KIND, WHETHER
@@ -412,7 +412,7 @@ export default function MobileTermsPage() {
           its affiliates, officers, directors, employees, contractors, agents,
           successors, assigns, and service providers from and against any
           third-party claims, damages, liabilities, losses, costs, expenses, and
-          reasonable attorneys' fees arising out of or relating to your material
+          reasonable attorneys&apos; fees arising out of or relating to your material
           violation of these Mobile Messaging Terms, your unlawful use of a
           messaging service, your use of a telephone number without
           authorization, or your violation of applicable law.

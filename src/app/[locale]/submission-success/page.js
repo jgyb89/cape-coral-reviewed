@@ -19,26 +19,26 @@ export default function SubmissionSuccessPage() {
     }, 100);
     return () => clearInterval(interval);
   }, []);
-  return <main className={styles["inline-style-1"]}>
-      <div className={styles["inline-style-2"]}>
-        <span className={`material-symbols-outlined ${styles["inline-style-3"]}`}>check_circle</span>
-        <h1 className={styles["inline-style-4"]}>Submission Successful!</h1>
-        <p className={styles["inline-style-5"]}>
+  return <main className={styles["success-page__main"]}>
+      <div className={styles["success-page__container"]}>
+        <span className={`material-symbols-outlined ${styles["success-page__icon"]}`}>check_circle</span>
+        <h1 className={styles["success-page__title"]}>Submission Successful!</h1>
+        <p className={styles["success-page__message"]}>
           Your business listing has been securely transmitted. It typically takes a few moments for our servers to process your media, optimize your images, and publish the listing to the global directory.
         </p>
 
-        <div className={styles["inline-style-6"]}>
-          <div className={styles["inline-style-7"]} />
+        <div className={styles["success-page__progress-bar-container"]}>
+          <div className={styles["success-page__progress-bar-fill"]} />
         </div>
 
-        {progress === 100 ? <div className={styles["inline-style-8"]}>
-            <Link href={`/dashboard`} className={styles["inline-style-9"]}>
+        {progress === 100 ? <div className={styles["success-page__actions"]}>
+            <Link href={`/dashboard`} className={styles["success-page__dashboard-link"]}>
               Go to Dashboard
             </Link>
-            <Link href={``} className={styles["inline-style-10"]}>
+            <Link href={``} className={styles["success-page__home-link"]}>
               Back to Home
             </Link>
-          </div> : <p className={styles["inline-style-11"]}>Processing your listing...</p>}
+          </div> : <p className={styles["success-page__loading-text"]}>Processing your listing...</p>}
       </div>
     </main>;
 }

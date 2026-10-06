@@ -27,9 +27,9 @@ export default async function ReviewsPage({
       <Link href={`/dashboard`} className="dashboard-back-btn">
         <span className="material-symbols-outlined">arrow_back</span> Back to Dashboard
       </Link>
-      <header className={styles["inline-style-1"]}>
-        <h1 className={styles["inline-style-2"]}>My Reviews</h1>
-        <p className={styles["inline-style-3"]}>
+      <header className={styles["dashboard-reviews__header"]}>
+        <h1 className={styles["dashboard-reviews__title"]}>My Reviews</h1>
+        <p className={styles["dashboard-reviews__subtitle"]}>
           Manage the reviews you have written for businesses in the directory.
         </p>
       </header>

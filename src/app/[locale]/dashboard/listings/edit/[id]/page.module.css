@@ -1,9 +1,9 @@
 
-.inline-style-1 {
+.dashboard-listing-edit__back-nav {
   margin-bottom: 2rem;
 }
 
-.inline-style-2 {
+.dashboard-listing-edit__back-link {
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
@@ -12,17 +12,17 @@
   font-weight: 600;
 }
 
-.inline-style-3 {
+.dashboard-listing-edit__header {
   margin-bottom: 2.5rem;
 }
 
-.inline-style-4 {
+.dashboard-listing-edit__title {
   font-size: 2.5rem;
   font-weight: 800;
   margin-bottom: 0.5rem;
 }
 
-.inline-style-5 {
+.dashboard-listing-edit__subtitle {
   color: #666;
   font-size: 1.1rem;
 }

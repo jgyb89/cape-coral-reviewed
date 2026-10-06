@@ -27,9 +27,9 @@ export default async function FavoritesPage({
       <Link href={`/dashboard`} className="dashboard-back-btn">
         <span className="material-symbols-outlined">arrow_back</span> Back to Dashboard
       </Link>
-      <header className={styles["inline-style-1"]}>
-        <h1 className={styles["inline-style-2"]}>Favorite Listings</h1>
-        <p className={styles["inline-style-3"]}>
+      <header className={styles["dashboard-favorites__header"]}>
+        <h1 className={styles["dashboard-favorites__title"]}>Favorite Listings</h1>
+        <p className={styles["dashboard-favorites__subtitle"]}>
           Manage your saved business listings here.
         </p>
       </header>

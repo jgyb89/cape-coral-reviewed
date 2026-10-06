@@ -28,16 +28,16 @@ export default async function DirectoryIndexPage({
   const currentUser = null;
   const t = dict?.directory || {};
   return <div className="directory-page-wrapper">
-      <header className={styles["inline-style-1"]}>
-        <h1 className={styles["inline-style-2"]}>
+      <header className={styles["directory-page__header"]}>
+        <h1 className={styles["directory-page__title"]}>
           {t.title || "Business Directory"}
         </h1>
-        <p className={styles["inline-style-3"]}>
+        <p className={styles["directory-page__subtitle"]}>
           {t.subtitle || "Explore the best local services, restaurants, and shops in Cape Coral."}
         </p>
       </header>
 
-      <Suspense fallback={<div className={styles["inline-style-4"]}>Loading listings...</div>}>
+      <Suspense fallback={<div className={styles["directory-page__loading"]}>Loading listings...</div>}>
         <DirectoryFilterManager listings={listings} currentUser={currentUser} dict={dict} locale={locale} />
       </Suspense>
     </div>;
