@@ -6,10 +6,13 @@
   display: grid;
   grid-template-columns: 1fr 350px;
   gap: 3rem;
-  max-width: 1200px;
-  margin: 0 auto;
+  width: 100% !important;
+  max-width: 1200px !important;
+  margin: 0 auto !important;
   padding: 4rem 1.5rem;
   align-items: start;
+  box-sizing: border-box !important;
+  overflow-x: hidden !important;
 }
 
 @media (max-width: 992px) {
@@ -20,7 +23,11 @@
 }
 
 .blog-post-main {
-  min-width: 0; /* Prevents flex/grid blowout */
+  min-width: 0 !important; /* Prevents flex/grid blowout */
+  width: 100% !important;
+  max-width: 100% !important;
+  box-sizing: border-box !important;
+  overflow-x: hidden !important;
 }
 
 .blog-post__header {
