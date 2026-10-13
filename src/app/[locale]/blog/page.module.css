@@ -1,8 +1,16 @@
 
+.blog-page {
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  overflow-x: clip;
+}
+
 .blog-index__header {
   max-width: 1200px;
   margin: 0 auto;
   padding: 2rem 1rem 0;
+  box-sizing: border-box;
 }
 
 .blog-index__title {

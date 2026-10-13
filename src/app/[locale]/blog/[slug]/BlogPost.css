@@ -12,7 +12,7 @@
   padding: 4rem 1.5rem;
   align-items: start;
   box-sizing: border-box !important;
-  overflow-x: hidden !important;
+  overflow-x: clip;
 }
 
 @media (max-width: 992px) {
@@ -27,7 +27,7 @@
   width: 100% !important;
   max-width: 100% !important;
   box-sizing: border-box !important;
-  overflow-x: hidden !important;
+  overflow-x: clip;
 }
 
 .blog-post__header {
@@ -279,7 +279,8 @@
 }
 
 /* 2. Let the browser handle the aspect ratio naturally! */
-.blog-post-main iframe,
+.blog-post-main .wp-block-embed iframe,
+.blog-post-main .wp-block-video video,
 .blog-post-main video {
   max-width: 100% !important; /* Never break out of the blog container */
   height: auto !important;    /* Always scale proportionally */
@@ -288,6 +289,13 @@
   display: block;
   margin: 0 auto;
   box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+}
+
+/* Explicitly protect AdSense iframes and containers from video embed styles */
+.blog-post-main ins.adsbygoogle,
+.blog-post-main ins.adsbygoogle iframe {
+  box-shadow: none !important;
+  border-radius: 0 !important;
 }
 
 .blog-post__video-wrapper {

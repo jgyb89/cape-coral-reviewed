@@ -1,12 +1,21 @@
 /* Base state: Takes up width so AdSense can measure it, but remains invisible */
 .wrapper {
   width: 100%;
+  max-width: 100%;
   min-height: 1px;
   background-color: transparent;
   padding: 0 16px; /* Pre-apply horizontal padding so AdSense measures correctly */
   margin: 0;
   box-sizing: border-box; /* Crucial for preventing horizontal overflow */
   transition: all 0.3s ease;
+  overflow-x: clip;
+}
+
+/* Prevent any AdSense ins or iframes from expanding beyond wrapper */
+.wrapper ins,
+.wrapper iframe {
+  max-width: 100% !important;
+  box-sizing: border-box;
 }
 
 /* Filled state: Applies the brand styling only once the ad successfully loads */
@@ -44,6 +53,12 @@
 }
 
 /* Modifier for Plain / Native Article integration */
+.wrapper--plain {
+  padding: 0;
+  background-color: transparent;
+  border: none;
+}
+
 .wrapper--plain.wrapper--filled {
   background-color: transparent;
   padding: 0;
