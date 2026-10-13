@@ -31,7 +31,7 @@ export default async function BlogPage({
       ALLOWED_TAGS: []
     }) : ""
   }));
-  return <main className="blog-page">
+  return <div className={styles["blog-page"]}>
       <div className={styles["blog-index__header"]}>
         <h1 className={styles["blog-index__title"]}>
           {t.title || "Cape Coral News & Reviews"}
@@ -44,7 +44,7 @@ export default async function BlogPage({
       <Suspense fallback={<div className={styles["blog-index__loading"]}>Loading posts...</div>}>
         <BlogView posts={formattedPosts} dict={dict} locale={locale} />
       </Suspense>
-    </main>;
+    </div>;
 }
 BlogPage.propTypes = {
   params: PropTypes.object.isRequired

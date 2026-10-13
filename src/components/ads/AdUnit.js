@@ -14,7 +14,13 @@ if (typeof window !== 'undefined') {
   }, 2000);
 }
 
-export default function AdUnit({ type = "horizontal", isGridCard = false, isPlain = false, isSidebarWidget = false }) {
+export default function AdUnit({ 
+  type = "horizontal", 
+  isGridCard = false, 
+  isPlain = false, 
+  isSidebarWidget = false,
+  fullWidthResponsive = false 
+}) {
   const adRef = useRef(null);
   const pathname = usePathname();
   const [isFilled, setIsFilled] = useState(false);
@@ -105,7 +111,7 @@ export default function AdUnit({ type = "horizontal", isGridCard = false, isPlai
         className="adsbygoogle"
         style={{ display: "block" }}
         data-ad-client="ca-pub-9224507908532843"
-        data-full-width-responsive="true"
+        data-full-width-responsive={fullWidthResponsive ? "true" : "false"}
         {...getAdConfig()}
       />
     </div>
@@ -117,4 +123,5 @@ AdUnit.propTypes = {
   isGridCard: PropTypes.bool,
   isPlain: PropTypes.bool,
   isSidebarWidget: PropTypes.bool,
+  fullWidthResponsive: PropTypes.bool,
 };
