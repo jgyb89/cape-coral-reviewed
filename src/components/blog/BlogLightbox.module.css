@@ -1,0 +1,105 @@
+/* src/components/blog/BlogLightbox.module.css */
+
+.lightbox-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.88); /* Darkens background to 88% */
+  z-index: 10000; /* Puts it above all site headers and navigation menus */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+}
+
+.lightbox-close {
+  position: absolute;
+  top: 1.5rem;
+  right: 2rem;
+  background: transparent;
+  border: none;
+  color: #ffffff;
+  font-size: 3rem;
+  line-height: 1;
+  cursor: pointer;
+  z-index: 10001;
+  padding: 0.5rem;
+  transition: opacity 0.2s;
+}
+
+.lightbox-close:hover {
+  opacity: 0.7;
+}
+
+.lightbox-content {
+  position: relative;
+  width: 90vw;
+  height: 90vh;
+  max-width: 1400px;
+  cursor: default;
+}
+
+/* --- Lightbox Navigation Arrows --- */
+
+.lightbox-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background-color: #000000;
+  color: #ffffff;
+  border: none;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 1.25rem;
+  cursor: pointer;
+  z-index: 10002;
+  transition: background-color 0.2s, opacity 0.2s;
+  opacity: 0.6;
+}
+
+.lightbox-arrow:hover {
+  opacity: 1;
+  background-color: #222222;
+}
+
+.lightbox-arrow--left {
+  left: clamp(1rem, 3vw, 3rem);
+}
+
+.lightbox-arrow--right {
+  right: clamp(1rem, 3vw, 3rem);
+}
+
+@media (max-width: 768px) {
+  .lightbox-close {
+    top: 1rem;
+    right: 1rem;
+    font-size: 2.5rem;
+  }
+
+  .lightbox-arrow {
+    width: 44px;
+    height: 44px;
+    font-size: 1.1rem;
+    opacity: 0.8;
+  }
+
+  .lightbox-arrow--left {
+    left: 0.75rem;
+  }
+
+  .lightbox-arrow--right {
+    right: 0.75rem;
+  }
+
+  .lightbox-content {
+    width: 95vw;
+    height: 85vh;
+  }
+}

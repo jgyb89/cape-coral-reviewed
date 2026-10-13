@@ -10,6 +10,7 @@ import BackButton from "@/components/blog/BackButton";
 import NewsletterWidget from '@/components/blog/NewsletterWidget';
 import BlogComments from "@/components/blog/BlogComments";
 import AdUnit from "@/components/ads/AdUnit";
+import BlogLightbox from "@/components/blog/BlogLightbox";
 import { getViewer } from "@/lib/auth";
 import "./BlogPost.css";
 export async function generateMetadata({
@@ -123,13 +124,15 @@ export default async function BlogPostPage({
           </h1>
         </header>
 
-        {post.featuredImage?.node?.sourceUrl && <div className="blog-post__featured-image blog-post__image-container">
-            <Image src={formatImageUrl(post.featuredImage.node.sourceUrl)} alt={post.featuredImage.node.altText || post.title} fill priority className="blog-post__image" />
-          </div>}
+        <BlogLightbox>
+          {post.featuredImage?.node?.sourceUrl && <div className="blog-post__featured-image blog-post__image-container">
+              <Image src={formatImageUrl(post.featuredImage.node.sourceUrl)} alt={post.featuredImage.node.altText || post.title} fill priority className="blog-post__image" />
+            </div>}
 
-        <div className="blog-post__content">
-          {parse(sanitizedContent, parseOptions)}
-        </div>
+          <div className="blog-post__content">
+            {parse(sanitizedContent, parseOptions)}
+          </div>
+        </BlogLightbox>
 
         {/* Inject Gated Comments Here */}
         <BlogComments postId={post.databaseId} initialComments={post.comments?.nodes} currentUser={viewer} />
