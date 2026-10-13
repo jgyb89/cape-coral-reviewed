@@ -5,8 +5,10 @@ import PropTypes from "prop-types";
 import { createPortal } from "react-dom";
 import Link from "next/link";
 import { useRouter, useSearchParams, usePathname } from "next/navigation";
-import { ALL_CATEGORIES } from "@/lib/constants";
+import { ALL_CATEGORIES, getCategoryRoute } from "@/lib/constants";
 import styles from "./DirectoryFilters.module.css";
+
+export { getCategoryRoute };
 
 export const QUICK_PILLS = [
   { label: "Restaurants", slug: "restaurants" },
@@ -18,26 +20,6 @@ export const QUICK_PILLS = [
   { label: "Real Estate", slug: "real-estate" },
   { label: "Auto & Transport", slug: "auto-transport" },
 ];
-
-export const getCategoryRoute = (slug) => {
-  const category = ALL_CATEGORIES.find((c) => c.slug === slug);
-  if (!category) return "/directory";
-
-  const sanitizedSlug = category.slug.replace(/-en$/, "");
-
-  if (category.directoryType) {
-    return `/directory/${category.directoryType}/${sanitizedSlug}`;
-  }
-
-  if (category.parentSlug) {
-    const parent = ALL_CATEGORIES.find((p) => p.slug === category.parentSlug);
-    if (parent && parent.directoryType) {
-      return `/directory/${parent.directoryType}/${sanitizedSlug}`;
-    }
-  }
-
-  return `/directory`; // Fallback
-};
 
 export const getDynamicPills = (pathname) => {
   const pathSegments = pathname.split("/").filter(Boolean);
@@ -481,7 +463,7 @@ const DirectoryFilters = ({ isModalOpen, setIsModalOpen }) => {
         <ul className={styles["predictive-list"]}>
           {hasCategories &&
             searchResults.categories.map((cat) => {
-              const route = getCategoryRoute(cat.slug);
+              const route = getCategoryRoute(cat);
               const categoryHref = `${localePrefix}${route}`;
               return (
                 <li

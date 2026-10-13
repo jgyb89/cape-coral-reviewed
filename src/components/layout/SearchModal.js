@@ -3,7 +3,7 @@
 import { useState, useEffect, useCallback } from "react";
 import PropTypes from "prop-types";
 import Link from "next/link";
-import { ALL_CATEGORIES } from "@/lib/constants";
+import { ALL_CATEGORIES, getCategoryRoute, getLocalizedUrl } from "@/lib/constants";
 import styles from "./SearchModal.module.css";
 
 const TOP_CATEGORIES = [
@@ -28,26 +28,6 @@ const TOP_CATEGORIES = [
     parentSlug: "home-local-services",
   },
 ];
-
-const getCategoryRoute = (slug) => {
-  const category = ALL_CATEGORIES.find((c) => c.slug === slug);
-  if (!category) return "/directory";
-
-  // If it has a direct directoryType, use it
-  if (category.directoryType) {
-    return `/directory/${category.directoryType}/${category.slug}`;
-  }
-
-  // If it's a child, find the parent's directoryType
-  if (category.parentSlug) {
-    const parent = ALL_CATEGORIES.find((p) => p.slug === category.parentSlug);
-    if (parent?.directoryType) {
-      return `/directory/${parent.directoryType}/${category.slug}`;
-    }
-  }
-
-  return `/directory`; // Fallback
-};
 /**
  * SearchModal Component
  * A predictive search modal for the Cape Coral Directory.
@@ -192,7 +172,10 @@ export default function SearchModal({
             onSubmit={(e) => {
               e.preventDefault();
               if (!searchTerm.trim()) return;
-              globalThis.location.href = `/directory?search=${encodeURIComponent(searchTerm.trim())}`;
+              globalThis.location.href = getLocalizedUrl(
+                `/directory?search=${encodeURIComponent(searchTerm.trim())}`,
+                locale,
+              );
               onClose();
             }}
             className={styles["search-modal__input-wrapper"]}
@@ -216,7 +199,10 @@ export default function SearchModal({
             {TOP_CATEGORIES.map((cat) => (
               <Link
                 key={cat.slug}
-                href={`/directory/${cat.parentSlug}/${cat.slug}`}
+                href={getLocalizedUrl(
+                  `/directory/${cat.parentSlug}/${cat.slug}`,
+                  locale,
+                )}
                 className={styles["search-modal__pill"]}
                 onClick={onClose}
               >
@@ -241,8 +227,8 @@ export default function SearchModal({
                       <div className={styles["search-modal__results-list"]}>
                         {/* Categories Results */}
                         {searchResults.categories.map((cat) => {
-                          const route = getCategoryRoute(cat.slug);
-                          const categoryHref = `${route}`;
+                          const route = getCategoryRoute(cat);
+                          const categoryHref = getLocalizedUrl(route, locale);
 
                           return (
                             <div
@@ -280,7 +266,10 @@ export default function SearchModal({
                             className={styles["search-modal__result-item"]}
                           >
                             <Link
-                              href={`/listing/${listing.slug}`}
+                              href={getLocalizedUrl(
+                                `/listing/${listing.slug}`,
+                                locale,
+                              )}
                               className={styles["search-modal__result-link"]}
                               onClick={onClose}
                             >
