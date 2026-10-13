@@ -8,7 +8,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { ChevronLeft, ChevronRight, Play, Pause } from "lucide-react";
 import { formatImageUrl } from "@/lib/formatImageUrl";
-import { ALL_CATEGORIES, getLocalizedUrl } from "@/lib/constants";
+import { ALL_CATEGORIES, getCategoryRoute, getLocalizedUrl } from "@/lib/constants";
 import styles from "./HeroSlideshow.module.css";
 
 const PILLS = [
@@ -21,27 +21,6 @@ const PILLS = [
   { label: 'Beauty & Spas', slug: 'beauty-spas' },
   { label: 'Real Estate', slug: 'real-estate' }
 ];
-
-const getCategoryRoute = (slug) => {
-  if (slug === "all") return "/directory";
-  const category = ALL_CATEGORIES.find(c => c.slug === slug);
-  if (!category) return '/directory';
-
-  const sanitizedSlug = category.slug.replace(/-en$/, '');
-
-  if (category.directoryType) {
-    return `/directory/${category.directoryType}/${sanitizedSlug}`;
-  }
-
-  if (category.parentSlug) {
-    const parent = ALL_CATEGORIES.find(p => p.slug === category.parentSlug);
-    if (parent?.directoryType) {
-      return `/directory/${parent.directoryType}/${sanitizedSlug}`;
-    }
-  }
-
-  return `/directory`; // Fallback
-};
 
 export default function HeroSlideshow({ featuredListings = [], locale = "en" }) {
   const router = useRouter();

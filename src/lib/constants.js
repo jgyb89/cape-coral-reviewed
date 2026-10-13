@@ -33,3 +33,51 @@ export function getLocalizedUrl(path, locale) {
   }
   return path;
 }
+
+export function getCategoryRoute(categoryOrSlug, explicitParentSlug = null) {
+  if (!categoryOrSlug) return "/directory";
+
+  const rawSlug =
+    typeof categoryOrSlug === "string" ? categoryOrSlug : categoryOrSlug?.slug;
+  if (!rawSlug || rawSlug === "all") return "/directory";
+
+  const cleanSlug = rawSlug.replace(/-(en|es)$/, "");
+
+  const rawParentSlug =
+    explicitParentSlug ||
+    (typeof categoryOrSlug === "object"
+      ? categoryOrSlug?.parent?.node?.slug || categoryOrSlug?.parentSlug
+      : null);
+  const cleanParentSlug = rawParentSlug
+    ? rawParentSlug.replace(/-(en|es)$/, "")
+    : null;
+
+  // 1. Check local ALL_CATEGORIES match
+  const matched = ALL_CATEGORIES.find(
+    (c) => c.slug === cleanSlug || c.slug === rawSlug,
+  );
+
+  if (matched) {
+    if (matched.isParent || matched.directoryType === matched.slug) {
+      return `/directory/${matched.slug}`;
+    }
+    if (matched.parentSlug) {
+      return `/directory/${matched.parentSlug}/${matched.slug}`;
+    }
+  }
+
+  // 2. If parent was provided (e.g. from GraphQL parent node or argument)
+  if (cleanParentSlug) {
+    return `/directory/${cleanParentSlug}/${cleanSlug}`;
+  }
+
+  // 3. Check if cleanSlug is a parent directory type
+  const isParentType = DIRECTORY_TYPES.some(
+    (dt) => dt.slug === cleanSlug || dt.slug === rawSlug,
+  );
+  if (isParentType) {
+    return `/directory/${cleanSlug}`;
+  }
+
+  return "/directory";
+}

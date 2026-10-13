@@ -15,6 +15,14 @@ import {
   Brush,
   Zap,
   Leaf,
+  Anchor,
+  Car,
+  ShoppingBag,
+  PawPrint,
+  Briefcase,
+  PartyPopper,
+  GraduationCap,
+  Scissors,
 } from "lucide-react";
 import categoriesData from "./categories-data.json";
 
@@ -35,6 +43,14 @@ const ICON_MAP = {
   Brush: <Brush size={20} />,
   Zap: <Zap size={20} />,
   Leaf: <Leaf size={20} />,
+  Anchor: <Anchor size={20} />,
+  Car: <Car size={20} />,
+  ShoppingBag: <ShoppingBag size={20} />,
+  PawPrint: <PawPrint size={20} />,
+  Briefcase: <Briefcase size={20} />,
+  PartyPopper: <PartyPopper size={20} />,
+  GraduationCap: <GraduationCap size={20} />,
+  Scissors: <Scissors size={20} />,
 };
 
 const SUB_ICON_MAP = {
@@ -54,13 +70,73 @@ const SUB_ICON_MAP = {
   Brush: <Brush size={16} />,
   Zap: <Zap size={16} />,
   Leaf: <Leaf size={16} />,
+  Anchor: <Anchor size={16} />,
+  Car: <Car size={16} />,
+  ShoppingBag: <ShoppingBag size={16} />,
+  PawPrint: <PawPrint size={16} />,
+  Briefcase: <Briefcase size={16} />,
+  PartyPopper: <PartyPopper size={16} />,
+  GraduationCap: <GraduationCap size={16} />,
+  Scissors: <Scissors size={16} />,
 };
 
-export const categories = categoriesData.map(cat => ({
-  ...cat,
-  icon: ICON_MAP[cat.iconName],
-  subs: cat.subs.map(sub => ({
-    ...sub,
-    icon: SUB_ICON_MAP[sub.iconName]
-  }))
-}));
+// Curated top 10 most broad categories per directory type for the nav mega menu (30 total)
+const MEGA_MENU_CATEGORY_SLUGS = {
+  "food-drink": [
+    "restaurants",
+    "bars-nightlife",
+    "cafes-bakeries",
+    "breakfast-brunch",
+    "seafood",
+    "pizza",
+    "mexican-latin",
+    "breweries",
+    "coffee-tea",
+    "steakhouse",
+  ],
+  "health-wellness": [
+    "medical-dental",
+    "beauty-spas",
+    "fitness-sports",
+    "alternative-therapy",
+    "primary-care-doctors",
+    "dentists-orthodontics",
+    "hair-salons",
+    "gyms-health-clubs",
+    "massage-therapy",
+    "senior-care-services",
+  ],
+  "home-local-services": [
+    "contractors-repair",
+    "home-property",
+    "boating-marine",
+    "real-estate",
+    "auto-transport",
+    "shopping",
+    "pet-services",
+    "financial-services",
+    "parties-events",
+    "education",
+  ],
+};
+
+export const categories = categoriesData.map((cat) => {
+  const allowedSlugs = MEGA_MENU_CATEGORY_SLUGS[cat.slug];
+  let subs = cat.subs;
+  if (allowedSlugs) {
+    subs = allowedSlugs
+      .map((slug) => cat.subs.find((sub) => sub.slug === slug))
+      .filter(Boolean);
+  } else {
+    subs = subs.slice(0, 10);
+  }
+
+  return {
+    ...cat,
+    icon: ICON_MAP[cat.iconName] || <Smile size={20} />,
+    subs: subs.map((sub) => ({
+      ...sub,
+      icon: SUB_ICON_MAP[sub.iconName] || <Smile size={16} />,
+    })),
+  };
+});
