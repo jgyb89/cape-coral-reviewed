@@ -14,6 +14,7 @@ const EXPLORE_LINKS = [
 
 const QUICK_LINKS = [
   { name: "About Us", href: "/about" },
+  { name: "Pricing", href: "/pricing" },
   { name: "Events", href: "/events" },
   { name: "Contact", href: "/contact" },
   { name: "Business Login", href: "/login" },
