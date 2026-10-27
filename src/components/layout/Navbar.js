@@ -244,6 +244,13 @@ export default function Navbar({ currentUser: propCurrentUser, dict, locale }) {
             {t.about || "About"}
           </Link>
 
+          <Link
+            href={getLocalizedUrl("/pricing", locale)}
+            className={styles["nav-link"]}
+          >
+            {t.pricing || "Pricing"}
+          </Link>
+
           <div
             className={styles["locale-toggle-container"]}
             style={{ display: "none" }}
@@ -431,6 +438,15 @@ export default function Navbar({ currentUser: propCurrentUser, dict, locale }) {
                     onClick={closeMobileMenu}
                   >
                     {t.about || "About"}
+                  </Link>
+                </li>
+                <li className={styles["flyout-item"]}>
+                  <Link
+                    href={getLocalizedUrl("/pricing", locale)}
+                    className={styles["flyout-link"]}
+                    onClick={closeMobileMenu}
+                  >
+                    {t.pricing || "Pricing"}
                   </Link>
                 </li>
 
