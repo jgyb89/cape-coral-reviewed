@@ -111,8 +111,8 @@ async function handleGraphQLError(json) {
 
     if (isTokenError) {
       const cookieStore = await cookies();
-      cookieStore.set("authToken", "", { maxAge: 0 });
-      cookieStore.set("hasSession", "", { maxAge: 0 });
+      cookieStore.set("authToken", "", { maxAge: 0, path: "/" });
+      cookieStore.set("hasSession", "", { maxAge: 0, path: "/" });
       return true;
     }
 

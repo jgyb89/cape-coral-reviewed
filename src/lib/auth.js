@@ -1,6 +1,5 @@
 // src/lib/auth.js
 import { cookies } from "next/headers";
-import { redirect } from "next/navigation";
 
 const GRAPHQL_URL = process.env.NEXT_PUBLIC_WORDPRESS_API_URL;
 
@@ -55,16 +54,16 @@ export async function loginUser(username, password) {
     cookieStore.set("authToken", authToken, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
-      sameSite: "strict",
+      sameSite: "lax",
       path: "/",
-      maxAge: 60 * 60 * 4, // 4 hours
+      maxAge: 7 * 24 * 60 * 60, // 7 days
     });
     cookieStore.set("hasSession", "true", {
       httpOnly: false,
       secure: process.env.NODE_ENV === "production",
-      sameSite: "strict",
+      sameSite: "lax",
       path: "/",
-      maxAge: 60 * 60 * 4, // 4 hours
+      maxAge: 7 * 24 * 60 * 60, // 7 days
     });
 
     return json.data.login.user;
@@ -225,16 +224,12 @@ export async function getViewer() {
     console.error("Fetch Viewer Error:", error);
   }
 
-  // CRITICAL: Next.js redirects throw an error.
-  // This MUST sit outside the try/catch block to work properly.
   if (isTokenExpired) {
     // Clear the dead cookie
     const cookieStore = await cookies();
-    cookieStore.set("authToken", "", { maxAge: 0 });
-    cookieStore.set("hasSession", "", { maxAge: 0 });
-    
-    // Redirect to branded login page
-    redirect("/login");
+    cookieStore.set("authToken", "", { maxAge: 0, path: "/" });
+    cookieStore.set("hasSession", "", { maxAge: 0, path: "/" });
+    return null;
   }
 
   return null;
@@ -245,6 +240,6 @@ export async function getViewer() {
  */
 export async function logoutUser() {
   const cookieStore = await cookies();
-  cookieStore.delete("authToken");
-  cookieStore.delete("hasSession");
+  cookieStore.set("authToken", "", { maxAge: 0, path: "/" });
+  cookieStore.set("hasSession", "", { maxAge: 0, path: "/" });
 }
